@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VA-20260804-004 — Cotton Duty Waiver | Air8 Intelligence</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-hover: #21253a;
+    --border: #2a2d3e;
+    --text: #e2e4f0;
+    --text-muted: #8b8fa8;
+    --accent: #f97316;
+    --accent-dim: rgba(249,115,22,0.12);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --yellow: #eab308;
+    --yellow-dim: rgba(234,179,8,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --radius: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; padding: 20px; }
+
+  header { max-width: 960px; margin: 0 auto 28px; }
+  .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .logo { background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+  .run-id { font-size: 12px; color: var(--text-muted); }
+  h1 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .subtitle { color: var(--text-muted); font-size: 13px; }
+  .event-banner { max-width: 960px; margin: 0 auto 24px; background: var(--accent-dim); border: 1px solid rgba(249,115,22,0.3); border-radius: var(--radius); padding: 14px 18px; }
+  .event-banner .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+  .event-banner .event-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  .event-banner .event-meta { font-size: 12px; color: var(--text-muted); }
+  .event-banner .tag { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; }
+
+  .stats-row { max-width: 960px; margin: 0 auto 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
+  .stat-card .num { font-size: 28px; font-weight: 800; }
+  .stat-card .num.green { color: var(--green); }
+  .stat-card .num.yellow { color: var(--yellow); }
+  .stat-card .num.orange { color: var(--accent); }
+  .stat-card .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  .combo-section { max-width: 960px; margin: 0 auto 28px; }
+  .combo-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .combo-badge { font-size: 12px; font-weight: 700; background: var(--card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; color: var(--text-muted); }
+  .combo-badge.green { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+  .combo-badge.yellow { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-dim); }
+  .combo-title { font-size: 15px; font-weight: 700; }
+  .combo-clients { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .client-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: border-color 0.15s, background 0.15s; }
+  .client-card:hover { border-color: var(--accent); background: var(--card-hover); }
+  .client-card.green-card { border-left: 3px solid var(--green); }
+  .client-card.yellow-card { border-left: 3px solid var(--yellow); }
+
+  .client-name { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .signal-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .signal-pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+  .pill-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .pill-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .product-pill { font-size: 11px; background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(249,115,22,0.3); padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+
+  .why-block { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .why-block strong { color: var(--text); }
+
+  .ask-list { list-style: none; padding: 0; margin-bottom: 10px; }
+  .ask-list li { font-size: 12px; color: var(--text-muted); padding: 3px 0 3px 16px; position: relative; }
+  .ask-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+  .action-block { background: var(--accent-dim); border-radius: 8px; padding: 10px 12px; }
+  .action-block .action-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+  .action-block .action-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+
+  .kb-gap-section { max-width: 960px; margin: 0 auto 28px; }
+  .kb-gap-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  .kb-gap-table th { text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+  .kb-gap-table td { padding: 10px 14px; font-size: 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .kb-gap-table tr:last-child td { border-bottom: none; }
+  .kb-gap-table .priority-high { color: var(--red); font-weight: 600; }
+  .kb-gap-table .priority-med { color: var(--yellow); font-weight: 600; }
+  .kb-gap-table .priority-low { color: var(--text-muted); }
+
+  footer { max-width: 960px; margin: 0 auto; text-align: center; font-size: 11px; color: var(--text-muted); padding: 20px 0; border-top: 1px solid var(--border); }
+
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <span class="logo">AIR8</span>
+    <span class="run-id">VA-20260804-004 · Aug 4, 2026</span>
+  </div>
+  <h1>India Cotton Duty Waiver — COMBO Intelligence</h1>
+  <p class="subtitle">5 COMBOs · 34 clients matched · CP5 Insight Assembly v0.4</p>
+</header>
+
+<div class="event-banner">
+  <div class="label">Active Event · Expires Oct 31, 2026</div>
+  <div class="event-name">India BCD+AIDC Cotton Duty Waiver — HS 5201<span class="tag">13 WEEKS LEFT</span></div>
+  <div class="event-meta">Section 301 + India BCD/AIDC · Countries: India, Pakistan, Bangladesh · Sourcing shift in progress</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="num green">4</div>
+    <div class="lbl">Beneficiary Clients</div>
+  </div>
+  <div class="stat-card">
+    <div class="num yellow">9</div>
+    <div class="lbl">Window Opportunity</div>
+  </div>
+  <div class="stat-card">
+    <div class="num orange">8</div>
+    <div class="lbl">Monitor</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:var(--text-muted)">2</div>
+    <div class="lbl">Insulated</div>
+  </div>
+</div>
+
+<!-- COMBO-009 · Pakistan Home Textile · 4 clients · BENEFICIARY -->
+<div class="combo-section">
+  <div class="combo-header">
+    <span class="combo-badge green">🟢 BENEFICIARY</span>
+    <span class="combo-title">COMBO-009 · Pakistan Home Textile</span>
+    <span class="combo-clients">4 clients matched</span>
+  </div>
+  <div class="cards-grid">
+    <div class="client-card green-card">
+      <div class="client-name">PK-HT-001 · Punjab Cotton Mills</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
+        <span class="product-pill">PROD-ARP</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Domestic Punjab cotton sourcing — zero India import dependency. Structural cost advantage widens as Indian mills absorb +16% post-Oct 31 cliff. EU/US buyer allocation decisions for Q1 2027 are imminent.
+      </div>
+      <ul class="ask-list">
+        <li>EU/US buyer signalling new programme allocation for Q1 2027?</li>
+        <li>Current mill utilisation — headroom for +20–30% volume?</li>
+        <li>Payment terms on new programmes — OA or L/C?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Call now — pre-position PROD-ARP before capacity locks to existing buyers. Frame as receivables scaling solution, not borrowing.</div>
+      </div>
+    </div>
+    <div class="client-card green-card">
+      <div class="client-name">PK-HT-002 · Faisalabad Home Textile</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
+        <span class="product-pill">PROD-ARP</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Zero cotton import exposure. PKR stabilised. As India mills face input cost inflation post-Oct 31, Pakistan exporters gain 5–8% FOB cost advantage on EU/US buyers already reviewing allocation.
+      </div>
+      <ul class="ask-list">
+        <li>Which EU/US buyer most likely to increase allocation first?</li>
+        <li>Mill capacity headroom for incoming volume ramp?</li>
+        <li>Current OB base vs max utilisation?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Pre-position PROD-ARP before Q1 2027 buyer decisions lock. Talk track: <em>"India cotton costs are rising — you're the natural beneficiary."</em></div>
+      </div>
+    </div>
+    <div class="client-card green-card">
+      <div class="client-name">PK-HT-003 · Karachi Textile Export</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
+        <span class="product-pill">PROD-ARP</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Pakistan garment exports at $4.18B FY26 (+5.5% YoY). Domestic cotton buffer means no T3 exposure. Post-Oct 31 India disadvantage = structural PK win on EU/US home textile sourcing.
+      </div>
+      <ul class="ask-list">
+        <li>Q1 2027 order book strength — confirmed vs pipeline?</li>
+        <li>Home textile only or apparel diversification in progress?</li>
+        <li>Receivables concentration — top buyer %?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Call this cycle. PROD-ARP scales with PO ramp. No urgency pressure from T3 clock — structural tailwind is the angle.</div>
+      </div>
+    </div>
+    <div class="client-card green-card">
+      <div class="client-name">PK-HT-004 · Lahore Cotton & Home</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
+        <span class="product-pill">PROD-ARP</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Domestic sourcing fully insulated. USAID Cotton Connect programme participation signals quality compliance. Competitive advantage accelerates as India mills who didn't stockpile face Oct 31 cost cliff.
+      </div>
+      <ul class="ask-list">
+        <li>Current WC headroom vs near-term PO ramp?</li>
+        <li>Top 3 buyers by revenue % — EU/US split?</li>
+        <li>Any capacity expansion planned for 2027?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Frame PROD-ARP as scaling receivables against growing EU/US book. No T3 urgency needed — structural beneficiary is the pitch.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMBO-003 · India Large Vertical · 9 clients · WINDOW OPPORTUNITY -->
+<div class="combo-section">
+  <div class="combo-header">
+    <span class="combo-badge yellow">🟡 WINDOW OPPORTUNITY</span>
+    <span class="combo-title">COMBO-003 · India Large Vertical Integrator</span>
+    <span class="combo-clients">9 clients matched · 13 weeks left</span>
+  </div>
+  <div class="cards-grid">
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-001 · Large Vertical Mill</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Fully integrated cotton buyer where cotton = 60–70% of COGS. BCD+AIDC waiver makes Pima/Giza imports duty-free until Oct 31. Industry estimates 35–45 lakh bales will be imported during window. Binding constraint: working capital.
+      </div>
+      <ul class="ask-list">
+        <li>Q1 2027 PO volume confirmed — which buyers, approximate bales?</li>
+        <li>Current WC position — stockpile plan target volume?</li>
+        <li>Storage available for 3–5 months of cotton inventory?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Call this week. 13 weeks is short for procurement + logistics + financing. Frame PROD-RT2C as capital deployment, not borrowing. Post-Oct 31: non-actors face secondary HURT signal.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-002 · Integrated Spinner-Weaver</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Pima/Giza dependency for fine-count programs makes T3 window critical. Shankar-6 cannot replace for counts above 60s. Bulk procurement ahead of Oct 31 cliff requires WC facility.
+      </div>
+      <ul class="ask-list">
+        <li>% of cotton program from imported Pima/Giza vs domestic Shankar-6?</li>
+        <li>Target stockpile volume before Oct 31?</li>
+        <li>Existing bank OD or WC facility — headroom?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Offer PROD-RT2C to finance pre-Oct stockpile. <em>"The 0% duty window closes Oct 31 — maximise imports now."</em></div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-003 · South India Vertical</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Fine-count export programs (60s+) require Pima/Giza — domestic Shankar-6 insufficient. T3 duty window = only opportunity to build cost-advantaged stockpile before 16% duty returns.
+      </div>
+      <ul class="ask-list">
+        <li>Fine-count program volume as % of total — Pima vs Giza split?</li>
+        <li>US vs EU buyer split on fine-count orders?</li>
+        <li>Current cotton procurement cycle — cash or credit?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Cotton procurement capital is the fit. PROD-RT2C self-liquidates within cotton → yarn → fabric → garment cycle. High urgency given timeline.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-004 · Gujarat Integrated Textile</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Cotton cost represents 60–70% of COGS for this vertical. T3 window is the only mechanism to import Pima/Giza at 0% duty. Post-cliff: +16% input cost on all imports. Every week of inaction reduces stockpile potential.
+      </div>
+      <ul class="ask-list">
+        <li>Current bale-equivalent procurement target for Q1 2027?</li>
+        <li>Existing inventory on hand vs target stockpile?</li>
+        <li>Payment terms with cotton supplier — LC or open account?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">13-week window. Offer PROD-RT2C now — do not wait for Oct. Post-Oct 31 non-actors will be flagged as secondary HURT in next run cycle.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-005 · Maharashtra Cotton Complex</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> High cotton intensity (60–70% COGS). US buyer concentration means Pima/Giza dependency is structural. T3 window = only window to build cost-advantaged stock before 16% duty return.
+      </div>
+      <ul class="ask-list">
+        <li>US buyer order book for Q1 2027 — confirmed volume?</li>
+        <li>Do you have a pre-Oct stockpile plan already in place?</li>
+        <li>Storage capacity — how many months of cotton can you hold?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">High urgency call. PROD-RT2C sizes to cotton procurement cycle. Frame as protecting margin against 16% duty increase, not as a loan.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-006 · Tamil Nadu Spinning Mill</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Fine-count specialty cotton buyer. Shankar-6 insufficient for 80s+ programs. T3 window makes Pima/Giza cost-competitive with domestic for first time in 18 months.
+      </div>
+      <ul class="ask-list">
+        <li>Specialty count range — confirm % requiring Pima/Giza vs Shankar-6?</li>
+        <li>Current supplier relationships for Pima/Giza — US or Australian origin?</li>
+        <li>Cotton supplier payment terms — any LC facility available?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">PROD-RT2C fits the specialty cotton procurement cycle. Urgency is real — this window has a hard close date of Oct 31.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-007 · Karnataka Vertical Cluster</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Cotton-heavy COGS (60–70%). T3 window is a once-a-year procurement event. Post-Oct 31, +16% duty makes Pima/Giza imports uneconomical vs domestic Shankar-6 for fine-count programs.
+      </div>
+      <ul class="ask-list">
+        <li>Current cotton inventory level — weeks of supply on hand?</li>
+        <li>Buyer order confirmation timeline for Q1 2027?</li>
+        <li>Existing WC facility — available headroom for stockpile finance?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Offer PROD-RT2C for pre-Oct cotton procurement. This is a self-liquidating facility tied to the cotton-to-garment cycle — clean credit structure.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-008 · North India Spun Yarn</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Domestic Shankar-6 supply insufficient for export-quality fine-count woven. Imported Pima/Giza at 0% duty during T3 window enables export program economics that are impossible post-Oct 31.
+      </div>
+      <ul class="ask-list">
+        <li>Current export order book — which markets, which buyers?</li>
+        <li>Cotton sourcing split — domestic vs imported last 12 months?</li>
+        <li>Do you have mill certifications for Pima/Giza programs?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Cotton procurement capital is the primary need. PROD-RT2C is the validated product — call this week before window narrows further.</div>
+      </div>
+    </div>
+    <div class="client-card yellow-card">
+      <div class="client-name">IN-VI-009 · Punjab Haryana Textile</div>
+      <div class="signal-row">
+        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
+        <span class="product-pill">PROD-RT2C</span>
+      </div>
+      <div class="why-block">
+        <strong>Why:</strong> Fully integrated, cotton-dominant COGS. BCD+AIDC waiver makes this the first opportunity in 18 months to import Pima/Giza at cost-competitive rates. Window closes Oct 31. Every week matters.
+      </div>
+      <ul class="ask-list">
+        <li>Existing bank WC facility — headroom for additional cotton finance?</li>
+        <li>Do you have cold storage / covered storage for 3–5 month cotton stockpile?</li>
+        <li>Top 3 buyers by revenue — US vs EU split?</li>
+      </ul>
+      <div class="action-block">
+        <div class="action-label">What To Do</div>
+        <div class="action-text">Highest urgency tier. PROD-RT2C + cotton stockpile plan = 13-week sprint. <em>"The 0% duty window closes Oct 31 — maximise your cotton imports now."</em></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KB Gaps -->
+<div class="kb-gap-section">
+  <div class="combo-header">
+    <span class="combo-badge">KB GAPS FLAGGED</span>
+    <span class="combo-title">Knowledge Base Gaps — Next Run Cycle</span>
+  </div>
+  <table class="kb-gap-table">
+    <thead>
+      <tr>
+        <th>Gap ID</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Route</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>KBG-001</td>
+        <td>COMBO-014 domestic/import cotton split not pre-coded — requires R1 to resolve</td>
+        <td><span class="priority-med">MEDIUM</span></td>
+        <td>KB Expand</td>
+      </tr>
+      <tr>
+        <td>KBG-002</td>
+        <td>COMBO-002 LDC graduation EBA loss timing not cross-linked to T3 event</td>
+        <td><span class="priority-med">MEDIUM</span></td>
+        <td>KB Expand</td>
+      </tr>
+      <tr>
+        <td>KBG-003</td>
+        <td>COMBO-008 CSDDD enforcement date + buyer documentation templates not in KB</td>
+        <td><span class="priority-low">LOW</span></td>
+        <td>Log</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  VA-20260804-004 · Generated by CP5-INSIGHT-ASSEMBLY v0.4 · Air8 Intelligence Platform<br>
+  13 clients with active signals · 3 KB gaps flagged · Next run: after Oct 31 event expiry check
+</footer>
+
+</body>
+</html>
