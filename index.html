@@ -1,448 +1,653 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VA-20260804-004 — Cotton Duty Waiver | Air8 Intelligence</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXT RETAIL — BD Call List</title>
 <style>
-  :root {
-    --bg: #0f1117;
-    --card: #1a1d27;
-    --card-hover: #21253a;
-    --border: #2a2d3e;
-    --text: #e2e4f0;
-    --text-muted: #8b8fa8;
-    --accent: #f97316;
-    --accent-dim: rgba(249,115,22,0.12);
-    --green: #22c55e;
-    --green-dim: rgba(34,197,94,0.12);
-    --yellow: #eab308;
-    --yellow-dim: rgba(234,179,8,0.12);
-    --red: #ef4444;
-    --red-dim: rgba(239,68,68,0.12);
-    --radius: 12px;
-    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; padding: 20px; }
+:root{--bg:#0b0e17;--p1:#111827;--p2:#1a2235;--bd:#2a3557;--tx:#e2e8f4;--mu:#7a85a8;
+--ac:#34d399;--a2:#fbbf24;--ok:#4ade80;--wn:#fbbf24;--fr:#f87171;--uk:#60a5fa;--gr:#6b7280;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'SF Pro Display',-apple-system,sans-serif;
+font-size:13px;padding:16px 12px 80px;max-width:960px;margin:0 auto;}
+.hdr{background:var(--p1);border:1px solid var(--bd);border-radius:12px;padding:18px 22px;margin-bottom:20px;}
+.hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.badge{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);color:var(--ac);
+font-size:11px;font-weight:700;letter-spacing:.8px;padding:4px 10px;border-radius:6px;text-transform:uppercase;}
+.hdr-title{font-size:18px;font-weight:700;}
+.hdr-meta{display:flex;gap:14px;flex-wrap:wrap;}
+.hdr-stat{background:var(--p2);border-radius:8px;padding:8px 14px;}
+.hdr-stat .lbl{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;}
+.hdr-stat .val{font-size:18px;font-weight:700;color:var(--ac);}
+.section{margin-bottom:28px;}
+.section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bd);}
+.section-num{background:var(--p2);border:1px solid var(--bd);color:var(--mu);font-size:11px;font-weight:700;
+width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.section-title{font-size:14px;font-weight:700;}
+.section-count{font-size:12px;color:var(--mu);margin-left:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.6px;
+color:var(--mu);background:rgba(255,255,255,.02);border-bottom:1px solid var(--bd);position:sticky;top:0;}
+td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.rank{color:var(--mu);width:32px;text-align:right;padding-right:8px;}
+.sup-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.sup-meta{font-size:11px;color:var(--mu);margin-bottom:4px;}
+.tag-stale{font-size:10px;background:rgba(251,191,36,.15);color:var(--wn);padding:1px 6px;border-radius:4px;margin-right:4px;border:1px solid rgba(251,191,36,.3);}
+.tag-own{font-size:10px;background:rgba(52,211,153,.12);color:var(--ac);padding:1px 6px;border-radius:4px;margin-right:4px;}
+.tag-aff{font-size:10px;background:rgba(96,165,250,.12);color:var(--uk);padding:1px 6px;border-radius:4px;margin-right:4px;}
+.tag-fin{font-size:10px;background:rgba(251,191,36,.1);color:var(--a2);padding:1px 6px;border-radius:4px;margin-right:4px;}
+.tier{font-size:12px;font-weight:800;padding:3px 7px;border-radius:5px;display:inline-block;}
+.tier-a{background:rgba(74,222,128,.15);color:var(--ok);}
+.tier-b{background:rgba(251,191,36,.15);color:var(--a2);}
+.tier-c{background:rgba(248,113,113,.12);color:#f87171;}
+.score{font-size:13px;font-weight:700;white-space:nowrap;}
+.pct{font-size:11px;color:var(--mu);font-weight:400;}
+.cp{display:inline-block;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.06);margin:1px 2px;font-family:monospace;font-size:11px;}
+.adv{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;}
+.adv.ok{background:rgba(74,222,128,.12);color:var(--ok);}
+.adv.warn{background:rgba(251,191,36,.12);color:var(--wn);}
+.adv.fire{background:rgba(248,113,113,.12);color:var(--fr);}
+.adv.unk{background:rgba(107,114,128,.1);color:var(--gr);}
+.fn{font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;}
+.fn.very-high,.fn.high{background:rgba(248,113,113,.12);color:var(--fr);}
+.fn.medium-high,.fn.medium{background:rgba(251,191,36,.12);color:var(--wn);}
+.fn.low{background:rgba(74,222,128,.12);color:var(--ok);}
+.fn.unknown{background:rgba(107,114,128,.1);color:var(--gr);}
+.empty{text-align:center;color:var(--mu);font-size:12px;padding:16px;}
+.rules{background:var(--p1);border:1px solid var(--bd);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--mu);}
+.rules strong{color:var(--tx);}
+.gate-note{font-size:11px;color:var(--mu);padding:8px 12px;background:rgba(255,255,255,.02);border-radius:6px;margin-bottom:12px;}
+</style></head><body>
 
-  header { max-width: 960px; margin: 0 auto 28px; }
-  .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
-  .logo { background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
-  .run-id { font-size: 12px; color: var(--text-muted); }
-  h1 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .subtitle { color: var(--text-muted); font-size: 13px; }
-  .event-banner { max-width: 960px; margin: 0 auto 24px; background: var(--accent-dim); border: 1px solid rgba(249,115,22,0.3); border-radius: var(--radius); padding: 14px 18px; }
-  .event-banner .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
-  .event-banner .event-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-  .event-banner .event-meta { font-size: 12px; color: var(--text-muted); }
-  .event-banner .tag { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; }
+<div class="hdr"><div class="hdr-top">
+<span class="badge">NEXT RETAIL</span><span class="hdr-title">BD Call List</span>
+</div><div class="hdr-meta">
+<div class="hdr-stat"><div class="lbl">Call List</div><div class="val">25</div></div>
+<div class="hdr-stat"><div class="lbl">Apparel</div><div class="val">17</div></div>
+<div class="hdr-stat"><div class="lbl">Hardgoods</div><div class="val">8</div></div>
+<div class="hdr-stat"><div class="lbl">Bench</div><div class="val">5</div></div>
+<div class="hdr-stat"><div class="lbl">Pipeline</div><div class="val">50</div></div>
+</div></div>
 
-  .stats-row { max-width: 960px; margin: 0 auto 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
-  .stat-card .num { font-size: 28px; font-weight: 800; }
-  .stat-card .num.green { color: var(--green); }
-  .stat-card .num.yellow { color: var(--yellow); }
-  .stat-card .num.orange { color: var(--accent); }
-  .stat-card .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+<div class="rules"><strong>Sort order:</strong> India first, then Pakistan, Bangladesh, China/HK, then others. Within same region: higher score first. &nbsp;|&nbsp;
+<strong>Tier A = call this week.</strong> Tier B = call this quarter. &nbsp;|&nbsp;
+<strong>Background check: pending</strong> — run adverse search on each name before calling. &nbsp;|&nbsp;
+<strong>Financing need: not yet assessed</strong> — check accounts before first call.</div>
 
-  .combo-section { max-width: 960px; margin: 0 auto 28px; }
-  .combo-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-  .combo-badge { font-size: 12px; font-weight: 700; background: var(--card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; color: var(--text-muted); }
-  .combo-badge.green { border-color: var(--green); color: var(--green); background: var(--green-dim); }
-  .combo-badge.yellow { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-dim); }
-  .combo-title { font-size: 15px; font-weight: 700; }
-  .combo-clients { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+<div class="section"><div class="section-hdr">
+<span class="section-num">1</span><span class="section-title">Call List — Top 25</span>
+<span class="section-count">region priority → score → need</span>
+</div><div class="gate-note">⚠️ Background check and financing need not yet assessed — complete research on each supplier before making outbound calls</div>
+<table><thead><tr><th>#</th><th>Supplier</th><th>Tier</th><th>Score</th><th>Components</th><th>Adverse</th><th>Fin Need</th></tr></thead>
+<tbody><tr><td class="rank">#1</td>
+        <td><div class="sup-name">STAR EXPORTS</div><div class="sup-meta">sp0000014810 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">11/11 <span class="pct">(100.0%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#2</td>
+        <td><div class="sup-name">RAAGAM EXPORTS</div><div class="sup-meta">sp0000024098 &middot; India &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span> <span class="tag-fin">PREVIOUSLY FINANCED</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">11/11 <span class="pct">(100.0%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#3</td>
+        <td><div class="sup-name">ILA HOME FASHIONS</div><div class="sup-meta">sp0000000560 &middot; India &middot; HARDGOODS</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/15 <span class="pct">(66.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#4</td>
+        <td><div class="sup-name">ABHI HOME</div><div class="sup-meta">sp0000060697 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/15 <span class="pct">(66.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#5</td>
+        <td><div class="sup-name">AMBADI ENTERPRISES LIMITED</div><div class="sup-meta">sp0000147970 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/15 <span class="pct">(66.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#6</td>
+        <td><div class="sup-name">ASIAN HANDICRAFTS</div><div class="sup-meta">sp0000208192 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/15 <span class="pct">(66.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#7</td>
+        <td><div class="sup-name">SUNSHINE (GUANGZHOU) LTD</div><div class="sup-meta">sp0000361454 &middot; China &middot; HARDGOODS</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">11/15 <span class="pct">(73.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:-1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#8</td>
+        <td><div class="sup-name">SINOSKY LIMITED</div><div class="sup-meta">sp0000001868 &middot; Hong Kong &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#9</td>
+        <td><div class="sup-name">SUNVIM GROUP CO. LTD.</div><div class="sup-meta">sp0000208904 &middot; China &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#10</td>
+        <td><div class="sup-name">SHANGHAI SUNWIN INDUSTRY GROUP CO.,LTD</div><div class="sup-meta">sp0000211432 &middot; China &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#11</td>
+        <td><div class="sup-name">ZIBO AODISEN MATERNAL & INFANT PROD</div><div class="sup-meta">sp0000357911 &middot; China &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/15 <span class="pct">(66.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Breadth:0/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#12</td>
+        <td><div class="sup-name">XIAMEN UNIBEST IMPORT AND EXPORT CO., LTD</div><div class="sup-meta">sp0000078931 &middot; China &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#13</td>
+        <td><div class="sup-name">HIGH FASHION GARMENTS INTERNATIONAL</div><div class="sup-meta">sp0000361008 &middot; Hong Kong &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:0/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#14</td>
+        <td><div class="sup-name">CONG TY TNHH BIZMAX</div><div class="sup-meta">sp0000010219 &middot; Vietnam &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">11/15 <span class="pct">(73.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:-1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#15</td>
+        <td><div class="sup-name">CONG TY TNHH THAO NGUYEN</div><div class="sup-meta">sp0000048051 &middot; Vietnam &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">11/15 <span class="pct">(73.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:-1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#16</td>
+        <td><div class="sup-name">CONG TY TNHH MAY HUALIDA THAI BINH</div><div class="sup-meta">sp0000000226 &middot; Vietnam &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#17</td>
+        <td><div class="sup-name">PT CARTINI LINGERIE INDONESIA</div><div class="sup-meta">sp0000187667 &middot; Indonesia &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#18</td>
+        <td><div class="sup-name">REGAL CALIBRE LK</div><div class="sup-meta">sp0000359394 &middot; Sri Lanka &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#19</td>
+        <td><div class="sup-name">ACE APPARELS</div><div class="sup-meta">sp0000360926 &middot; Sri Lanka &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#20</td>
+        <td><div class="sup-name">GARMENT 10 CORPORATION - JOINT STOCK COMPANY</div><div class="sup-meta">sp0000200800 &middot; Vietnam &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:0/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#21</td>
+        <td><div class="sup-name">MARSYLKA MANUFACTURING LANKA</div><div class="sup-meta">sp0000350107 &middot; Sri Lanka &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#22</td>
+        <td><div class="sup-name">GANDHARI GARMENTS</div><div class="sup-meta">sp0000360972 &middot; Sri Lanka &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:0/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#23</td>
+        <td><div class="sup-name">MIAMI EXPORTS</div><div class="sup-meta">sp0000361054 &middot; Sri Lanka &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#24</td>
+        <td><div class="sup-name">SPENCER INDUSTRIES</div><div class="sup-meta">sp0000361148 &middot; United States &middot; APPAREL</div></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">10/11 <span class="pct">(90.9%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#25</td>
+        <td><div class="sup-name">REGINA MIRACLE INTERNATIONAL (GROUP) LTD.</div><div class="sup-meta">sp0000107546 &middot; Hong Kong (Regina Miracle International (Group) Limited Is Based In Hong Kong And Functions As Part Of The Hong Kong-Headquartered Regina Miracle Group) &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-a">A</span></td>
+        <td class="score">9/11 <span class="pct">(81.8%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr></tbody></table></div>
 
-  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-  .client-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: border-color 0.15s, background 0.15s; }
-  .client-card:hover { border-color: var(--accent); background: var(--card-hover); }
-  .client-card.green-card { border-left: 3px solid var(--green); }
-  .client-card.yellow-card { border-left: 3px solid var(--yellow); }
-
-  .client-name { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-  .signal-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .signal-pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
-  .pill-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-  .pill-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
-  .product-pill { font-size: 11px; background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(249,115,22,0.3); padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-
-  .why-block { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
-  .why-block strong { color: var(--text); }
-
-  .ask-list { list-style: none; padding: 0; margin-bottom: 10px; }
-  .ask-list li { font-size: 12px; color: var(--text-muted); padding: 3px 0 3px 16px; position: relative; }
-  .ask-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
-
-  .action-block { background: var(--accent-dim); border-radius: 8px; padding: 10px 12px; }
-  .action-block .action-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
-  .action-block .action-text { font-size: 12px; color: var(--text); line-height: 1.5; }
-
-  .kb-gap-section { max-width: 960px; margin: 0 auto 28px; }
-  .kb-gap-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
-  .kb-gap-table th { text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
-  .kb-gap-table td { padding: 10px 14px; font-size: 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
-  .kb-gap-table tr:last-child td { border-bottom: none; }
-  .kb-gap-table .priority-high { color: var(--red); font-weight: 600; }
-  .kb-gap-table .priority-med { color: var(--yellow); font-weight: 600; }
-  .kb-gap-table .priority-low { color: var(--text-muted); }
-
-  footer { max-width: 960px; margin: 0 auto; text-align: center; font-size: 11px; color: var(--text-muted); padding: 20px 0; border-top: 1px solid var(--border); }
-
-  @media (max-width: 600px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .cards-grid { grid-template-columns: 1fr; }
-    h1 { font-size: 17px; }
-  }
-</style>
-</head>
-<body>
-
-<header>
-  <div class="header-top">
-    <span class="logo">AIR8</span>
-    <span class="run-id">VA-20260804-004 · Aug 4, 2026</span>
-  </div>
-  <h1>India Cotton Duty Waiver — COMBO Intelligence</h1>
-  <p class="subtitle">5 COMBOs · 34 clients matched · CP5 Insight Assembly v0.4</p>
-</header>
-
-<div class="event-banner">
-  <div class="label">Active Event · Expires Oct 31, 2026</div>
-  <div class="event-name">India BCD+AIDC Cotton Duty Waiver — HS 5201<span class="tag">13 WEEKS LEFT</span></div>
-  <div class="event-meta">Section 301 + India BCD/AIDC · Countries: India, Pakistan, Bangladesh · Sourcing shift in progress</div>
+<div class="section"><div class="section-hdr">
+<span class="section-num">2</span><span class="section-title">Bench — Backup List</span>
+<span class="section-count">Good suppliers that didn’t make the top 20 — promote if a call list slot opens</span>
 </div>
+<table><thead><tr><th>#</th><th>Supplier</th><th>Tier</th><th>Score</th><th>Components</th><th>Adverse</th><th>Fin Need</th></tr></thead>
+<tbody><tr><td class="rank">#1</td>
+        <td><div class="sup-name">AFFLATUS INTERNATIONAL</div><div class="sup-meta">sp0000000022 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#2</td>
+        <td><div class="sup-name">AMBERTEX UNIVERSAL EXPORT</div><div class="sup-meta">sp0000000042 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#3</td>
+        <td><div class="sup-name">DHRUV GLOBALS LIMITED</div><div class="sup-meta">sp0000000316 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#4</td>
+        <td><div class="sup-name">KAVSET EXPORTS PRIVATE LIMITED</div><div class="sup-meta">sp0000000639 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#5</td>
+        <td><div class="sup-name">SAKTHI INFRA TEX PRIVATE LIMITED</div><div class="sup-meta">sp0000001006 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr></tbody></table></div>
 
-<div class="stats-row">
-  <div class="stat-card">
-    <div class="num green">4</div>
-    <div class="lbl">Beneficiary Clients</div>
-  </div>
-  <div class="stat-card">
-    <div class="num yellow">9</div>
-    <div class="lbl">Window Opportunity</div>
-  </div>
-  <div class="stat-card">
-    <div class="num orange">8</div>
-    <div class="lbl">Monitor</div>
-  </div>
-  <div class="stat-card">
-    <div class="num" style="color:var(--text-muted)">2</div>
-    <div class="lbl">Insulated</div>
-  </div>
+<div class="section"><div class="section-hdr">
+<span class="section-num">3</span><span class="section-title">Pipeline — Remaining Suppliers</span>
+<span class="section-count">Lower scored or inactive suppliers — revisit next quarter</span>
 </div>
+<table><thead><tr><th>#</th><th>Supplier</th><th>Tier</th><th>Score</th><th>Components</th><th>Adverse</th><th>Fin Need</th></tr></thead>
+<tbody><tr><td class="rank">#1</td>
+        <td><div class="sup-name">AFFLATUS INTERNATIONAL</div><div class="sup-meta">sp0000000022 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#2</td>
+        <td><div class="sup-name">AMBERTEX UNIVERSAL EXPORT</div><div class="sup-meta">sp0000000042 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#3</td>
+        <td><div class="sup-name">ARVIND SMART TEXTILES LIMITED</div><div class="sup-meta">sp0000000073 &middot; India &middot; APPAREL</div> <span class="tag-stale">INACTIVE &gt;6MO</span></td>
+        <td><span class="tier tier-c">C</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#4</td>
+        <td><div class="sup-name">DHRUV GLOBALS LIMITED</div><div class="sup-meta">sp0000000316 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#5</td>
+        <td><div class="sup-name">KAVSET EXPORTS PRIVATE LIMITED</div><div class="sup-meta">sp0000000639 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#6</td>
+        <td><div class="sup-name">SAKTHI INFRA TEX PRIVATE LIMITED</div><div class="sup-meta">sp0000001006 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#7</td>
+        <td><div class="sup-name">SWIFT MERCHANDISE</div><div class="sup-meta">sp0000001161 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#8</td>
+        <td><div class="sup-name">DK INDUSTRIES (PVT) LTD</div><div class="sup-meta">sp0000002493 &middot; India &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#9</td>
+        <td><div class="sup-name">ARVIND FASHIONS</div><div class="sup-meta">sp0000002639 &middot; India &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#10</td>
+        <td><div class="sup-name">SARAN GARMENTS</div><div class="sup-meta">sp0000023177 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#11</td>
+        <td><div class="sup-name">POPPYS KNITWEAR PRIVATE LIMITED</div><div class="sup-meta">sp0000024081 &middot; India &middot; APPAREL</div> <span class="tag-stale">INACTIVE &gt;6MO</span></td>
+        <td><span class="tier tier-c">C</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#12</td>
+        <td><div class="sup-name">VENTURES</div><div class="sup-meta">sp0000024831 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#13</td>
+        <td><div class="sup-name">MKM KNIT CREATION</div><div class="sup-meta">sp0000025065 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#14</td>
+        <td><div class="sup-name">PUNIHANI INTERNATIONAL</div><div class="sup-meta">sp0000025390 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:0/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#15</td>
+        <td><div class="sup-name">DILEEP CRAFTS PRIVATE LIMITED</div><div class="sup-meta">sp0000049122 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:0/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#16</td>
+        <td><div class="sup-name">PALM FIBRE (INDIA) PRIVATE LIMITED</div><div class="sup-meta">sp0000081592 &middot; India &middot; HARDGOODS</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#17</td>
+        <td><div class="sup-name">AMAZING EXPORT CORPORATION</div><div class="sup-meta">sp0000109146 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#18</td>
+        <td><div class="sup-name">ANG Exports</div><div class="sup-meta">sp0000111941 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:3/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:0/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#19</td>
+        <td><div class="sup-name">INDO COUNT INDUSTRIES LIMITED</div><div class="sup-meta">sp0000148504 &middot; India &middot; HARDGOODS</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/15 <span class="pct">(53.3%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#20</td>
+        <td><div class="sup-name">SILK N FAB PRIVATE LIMITED</div><div class="sup-meta">sp0000149408 &middot; India &middot; APPAREL</div> <span class="tag-stale">INACTIVE &gt;6MO</span></td>
+        <td><span class="tier tier-c">C</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#21</td>
+        <td><div class="sup-name">IIPI GLOBAL LLP</div><div class="sup-meta">sp0000157765 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#22</td>
+        <td><div class="sup-name">CENTURY APPARELS LTD</div><div class="sup-meta">sp0000360644 &middot; India &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">8/11 <span class="pct">(72.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#23</td>
+        <td><div class="sup-name">E-LAND APPAREL LIMITED</div><div class="sup-meta">sp0000000361 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#24</td>
+        <td><div class="sup-name">JAIDKA WOOLLEN AND HOISIERY MILLS PRIVATE LIMITED</div><div class="sup-meta">sp0000000596 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#25</td>
+        <td><div class="sup-name">OPERA GLOBAL PRIVATE LIMITED</div><div class="sup-meta">sp0000000880 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#26</td>
+        <td><div class="sup-name">RADIAANT EXPOVISION PRIVATE LIMITED</div><div class="sup-meta">sp0000000965 &middot; India &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#27</td>
+        <td><div class="sup-name">STRANGE EXPORTS PVT LTD</div><div class="sup-meta">sp0000001139 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:0/2</span> <span class="cp">CatMix:0/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#28</td>
+        <td><div class="sup-name">VNS ACCESSORIES (INDIA) LLP</div><div class="sup-meta">sp0000001263 &middot; India &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#29</td>
+        <td><div class="sup-name">MEENU CREATION LLP</div><div class="sup-meta">sp0000001662 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#30</td>
+        <td><div class="sup-name">PREM TEXTILES (INTERNATIONAL) PRIVATE LIMITED</div><div class="sup-meta">sp0000002632 &middot; India &middot; HARDGOODS</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/15 <span class="pct">(46.7%)</span></td>
+        <td><span class="cp">Act:3/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#31</td>
+        <td><div class="sup-name">RANGER APPAREL EXPORT PRIVATE LIMITED</div><div class="sup-meta">sp0000024259 &middot; India &middot; APPAREL</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#32</td>
+        <td><div class="sup-name">BHUVANESWARI TEX</div><div class="sup-meta">sp0000026143 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#33</td>
+        <td><div class="sup-name">BAZAAR KONNECTIONS</div><div class="sup-meta">sp0000028718 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/15 <span class="pct">(46.7%)</span></td>
+        <td><span class="cp">Act:3/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#34</td>
+        <td><div class="sup-name">KANIKA EXPORTS</div><div class="sup-meta">sp0000052995 &middot; India &middot; APPAREL</div> <span class="tag-stale">INACTIVE &gt;6MO</span></td>
+        <td><span class="tier tier-c">C</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#35</td>
+        <td><div class="sup-name">RAKHEJA ENTERPRISES LLP</div><div class="sup-meta">sp0000056408 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#36</td>
+        <td><div class="sup-name">VINTY IMPEX PVT LTD</div><div class="sup-meta">sp0000076324 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:0/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#37</td>
+        <td><div class="sup-name">GENIEMODE GLOBAL PRIVATE LIMITED</div><div class="sup-meta">sp0000080406 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:0/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#38</td>
+        <td><div class="sup-name">MUSTANG ENTERPRISES</div><div class="sup-meta">sp0000083146 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#39</td>
+        <td><div class="sup-name">ORIENT CRAFT FASHION INDUSTRIES LIMITED</div><div class="sup-meta">sp0000099951 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#40</td>
+        <td><div class="sup-name">ARVIND LIMITED</div><div class="sup-meta">sp0000109789 &middot; India &middot; APPAREL</div> <span class="tag-stale">INACTIVE &gt;6MO</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-c">C</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#41</td>
+        <td><div class="sup-name">Aquarelle India Private Limited</div><div class="sup-meta">sp0000112198 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#42</td>
+        <td><div class="sup-name">VAMANI OVERSEAS PRIVATE LIMITED</div><div class="sup-meta">sp0000135808 &middot; India &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-fin">PREVIOUSLY FINANCED</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:1/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#43</td>
+        <td><div class="sup-name">SEET KAMAL PRIVATE LIMITED</div><div class="sup-meta">sp0000147353 &middot; India &middot; HARDGOODS</div> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/15 <span class="pct">(46.7%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:0/2</span> <span class="cp">Ticket:0/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#44</td>
+        <td><div class="sup-name">JIVA DESIGNS PVT. LTD.</div><div class="sup-meta">sp0000148526 &middot; India &middot; APPAREL</div> <span class="tag-own">ALREADY A CLIENT</span> <span class="tag-aff">REFERRED BY LF</span></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#45</td>
+        <td><div class="sup-name">SARITA HANDA EXPORTS PRIVATE LIMITED</div><div class="sup-meta">sp0000149378 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/15 <span class="pct">(46.7%)</span></td>
+        <td><span class="cp">Act:3/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:1/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:2/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#46</td>
+        <td><div class="sup-name">SHALIMAR TANNING COMPANY</div><div class="sup-meta">sp0000212846 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/15 <span class="pct">(46.7%)</span></td>
+        <td><span class="cp">Act:3/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:0/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#47</td>
+        <td><div class="sup-name">RAJ INTERNATIONAL APPARELS PRIVATE LIMITED</div><div class="sup-meta">sp0000213460 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:2/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:0/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#48</td>
+        <td><div class="sup-name">SREEKUMAAR TEXIND CORPORATION</div><div class="sup-meta">sp0000297564 &middot; India &middot; APPAREL</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:4/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Density:1/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#49</td>
+        <td><div class="sup-name">A C BROTHERS</div><div class="sup-meta">sp0000360878 &middot; India &middot; HARDGOODS</div></td>
+        <td><span class="tier tier-b">B</span></td>
+        <td class="score">7/15 <span class="pct">(46.7%)</span></td>
+        <td><span class="cp">Act:3/4</span> <span class="cp">Growth:0/3</span> <span class="cp">Breadth:3/3</span> <span class="cp">Buyer:0/2</span> <span class="cp">Cat:0/2</span> <span class="cp">Ticket:1/1</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr>
+<tr><td class="rank">#50</td>
+        <td><div class="sup-name">PATRONUS APPARELS PRIVATE LIMITED</div><div class="sup-meta">sp0000361091 &middot; India &middot; APPAREL</div> <span class="tag-stale">INACTIVE &gt;6MO</span></td>
+        <td><span class="tier tier-c">C</span></td>
+        <td class="score">7/11 <span class="pct">(63.6%)</span></td>
+        <td><span class="cp">Act:0/4</span> <span class="cp">Growth:3/3</span> <span class="cp">Density:2/2</span> <span class="cp">CatMix:2/2</span></td>
+        <td><span class="adv unk">Not checked</span></td>
+        <td><span class="fn unknown">Not assessed</span></td></tr></tbody></table></div>
 
-<!-- COMBO-009 · Pakistan Home Textile · 4 clients · BENEFICIARY -->
-<div class="combo-section">
-  <div class="combo-header">
-    <span class="combo-badge green">🟢 BENEFICIARY</span>
-    <span class="combo-title">COMBO-009 · Pakistan Home Textile</span>
-    <span class="combo-clients">4 clients matched</span>
-  </div>
-  <div class="cards-grid">
-    <div class="client-card green-card">
-      <div class="client-name">PK-HT-001 · Punjab Cotton Mills</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
-        <span class="product-pill">PROD-ARP</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Domestic Punjab cotton sourcing — zero India import dependency. Structural cost advantage widens as Indian mills absorb +16% post-Oct 31 cliff. EU/US buyer allocation decisions for Q1 2027 are imminent.
-      </div>
-      <ul class="ask-list">
-        <li>EU/US buyer signalling new programme allocation for Q1 2027?</li>
-        <li>Current mill utilisation — headroom for +20–30% volume?</li>
-        <li>Payment terms on new programmes — OA or L/C?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Call now — pre-position PROD-ARP before capacity locks to existing buyers. Frame as receivables scaling solution, not borrowing.</div>
-      </div>
-    </div>
-    <div class="client-card green-card">
-      <div class="client-name">PK-HT-002 · Faisalabad Home Textile</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
-        <span class="product-pill">PROD-ARP</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Zero cotton import exposure. PKR stabilised. As India mills face input cost inflation post-Oct 31, Pakistan exporters gain 5–8% FOB cost advantage on EU/US buyers already reviewing allocation.
-      </div>
-      <ul class="ask-list">
-        <li>Which EU/US buyer most likely to increase allocation first?</li>
-        <li>Mill capacity headroom for incoming volume ramp?</li>
-        <li>Current OB base vs max utilisation?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Pre-position PROD-ARP before Q1 2027 buyer decisions lock. Talk track: <em>"India cotton costs are rising — you're the natural beneficiary."</em></div>
-      </div>
-    </div>
-    <div class="client-card green-card">
-      <div class="client-name">PK-HT-003 · Karachi Textile Export</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
-        <span class="product-pill">PROD-ARP</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Pakistan garment exports at $4.18B FY26 (+5.5% YoY). Domestic cotton buffer means no T3 exposure. Post-Oct 31 India disadvantage = structural PK win on EU/US home textile sourcing.
-      </div>
-      <ul class="ask-list">
-        <li>Q1 2027 order book strength — confirmed vs pipeline?</li>
-        <li>Home textile only or apparel diversification in progress?</li>
-        <li>Receivables concentration — top buyer %?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Call this cycle. PROD-ARP scales with PO ramp. No urgency pressure from T3 clock — structural tailwind is the angle.</div>
-      </div>
-    </div>
-    <div class="client-card green-card">
-      <div class="client-name">PK-HT-004 · Lahore Cotton & Home</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-green">🟢 BENEFICIARY</span>
-        <span class="product-pill">PROD-ARP</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Domestic sourcing fully insulated. USAID Cotton Connect programme participation signals quality compliance. Competitive advantage accelerates as India mills who didn't stockpile face Oct 31 cost cliff.
-      </div>
-      <ul class="ask-list">
-        <li>Current WC headroom vs near-term PO ramp?</li>
-        <li>Top 3 buyers by revenue % — EU/US split?</li>
-        <li>Any capacity expansion planned for 2027?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Frame PROD-ARP as scaling receivables against growing EU/US book. No T3 urgency needed — structural beneficiary is the pitch.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- COMBO-003 · India Large Vertical · 9 clients · WINDOW OPPORTUNITY -->
-<div class="combo-section">
-  <div class="combo-header">
-    <span class="combo-badge yellow">🟡 WINDOW OPPORTUNITY</span>
-    <span class="combo-title">COMBO-003 · India Large Vertical Integrator</span>
-    <span class="combo-clients">9 clients matched · 13 weeks left</span>
-  </div>
-  <div class="cards-grid">
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-001 · Large Vertical Mill</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Fully integrated cotton buyer where cotton = 60–70% of COGS. BCD+AIDC waiver makes Pima/Giza imports duty-free until Oct 31. Industry estimates 35–45 lakh bales will be imported during window. Binding constraint: working capital.
-      </div>
-      <ul class="ask-list">
-        <li>Q1 2027 PO volume confirmed — which buyers, approximate bales?</li>
-        <li>Current WC position — stockpile plan target volume?</li>
-        <li>Storage available for 3–5 months of cotton inventory?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Call this week. 13 weeks is short for procurement + logistics + financing. Frame PROD-RT2C as capital deployment, not borrowing. Post-Oct 31: non-actors face secondary HURT signal.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-002 · Integrated Spinner-Weaver</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Pima/Giza dependency for fine-count programs makes T3 window critical. Shankar-6 cannot replace for counts above 60s. Bulk procurement ahead of Oct 31 cliff requires WC facility.
-      </div>
-      <ul class="ask-list">
-        <li>% of cotton program from imported Pima/Giza vs domestic Shankar-6?</li>
-        <li>Target stockpile volume before Oct 31?</li>
-        <li>Existing bank OD or WC facility — headroom?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Offer PROD-RT2C to finance pre-Oct stockpile. <em>"The 0% duty window closes Oct 31 — maximise imports now."</em></div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-003 · South India Vertical</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Fine-count export programs (60s+) require Pima/Giza — domestic Shankar-6 insufficient. T3 duty window = only opportunity to build cost-advantaged stockpile before 16% duty returns.
-      </div>
-      <ul class="ask-list">
-        <li>Fine-count program volume as % of total — Pima vs Giza split?</li>
-        <li>US vs EU buyer split on fine-count orders?</li>
-        <li>Current cotton procurement cycle — cash or credit?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Cotton procurement capital is the fit. PROD-RT2C self-liquidates within cotton → yarn → fabric → garment cycle. High urgency given timeline.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-004 · Gujarat Integrated Textile</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Cotton cost represents 60–70% of COGS for this vertical. T3 window is the only mechanism to import Pima/Giza at 0% duty. Post-cliff: +16% input cost on all imports. Every week of inaction reduces stockpile potential.
-      </div>
-      <ul class="ask-list">
-        <li>Current bale-equivalent procurement target for Q1 2027?</li>
-        <li>Existing inventory on hand vs target stockpile?</li>
-        <li>Payment terms with cotton supplier — LC or open account?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">13-week window. Offer PROD-RT2C now — do not wait for Oct. Post-Oct 31 non-actors will be flagged as secondary HURT in next run cycle.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-005 · Maharashtra Cotton Complex</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> High cotton intensity (60–70% COGS). US buyer concentration means Pima/Giza dependency is structural. T3 window = only window to build cost-advantaged stock before 16% duty return.
-      </div>
-      <ul class="ask-list">
-        <li>US buyer order book for Q1 2027 — confirmed volume?</li>
-        <li>Do you have a pre-Oct stockpile plan already in place?</li>
-        <li>Storage capacity — how many months of cotton can you hold?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">High urgency call. PROD-RT2C sizes to cotton procurement cycle. Frame as protecting margin against 16% duty increase, not as a loan.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-006 · Tamil Nadu Spinning Mill</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Fine-count specialty cotton buyer. Shankar-6 insufficient for 80s+ programs. T3 window makes Pima/Giza cost-competitive with domestic for first time in 18 months.
-      </div>
-      <ul class="ask-list">
-        <li>Specialty count range — confirm % requiring Pima/Giza vs Shankar-6?</li>
-        <li>Current supplier relationships for Pima/Giza — US or Australian origin?</li>
-        <li>Cotton supplier payment terms — any LC facility available?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">PROD-RT2C fits the specialty cotton procurement cycle. Urgency is real — this window has a hard close date of Oct 31.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-007 · Karnataka Vertical Cluster</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Cotton-heavy COGS (60–70%). T3 window is a once-a-year procurement event. Post-Oct 31, +16% duty makes Pima/Giza imports uneconomical vs domestic Shankar-6 for fine-count programs.
-      </div>
-      <ul class="ask-list">
-        <li>Current cotton inventory level — weeks of supply on hand?</li>
-        <li>Buyer order confirmation timeline for Q1 2027?</li>
-        <li>Existing WC facility — available headroom for stockpile finance?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Offer PROD-RT2C for pre-Oct cotton procurement. This is a self-liquidating facility tied to the cotton-to-garment cycle — clean credit structure.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-008 · North India Spun Yarn</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Domestic Shankar-6 supply insufficient for export-quality fine-count woven. Imported Pima/Giza at 0% duty during T3 window enables export program economics that are impossible post-Oct 31.
-      </div>
-      <ul class="ask-list">
-        <li>Current export order book — which markets, which buyers?</li>
-        <li>Cotton sourcing split — domestic vs imported last 12 months?</li>
-        <li>Do you have mill certifications for Pima/Giza programs?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Cotton procurement capital is the primary need. PROD-RT2C is the validated product — call this week before window narrows further.</div>
-      </div>
-    </div>
-    <div class="client-card yellow-card">
-      <div class="client-name">IN-VI-009 · Punjab Haryana Textile</div>
-      <div class="signal-row">
-        <span class="signal-pill pill-yellow">🟡 WINDOW OPPORTUNITY</span>
-        <span class="product-pill">PROD-RT2C</span>
-      </div>
-      <div class="why-block">
-        <strong>Why:</strong> Fully integrated, cotton-dominant COGS. BCD+AIDC waiver makes this the first opportunity in 18 months to import Pima/Giza at cost-competitive rates. Window closes Oct 31. Every week matters.
-      </div>
-      <ul class="ask-list">
-        <li>Existing bank WC facility — headroom for additional cotton finance?</li>
-        <li>Do you have cold storage / covered storage for 3–5 month cotton stockpile?</li>
-        <li>Top 3 buyers by revenue — US vs EU split?</li>
-      </ul>
-      <div class="action-block">
-        <div class="action-label">What To Do</div>
-        <div class="action-text">Highest urgency tier. PROD-RT2C + cotton stockpile plan = 13-week sprint. <em>"The 0% duty window closes Oct 31 — maximise your cotton imports now."</em></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- KB Gaps -->
-<div class="kb-gap-section">
-  <div class="combo-header">
-    <span class="combo-badge">KB GAPS FLAGGED</span>
-    <span class="combo-title">Knowledge Base Gaps — Next Run Cycle</span>
-  </div>
-  <table class="kb-gap-table">
-    <thead>
-      <tr>
-        <th>Gap ID</th>
-        <th>Description</th>
-        <th>Priority</th>
-        <th>Route</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>KBG-001</td>
-        <td>COMBO-014 domestic/import cotton split not pre-coded — requires R1 to resolve</td>
-        <td><span class="priority-med">MEDIUM</span></td>
-        <td>KB Expand</td>
-      </tr>
-      <tr>
-        <td>KBG-002</td>
-        <td>COMBO-002 LDC graduation EBA loss timing not cross-linked to T3 event</td>
-        <td><span class="priority-med">MEDIUM</span></td>
-        <td>KB Expand</td>
-      </tr>
-      <tr>
-        <td>KBG-003</td>
-        <td>COMBO-008 CSDDD enforcement date + buyer documentation templates not in KB</td>
-        <td><span class="priority-low">LOW</span></td>
-        <td>Log</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<footer>
-  VA-20260804-004 · Generated by CP5-INSIGHT-ASSEMBLY v0.4 · Air8 Intelligence Platform<br>
-  13 clients with active signals · 3 KB gaps flagged · Next run: after Oct 31 event expiry check
-</footer>
-
-</body>
-</html>
+</body></html>
