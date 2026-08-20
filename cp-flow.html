@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air8 Validation Flow — CP0→CP5 Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --surface-2: #1e1e24;
+      --surface-3: #252530;
+      --border: #2e2e3a;
+      --orange: #f97316;
+      --orange-dim: rgba(249,115,22,0.15);
+      --orange-border: rgba(249,115,22,0.4);
+      --blue: #38bdf8;
+      --blue-dim: rgba(56,189,248,0.12);
+      --blue-border: rgba(56,189,248,0.35);
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.12);
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --text: #e2e2e8;
+      --text-muted: #7a7a8c;
+      --text-dim: #4a4a5c;
+      --font: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-dot {
+      width: 8px; height: 8px; background: var(--orange); border-radius: 50%;
+    }
+    .header-title {
+      font-size: 14px; font-weight: 600; color: var(--text);
+      letter-spacing: 0.02em;
+    }
+    .header-sub {
+      font-size: 11px; color: var(--text-muted);
+      font-family: var(--mono);
+    }
+    .badge {
+      background: var(--orange-dim);
+      border: 1px solid var(--orange-border);
+      color: var(--orange);
+      font-size: 10px; font-weight: 600; padding: 3px 8px;
+      border-radius: 20px; letter-spacing: 0.05em;
+    }
+
+    /* ── Layout ─────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 57px);
+    }
+
+    /* ── Step Rail (left) ───────────────────── */
+    .rail {
+      width: 220px;
+      min-width: 220px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 57px;
+      height: calc(100vh - 57px);
+      overflow-y: auto;
+    }
+    .rail-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--text-dim); text-transform: uppercase;
+      padding: 0 20px 12px;
+    }
+    .rail-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+    .rail-step:hover { background: rgba(255,255,255,0.03); }
+    .rail-step.active {
+      background: var(--orange-dim);
+      border-left-color: var(--orange);
+    }
+    .rail-step.done {
+      border-left-color: var(--green);
+    }
+    .rail-step-n {
+      width: 20px; min-width: 20px;
+      height: 20px; border-radius: 50%;
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      font-family: var(--mono);
+      margin-top: 2px;
+    }
+    .rail-step.active .rail-step-n { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .rail-step.done .rail-step-n { background: var(--green); border-color: var(--green); color: #000; }
+    .rail-step.done .rail-step-n::after { content: '✓'; font-size: 9px; }
+    .rail-step.done .rail-step-n { font-size: 0; }
+    .rail-step-label { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+    .rail-step.active .rail-step-label { color: var(--text); font-weight: 500; }
+    .rail-step.done .rail-step-label { color: var(--text-dim); }
+    .rail-divider {
+      height: 1px; background: var(--border); margin: 8px 20px;
+    }
+
+    /* ── Main Panel (right) ─────────────────── */
+    .main {
+      flex: 1;
+      padding: 32px 40px;
+      max-width: 820px;
+    }
+
+    /* ── Step Header ────────────────────────── */
+    .step-header {
+      margin-bottom: 24px;
+    }
+    .step-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--orange); text-transform: uppercase;
+      margin-bottom: 6px;
+      font-family: var(--mono);
+    }
+    .step-title {
+      font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px;
+    }
+    .step-kb {
+      font-size: 11px; color: var(--text-muted);
+      font-family: var(--mono);
+    }
+    .step-kb span {
+      background: var(--blue-dim);
+      border: 1px solid var(--blue-border);
+      color: var(--blue);
+      padding: 1px 6px; border-radius: 4px;
+      font-size: 10px;
+    }
+
+    /* ── Message Bubble ──────────────────────── */
+    .msg {
+      margin-bottom: 20px;
+    }
+    .msg-agent {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .avatar {
+      width: 32px; min-width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      margin-top: 2px;
+    }
+    .avatar-agent {
+      background: var(--orange);
+      color: #fff;
+    }
+    .avatar-user {
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .msg-body {
+      flex: 1;
+    }
+    .msg-name {
+      font-size: 12px; font-weight: 600; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .msg-text {
+      font-size: 14px; color: var(--text);
+      line-height: 1.7;
+    }
+    .msg-text p { margin-bottom: 8px; }
+    .msg-text p:last-child { margin-bottom: 0; }
+
+    /* ── Code / Data Block ───────────────────── */
+    .code-block {
+      background: var(--blue-dim);
+      border: 1px solid var(--blue-border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: #93c5fd;
+      margin: 10px 0;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    .code-block.green {
+      background: var(--green-dim);
+      border-color: rgba(74,222,128,0.3);
+      color: #86efac;
+    }
+    .code-block.yellow {
+      background: rgba(251,191,36,0.08);
+      border-color: rgba(251,191,36,0.3);
+      color: #fde68a;
+    }
+
+    /* ── Results Grid ────────────────────────── */
+    .results-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .result-chip {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: var(--mono);
+      color: var(--text);
+    }
+    .result-chip .n { color: var(--orange); font-weight: 700; }
+    .result-chip .label { color: var(--text-muted); margin-left: 4px; }
+
+    /* ── Supplier List ───────────────────────── */
+    .supplier-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 12.5px;
+      font-family: var(--mono);
+    }
+    .supplier-table th {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 7px 10px;
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .supplier-table td {
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      color: var(--text);
+    }
+    .supplier-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    .tier-a { color: var(--green); font-weight: 600; }
+    .tier-b { color: var(--yellow); font-weight: 600; }
+    .tier-c { color: var(--text-muted); }
+    .tag {
+      display: inline-block;
+      background: var(--orange-dim);
+      border: 1px solid var(--orange-border);
+      color: var(--orange);
+      font-size: 9px; padding: 1px 5px; border-radius: 3px;
+      font-weight: 600; letter-spacing: 0.05em;
+    }
+    .tag-red {
+      background: rgba(248,113,113,0.12);
+      border-color: rgba(248,113,113,0.3);
+      color: var(--red);
+    }
+    .tag-blue {
+      background: var(--blue-dim);
+      border-color: var(--blue-border);
+      color: var(--blue);
+    }
+
+    /* ── Buttons ─────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      border: 1px solid;
+      transition: all 0.15s;
+      font-family: var(--font);
+    }
+    .btn-primary {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #ea6c0f; }
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
+
+    /* ── Scenario Selection ─────────────────── */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .scenario-card {
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .scenario-card:hover { border-color: var(--orange-border); background: var(--orange-dim); }
+    .scenario-card.selected { border-color: var(--orange); background: var(--orange-dim); }
+    .scenario-icon { font-size: 24px; margin-bottom: 8px; }
+    .scenario-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .scenario-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Phase Separator ─────────────────────── */
+    .phase-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      color: var(--text-dim); text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+      margin: 24px 0 16px;
+    }
+    .phase-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── Summary Card ───────────────────────── */
+    .summary-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    .summary-card-title {
+      font-size: 12px; font-weight: 700; color: var(--orange);
+      letter-spacing: 0.05em; margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+    }
+    .summary-item {
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .summary-item .num {
+      font-size: 20px; font-weight: 700;
+      color: var(--orange); font-family: var(--mono);
+    }
+    .summary-item .desc { font-size: 11px; color: var(--text-muted); }
+
+    /* ── Footer note ─────────────────────────── */
+    .footer-note {
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      padding-top: 20px;
+      font-size: 11px; color: var(--text-dim);
+      font-family: var(--mono);
+      line-height: 1.8;
+    }
+
+    /* ── Mobile ──────────────────────────────── */
+    @media (max-width: 700px) {
+      .rail { display: none; }
+      .main { padding: 20px 16px; }
+      .scenario-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Scrollbar ──────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="header-title">Air8 Validation Agent</div>
+      <div class="header-sub">CP0 → CP5 · Leads Scoring Flow</div>
+    </div>
+  </div>
+  <div class="badge">DEMO · FICTIONAL DATA</div>
+</div>
+
+<div class="layout">
+
+  <!-- ── Rail (left) ── -->
+  <nav class="rail">
+    <div class="rail-title">Pipeline Steps</div>
+
+    <div class="rail-step done" onclick="jumpTo('scenario')">
+      <div class="rail-step-n">✓</div>
+      <div class="rail-step-label">Scenario Selection</div>
+    </div>
+    <div class="rail-divider"></div>
+
+    <div class="rail-step done" onclick="jumpTo('cp0')">
+      <div class="rail-step-n">✓</div>
+      <div class="rail-step-label">CP0 · Data Load</div>
+    </div>
+    <div class="rail-step done" onclick="jumpTo('cp1')">
+      <div class="rail-step-n">✓</div>
+      <div class="rail-step-label">CP1 · Vertical Routing</div>
+    </div>
+    <div class="rail-step done" onclick="jumpTo('cp2')">
+      <div class="rail-step-n">✓</div>
+      <div class="rail-step-label">CP2 · Scoring</div>
+    </div>
+    <div class="rail-step done" onclick="jumpTo('cp3')">
+      <div class="rail-step-n">✓</div>
+      <div class="rail-step-label">CP3 · Gate Checks</div>
+    </div>
+    <div class="rail-step active" onclick="jumpTo('cp4')">
+      <div class="rail-step-n">4</div>
+      <div class="rail-step-label">CP4 · Sort &amp; Call List</div>
+    </div>
+    <div class="rail-step" onclick="jumpTo('cp45')">
+      <div class="rail-step-n">4.5</div>
+      <div class="rail-step-label">CP4.5 · Research</div>
+    </div>
+    <div class="rail-step" onclick="jumpTo('cp5')">
+      <div class="rail-step-n">5</div>
+      <div class="rail-step-label">CP5 · Notion Export</div>
+    </div>
+  </nav>
+
+  <!-- ── Main content ── -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- SCENARIO SELECTION                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="scenario">
+      <div class="step-header">
+        <div class="step-eyebrow">Before CP0</div>
+        <div class="step-title">Scenario Selection</div>
+        <div class="step-kb">The agent asks which use case before proceeding</div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>🧭 <strong>Validation Agent — which scenario?</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-grid">
+        <div class="scenario-card selected">
+          <div class="scenario-icon">📊</div>
+          <div class="scenario-name">Leads Scoring</div>
+          <div class="scenario-desc">Score a supplier list, apply gates, sort into tiers, and export to Notion. Runs full CP0→CP5 pipeline.</div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-icon">🔍</div>
+          <div class="scenario-name">Event Validation</div>
+          <div class="scenario-desc">Validate a specific supplier or event against the SHI knowledge rules. Runs SV0→SV5 document review flow.</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp0')">📊 Select Leads Scoring →</button>
+      </div>
+    </section>
+
+    <div class="phase-label">Lead Scoring Pipeline</div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP0                                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp0">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 1</div>
+        <div class="step-title">CP0 · Data Load &amp; Field Mapping</div>
+        <div class="step-kb"><span>KB: L1-db-field-contract.md</span> <span>NODE-indicator.md</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>Loaded <strong>NEXT_Retail_supplier_list.xlsx</strong> — 670 rows across 47 unique suppliers after dedup on SUPPLIER_CODE.</p>
+              <p>Columns mapped: 14 / 14 fields matched to canonical indicators.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block green">✓ 670 rows loaded → 47 unique suppliers
+✓ 14/14 columns mapped to indicators
+  [supplier_name, country, hs_code, product_family,
+   shipments_12m, growth_p1y, months_active,
+   avg_invoice_usd, n_buyers, buyer_names,
+   top_products, own_book, cny_domestic]
+
+⚠ 3 suppliers missing hs_code → Enrichment queue
+  (Mano Apparels PK, Apex Trading CN — need HS lookup)</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp1')">✅ Confirm — go to CP1 →</button>
+        <button class="btn btn-secondary" onclick="alert('Flag sent to agent — awaiting correction...')">⚠ Flag issue</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP1                                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp1">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 2</div>
+        <div class="step-title">CP1 · Vertical Routing</div>
+        <div class="step-kb"><span>KB: L1-pipeline-and-gates.md §3</span> <span>NODE-scoring-framework.md §ROUTED_FROM</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>Each supplier routed by HS chapter to its scoring framework.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">Routing applied: valid_to IS NULL · active framework rows only
+
+Framework: fw:apparel-v1.1   calibrated 2026-07-01 · 50 days ago
+Framework: fw:hardgoods-v3.0  calibrated 2026-07-15 · 36 days ago
+  → Calibration age checks PASSED · No re-calibration required
+
+📦 Apparel v1.1     (HS 61, 62)  → 28 suppliers
+📦 Hardgoods v3.0  (other HS)    → 14 suppliers
+📦 Hardgoods v2.1   (thin data)   →  2 suppliers
+🏭 Parked           (raw mats)    →  0 suppliers
+⚠️  Enrichment       (no HS)       →  3 suppliers</div>
+
+      <div class="results-row">
+        <div class="result-chip"><span class="n">28</span><span class="label">Apparel</span></div>
+        <div class="result-chip"><span class="n">14</span><span class="label">Hardgoods v3.0</span></div>
+        <div class="result-chip"><span class="n">2</span><span class="label">Hardgoods v2.1</span></div>
+        <div class="result-chip"><span class="n">3</span><span class="label">Enrichment</span></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp2')">✅ Confirm — go to CP2 →</button>
+        <button class="btn btn-secondary" onclick="alert('Reroute request sent...')">⚠ Reroute a supplier</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP2                                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp2">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 3</div>
+        <div class="step-title">CP2 · Component Scoring</div>
+        <div class="step-kb"><span>KB: L1-scoring-method.md</span> <span>NODE-scoring-framework.md</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>Banded additive scoring applied per vertical. All thresholds and tier cuts loaded live from <em>NODE-scoring-framework.md</em> at runtime.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">Scoring method: banded additive · missing component → Enrichment (not zero)
+fw:apparel-v1.1  — max 11 pts · 6 indicators
+fw:hardgoods-v3.0 — max 15 pts · 9 indicators
+
+Indicator bands (active rows only, valid_to IS NULL)
+
+APPAREL v1.1
+  Stickness       0–3 pts
+  Volume          0–2 pts
+  Growth          0–2 pts
+  Buyer Quality   0–2 pts
+  Diversity       0–1 pt
+  Financing Need  0–1 pt
+  TIER A ≥ 9     TIER B ≥ 6     TIER C < 6
+
+HARDGOODS v3.0
+  Stickness       0–3 pts
+  Volume          0–2 pts
+  Growth          0–2 pts
+  Buyer Quality   0–2 pts
+  Diversity       0–2 pts
+  Capacity        0–1 pt
+  Product Type    0–1 pt
+  Financing Need  0–1 pt
+  ESG Flags       0–1 pt
+  TIER A ≥ 12    TIER B ≥ 8     TIER C < 8</div>
+
+      <div class="phase-label">Tier Distribution</div>
+
+      <div class="code-block">Results:
+📊 Apparel   Tier A: 7  Tier B: 14  Tier C: 7  (28 total)
+📊 Hardgoods Tier A: 4  Tier B: 8   Tier C: 4  (16 total)
+⚠️ 3 suppliers moved to Enrichment (missing key components)</div>
+
+      <div class="results-row">
+        <div class="result-chip"><span class="n">11</span><span class="label">Tier A total</span></div>
+        <div class="result-chip"><span class="n">22</span><span class="label">Tier B total</span></div>
+        <div class="result-chip"><span class="n">11</span><span class="label">Tier C total</span></div>
+        <div class="result-chip"><span class="n">3</span><span class="label">Enrichment</span></div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-card-title">Top Apparel — Tier A</div>
+        <table class="supplier-table">
+          <thead><tr>
+            <th>#</th><th>Supplier</th><th>Country</th><th>Score</th><th>Tier</th><th>Own-Book</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>1</td><td>SunGold Textiles Ltd</td><td>BD</td><td>11</td><td class="tier-a">A</td><td>—</td></tr>
+            <tr><td>2</td><td>Pearl River Garments</td><td>BD</td><td>10</td><td class="tier-a">A</td><td>—</td></tr>
+            <tr><td>3</td><td>Zenith Apparels BD</td><td>BD</td><td>10</td><td class="tier-a">A</td><td>—</td></tr>
+            <tr><td>4</td><td>Urban Knit Co</td><td>BD</td><td>9</td><td class="tier-a">A</td><td>—</td></tr>
+            <tr><td>5</td><td>Nova Fashion BD</td><td>BD</td><td>9</td><td class="tier-a">A</td><td>—</td></tr>
+            <tr><td>6</td><td>BlueSky Innerwear</td><td>BD</td><td>9</td><td class="tier-a">A</td><td>🏷 own-book</td></tr>
+            <tr><td>7</td><td>Vista Fashions</td><td>PK</td><td>9</td><td class="tier-a">A</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp3')">✅ Confirm — go to CP3 →</button>
+        <button class="btn btn-secondary" onclick="alert('Flag sent...')">⚠ Flag a supplier</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP3                                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp3">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 4</div>
+        <div class="step-title">CP3 · Gate Checks</div>
+        <div class="step-kb"><span>KB: L1-pipeline-and-gates.md §gates</span> <span>NODE-scoring-framework.md §Gates</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>Gates applied in order. Adverse screening deferred to CP4.5 (shortlist only).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">Gate           Condition                        Action
+────────────  ────────────────────────────────  ─────────────
+kill-combo    CN + ≤1 buyer + ticket > cap +     HARD REMOVE
+              low cadence                       → Removed
+cny-domestic  Only CNY domestic transactions     HARD REMOVE
+furniture-cap Category = furniture               Cap at Tier B
+flow-stale    >6m since last target txn          Demote 1 tier
+own-book      Already financed by Air8            Label only
+adverse       Not yet checked                    NOT SCREENED</div>
+
+      <div class="code-block">Results:
+✅ kill-combo    — 1 removed  (Nova Sports PK)
+✅ cny-domestic  — 1 removed  (Guangzhou Silk CN)
+✅ furniture-cap — 1 capped  (Comfort Living BD → Tier B)
+⚠️ flow-stale    — 2 demoted  (LoneStar PK, GreenLeaf IN)
+🏷 own-book      — 2 labelled (BlueSky Innerwear BD, TerraTex IN)
+🔍 adverse       — NOT SCREENED (CP4.5 checks shortlist only)</div>
+
+      <div class="code-block green">Post-CP3 summary:
+  Tier A (proceed):    11 suppliers
+  Tier B (proceed):    20 suppliers
+  Tier C (proceed):     9 suppliers
+  Hard removed:          2 suppliers
+  Demoted:               2 suppliers
+  Enrichment:            3 suppliers
+  ─────────────────────────────
+  Total proceeding:     40 scored suppliers</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp4')">✅ Confirm — go to CP4 →</button>
+        <button class="btn btn-secondary" onclick="alert('Flag sent...')">⚠ Flag a supplier</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP4                                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp4">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 5</div>
+        <div class="step-title">CP4 · Sort &amp; Call List</div>
+        <div class="step-kb"><span>KB: L1-pipeline-and-gates.md §sort</span> <span>NODE-scoring-framework.md §TIEBREAK_BY</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>Sort: score desc → financing need as tiebreaker. Default filter: all sourcing regions. Call list built top-down by tier.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block yellow">Default filter: India · Pakistan · Bangladesh · China · HK · Vietnam · Indonesia · Sri Lanka
+(no region priority — filter, not ranking)
+
+Sort order:
+  1. Composite score  (descending)
+  2. Financing need    (tiebreaker only — never removes)
+
+List structure:
+  📞 Call list    — top 20 Tier A (fills from Tier B if A < 20)
+  🪑 Bench        — next 5 Tier B (promote if slot opens)
+  📦 Pipeline     — remaining scored suppliers (revisit next quarter)
+  🏁 Floor        — LOW financing need (visible, not deleted)
+  🚫 Gated Out    — removed suppliers with reason (never silently deleted)</div>
+
+      <div class="phase-label">Call List — Top Apparel</div>
+
+      <table class="supplier-table">
+        <thead><tr><th>#</th><th>Supplier</th><th>Country</th><th>Score</th><th>Tier</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>SunGold Textiles Ltd</td><td>BD</td><td class="tier-a">11</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>2</td><td>Pearl River Garments</td><td>BD</td><td class="tier-a">10</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>3</td><td>Zenith Apparels BD</td><td>BD</td><td class="tier-a">10</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>4</td><td>Urban Knit Co</td><td>BD</td><td class="tier-a">9</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>5</td><td>Vista Fashions</td><td>PK</td><td class="tier-a">9</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>6</td><td>Harvest Textiles BD</td><td>BD</td><td class="tier-b">8</td><td class="tier-b">B</td><td><span class="tag-blue">🪑 Bench</span></td></tr>
+          <tr><td>7</td><td>Delta Wears PK</td><td>PK</td><td class="tier-b">8</td><td class="tier-b">B</td><td><span class="tag-blue">🪑 Bench</span></td></tr>
+          <tr><td>8</td><td>LoneStar PK</td><td>PK</td><td class="tier-b">7↓</td><td class="tier-b">B</td><td><span class="tag-blue">🪑 Bench</span> <span class="tag tag-red">demoted</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="phase-label">Call List — Top Hardgoods</div>
+
+      <table class="supplier-table">
+        <thead><tr><th>#</th><th>Supplier</th><th>Country</th><th>Score</th><th>Tier</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Titan Tools Mfg</td><td>CN</td><td class="tier-a">14</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>2</td><td>Precision Components</td><td>CN</td><td class="tier-a">13</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>3</td><td>Evergreen Polymers</td><td>IN</td><td class="tier-a">12</td><td class="tier-a">A</td><td><span class="tag">📞 Call Now</span></td></tr>
+          <tr><td>4</td><td>TerraTex IN</td><td>IN</td><td class="tier-b">11</td><td class="tier-a">A</td><td><span class="tag tag-red">🏷 own-book</span></td></tr>
+          <tr><td>5</td><td>Alba Polymers</td><td>VN</td><td class="tier-b">10</td><td class="tier-b">B</td><td><span class="tag-blue">🪑 Bench</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="summary-card">
+        <div class="summary-card-title">CP4 Output Summary</div>
+        <div class="summary-grid">
+          <div class="summary-item"><div class="num">47</div><div class="desc">Suppliers scored</div></div>
+          <div class="summary-item"><div class="num">40</div><div class="desc">Proceed to CP4.5</div></div>
+          <div class="summary-item"><div class="num">9</div><div class="desc">📞 Call Now</div></div>
+          <div class="summary-item"><div class="num">5</div><div class="desc">🪑 Bench</div></div>
+          <div class="summary-item"><div class="num">22</div><div class="desc">📦 Pipeline</div></div>
+          <div class="summary-item"><div class="num">4</div><div class="desc">🏁 Floor</div></div>
+          <div class="summary-item"><div class="num">2</div><div class="desc">🚫 Gated Out</div></div>
+          <div class="summary-item"><div class="num">3</div><div class="desc">⚠️ Enrichment</div></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp45')">✅ Approve CP4 — run CP4.5 →</button>
+        <button class="btn btn-secondary" onclick="alert('Filter change dialog would open here...')">🔧 Change filter</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP4.5                                   -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp45">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 6</div>
+        <div class="step-title">CP4.5 · Top N Research</div>
+        <div class="step-kb"><span>KB: NODE-adverse-screen.md · NODE-financing-need.md · NODE-outreach-profile.md · NODE-evidence-source.md</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>Research completed for 9 Call Now suppliers (scope confirmed at CP4). Own-book suppliers skipped. Results cached to <em>NEXT_cp45_cache.json</em>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">Scope: top 9 Call Now suppliers (Apparel 5 + Hardgoods 4)
+Own-book skipped: TerraTex IN, BlueSky Innerwear BD
+Cache hit: 0 (clean run)
+
+Research per supplier:
+  1. Adverse background check    [NODE-adverse-screen.md]
+  2. Financing need assessment   [NODE-financing-need.md]
+  3. Key buyer concentration     [NODE-outreach-profile.md]
+  4. Company info (founded, cert) [public records]
+  5. Contact details             [NODE-evidence-source.md §Contact-Finding Hierarchy]</div>
+
+      <div class="phase-label">Research Results</div>
+
+      <table class="supplier-table">
+        <thead><tr><th>Supplier</th><th>Country</th><th>Adverse</th><th>Fin. Need</th><th>Top Buyer</th><th>Certifications</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>SunGold Textiles</td><td>BD</td><td class="tier-a">CLEAN</td><td class="tier-a">HIGH</td><td>NEXT 62%</td><td>GOTS, OEKO-TEX</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Pearl River Garments</td><td>BD</td><td class="tier-a">CLEAN</td><td class="tier-a">VERY HIGH</td><td>NEXT 78%</td><td>SEDEX, ISO9001</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Zenith Apparels BD</td><td>BD</td><td class="tier-a">CLEAN</td><td class="tier-b">MEDIUM</td><td>M&S 45%</td><td>GOTS</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Urban Knit Co</td><td>BD</td>
+            <td style="color:var(--yellow)">MINOR</td>
+            <td class="tier-a">HIGH</td><td>NEXT 55%</td><td>OEKO-TEX</td>
+            <td><span class="tag tag-blue">🟡 Verify First</span></td>
+          </tr>
+          <tr>
+            <td>Vista Fashions</td><td>PK</td><td class="tier-a">CLEAN</td><td class="tier-a">HIGH</td><td>NEXT 40%</td><td>SEDEX, WRAP</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Titan Tools Mfg</td><td>CN</td><td class="tier-a">CLEAN</td><td class="tier-a">HIGH</td><td>HobbyLobby 50%</td><td>ISO14001</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Precision Components</td><td>CN</td><td class="tier-a">CLEAN</td><td class="tier-b">MEDIUM</td><td>TractorSupply 35%</td><td>ISO9001</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Evergreen Polymers</td><td>IN</td><td class="tier-a">CLEAN</td><td class="tier-a">VERY HIGH</td><td>HomeDepot 60%</td><td>ISO14001, BIS</td>
+            <td><span class="tag">📞 Call Now</span></td>
+          </tr>
+          <tr>
+            <td>Atlas Hardware</td><td>CN</td>
+            <td style="color:var(--red)">MATERIAL</td>
+            <td class="tier-a">HIGH</td><td>Amazon 70%</td><td>CE Mark</td>
+            <td><span class="tag tag-red">🚫 REMOVE</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block green">CP4.5 Summary:
+  Background: Clean 6  ·  Minor 1  ·  Material 1  ·  Removed 1
+  Financing:  Very High 2  ·  High 4  ·  Medium 2
+  Shortlist:  7 suppliers → Call Now
+  Floor:      0 (no LOW need among Call Now)
+  Removed:    Atlas Hardware CN — MATERIAL adverse (Amazon 70% concentration)</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="jumpTo('cp5')">✅ Confirm — go to CP5 →</button>
+        <button class="btn btn-secondary" onclick="alert('Adjust sent...')">⚠ Adjust a supplier</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- CP5                                     -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="cp5">
+      <div class="step-header">
+        <div class="step-eyebrow">Step 7 · Final</div>
+        <div class="step-title">CP5 · Export to Notion</div>
+        <div class="step-kb"><span>KB: L1-evidence-discipline.md</span> <span>CP-MAP.md §Notion output schema</span></div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-agent">
+          <div class="avatar avatar-agent">AI</div>
+          <div class="msg-body">
+            <div class="msg-name">Validation Agent</div>
+            <div class="msg-text">
+              <p>All 47 scored suppliers written to Notion. BD fields left empty for team to fill.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block green">✅ CP5 · Export complete
+
+📊 Notion: https://app.notion.com/air8/leads-db/xxxxx
+🕐 Run timestamp: 2026-08-20T13:45:00 HKT
+🔖 Run ID: LS-NE-20260820-001
+
+47 suppliers written to Notion
+  📞 Tier A (call this week):     9  ← 7 shortlisted
+  🟡 Tier B (call this quarter):  22
+  🟢 Tier C (not ready):           9
+  ⚠️  Enrichment queue:             3
+  🚫 Removed (adverse):            1
+  🏷  Own-book (labelled):         2</div>
+
+      <div class="summary-card">
+        <div class="summary-card-title">Final Pipeline Summary</div>
+        <div class="summary-grid">
+          <div class="summary-item"><div class="num">47</div><div class="desc">Total scored</div></div>
+          <div class="summary-item"><div class="num">7</div><div class="desc">Shortlisted</div></div>
+          <div class="summary-item"><div class="num">9</div><div class="desc">Call this week</div></div>
+          <div class="summary-item"><div class="num">22</div><div class="desc">Call this quarter</div></div>
+          <div class="summary-item"><div class="num">1</div><div class="desc">Removed (adverse)</div></div>
+          <div class="summary-item"><div class="num">3</div><div class="desc">Enrichment</div></div>
+        </div>
+      </div>
+
+      <div class="code-block">Audit log saved: lead_scoring_audit_20260820_001.json
+  Input hash:    a3f8c2d1...
+  KB files used: NODE-scoring-framework.md (fw:apparel-v1.1 · fw:hardgoods-v3.0)
+                 NODE-adverse-screen.md · NODE-financing-need.md
+                 NODE-outreach-profile.md · NODE-evidence-source.md
+  Filter:        All regions · No exclusions
+  Calibration:   fw:apparel-v1.1 (50d) · fw:hardgoods-v3.0 (36d) — no re-calibration</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="alert('Report saved! ✅')">✅ Done — save report</button>
+        <button class="btn btn-secondary" onclick="alert('Adjust request sent...')">⚠ Adjust</button>
+      </div>
+    </section>
+
+    <!-- ── Footer ── -->
+    <div class="footer-note">
+      This is a simulated demo with fictional supplier data.<br>
+      Framework: Apparel v1.1 · Hardgoods v3.0/v2.1 · Validated 2026<br>
+      KB: air8-databases/kb-v2/ · Agent: openclaw/lead-scoring-agent v2
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function jumpTo(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Highlight the rail step
+    document.querySelectorAll('.rail-step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.rail-step').forEach(s => {
+      if (s.getAttribute('onclick')?.includes(id)) s.classList.add('active');
+    });
+
+    // Mark previous steps as done
+    const sections = ['scenario','cp0','cp1','cp2','cp3','cp4','cp45','cp5'];
+    const idx = sections.indexOf(id);
+    for (let i = 0; i < idx; i++) {
+      const sec = document.getElementById(sections[i]);
+      if (sec) {
+        const step = document.querySelector(`.rail-step[onclick*="${sections[i]}"]`);
+        if (step) step.classList.add('done');
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
