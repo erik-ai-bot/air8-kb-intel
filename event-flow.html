@@ -1,596 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Air8 · FL301 Event Validation</title>
-  <style>
-    :root {
-      --bg: #e5ddd5;
-      --bubble-yd: #ffffff;
-      --bubble-jz: #dcf8c6;
-      --text: #111b21;
-      --muted: #667781;
-      --orange: #d97518;
-      --green: #25d366;
-      --blue: #0084ff;
-      --tick: #53bdeb;
-      --code-bg: #f6f6f6;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; }
-    body { background: #f0f2f5; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL301 Event Validation — CP0→CP5 Chat Flow</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d1117; color:#e6edf3; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:13px; line-height:1.5; }
 
-    .page { display: flex; height: 100vh; }
+  /* ── Sidebar ── */
+  .sidebar { position:fixed; left:0; top:0; bottom:0; width:220px; background:#161b22; border-right:1px solid #30363d; padding:20px 0; z-index:10; }
+  .sidebar-title { font-size:11px; font-weight:700; color:#7d8590; text-transform:uppercase; letter-spacing:1px; padding:0 16px 12px; }
+  .step { display:flex; align-items:center; gap:10px; padding:10px 16px; color:#7d8590; font-size:12px; cursor:default; transition:all .2s; }
+  .step.active { color:#e6edf3; }
+  .step.done { color:#3fb950; }
+  .step-num { width:22px; height:22px; border-radius:50%; border:1.5px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
+  .step.done .step-num { background:#238636; border-color:#238636; }
+  .step.done .step-num::after { content:'✓'; }
+  .step.active .step-num { border-color:#58a6ff; color:#58a6ff; }
+  .step-sep { height:1px; background:#21262d; margin:4px 16px; }
 
-    /* Sidebar */
-    .sidenav {
-      width: 148px; min-width: 148px;
-      background: #f0f2f5; border-right: 1px solid #d1d7db;
-      padding: 16px 0; display: flex; flex-direction: column;
-    }
-    .sidenav-title { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: #9ca6b0; text-transform: uppercase; padding: 0 12px 10px; }
-    .snav { display: flex; align-items: center; gap: 8px; padding: 6px 12px; cursor: pointer; text-decoration: none; border-left: 3px solid transparent; transition: all 0.12s; }
-    .snav:hover { background: rgba(0,0,0,0.04); }
-    .snav.done { border-left-color: #c8e6c9; }
-    .snav.on { background: #e8f5e9; border-left-color: #43a047; }
-    .sdot { width: 6px; height: 6px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
-    .snav.done .sdot { background: #81c784; }
-    .snav.on .sdot { background: #43a047; }
-    .slabel { font-size: 11px; color: var(--muted); line-height: 1.3; }
-    .snav.on .slabel { color: #2e7d32; font-weight: 600; }
+  /* ── Main ── */
+  .main { margin-left:220px; padding:24px 40px 60px; max-width:800px; }
 
-    /* Chat window */
-    .frame-wrap { flex: 1; display: flex; overflow: hidden; }
-    .tg-window {
-      width: 100%; max-width: 580px; height: 100vh;
-      display: flex; flex-direction: column;
-      background: var(--bg);
-      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b0a090' fill-opacity='0.12'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-9.5zm-2 5.5h-1v-5h1v5zm-2 0h-1v-5h1v5zM0 5h1v5H0V5zm2 0h1v5H2V5zm2 0h1v5H4V5zM4 0h1v3H4V0zm2 0h1v3H6V0zm2 0h1v3H8V0z'/%3E%3C/g%3E%3C/svg%3E");
-    }
+  /* ── Chat bubble ── */
+  .bubble-wrap { display:flex; gap:10px; margin-bottom:20px; align-items:flex-start; }
+  .bubble-wrap.yeti { flex-direction:row; }
+  .bubble-wrap.jz { flex-direction:row-reverse; }
+  .bubble-wrap.system { justify-content:center; margin:24px 0; }
+  .avatar { width:32px; height:32px; border-radius:50%; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .avatar.yeti { background:#1f6feb; color:#fff; }
+  .avatar.jz { background:#3fb950; color:#fff; }
+  .avatar.sys { background:#30363d; color:#7d8590; width:20px; height:20px; font-size:10px; border-radius:4px; }
+  .bubble { max-width:70%; padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.5; }
+  .bubble-wrap.yeti .bubble { background:#1f6feb; color:#e6edf3; border-bottom-left-radius:4px; }
+  .bubble-wrap.jz .bubble { background:#21262d; color:#e6edf3; border:1px solid #30363d; border-bottom-right-radius:4px; }
+  .bubble-wrap.system .bubble { background:transparent; color:#484f58; font-size:11px; font-style:italic; border:none; text-align:center; padding:4px 16px; }
+  .bubble-wrap.jz .bubble.approve { background:#0d1f0d; border:1px solid #3fb950; color:#3fb950; border-radius:8px; font-size:11px; padding:6px 12px; }
+  .bubble-meta { font-size:10px; color:#484f58; margin-top:4px; padding:0 4px; }
+  .bubble-wrap.jz .bubble-meta { text-align:right; }
 
-    .tg-head {
-      background: #fff; border-bottom: 1px solid #e0e0e0;
-      padding: 8px 12px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
-    }
-    .back-arrow { color: var(--blue); font-size: 22px; cursor: pointer; line-height: 1; }
-    .av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
-    .av-yd { background: linear-gradient(135deg,#f97316,#e55a00); }
-    .av-jz { background: linear-gradient(135deg,#0088cc,#0066aa); }
-    .tg-head-info { flex: 1; }
-    .tg-head-name { font-size: 15px; font-weight: 600; color: var(--text); }
-    .tg-head-status { font-size: 12px; color: var(--green); }
-    .tg-head-icons { display: flex; gap: 14px; color: #8696a0; font-size: 20px; cursor: pointer; }
+  /* ── Code blocks ── */
+  pre { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:14px; font-size:11.5px; line-height:1.6; overflow-x:auto; margin-top:8px; color:#c9d1d9; }
+  code { font-family:'Fira Code','Cascadia Code',monospace; font-size:11.5px; }
+  .inline-code { background:#161b22; border:1px solid #30363d; border-radius:4px; padding:1px 6px; font-size:11px; color:#79c0ff; }
 
-    .tg-scroll { flex: 1; overflow-y: auto; padding: 6px 8px 20px; }
+  /* ── Section divider ── */
+  .divider { display:flex; align-items:center; gap:12px; margin:28px 0 20px; color:#484f58; font-size:11px; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background:#21262d; }
+  .divider span { background:#0d1117; padding:0 8px; white-space:nowrap; }
 
-    .date-div { display: flex; justify-content: center; margin: 10px 0 5px; }
-    .date-pill { background: rgba(255,255,255,0.8); color: var(--muted); font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  /* ── Header ── */
+  .page-header { margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid #21262d; }
+  .page-header h1 { font-size:18px; font-weight:700; color:#e6edf3; margin-bottom:6px; }
+  .page-header p { color:#7d8590; font-size:12px; }
+  .tag { display:inline-block; background:#1f6feb22; color:#58a6ff; border:1px solid #1f6feb44; border-radius:4px; padding:2px 8px; font-size:10px; font-weight:600; margin-right:6px; }
+  .tag.ok { background:#23863622; color:#3fb950; border-color:#3fb95044; }
+  .tag.new { background:#f0883e22; color:#f0883e; border-color:#f0883e44; }
 
-    .step-div { display: flex; justify-content: center; margin: 14px 0 4px; }
-    .step-pill { background: rgba(255,255,255,0.85); border: 1px solid rgba(249,115,22,0.28); color: var(--orange); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.06em; }
+  /* ── Flow step header ── */
+  .flow-step { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:16px 20px; margin-bottom:24px; }
+  .flow-step-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .flow-step-num { background:#1f6feb; color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+  .flow-step-title { font-weight:700; font-size:14px; color:#e6edf3; }
+  .flow-step-sub { font-size:11px; color:#7d8590; margin-left:auto; }
+  .flow-step-body { font-size:12.5px; color:#c9d1d9; line-height:1.6; }
+  .flow-step-body p { margin-bottom:8px; }
+  .flow-step-body strong { color:#e6edf3; }
+  .flow-step-body .label { color:#79c0ff; font-weight:600; }
 
-    /* Message rows */
-    .row { display: flex; margin-bottom: 1px; padding: 0 4px; }
-    .row.agent { justify-content: flex-start; align-items: flex-end; gap: 5px; }
-    .row.user  { justify-content: flex-end; }
-    .row.user  .av-mini { visibility: hidden; }
+  /* ── Alert boxes ── */
+  .alert { border-radius:8px; padding:12px 16px; margin:10px 0; font-size:12px; }
+  .alert.warn { background:#f0883e18; border-left:3px solid #f0883e; color:#e6edf3; }
+  .alert.info { background:#1f6feb18; border-left:3px solid #1f6feb; color:#c9d1d9; }
+  .alert.ok { background:#23863618; border-left:3px solid #3fb950; color:#c9d1d9; }
+  .alert-title { font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+  .alert.warn .alert-title { color:#f0883e; }
+  .alert.info .alert-title { color:#58a6ff; }
+  .alert.ok .alert-title { color:#3fb950; }
 
-    .av-mini { width: 24px; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: #fff; flex-shrink: 0; margin-bottom: 2px; }
-    .av-mini.yd { background: linear-gradient(135deg,#f97316,#e55a00); }
-    .av-mini.jz { background: linear-gradient(135deg,#0088cc,#0066aa); }
+  /* ── KP I row ── */
+  .kpi-row { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .kpi-badge { background:#21262d; border:1px solid #30363d; border-radius:6px; padding:5px 12px; font-size:11px; color:#c9d1d9; }
+  .kpi-val { font-weight:700; color:#e6edf3; margin-right:4px; }
 
-    .bbl { max-width: 88%; border-radius: 8px; padding: 5px 9px 4px; font-size: 13px; line-height: 1.5; box-shadow: 0 1px 1px rgba(0,0,0,0.08); word-break: break-word; }
-    .bbl.agent { background: var(--bubble-yd); border-top-left-radius: 2px; }
-    .bbl.user  { background: var(--bubble-jz); border-top-right-radius: 2px; }
-    .bbl.confirm { background: var(--bubble-jz); border-top-right-radius: 2px; }
+  /* ── Table ── */
+  table { width:100%; border-collapse:collapse; margin:10px 0; font-size:12px; }
+  th,td { padding:8px 12px; text-align:left; border:1px solid #21262d; }
+  th { background:#161b22; color:#7d8590; font-size:10px; text-transform:uppercase; letter-spacing:.5px; }
+  td { background:#0d1117; color:#c9d1d9; }
+  tr:hover td { background:#161b22; }
 
-    .sender-name { font-size: 11.5px; font-weight: 600; color: var(--orange); margin-bottom: 2px; }
-    .sender-name.jz { color: #0066aa; }
-
-    .bbl-meta { display: flex; align-items: center; justify-content: flex-end; gap: 2px; margin-top: 2px; }
-    .bbl-ts { font-size: 10.5px; color: var(--muted); }
-    .bbl-tick { font-size: 12px; color: var(--tick); }
-
-    /* Code block */
-    .cbl {
-      background: var(--code-bg); border: 1px solid #e4e4e4; border-radius: 6px;
-      padding: 9px 11px; font-family: 'SF Mono','Fira Code',monospace;
-      font-size: 11px; line-height: 1.8; color: #1a1a2e;
-      margin: 5px 0 3px; white-space: pre; overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .g  { color: #1a7a40; }
-    .y  { color: #a05c00; }
-    .r  { color: #b91c1c; }
-    .o  { color: #c2410c; font-weight: 600; }
-    .d  { color: #aaa; }
-    .w  { color: #111827; }
-    .h  { color: #1e3a5f; font-weight: 600; }
-    .lbl { color: #888; font-size: 10px; }
-
-    /* Btns */
-    .btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-    .btn { flex: 1; min-width: 0; background: #f0f8ff; border: 1px solid #b3d9f7; color: #0077b6; font-size: 11.5px; font-weight: 500; padding: 5px 7px; border-radius: 5px; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: background 0.1s; }
-    .btn:hover { background: #dff0fd; }
-    .btn.ok { background: #f0faf3; border-color: #a3d9b1; color: #1a7a40; }
-    .btn.ok:hover { background: #e0f5e8; }
-    .btn.warn { background: #fffbf0; border-color: #f8d7a0; color: #92400e; }
-    .confirm-text { color: #2e7d32; font-size: 12.5px; }
-
-    /* Response bubble */
-    .resp { background: #dcf8c6; border-radius: 8px; border-top-right-radius: 2px; padding: 5px 9px 4px; font-size: 12.5px; color: #2e7d32; box-shadow: 0 1px 1px rgba(0,0,0,0.08); max-width: 88%; }
-
-    @media (max-width: 600px) {
-      .sidenav { width: 40px; min-width: 40px; }
-      .sidenav-title, .slabel { display: none; }
-      .snav { justify-content: center; padding: 8px 0; }
-    }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
-  </style>
+  /* ── Footer ── */
+  .footer { margin-top:40px; padding-top:16px; border-top:1px solid #21262d; color:#484f58; font-size:11px; text-align:center; }
+</style>
 </head>
 <body>
-<div class="page">
 
-  <nav class="sidenav">
-    <div class="sidenav-title">Steps</div>
-    <a class="snav done" href="#sv0"><div class="sdot"></div><div class="slabel">SV0 · Intake</div></a>
-    <a class="snav done" href="#sv1"><div class="sdot"></div><div class="slabel">SV1 · Parse</div></a>
-    <a class="snav done" href="#sv2"><div class="sdot"></div><div class="slabel">SV2 · Detect</div></a>
-    <a class="snav done" href="#sv3"><div class="sdot"></div><div class="slabel">SV3 · Resolve</div></a>
-    <a class="snav done" href="#sv4"><div class="sdot"></div><div class="slabel">SV4 · Evidence</div></a>
-    <a class="snav on" href="#sv5"><div class="sdot"></div><div class="slabel">SV5 · Output</div></a>
-  </nav>
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-title">Event Flow</div>
 
-  <div class="frame-wrap">
-  <div class="tg-window">
+  <div class="step done">
+    <div class="step-num">0</div>
+    <span>CP0 · Event Enrichment</span>
+  </div>
+  <div class="step-sep"></div>
 
-    <div class="tg-head">
-      <div class="back-arrow">‹</div>
-      <div class="av av-yd">YD</div>
-      <div class="tg-head-info">
-        <div class="tg-head-name">Yeti Dev</div>
-        <div class="tg-head-status">online</div>
-      </div>
-      <div class="tg-head-icons"><span>🔍</span><span>⋮</span></div>
-    </div>
+  <div class="step done">
+    <div class="step-num">1</div>
+    <span>CP1 · Event Parse</span>
+  </div>
+  <div class="step-sep"></div>
 
-    <div class="tg-scroll" id="chat">
+  <div class="step done">
+    <div class="step-num">2</div>
+    <span>CP2 · Family Activation</span>
+  </div>
+  <div class="step-sep"></div>
 
-      <div class="date-div"><div class="date-pill">Wed, 19 Aug 2026</div></div>
+  <div class="step done">
+    <div class="step-num">3</div>
+    <span>CP3 · Entity Fetch Plan</span>
+  </div>
+  <div class="step-sep"></div>
 
-      <!-- ═══════════ SV0 ═══════════ -->
-      <div id="sv0" class="step-div"><div class="step-pill">SV0 · INTAKE</div></div>
+  <div class="step done">
+    <div class="step-num" style="background:#f0883e;border-color:#f0883e;color:#fff;font-size:9px;">3.5</div>
+    <span style="color:#f0883e;font-weight:700;">CP3.5 · Client Mapping</span>
+  </div>
+  <div class="step-sep"></div>
 
-      <div class="row user">
-        <div class="av-mini jz">JZ</div>
-        <div class="bbl user">
-          <div class="sender-name jz">Jerri Zhou</div>
-          Hey, got a news event for you. USTR just published the Section 301 Forced Labour tariff list. VN is Tier 2 at 12.5%, IN/BD are Tier 1 at 10%. Affects NEXT Retail's apparel portfolio. Let's run it through validation.
-          <div class="bbl-meta"><span class="bbl-ts">09:41</span><span class="bbl-tick">✓✓</span></div>
-        </div>
-      </div>
+  <div class="step done">
+    <div class="step-num">4</div>
+    <span>CP4 · Data Extract</span>
+  </div>
+  <div class="step-sep"></div>
 
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          📥 SV0 · Intake
-          <span class="lbl">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB · CLIENT-DB]</span>
-          <div class="cbl"><span class="g">✓</span> Event:    Section 301 Forced Labour tariff update
-<span class="g">✓</span> Source:   USTR announcement · June 2, 2026 findings
-<span class="g">✓</span> Effective: July 24, 2026
-<span class="g">✓</span> Buyer:    NEXT Retail
-<span class="g">✓</span> Scope:    VN · IN · BD - HS 61/62 apparel suppliers
-<span class="g">✓</span> Docs:    News article · TARIFF-DB · COUNTRY-DB
+  <div class="step done">
+    <div class="step-num">5</div>
+    <span>CP5 · Insight Assembly</span>
+  </div>
 
-<span class="lbl">KB sources to process:</span>
-  1. section-301-forced-labour-asean.md  [Compliance brief · Jun 30]
-  2. TARIFF-DB                        [KB · verified Aug 4]
-  3. COUNTRY-DB                      [KB · verified Aug 4]
-  4. CLIENT-DB · NEXT                [KB · supplier list]</div>
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV1</button>
-            <button class="btn warn">⚠️ Adjust</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:41</span></div>
-        </div>
-      </div>
+  <div style="position:absolute;bottom:20px;left:16px;right:16px;">
+    <div style="background:#23863622;border:1px solid #3fb95044;border-radius:8px;padding:10px;text-align:center;font-size:11px;color:#3fb950;font-weight:600;">✅ All steps complete</div>
+  </div>
+</nav>
 
-      <!-- ═══════════ SV1 ═══════════ -->
-      <div id="sv1" class="step-div"><div class="step-pill">SV1 · PARSE</div></div>
+<!-- ── MAIN ── -->
+<div class="main">
 
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          🔍 SV1 · Parse
-          <span class="lbl">[KB: TARIFF-DB · COUNTRY-DB · EVENT T2-VN / T2-IN / T2-BD]</span>
-          <div class="cbl"><span class="h">── Tariff (TARIFF-DB · HS 61/62 apparel) ──</span>
-  Country  FL301    US Total  Tier
-  VN       <span class="r">+12.5%</span>   <span class="r">~28.5%</span>    Tier 2
-  IN       <span class="g">+10.0%</span>   <span class="g">~26.5%</span>    (non-ASEAN)
-  BD       <span class="g">+10.0%</span>   <span class="g">~26.5%</span>    (non-ASEAN)
-
-  <span class="o">→ VN +2.5pp vs IN/BD on every HS 61/62 line</span>
-  <span class="d">⚠️ FL301 legal challenge: 25 states (Aug 3, 2026)</span>
-  <span class="d">   Rates active · injunction not yet granted</span>
-
-<span class="h">── Country Signals (COUNTRY-DB · Aug 4) ──</span>
-  VN  FL301 highest burden among Air8 countries
-      S301 investigation open · bilateral tension
-      Air8: "Erodes VN diversification vs CN"
-
-  BD  FL301 +10% on US → immediate revenue hit
-      <span class="r">EBA 0% at risk</span> · LDC graduation 2027+
-      Banking crisis: BDT 400,000cr exposure
-      <span class="r">85%+ RMG concentration</span> · extreme dependency
-      UFLPA: <span class="r">elevated risk</span> (CBP priority monitoring)
-
-  IN  FL301 +10% · erodes diversification vs CN
-      Cotton waiver <span class="y">expires Oct 31</span> (13 wks)
-      Nov 1: +16% raw cotton (BCD 11% + AIDC 5%)
-      UFLPA: variable · not all suppliers audit-ready
-      Air8: "13-week pre-buy window before spike"
-
-<span class="h">── Portfolio (CLIENT-DB · NEXT) ──</span>
-  VN  6 suppliers   IN  9 suppliers   BD  11 suppliers
-  Total in scope: 47 suppliers · HS 61/62 apparel</div>
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV2</button>
-            <button class="btn warn">⚠️ Adjust</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:44</span></div>
-        </div>
-      </div>
-
-      <div class="row user">
-        <div class="av-mini jz">JZ</div>
-        <div class="bbl user">
-          <div class="sender-name jz">Jerri Zhou</div>
-          BD is NOT simply advantaged. They have double exposure - FL301 on US plus EBA at risk on EU. That's a different risk dimension from VN.
-          <div class="bbl-meta"><span class="bbl-ts">09:45</span><span class="bbl-tick">✓✓</span></div>
-        </div>
-      </div>
-
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          Understood - correcting BD signal. BD is not a clean beneficiary. FL301 on US + EBA at risk on EU + banking sector stress = three-layer exposure. Not a simple tariff advantage story.
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV2</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:45</span></div>
-        </div>
-      </div>
-
-      <!-- ═══════════ SV2 ═══════════ -->
-      <div id="sv2" class="step-div"><div class="step-pill">SV2 · DETECT</div></div>
-
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          ⚠️ SV2 · Detect
-          <span class="lbl">[KB: NODE-risk-categories · L1-reasoning-principles]</span>
-          <div class="cbl"><span class="h">── Exception / Signal Detection ──</span>
-
-<span class="y">E1</span> VN Competitive Position - R6
-    VN FL301 +12.5% vs IN/BD +10% = <span class="r">+2.5pp gap</span>
-    6 NEXT VN suppliers at higher US tariff post Jul 24
-    VN S301 investigation open → bilateral uncertainty
-
-<span class="y">E2</span> BD Double Exposure - R4
-    FL301 +10% on US-bound volume (immediate hit)
-    EBA 0% at risk → LDC graduation 2027+ (EU)
-    Banking crisis: BDT 400,000cr total exposure
-    <span class="r">→ Not a clean beneficiary - three-layer risk</span>
-
-<span class="y">E3</span> IN Cotton Input Window - R4
-    Cotton waiver expires <span class="y">Oct 31</span> · 13 weeks left
-    Nov 1: +16% raw cotton (BCD 11% + AIDC 5%)
-    Mills face +8-12% input spike → Q4 margin risk
-
-<span class="y">E4</span> UFLPA as Independent Gate - R4
-    BD = elevated UFLPA risk (COUNTRY-DB)
-    IN = variable compliance, not all audit-ready
-    UFLPA gate is separate from tariff cost analysis
-    Tariff advantage ≠ buyer qualification
-
-<span class="r">E5</span> FL301 Legal Uncertainty - R4
-    25 states filed challenge Aug 3, 2026
-    Rates active · injunction not yet granted
-    <span class="r">→ E1-E3 conclusions are PROVISIONAL</span>
-
-<span class="r">E6</span> Assumption Gap - R4
-    No confirmed NEXT buyer intent in CLIENT-DB
-    Order migration VN→IN/BD = <span class="r">inference not fact</span>
-    Report draft treats migration as confirmed
-
-<span class="h">── Hard Stop Pre-check ──</span>
-  HS1 Sanctions     → PASS ✅
-  HS2 FATF          → PASS ✅
-  HS3 CBP detention → PASS ✅
-  HS4 Hard stop doc → PASS ✅
-  HS5 Entity list   → PASS ✅
-  <span class="g">→ No hard stops · proceed to SV3</span></div>
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV3</button>
-            <button class="btn warn">⚠️ Adjust</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:48</span></div>
-        </div>
-      </div>
-
-      <!-- ═══════════ SV3 ═══════════ -->
-      <div id="sv3" class="step-div"><div class="step-pill">SV3 · RESOLVE</div></div>
-
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          🔎 SV3 · Resolve
-          <span class="lbl">[KB: L1-reasoning-principles · reasoning hierarchy: hard stop → buyer rule → auto-pass → risk node]</span>
-          <div class="cbl"><span class="h">── Resolution per Signal ──</span>
-
-<span class="y">E1</span> VN Competitive Position
-    Decision: <span class="y">HOLD 🟡</span>  Rule: R6
-    Rationale: 2.5pp gap confirmed. No buyer decision yet.
-    Language: "may face pressure" not "will lose orders"
-    Action: Flag VN >60% US concentration → BD/IN talk
-
-<span class="y">E2</span> BD Double Exposure
-    Decision: <span class="y">HOLD 🟡</span>  Rule: R4
-    Three layers: FL301 + EBA risk + banking stress
-    Not "advantaged" - list as three-layer risk profile
-    Action: ARP early payment relevant · flag BD >70% US
-
-<span class="y">E3</span> IN Cotton Duty Window  ⚠️ time-sensitive
-    Decision: <span class="y">HOLD 🟡</span>  Rule: R4
-    13 weeks actionable · pre-buy decision is real
-    Action: Alert IN suppliers → pre-buy cotton now
-    Add: mills without stock face Nov Q4 cost spike
-
-<span class="y">E4</span> UFLPA Independent Gate
-    Decision: <span class="y">HOLD 🟡</span>  Rule: R4
-    UFLPA = standalone buyer gate (not tariff footnote)
-    BD elevated · IN variable (COUNTRY-DB)
-    Action: Add UFLPA as own risk dim + readiness heatmap
-
-<span class="r">E5</span> FL301 Legal Challenge
-    Decision: <span class="r">ESCALATE 🔴</span>  Rule: R4
-    Voided → VN baseline restored, IN/BD lose advantage
-    Action: Label E1-E3 PROVISIONAL · add legal tracker
-
-<span class="r">E6</span> Assumption Gap
-    Decision: <span class="r">ESCALATE 🔴</span>  Rule: R4
-    Draft treats VN→IN/BD migration as fact - not confirmed
-    Action: Add Facts vs Assumptions section before release
-            Add portfolio exposure numbers for management</div>
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV4</button>
-            <button class="btn warn">⚠️ Adjust</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:51</span></div>
-        </div>
-      </div>
-
-      <div class="row user">
-        <div class="av-mini jz">JZ</div>
-        <div class="bbl user">
-          <div class="sender-name jz">Jerri Zhou</div>
-          E4 is right - UFLPA is always a separate gate. Doesn't matter what the tariff says. Any supplier can get blocked on UFLPA even with a cost advantage. Keep it as HOLD and make sure the report treats it as independent.
-          <div class="bbl-meta"><span class="bbl-ts">09:52</span><span class="bbl-tick">✓✓</span></div>
-        </div>
-      </div>
-
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          Confirmed - UFLPA is a standalone buyer gate, always separate from tariff. Report will list it as its own risk dimension under E4. Not a footnote.
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV4</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:52</span></div>
-        </div>
-      </div>
-
-      <!-- ═══════════ SV4 ═══════════ -->
-      <div id="sv4" class="step-div"><div class="step-pill">SV4 · EVIDENCE CHECK</div></div>
-
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          📎 SV4 · Evidence Check
-          <span class="lbl">[KB: L1-evidence-discipline · evidence ranking by source type]</span>
-          <div class="cbl"><span class="h">── Evidence per Signal ──</span>
-
-<span class="g">E1</span> VN tariff differential +2.5pp
-    [TARIFF-DB · Aug 4, 2026 · USTR / tariffstool.com]
-    VN 12.5% vs IN/BD 10% confirmed in TARIFF-DB
-    <span class="g">→ SUFFICIENT ✅</span>
-
-<span class="g">E2</span> BD double exposure
-    [COUNTRY-DB · Aug 4 · BGMEA / EC Trade / FashionatingWorld]
-    FL301 rate ✅ · EBA risk ✅ · banking crisis ✅
-    BDT 400,000cr documented
-    <span class="g">→ SUFFICIENT ✅</span>
-
-<span class="g">E3</span> IN cotton duty expiry Oct 31
-    [COUNTRY-DB · India Budget 2026 · TBSNews]
-    BCD+AIDC waiver Jun 1–Oct 31 confirmed
-    Reinstatement Nov 1 = +16% on raw cotton
-    <span class="g">→ SUFFICIENT ✅</span>
-
-<span class="g">E4</span> UFLPA as independent gate
-    [COUNTRY-DB · Aug 4 · CBP enforcement guidance]
-    BD elevated ✅ · IN variable ✅ (COUNTRY-DB)
-    <span class="g">→ SUFFICIENT ✅</span>  (per-supplier audit: needed)
-
-<span class="y">E5</span> FL301 legal challenge
-    [TARIFF-DB footnote · Aug 3, 2026 · 25 states]
-    Court active · injunction not yet granted
-    <span class="y">→ PARTIAL ⚠️  — conclusions labeled PROVISIONAL</span>
-    Need: legal outcome tracker + re-run trigger
-
-<span class="r">E6</span> Buyer sourcing intent
-    [CLIENT-DB · no NEXT communication on record]
-    No buyer decision confirmed · no order shift data
-    <span class="r">→ INSUFFICIENT ⚠️</span>
-    Need: NEXT buying team intent
-          IN/BD supplier capacity assessment
-          12-month order trend from CLIENT-DB</div>
-          <div class="btns">
-            <button class="btn ok">✅ Confirmed - go to SV5</button>
-            <button class="btn warn">⚠️ Adjust</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:54</span></div>
-        </div>
-      </div>
-
-      <!-- ═══════════ SV5 ═══════════ -->
-      <div id="sv5" class="step-div"><div class="step-pill">SV5 · OUTPUT</div></div>
-
-      <div class="row agent">
-        <div class="av-mini yd">YD</div>
-        <div class="bbl agent">
-          <div class="sender-name">Yeti Dev</div>
-          ✅ SV5 · Output - ready for review
-          <span class="lbl">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB · CLIENT-DB]</span>
-          <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EVENT VALIDATION REPORT
-Event:     Section 301 Forced Labour · FL301
-Scope:     NEXT Retail · VN/IN/BD · 47 suppliers
-           HS 61/62 apparel · US import
-Date:      2026-08-19   KB: Aug 4, 2026
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-OVERALL:   <span class="y">HOLD 🟡</span>
-           ⚠️ provisional - FL301 legal challenge pending
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-<span class="h">FACTS (TARIFF-DB + COUNTRY-DB · verified)</span>
-  ✓ VN FL301 = +12.5% → US Total ~28.5% [Tier 2]
-  ✓ IN/BD FL301 = +10% → US Total ~26.5% [Tier 1]
-  ✓ Net VN disadvantage: +2.5pp vs IN/BD on HS 61/62
-  ✓ BD: FL301 + EBA at risk (EU) + banking sector crisis
-  ✓ IN: cotton duty waiver expires Oct 31 · 13 weeks left
-  ✓ BD UFLPA: elevated risk · IN UFLPA: variable
-  ✓ VN USTR S301 investigation open (bilateral tension)
-  ✓ FL301 legal challenge: 25 states v. admin (Aug 3, 2026)
-  ✓ 6 VN · 9 IN · 11 BD NEXT suppliers in scope
-
-<span class="h">ASSUMPTIONS (require buyer / supplier validation)</span>
-  ? NEXT buyer will shift VN orders to IN/BD
-  ? IN/BD suppliers have capacity to absorb additional volume
-  ? Cost advantage translates to higher supplier margin
-  ? FL301 rates will survive pending legal challenge
-
-──────────────────────────────────────────
-
-<span class="y">E1</span> · VN Competitive Position Shift
-  Found:     VN +2.5pp vs IN/BD on US tariff
-  Decision:   <span class="y">HOLD 🟡</span>
-  Rule:       R6 - cost disadvantage above 2pp · no auto-pass
-  Action:     Flag VN clients >60% US concentration for BD/IN
-              conversation. Use conditional language in report.
-
-<span class="y">E2</span> · BD Double Exposure
-  Found:     FL301 + EBA at risk + banking sector stress
-  Decision:   <span class="y">HOLD 🟡</span>
-  Rule:       R4 - multiple regulatory risk layers · no auto-pass
-  Action:     BD is not a clean beneficiary. List as three-layer risk.
-              ARP early payment highly relevant for BD clients.
-              Flag BD clients >70% US concentration.
-
-<span class="y">E3</span> · IN Cotton Duty Window Closing
-  Found:     Waiver expires Oct 31 · +16% on raw cotton from Nov 1
-  Decision:   <span class="y">HOLD 🟡</span>  · time-sensitive
-  Rule:       R4 - input cost spike = margin risk event
-  Action:     Alert IN apparel suppliers to pre-buy cotton now.
-              Add note: mills without stock face Q4 cost spike.
-
-<span class="y">E4</span> · UFLPA as Independent Compliance Gate
-  Found:     BD elevated · IN variable · VN standard
-  Decision:   <span class="y">HOLD 🟡</span>
-  Rule:       R4 - UFLPA clearance = standalone buyer gate
-  Action:     UFLPA listed as its own risk dimension (not a tariff footnote).
-              Supplier readiness heatmap: BD elevated · IN variable.
-              Independent of E1-E3 tariff cost conclusions.
-
-<span class="r">E5</span> · FL301 Legal Challenge
-  Found:     25 states · Aug 3, 2026 · rates active pending injunction
-  Decision:   <span class="r">ESCALATE 🔴</span>
-  Rule:       R4 - regulatory uncertainty + court = management alert
-  Action:     All E1-E3 tariff-based conclusions labeled PROVISIONAL.
-              Add legal outcome tracker. Set re-run trigger.
-
-<span class="r">E6</span> · Assumption Gap
-  Found:     No confirmed buyer intent · migration stated as fact
-  Decision:   <span class="r">ESCALATE 🔴</span>
-  Rule:       R4 - assumption as fact = report integrity risk
-  Action:     Add Facts vs Assumptions section before release.
-              Add portfolio exposure summary for management.
-              Validate buyer intent before final publish.
-
-──────────────────────────────────────────
-ACTIONS before release:
-  1. Label E1-E3 tariff conclusions PROVISIONAL (E5 active)
-  2. Add Facts vs Assumptions section (E6)
-  3. Reframe migration language → always conditional
-  4. List UFLPA as standalone risk dimension (E4)
-  5. Add BD as three-layer risk under E2
-  6. Add supplier readiness heatmap (E4)
-  7. Flag VN >60% US · BD >70% US clients (E1/E2)
-  8. Alert IN suppliers on cotton pre-buy window (E3)
-  9. Validate buyer sourcing intent before final publish (E6)
-
-KB PROPOSALS (do not self-modify KB):
-  · Add FL301 differential >2pp as auto-flag event rule
-  · Add BD EBA graduation risk field to COUNTRY-DB
-  · Add IN cotton duty expiry tracker field
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-          <div class="btns">
-            <button class="btn ok" onclick="this.textContent='✅ saved'">✅ Done - save report</button>
-            <button class="btn warn">⚠️ Adjust</button>
-          </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:56</span></div>
-        </div>
-      </div>
-
-      <div style="height:20px;"></div>
+  <div class="page-header">
+    <h1>⚖️ FL301 Event Validation — CP0→CP5 Chat Log</h1>
+    <p>US Section 301 Forced-Labor Tariff · VN 12.5% / IN·BD 10% · July 24, 2026</p>
+    <div style="margin-top:10px;">
+      <span class="tag ok">Auto-Approved</span>
+      <span class="tag">air8-kb-event-validation</span>
+      <span class="tag new">CP3.5 Added</span>
+      <span class="tag">Expert Comments Applied</span>
     </div>
   </div>
+
+  <!-- ═══════════════ CP0 ═══════════════ -->
+  <div class="flow-step">
+    <div class="flow-step-header">
+      <div class="flow-step-num">0</div>
+      <div class="flow-step-title">CP0 — Event Enrichment</div>
+      <div class="flow-step-sub">web-first · no KB yet</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble">Run this event:</div>
+          <div class="bubble-meta">Jerri Zhou · 2026-08-20 14:00</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP0 ✅ — Event Enrichment</strong><br><br>
+            Event: <strong>US Section 301 Forced-Labor Tariff — Vietnam 12.5%, India/Bangladesh 10%</strong><br>
+            Effective: July 24, 2026<br>
+            Scope: VN·IN·BD apparel suppliers in Air8 book<br>
+            Tariff basis: Federal Register / USTR notice<br><br>
+            <span class="inline-code">source: web_fetch Federal Register + USTR press release [VERIFIED ✅]</span>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:01</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — proceed</div>
+        </div>
+      </div>
+
+    </div>
   </div>
+
+  <!-- ═══════════════ CP1 ═══════════════ -->
+  <div class="divider"><span>CP1 · Event Parse</span></div>
+
+  <div class="flow-step">
+    <div class="flow-step-header">
+      <div class="flow-step-num">1</div>
+      <div class="flow-step-title">CP1 — Event Parse</div>
+      <div class="flow-step-sub">tariff fields + cross-check</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP1 ✅ — Event Parse</strong><br><br>
+            <span class="label">TARIFF FIELDS:</span><br>
+            VN rate: <strong>12.5%</strong> → US total landed ~28.5%<br>
+            IN/BD rate: <strong>10%</strong> → US total landed ~26.5%<br>
+            Net differential: <strong>+2.5pp VN disadvantage</strong><br>
+            HS 61/62 (apparel): <strong>NOT in Annex A</strong> → fully FL301-exposed<br><br>
+            <span class="label">CROSS-CHECK vs article claims:</span><br>
+            ✅ VN 12.5% confirmed<br>
+            ✅ IN/BD 10% confirmed<br>
+            ⚠️ "Leveling the playing field" narrative — unverified framing, not a tariff fact<br>
+            ⚠️ "Buyers shifting orders" — assumption, not confirmed fact<br>
+            ⚠️ "India/Bangladesh are beneficiaries" — <strong style="color:#f0883e">CLAIM FLAGGED: framing issue, not a KB fact</strong>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:02</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — proceed</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ CP2 ═══════════════ -->
+  <div class="divider"><span>CP2 · Family Activation</span></div>
+
+  <div class="flow-step">
+    <div class="flow-step-header">
+      <div class="flow-step-num">2</div>
+      <div class="flow-step-title">CP2 — Family Activation</div>
+      <div class="flow-step-sub">EVT-TARIFF · EVT-REGULATION · EVT-INPUT</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP2 ✅ — Family Activation</strong><br><br>
+            <span class="label">EVT-TARIFF</span> — FL301 rate differential<br>
+            <span class="label">EVT-REGULATION</span> — VN USTR S301 investigation (Jun 2) · BD EBA graduation risk<br>
+            <span class="label">EVT-INPUT</span> — IN cotton duty waiver (expires Oct 31) · raw cotton +16% Nov 1<br><br>
+            <div class="alert warn">
+              <div class="alert-title">⚠️ KB-FLAG: Expert Comments — Language Hard Rules</div>
+              "Beneficiaries" → <strong>never use as a label</strong> — use "gained cost advantage · conditional"<br>
+              "Will lose orders" → <strong>never use as a label</strong> — use "may face competitive pressure"
+            </div>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:03</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — proceed</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ CP3 ═══════════════ -->
+  <div class="divider"><span>CP3 · Entity Fetch Plan</span></div>
+
+  <div class="flow-step">
+    <div class="flow-step-header">
+      <div class="flow-step-num">3</div>
+      <div class="flow-step-title">CP3 — Entity Fetch Plan</div>
+      <div class="flow-step-sub">COMBOs + reasoning principles</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP3 ✅ — Entity Fetch Plan</strong><br><br>
+            <span class="label">COMBO MAPPING:</span><br><br>
+            <table>
+              <tr><th>COMBO</th><th>Signal</th><th>Clients</th><th>Reasoning Principle</th></tr>
+              <tr>
+                <td>COMBO-006</td>
+                <td><strong style="color:#f0883e">COMPETITIVE PRESSURE RISK</strong></td>
+                <td>1</td>
+                <td>VN 12.5% · VN USTR S301 open</td>
+              </tr>
+              <tr>
+                <td>COMBO-003</td>
+                <td><strong style="color:#3fb950">EXPAND CANDIDATE (conditional)</strong></td>
+                <td>2</td>
+                <td>IN vertical · US-exposed · cotton window closes Oct 31</td>
+              </tr>
+              <tr>
+                <td>COMBO-002</td>
+                <td><strong style="color:#f0883e">DUAL EXPOSURE</strong></td>
+                <td>3</td>
+                <td>BD · FL301 10% + EBA graduation risk + banking crisis</td>
+              </tr>
+              <tr>
+                <td>COMBO-014</td>
+                <td><strong style="color:#79c0ff">VERIFY FIRST → EXPAND</strong></td>
+                <td>47</td>
+                <td>IN FOB/CMT · conditional on buyer reallocation + pass-through terms</td>
+              </tr>
+            </table>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:04</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — proceed</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ CP3.5 ═══════════════ -->
+  <div class="divider"><span style="color:#f0883e;font-weight:700;">CP3.5 · Client Mapping ← NEW STEP</span></div>
+
+  <div class="flow-step" style="border-color:#f0883e44;">
+    <div class="flow-step-header">
+      <div class="flow-step-num" style="background:#f0883e;">3.5</div>
+      <div class="flow-step-title">CP3.5 — Client Mapping</div>
+      <div class="flow-step-sub">CLIENT-DB → who in Air8 book is hit</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP3.5 ✅ — Client Mapping</strong> <span style="background:#f0883e18;color:#f0883e;border:1px solid #f0883e44;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;">NEW STEP</span><br><br>
+            <span class="label">PORTFOLIO IMPACT SUMMARY:</span>
+            <div class="kpi-row" style="margin-top:8px;">
+              <div class="kpi-badge"><span class="kpi-val">1</span>COMPETITIVE PRESSURE RISK</div>
+              <div class="kpi-badge"><span class="kpi-val">2</span>EXPAND CANDIDATE</div>
+              <div class="kpi-badge"><span class="kpi-val">3</span>DUAL EXPOSURE</div>
+              <div class="kpi-badge"><span class="kpi-val">47</span>VERIFY FIRST</div>
+              <div class="kpi-badge"><span class="kpi-val">53</span>Total Clients</div>
+            </div>
+            <br>
+            <span class="label">CLIENT LIST (sample):</span>
+            <table>
+              <tr><th>Client</th><th>Country</th><th>Revenue</th><th>COMBO</th><th>Signal</th></tr>
+              <tr><td>HOANGPHAT CO., LTD</td><td>VN</td><td>&lt;$5M</td><td>COMBO-006</td><td style="color:#f0883e">PRESSURE RISK</td></tr>
+              <tr><td>COSMO FIRST LIMITED</td><td>IN</td><td>$100M+</td><td>COMBO-003</td><td style="color:#3fb950">EXPAND CANDIDATE</td></tr>
+              <tr><td>SAHU GLOBAL PVT LTD</td><td>IN</td><td>$100M+</td><td>COMBO-003</td><td style="color:#3fb950">EXPAND CANDIDATE</td></tr>
+              <tr><td>MEGHNA DENIMS LIMITED</td><td>BD</td><td>$5-20M</td><td>COMBO-002</td><td style="color:#f0883e">DUAL EXPOSURE</td></tr>
+              <tr><td>FASCINO EXPORTS PVT LTD</td><td>IN</td><td>&lt;$5M</td><td>COMBO-014</td><td style="color:#79c0ff">VERIFY FIRST</td></tr>
+              <tr><td>BHASKAR INDUSTRIES PVT LTD</td><td>IN</td><td>[UNKNOWN]</td><td>COMBO-014</td><td style="color:#79c0ff">VERIFY FIRST</td></tr>
+            </table>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:05</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — proceed</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ CP4 ═══════════════ -->
+  <div class="divider"><span>CP4 · Data Extract</span></div>
+
+  <div class="flow-step">
+    <div class="flow-step-header">
+      <div class="flow-step-num">4</div>
+      <div class="flow-step-title">CP4 — Data Extract</div>
+      <div class="flow-step-sub">per-client insight cards</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP4 ✅ — Data Extract · Per-Client Insight Cards</strong><br><br>
+            Each card WHY chain (updated with expert requirements):<br><br>
+            <table>
+              <tr><th>Node</th><th>Content (expert-required)</th></tr>
+              <tr><td>TRIGGER</td><td>Tariff rate change · effective date · HS scope</td></tr>
+              <tr><td>CLIENT EXPOSURE</td><td>Client match: country × combo × product × market</td></tr>
+              <tr><td>ECONOMICS GAP</td><td>Tariff math · relative disadvantage/advantage</td></tr>
+              <tr><td style="color:#f0883e">CAPACITY RISK ★</td><td style="color:#f0883e">Can they absorb volume? Flag if unknown</td></tr>
+              <tr><td style="color:#f0883e">MARGIN RISK ★</td><td style="color:#f0883e">Higher vol ≠ higher profit if buyer谈判压力 or compliance cost</td></tr>
+              <tr><td style="color:#58a6ff">COMPLIANCE GATE ★</td><td style="color:#58a6ff">UFLPA readiness + raw material traceability + supply chain transparency</td></tr>
+              <tr><td>CONCLUSION</td><td>Conditional posture language (not "beneficiary", not "will lose orders")</td></tr>
+            </table>
+            <br>
+            <div class="alert info">
+              <div class="alert-title">Card signal labels updated per expert comments</div>
+              🔴 HURT → <strong style="color:#f0883e">COMPETITIVE PRESSURE RISK</strong><br>
+              🟢 BENEFICIARY → <strong style="color:#3fb950">EXPAND CANDIDATE (conditional)</strong><br>
+              Repetitive financing logic → <strong>moved to Appendix</strong> (not per-card)
+            </div>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:06</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — proceed</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ CP5 ═══════════════ -->
+  <div class="divider"><span>CP5 · Insight Assembly</span></div>
+
+  <div class="flow-step">
+    <div class="flow-step-header">
+      <div class="flow-step-num">5</div>
+      <div class="flow-step-title">CP5 — Insight Assembly</div>
+      <div class="flow-step-sub">report + FACTS vs ASSUMPTIONS + KB-GAP</div>
+    </div>
+    <div class="flow-step-body">
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>CP5 ✅ — Insight Assembly</strong><br><br>
+            <span class="label">REPORT HEADER (updated):</span><br>
+            <div class="alert ok" style="margin-top:8px;">
+              <div class="alert-title">✅ Expert Comments Incorporated</div>
+              A: "Beneficiaries" language → <strong>"gained tariff-related cost advantage · conditional on buyer decisions, supplier capacity, compliance readiness, and commercial negotiations"</strong><br><br>
+              B: VN "may lose orders" → <strong>"may face increased competitive pressure, particularly where buyers are actively reviewing sourcing allocations or diversifying production footprints"</strong><br><br>
+              C: Generic "traceability docs" → <strong>"UFLPA readiness, raw material traceability, and supply chain transparency"</strong><br><br>
+              D: Financing logic → <strong>moved to Appendix (one place, not repeated in 53 cards)</strong>
+            </div>
+            <br>
+            <span class="label">FACTS vs ASSUMPTIONS (mandatory section):</span>
+            <table style="margin-top:8px;">
+              <tr><th style="width:50%;color:#3fb950;">✓ FACTS (KB-verified)</th><th style="color:#f0883e;">⚠️ ASSUMPTIONS (unconfirmed)</th></tr>
+              <tr><td>VN FL301 = 12.5% → US total ~28.5%</td><td>Buyers will shift orders from VN to IN/BD</td></tr>
+              <tr><td>IN/BD FL301 = 10% → US total ~26.5%</td><td>IN/BD suppliers have capacity for additional volume</td></tr>
+              <tr><td>Net VN disadvantage: +2.5pp vs IN/BD</td><td>Leveling the playing field narrative (political framing)</td></tr>
+              <tr><td>HS 61/62 NOT in Annex A → fully exposed</td><td>Actual order migration confirmed at buyer level</td></tr>
+              <tr><td>IN cotton duty waiver expires Oct 31 (13 weeks)</td><td>Suppliers can fully absorb compliance costs</td></tr>
+              <tr><td>BD EBA 0% at risk (graduation 2027)</td><td>Price negotiation pressure not yet material</td></tr>
+              <tr><td>FL301 legal challenge: 25 states filed Aug 3, 2026</td><td>—</td></tr>
+            </table>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:07</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <span class="label">PORTFOLIO IMPACT SUMMARY:</span>
+            <table style="margin-top:8px;">
+              <tr><th>Signal</th><th>Count</th><th>Revenue Exposure</th><th>Action</th></tr>
+              <tr><td style="color:#f0883e">COMPETITIVE PRESSURE RISK</td><td>1</td><td>&lt;$5M</td><td>Immediate BD check · H2 PO retention</td></tr>
+              <tr><td style="color:#3fb950">EXPAND CANDIDATE</td><td>2</td><td>$100M+</td><td>Buyer reallocation evidence · UFLPA docs</td></tr>
+              <tr><td style="color:#f0883e">DUAL EXPOSURE</td><td>3</td><td>Mixed</td><td>UFLPA readiness + EBA risk check</td></tr>
+              <tr><td style="color:#79c0ff">VERIFY FIRST → EXPAND</td><td>47</td><td>Partially unknown</td><td>R1 qualification · buyer pass-through</td></tr>
+            </table>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:07</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <span class="label">SUPPLIER READINESS HEATMAP (new):</span>
+            <table style="margin-top:8px;">
+              <tr><th>Readiness Tier</th><th>Criteria</th><th>Supplier Count</th></tr>
+              <tr><td style="color:#3fb950">🟢 READY</td><td>FOB + UFLPA docs + confirmed buyer shift + capacity check</td><td>TBD after R1</td></tr>
+              <tr><td style="color:#f0883e">🔴 NOT READY</td><td>CMT + no UFLPA docs + unknown buyer intent</td><td>Flag — do not finance</td></tr>
+              <tr><td style="color:#79c0ff">🔵 UNKNOWN</td><td>Revenue unknown + FOB/CMT unclear + no docs</td><td>Require BD validation first</td></tr>
+            </table>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:07</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <span class="label">STRATEGIC INSIGHT (new — expert recommendation):</span>
+            <div class="alert warn" style="margin-top:8px;">
+              <div class="alert-title">The Bigger Picture: Resilience-Optimized vs Cost-Optimized Sourcing</div>
+              The 2.5pp tariff differential is real but <strong>not the whole story</strong>.<br><br>
+              Buyers are increasingly shifting from <strong>cost-optimized</strong> to <strong>resilience-optimized</strong> sourcing strategies. Key priorities now:<br>
+              • Geographic diversification<br>
+              • Supply continuity<br>
+              • UFLPA compliance<br>
+              • Raw material traceability<br>
+              • Multi-country production capability<br><br>
+              <strong>Long-term winners:</strong> suppliers that combine competitive cost + strong traceability + compliance readiness + execution capability — regardless of sourcing country.<br><br>
+              BD is <strong>not simply advantaged</strong>: FL301 + EBA graduation + banking crisis = triple risk.<br>
+              IN verticals: real opportunity but <strong>conditional</strong> on cotton window, UFLPA readiness, and buyer allocation decisions.
+            </div>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:08</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <span class="label">KEY ACTIONS (prioritized):</span>
+            <table style="margin-top:8px;">
+              <tr><th>#</th><th>Action</th><th>Priority</th><th>Owner</th></tr>
+              <tr><td>1</td><td>Alert COSMO FIRST + SAHU GLOBAL: cotton pre-buy window · 13 weeks left</td><td style="color:#f0883e">HIGH</td><td>BD</td></tr>
+              <tr><td>2</td><td>BD check HOANGPHAT: H2 PO retention + VN USTR S301 compounding risk</td><td style="color:#f0883e">HIGH</td><td>BD</td></tr>
+              <tr><td>3</td><td>Flag DRESSMEN SOURCING for UFLPA readiness check before any financing</td><td style="color:#f0883e">HIGH</td><td>BD</td></tr>
+              <tr><td>4</td><td>BD EBA/UK clients (ANANTA, ASROTEX): start EBA graduation conversation now</td><td style="color:#f0883e">HIGH</td><td>BD</td></tr>
+              <tr><td>5</td><td>R1 all 47 COMBO-014 clients: FOB/CMT proof + US revenue % + pass-through terms</td><td style="color:#f0883e">HIGH</td><td>BD</td></tr>
+            </table>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:08</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <span class="label">KB-GAP ITEMS (propose to CLIENT-DB after this run):</span>
+            <div style="margin-top:8px;font-size:12px;">
+              <div style="margin-bottom:6px;"><strong style="color:#79c0ff">GAP-1:</strong> UFLPA readiness status field — per supplier</div>
+              <div style="margin-bottom:6px;"><strong style="color:#79c0ff">GAP-2:</strong> Raw material traceability tier — cotton/fabric origin proof level</div>
+              <div style="margin-bottom:6px;"><strong style="color:#79c0ff">GAP-3:</strong> Supplier capacity headroom — can absorb +20% volume? (Y/N/Unknown)</div>
+              <div style="margin-bottom:6px;"><strong style="color:#79c0ff">GAP-4:</strong> Buyer duty pass-through terms — fixed price vs cost-plus</div>
+              <div style="margin-bottom:6px;"><strong style="color:#79c0ff">GAP-5:</strong> US buyer reallocation evidence — confirmed vs speculative</div>
+              <div><strong style="color:#79c0ff">GAP-6:</strong> IN cotton pre-buy status — has supplier pre-buy cotton before Oct 31?</div>
+            </div>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:08</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap yeti">
+        <div class="avatar yeti">YD</div>
+        <div>
+          <div class="bubble">
+            <strong>✅ CP5 DONE — generating output HTML</strong><br><br>
+            Output: <span class="inline-code">s301-fl301-cp5-v2.html</span><br>
+            53 client cards · dark theme · expert changes applied<br>
+            <span style="color:#3fb950;">FACTS vs ASSUMPTIONS ✅</span> ·
+            <span style="color:#3fb950;">Portfolio Impact Summary ✅</span> ·
+            <span style="color:#3fb950;">Supplier Readiness Heatmap ✅</span> ·
+            <span style="color:#3fb950;">Strategic Insight ✅</span> ·
+            <span style="color:#3fb950;">Appendix (no card repetition) ✅</span>
+          </div>
+          <div class="bubble-meta">Yeti · 2026-08-20 14:09</div>
+        </div>
+      </div>
+
+      <div class="bubble-wrap jz">
+        <div class="avatar jz">JZ</div>
+        <div>
+          <div class="bubble approve">✅ Auto-approved — save and deliver</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    FL301 Event Validation · CP0→CP5 Complete · air8-kb-event-validation · 2026-08-20<br>
+    Expert comments (Jerri Zhou) incorporated · No KB data changed · SHI/Lead Scoring: NOT AFFECTED
+  </div>
+
 </div>
-
-<script>
-  var ids=['sv0','sv1','sv2','sv3','sv4','sv5'];
-  var navs=document.querySelectorAll('.snav');
-  var chat=document.getElementById('chat');
-  navs.forEach(function(a){
-    a.addEventListener('click',function(e){
-      e.preventDefault();
-      var el=document.getElementById(a.getAttribute('href').slice(1));
-      if(el) chat.scrollTo({top:el.offsetTop-8,behavior:'smooth'});
-    });
-  });
-  chat.addEventListener('scroll',function(){
-    var top=chat.scrollTop+50,cur=ids[0];
-    ids.forEach(function(id){
-      var el=document.getElementById(id);
-      if(el&&el.offsetTop-chat.offsetTop<=top) cur=id;
-    });
-    navs.forEach(function(a){
-      a.classList.remove('on');
-      if(a.getAttribute('href')==='#'+cur) a.classList.add('on');
-    });
-  });
-</script>
 </body>
 </html>
