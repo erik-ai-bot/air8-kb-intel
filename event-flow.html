@@ -3,191 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Air8 · Section 301 Event Validation</title>
+  <title>Air8 · FL301 Event Validation</title>
   <style>
     :root {
       --tg-bg: #e5ddd5;
-      --tg-header: #ffffff;
-      --tg-header-border: #e0e0e0;
       --b-agent: #ffffff;
       --b-user: #dcf8c6;
-      --b-confirm: #dcf8c6;
       --text: #111b21;
-      --text-muted: #667781;
-      --text-dim: #aaa;
+      --muted: #667781;
+      --dim: #aaa;
       --orange: #f97316;
-      --green: #25d366;
+      --green-sent: #25d366;
       --red: #dc3545;
       --yellow: #e67e00;
       --blue: #0084ff;
-      --code-bg: #f5f5f5;
-      --code-text: #1a1a2e;
-      --sidebar-bg: #f0f2f5;
-      --sidebar-border: #d1d7db;
+      --code-bg: #f7f7f7;
       --tick: #53bdeb;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: -apple-system, 'Segoe UI', sans-serif; }
-    body { background: #f0f2f5; }
+    html, body { height: 100%; font-family: -apple-system, 'Segoe UI', sans-serif; background: #f0f2f5; }
     .page { display: flex; height: 100vh; }
 
     /* ── Sidebar ── */
     .sidenav {
-      width: 150px; min-width: 150px;
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--sidebar-border);
-      padding: 16px 0; display: flex; flex-direction: column; gap: 1px;
+      width: 148px; min-width: 148px;
+      background: #f0f2f5; border-right: 1px solid #d1d7db;
+      padding: 16px 0; display: flex; flex-direction: column;
     }
-    .sidenav-title {
-      font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-      color: var(--text-muted); text-transform: uppercase;
-      padding: 0 12px 10px;
-    }
-    .snav {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 12px; cursor: pointer; text-decoration: none;
-      border-left: 3px solid transparent; transition: all 0.12s;
-    }
+    .sidenav-title { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; padding: 0 12px 10px; }
+    .snav { display: flex; align-items: center; gap: 8px; padding: 7px 12px; cursor: pointer; text-decoration: none; border-left: 3px solid transparent; transition: all 0.12s; }
     .snav:hover { background: rgba(0,0,0,0.04); }
     .snav.done { border-left-color: #c8e6c9; }
-    .snav.on   { background: #e8f5e9; border-left-color: #4caf50; }
+    .snav.on { background: #e8f5e9; border-left-color: #43a047; }
     .sdot { width: 6px; height: 6px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
-    .snav.done .sdot { background: #a5d6a7; }
-    .snav.on   .sdot { background: #4caf50; }
-    .slabel { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
+    .snav.done .sdot { background: #81c784; }
+    .snav.on .sdot { background: #43a047; }
+    .slabel { font-size: 11px; color: var(--muted); }
     .snav.on .slabel { color: #2e7d32; font-weight: 600; }
 
-    /* ── Chat window ── */
+    /* ── Chat ── */
     .frame-wrap { flex: 1; display: flex; overflow: hidden; }
     .tg-window {
-      width: 100%; max-width: 480px; height: 100vh;
+      width: 100%; max-width: 500px; height: 100vh;
       display: flex; flex-direction: column;
       background: var(--tg-bg);
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8b9a8' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      border-right: 1px solid #d1d7db;
-      box-shadow: 1px 0 6px rgba(0,0,0,0.08);
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b0a090' fill-opacity='0.12'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-9.5zm-2 5.5h-1v-5h1v5zm-2 0h-1v-5h1v5zM0 5h1v5H0V5zm2 0h1v5H2V5zm2 0h1v5H4V5zM4 0h1v3H4V0zm2 0h1v3H6V0zm2 0h1v3H8V0z'/%3E%3C/g%3E%3C/svg%3E");
     }
 
-    /* TG Header */
+    /* Header */
     .tg-head {
-      background: var(--tg-header);
-      border-bottom: 1px solid var(--tg-header-border);
-      padding: 8px 12px;
-      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      background: #fff; border-bottom: 1px solid #e0e0e0;
+      padding: 8px 12px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
     }
-    .back-arrow { color: #0084ff; font-size: 22px; cursor: pointer; line-height: 1; }
-    .tg-avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: linear-gradient(135deg,#f97316,#e55a00);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
+    .back-arrow { color: #0084ff; font-size: 22px; cursor: pointer; }
+    .tg-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#f97316,#e55a00); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
     .tg-head-info { flex: 1; }
-    .tg-head-name { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; }
-    .tg-head-status { font-size: 12px; color: var(--green); }
-    .tg-head-icons { display: flex; gap: 16px; color: #8696a0; font-size: 20px; cursor: pointer; }
+    .tg-head-name { font-size: 15px; font-weight: 600; color: var(--text); }
+    .tg-head-status { font-size: 12px; color: var(--green-sent); }
+    .tg-head-icons { display: flex; gap: 14px; color: #8696a0; font-size: 20px; cursor: pointer; }
 
-    /* Chat scroll */
-    .tg-scroll { flex: 1; overflow-y: auto; padding: 8px 8px 16px; }
+    /* Scroll */
+    .tg-scroll { flex: 1; overflow-y: auto; padding: 6px 8px 16px; }
 
-    /* Date divider */
-    .date-div { display: flex; align-items: center; justify-content: center; margin: 12px 0 6px; }
-    .date-pill {
-      background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);
-      color: var(--text-muted); font-size: 11px; font-weight: 500;
-      padding: 4px 10px; border-radius: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+    /* Date / step dividers */
+    .date-div { display: flex; align-items: center; justify-content: center; margin: 10px 0 6px; }
+    .date-pill { background: rgba(255,255,255,0.75); color: var(--muted); font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 
-    /* Step divider */
-    .step-div { display: flex; align-items: center; justify-content: center; margin: 14px 0 6px; }
-    .step-pill {
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(249,115,22,0.25);
-      color: var(--orange); font-size: 10px; font-weight: 700;
-      padding: 3px 10px; border-radius: 20px; letter-spacing: 0.06em;
-    }
+    .step-div { display: flex; align-items: center; justify-content: center; margin: 14px 0 4px; }
+    .step-pill { background: rgba(255,255,255,0.8); border: 1px solid rgba(249,115,22,0.3); color: var(--orange); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.06em; }
 
-    /* Message rows */
+    /* Rows */
     .row { display: flex; margin-bottom: 2px; padding: 0 4px; }
-    .row.agent { justify-content: flex-start; align-items: flex-end; gap: 6px; }
+    .row.agent { justify-content: flex-start; align-items: flex-end; gap: 5px; }
     .row.user  { justify-content: flex-end; }
-    .row.agent + .row.agent .row-avatar { visibility: hidden; }
 
-    /* Avatar (agent only) */
-    .row-avatar {
-      width: 28px; min-width: 28px; height: 28px; border-radius: 50%;
-      background: linear-gradient(135deg,#f97316,#e55a00);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
-      margin-bottom: 2px;
-    }
+    /* Avatar */
+    .row-avatar { width: 26px; min-width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg,#f97316,#e55a00); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; margin-bottom: 2px; }
 
-    /* Bubble */
-    .bbl {
-      max-width: 86%;
-      border-radius: 8px;
-      padding: 6px 10px 4px;
-      font-size: 13.5px; line-height: 1.5;
-      position: relative;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
-      word-break: break-word;
-    }
-    /* Bubble tails */
-    .bbl.agent {
-      background: var(--b-agent);
-      border-top-left-radius: 2px;
-    }
-    .bbl.user {
-      background: var(--b-user);
-      border-top-right-radius: 2px;
-    }
-    .bbl.confirm { background: var(--b-confirm); border-top-right-radius: 2px; }
-
-    .bbl-sender { font-size: 12px; font-weight: 600; color: var(--orange); margin-bottom: 2px; }
-
+    /* Bubbles */
+    .bbl { max-width: 88%; border-radius: 8px; padding: 6px 9px 4px; font-size: 13px; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-break: break-word; }
+    .bbl.agent   { background: #fff; border-top-left-radius: 2px; }
+    .bbl.user    { background: var(--b-user); border-top-right-radius: 2px; }
+    .bbl.confirm { background: var(--b-user); border-top-right-radius: 2px; }
+    .bbl-sender { font-size: 11.5px; font-weight: 600; color: var(--orange); margin-bottom: 2px; }
     .bbl-meta { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 2px; }
-    .bbl-ts { font-size: 11px; color: var(--text-muted); }
-    .bbl-tick { font-size: 13px; color: var(--tick); }
+    .bbl-ts { font-size: 11px; color: var(--muted); }
+    .bbl-tick { font-size: 12px; color: var(--tick); }
+    .confirm-text { color: #2e7d32; font-size: 13px; }
 
     /* Code block */
     .cbl {
-      background: var(--code-bg);
-      border-radius: 6px;
-      padding: 9px 11px;
-      font-family: 'SF Mono','Fira Code','Courier New',monospace;
-      font-size: 11.5px; line-height: 1.75;
-      color: var(--code-text);
-      margin: 6px 0 3px;
-      white-space: pre-wrap; overflow-x: auto;
-      border: 1px solid #e8e8e8;
+      background: var(--code-bg); border: 1px solid #e4e4e4; border-radius: 6px;
+      padding: 9px 11px; font-family: 'SF Mono','Fira Code','Courier New',monospace;
+      font-size: 11.5px; line-height: 1.75; color: #1a1a2e;
+      margin: 5px 0 3px; white-space: pre-wrap; overflow-x: auto;
     }
-    .g { color: #1a7a40; font-weight: 500; }
-    .y { color: #b45309; font-weight: 500; }
-    .r { color: #b91c1c; font-weight: 500; }
+    .g { color: #1a7a40; }
+    .y { color: #b45309; }
+    .r { color: #b91c1c; }
     .o { color: #c2410c; font-weight: 600; }
     .d { color: #9ca3af; }
     .w { color: #111827; }
     .h { color: #1e3a5f; font-weight: 600; }
+    .bold { font-weight: 600; }
 
-    /* Telegram inline buttons */
+    /* TG buttons */
     .tg-btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-    .tg-btn {
-      flex: 1; min-width: 0;
-      background: #f0f8ff;
-      border: 1px solid #b3d9f7;
-      color: #0077b6; font-size: 12px; font-weight: 500;
-      padding: 6px 8px; border-radius: 6px; cursor: pointer;
-      text-align: center; font-family: inherit;
-      transition: background 0.1s; white-space: nowrap;
-    }
+    .tg-btn { flex: 1; min-width: 0; background: #f0f8ff; border: 1px solid #b3d9f7; color: #0077b6; font-size: 12px; font-weight: 500; padding: 6px 7px; border-radius: 6px; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: background 0.1s; }
     .tg-btn:hover { background: #dff0fd; }
     .tg-btn.gb { background: #f0faf3; border-color: #a3d9b1; color: #1a7a40; }
     .tg-btn.gb:hover { background: #e0f5e8; }
     .tg-btn.yb { background: #fffbf0; border-color: #f8d7a0; color: #92400e; }
-
-    .confirm-text { color: #1a7a40; }
 
     @media (max-width: 600px) {
       .sidenav { width: 40px; min-width: 40px; }
@@ -202,7 +129,6 @@
 <body>
 <div class="page">
 
-  <!-- Sidebar -->
   <nav class="sidenav">
     <div class="sidenav-title">Steps</div>
     <a class="snav done" href="#sv0"><div class="sdot"></div><div class="slabel">SV0 · Intake</div></a>
@@ -213,11 +139,9 @@
     <a class="snav on"   href="#sv5"><div class="sdot"></div><div class="slabel">SV5 · Output</div></a>
   </nav>
 
-  <!-- Chat -->
   <div class="frame-wrap">
   <div class="tg-window">
 
-    <!-- Header -->
     <div class="tg-head">
       <div class="back-arrow">‹</div>
       <div class="tg-avatar">YD</div>
@@ -228,9 +152,7 @@
       <div class="tg-head-icons"><span>🔍</span><span>⋮</span></div>
     </div>
 
-    <!-- Messages -->
     <div class="tg-scroll" id="chat">
-
       <div class="date-div"><div class="date-pill">Wed, 19 Aug 2026</div></div>
 
       <!-- ══ SV0 ══ -->
@@ -238,7 +160,7 @@
 
       <div class="row user">
         <div class="bbl user">
-          I have a news event on Section 301 tariff update, need to run an event validation. NEXT Retail suppliers are in scope.
+          FL301 tariff effective Jul 24 — need an event validation for NEXT Retail portfolio. Vietnam, India, Bangladesh in scope.
           <div class="bbl-meta"><span class="bbl-ts">09:41</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
@@ -247,19 +169,16 @@
         <div class="row-avatar">YD</div>
         <div class="bbl agent">
           <div class="bbl-sender">Yeti · Validation Agent</div>
-          📥 <b>SV0 · Intake</b>
-          <span style="font-size:10px;color:var(--text-muted);margin-left:4px;">[KB: SHI-KB/]</span>
-          <div class="cbl"><span class="g">✓</span> Event:   <span class="w">Section 301 Tariff Update</span>
-<span class="g">✓</span> Date:    <span class="w">2026-08-19</span>
-<span class="g">✓</span> Scope:   <span class="w">NEXT Retail supplier portfolio</span>
-<span class="g">✓</span> Type:    <span class="w">Trade policy · Tariff regime change</span>
+          📥 <b>SV0 · Intake</b> <span style="font-size:10px;color:var(--muted);">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB]</span>
+          <div class="cbl"><span class="g">✓</span> Event:   <span class="w">Forced Labor Section 301 (FL301) effective Jul 24, 2026</span>
+<span class="g">✓</span> Trigger: <span class="w">New tariff layer on all major sourcing countries</span>
+<span class="g">✓</span> Scope:   <span class="w">NEXT Retail · HS 61/62 apparel portfolio</span>
 
-<span class="d">Sources to process:</span>
-  1. Section 301 USTR announcement   [Article]
-  2. Air8 TARIFF-DB                  [KB]
-  3. Air8 COUNTRY-DB                 [KB]
-  4. Air8 COMMODITY-DB               [KB]
-  5. Air8 CLIENT-DB · NEXT in scope  [KB]</div>
+<span class="d">Sources loaded:</span>
+  1. Air8 TARIFF-DB           [KB · verified Aug 4, 2026]
+  2. Air8 COUNTRY-DB          [KB · verified Aug 4, 2026]
+  3. Air8 CLIENT-DB · NEXT    [KB · suppliers in scope]
+  4. USTR FL301 announcement  [source]</div>
           <div class="tg-btns">
             <button class="tg-btn gb">✅ Confirmed — go to SV1</button>
             <button class="tg-btn yb">⚠️ Adjust</button>
@@ -282,41 +201,44 @@
         <div class="row-avatar">YD</div>
         <div class="bbl agent">
           <div class="bbl-sender">Yeti · Validation Agent</div>
-          🔍 <b>SV1 · Parse</b>
-          <span style="font-size:10px;color:var(--text-muted);margin-left:4px;">[KB: TARIFF-DB · COUNTRY-DB · NODE-terminology.md]</span>
-          <div class="cbl"><span class="h">Tariff Structure (TARIFF-DB · sourced USTR)</span>
-  Section 301 Forced Labour — two-tier additional duty
+          🔍 <b>SV1 · Parse</b> <span style="font-size:10px;color:var(--muted);">[KB: TARIFF-DB · COUNTRY-DB · EVENT-ID T2-VN / T2-IN / T2-BD]</span>
+          <div class="cbl"><span class="h">FL301 Rate Structure — HS 61/62 Apparel (TARIFF-DB)</span>
+  VN  MFN ~12–32% + FL301 <span class="r">+12.5%</span> = US Total <span class="r">~28.5%</span>
+  IN  MFN ~12–32% + FL301 <span class="g">+10.0%</span> = US Total <span class="g">~26.5%</span>
+  BD  MFN ~12–32% + FL301 <span class="g">+10.0%</span> = US Total <span class="g">~26.5%</span>
+  PK  MFN ~12–32% + FL301 <span class="g">+10.0%</span> = US Total <span class="g">~26.5%</span>
 
-  <span class="y">Tier 2</span>  +12.5%  No forced labour ban / No ART signed
-    Countries: Vietnam · Philippines · Thailand
+  <span class="o">Net US differential: VN +2.5pp vs IN / BD / PK</span>
 
-  <span class="g">Tier 1</span>  +10.0%  Forced labour ban OR ART signed
-    Countries: Cambodia · Indonesia · Malaysia
+  ⚠️ Legal challenge: 25 states v. Trump admin (Aug 3, 2026)
+     Rates active pending any court injunction
 
-  India / Bangladesh — non-ASEAN, not in Tier 1/2
-  Net difference on HS 61/62: <span class="o">VN +2.5pp vs IN/BD</span>
+<span class="h">Country Signals (COUNTRY-DB)</span>
+  VN  FL301 highest burden · <span class="r">USTR S301 investigation open</span>
+      Air8 signal: "Erodes VN diversification advantage"
+  BD  FL301 + <span class="r">EBA 0% at risk 2027+</span> (LDC graduation)
+      Banking sector crisis · BDT mild depreciation
+      Air8 signal: "Double pressure: FL301 US + EBA EU"
+  IN  FL301 + <span class="y">cotton duty waiver expiring Oct 31</span>
+      13 weeks before +16% raw cotton input cost spike
+      Air8 signal: "13-week window before reinstatement"
 
-<span class="h">Country Risk (COUNTRY-DB)</span>
-  Vietnam     MEDIUM      UFLPA: standard
-  India       MEDIUM-HIGH UFLPA: variable
-  Bangladesh  MEDIUM-HIGH UFLPA: <span class="r">elevated 🔴</span>
-
-<span class="h">Portfolio (CLIENT-DB · NEXT suppliers)</span>
-  Vietnam:     6 suppliers  ← Tier 2 exposed
-  India:       9 suppliers  ← cost advantage
-  Bangladesh: 11 suppliers  ← cost advantage + UFLPA flag</div>
+<span class="h">Portfolio (CLIENT-DB · NEXT in scope)</span>
+  VN:  6 suppliers · all HS 61/62 · US Total ~28.5%
+  IN:  9 suppliers · all HS 61/62 · US Total ~26.5%
+  BD: 11 suppliers · all HS 61/62 · US Total ~26.5%</div>
           <div class="tg-btns">
             <button class="tg-btn gb">✅ Confirmed — go to SV2</button>
             <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:44</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:45</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV2</span>
-          <div class="bbl-meta"><span class="bbl-ts">09:45</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:46</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -327,27 +249,32 @@
         <div class="row-avatar">YD</div>
         <div class="bbl agent">
           <div class="bbl-sender">Yeti · Validation Agent</div>
-          ⚠️ <b>SV2 · Detect</b>
-          <span style="font-size:10px;color:var(--text-muted);margin-left:4px;">[KB: NODE-risk-categories.md · L1-reasoning-principles.md]</span>
-          <div class="cbl"><span class="y">E1</span> Competitive Position Shift
-  VN HS 61/62 now +2.5pp vs IN/BD
-  6 NEXT VN suppliers face cost disadvantage
-  Buyers reviewing sourcing may act on differential
+          ⚠️ <b>SV2 · Detect</b> <span style="font-size:10px;color:var(--muted);">[KB: L1-reasoning-principles.md · COUNTRY-DB signals]</span>
+          <div class="cbl"><span class="y">E1</span> VN Competitive Position — Cost Disadvantage
+  VN FL301 = 12.5% vs IN/BD = 10% → 2.5pp gap
+  6 NEXT VN suppliers now at higher US tariff burden
+  VN also has open S301 investigation (bilateral risk)
 
-<span class="y">E2</span> Compliance Readiness Gap
-  BD carries elevated UFLPA risk
-  IN compliance: variable — not all audit-ready
-  Tariff advantage ≠ buyer qualification
+<span class="y">E2</span> BD Double Exposure
+  FL301 +10% hits US-bound exports
+  EBA 0% (EU) at risk from LDC graduation 2027+
+  Banking sector instability adds financing risk
+  BD is NOT simply "advantaged" — faces dual pressure
 
-<span class="y">E3</span> Capacity &amp; Margin Uncertainty
-  No capacity data for IN/BD beneficiaries
-  Higher volume ≠ higher margin (renegotiation risk)
-  Working capital requirements may increase
+<span class="y">E3</span> IN Input Cost Window Closing
+  Cotton duty waiver expires Oct 31 (13 weeks from Aug 4)
+  Nov 1 onwards: +16% raw cotton cost spike
+  Margin squeeze for IN apparel suppliers from Q4
 
-<span class="r">E4</span> Assumption Gap
-  No confirmed buyer sourcing decisions
-  <span class="r">Order migration is inference — not confirmed fact</span>
-  Report must separate facts from assumptions
+<span class="y">E4</span> FL301 Legal Uncertainty
+  25 states filed challenge Aug 3, 2026
+  Rates active but may be voided or modified
+  All cost advantage calculations are conditional
+
+<span class="r">E5</span> Assumption Gap — No Confirmed Buyer Action
+  No NEXT buyer sourcing decision confirmed
+  <span class="r">Order migration is inference — not fact</span>
+  Report must not overstate conclusions
 
 <span class="h">Hard Stop Check (HS1–HS5):</span>
   <span class="g">→ None triggered · Proceed to SV3</span></div>
@@ -355,14 +282,14 @@
             <button class="tg-btn gb">✅ Confirmed — go to SV3</button>
             <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:47</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:48</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV3</span>
-          <div class="bbl-meta"><span class="bbl-ts">09:48</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:49</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -373,42 +300,46 @@
         <div class="row-avatar">YD</div>
         <div class="bbl agent">
           <div class="bbl-sender">Yeti · Validation Agent</div>
-          🔎 <b>SV3 · Resolve</b>
-          <span style="font-size:10px;color:var(--text-muted);margin-left:4px;">[KB: L1-reasoning-principles.md]</span>
-          <div class="cbl"><span class="y">E1</span> Competitive Position Shift
+          🔎 <b>SV3 · Resolve</b> <span style="font-size:10px;color:var(--muted);">[KB: L1-reasoning-principles.md]</span>
+          <div class="cbl"><span class="y">E1</span> VN Competitive Position
   Decision: <span class="y">HOLD 🟡</span>
-  Differential confirmed. Migration not confirmed.
-  → "may face pressure" not "will lose orders"
-  → "gained cost advantage" not "are beneficiaries"
+  2.5pp FL301 differential confirmed.
+  → Must not overstate: "may face pressure" not "will lose orders"
+  → Flag VN clients with US concentration >60% for BD/IN conversation
 
-<span class="y">E2</span> Compliance Readiness Gap
+<span class="y">E2</span> BD Double Exposure
   Decision: <span class="y">HOLD 🟡</span>
-  UFLPA = independent selection gate, not footnote
-  → Separate risk dimension required in output
-  → Supplier readiness heatmap needed
+  BD is NOT simply advantaged. Dual risk: FL301 + EBA loss.
+  → Air8 ARP product highly relevant (early payment attractive)
+  → Flag BD clients >70% US concentration as high sensitivity
 
-<span class="y">E3</span> Capacity &amp; Margin Uncertainty
+<span class="y">E3</span> IN Cotton Duty Window
+  Decision: <span class="y">HOLD 🟡</span>  Time-sensitive (13 weeks)
+  → IN suppliers should pre-buy cotton before Oct 31
+  → Q4 margin impact if they don't act
+
+<span class="y">E4</span> FL301 Legal Uncertainty
   Decision: <span class="y">HOLD 🟡</span>
-  Capacity and margin unvalidated
-  → Add dedicated sections to report
+  All conclusions conditional on FL301 surviving challenge
+  → Label all tariff-based conclusions as PROVISIONAL
 
-<span class="r">E4</span> Assumption Gap
+<span class="r">E5</span> Assumption Gap
   Decision: <span class="r">ESCALATE 🔴</span>
-  Draft report treats migration as fact
+  Report draft treats migration as fact.
   → Add Facts vs Assumptions section
-  → Add portfolio exposure numbers for mgmt</div>
+  → Add portfolio exposure breakdown for management</div>
           <div class="tg-btns">
             <button class="tg-btn gb">✅ Confirmed — go to SV4</button>
             <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:50</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:51</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV4</span>
-          <div class="bbl-meta"><span class="bbl-ts">09:51</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:52</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -419,37 +350,41 @@
         <div class="row-avatar">YD</div>
         <div class="bbl agent">
           <div class="bbl-sender">Yeti · Validation Agent</div>
-          📎 <b>SV4 · Evidence Check</b>
-          <span style="font-size:10px;color:var(--text-muted);margin-left:4px;">[KB: L1-evidence-discipline.md]</span>
-          <div class="cbl"><span class="g">E1</span> Tariff Rates
-  [TARIFF-DB · 2026-08-19 · sourced from USTR]
+          📎 <b>SV4 · Evidence Check</b> <span style="font-size:10px;color:var(--muted);">[KB: L1-evidence-discipline.md]</span>
+          <div class="cbl"><span class="g">E1</span> VN tariff disadvantage
+  [TARIFF-DB · Aug 4, 2026 · sourced USTR + tariffstool.com]
   <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="g">E2</span> UFLPA / Country Risk
-  [COUNTRY-DB · 2026-08-01 · Air8 KB]
+<span class="g">E2</span> BD double exposure
+  [COUNTRY-DB · Aug 4, 2026 · BGMEA + EC Trade]
   <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="y">E3</span> Capacity &amp; Margin Risk
-  No field data available
-  <span class="y">→ PARTIAL ⚠️  flag: BD field validation needed</span>
+<span class="g">E3</span> IN cotton duty window
+  [COUNTRY-DB · Aug 4, 2026 · India Budget 2026 · TBSNews]
+  <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="r">E4</span> Order Migration Claim
-  Source: news article inference only
-  No buyer intent confirmed
+<span class="y">E4</span> FL301 legal challenge
+  [TARIFF-DB footnote · Aug 3, 2026 · 25 states filing]
+  Proceedings ongoing — outcome not determined
+  <span class="y">→ PARTIAL ⚠️  label conclusions as PROVISIONAL</span>
+
+<span class="r">E5</span> Buyer sourcing decisions
+  No NEXT buyer communication confirmed
+  No historical order shift data in CLIENT-DB
   <span class="r">→ INSUFFICIENT ⚠️</span>
-  Needed: buyer intent · supplier capacity · order trends</div>
+  Needed: buyer intent · supplier capacity · order trend data</div>
           <div class="tg-btns">
             <button class="tg-btn gb">✅ Confirmed — go to SV5</button>
             <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:53</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:54</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV5</span>
-          <div class="bbl-meta"><span class="bbl-ts">09:54</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:55</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -460,66 +395,71 @@
         <div class="row-avatar">YD</div>
         <div class="bbl agent">
           <div class="bbl-sender">Yeti · Validation Agent</div>
-          ✅ <b>SV5 · Output</b>
-          <span style="font-size:10px;color:var(--text-muted);margin-left:4px;">[KB: SHI-KB/]</span>
+          ✅ <b>SV5 · Output</b> <span style="font-size:10px;color:var(--muted);">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB]</span>
           <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Event Validation — Section 301 Tariff Update
-Scope: NEXT Retail · 47 suppliers
-Date: 2026-08-19
+Event Validation — FL301 Tariff Update
+Scope: NEXT Retail · VN/IN/BD · HS 61/62
+Date:  2026-08-19  |  KB: Aug 4, 2026
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-OVERALL: <span class="y">HOLD 🟡</span>
+OVERALL: <span class="y">HOLD 🟡</span>  (provisional — FL301 legal challenge pending)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<span class="h">FACTS (confirmed)</span>
-  ✓ VN HS 61/62 = Tier 2 · +12.5% Section 301
-  ✓ IN/BD non-ASEAN · ~2.5pp cost advantage vs VN
-  ✓ BD UFLPA elevated risk (COUNTRY-DB)
+<span class="h">FACTS (TARIFF-DB + COUNTRY-DB verified)</span>
+  ✓ VN FL301 = +12.5% → US Total ~28.5%
+  ✓ IN/BD FL301 = +10% → US Total ~26.5%
+  ✓ Net US differential: VN +2.5pp vs IN/BD
+  ✓ FL301 legal challenge filed Aug 3 (25 states)
+  ✓ BD EBA (EU 0%) at risk from 2027 LDC graduation
+  ✓ IN cotton duty waiver expires Oct 31 — 13 weeks left
   ✓ 6 VN · 9 IN · 11 BD NEXT suppliers in scope
 
-<span class="h">ASSUMPTIONS (not confirmed)</span>
-  ? Buyers will shift orders to IN/BD
-  ? IN/BD suppliers can absorb more volume
-  ? Cost advantage translates to better margin
+<span class="h">ASSUMPTIONS (require validation)</span>
+  ? NEXT buyer will shift orders VN → IN/BD
+  ? IN/BD suppliers have capacity to absorb volume
+  ? Cost advantage translates to margin gain
+  ? FL301 rates will survive legal challenge
 
 ───────────────────────────────
 
-<span class="y">E1</span> Competitive Position
-  <span class="y">HOLD 🟡</span> · Language must be conditional
-  Evidence: [TARIFF-DB · Air8 KB]
+<span class="y">E1</span> VN Competitive Position
+  <span class="y">HOLD 🟡</span> 2.5pp FL301 gap confirmed.
+  Language: "may face competitive pressure" (not "will lose")
+  Action: Flag VN clients >60% US concentration
 
-<span class="y">E2</span> Compliance Gate
-  <span class="y">HOLD 🟡</span> · UFLPA as independent dimension
-  Evidence: [COUNTRY-DB · Air8 KB]
+<span class="y">E2</span> BD Double Exposure
+  <span class="y">HOLD 🟡</span> NOT simply "advantaged" — FL301 + EBA dual risk.
+  Action: ARP early payment product highly relevant for BD
 
-<span class="y">E3</span> Capacity &amp; Margin Risk
-  <span class="y">HOLD 🟡</span> · Sections required in report
-  Evidence: partial · BD field validation needed
+<span class="y">E3</span> IN Cotton Duty Window
+  <span class="y">HOLD 🟡</span> Time-sensitive — 13 weeks to Oct 31.
+  Action: Alert IN suppliers to pre-buy cotton now
 
-<span class="r">E4</span> Assumption Gap
-  <span class="r">ESCALATE 🔴</span> · Facts vs Assumptions section required
-  Evidence: insufficient
+<span class="y">E4</span> FL301 Legal Uncertainty
+  <span class="y">HOLD 🟡</span> All conclusions provisional.
+  Action: Label tariff-based findings as PROVISIONAL
+
+<span class="r">E5</span> Assumption Gap
+  <span class="r">ESCALATE 🔴</span> Migration stated as fact in draft.
+  Action: Add Facts vs Assumptions section before release
 
 ───────────────────────────────
-ACTIONS before release:
-  1. Add Facts vs Assumptions section
-  2. Reframe language → conditional
-  3. UFLPA as standalone risk dimension
-  4. Add capacity + margin risk sections
-  5. Add portfolio numbers for management
-  6. Validate buyer intent before final publish
+KB PROPOSALS:
+  · Add FL301 differential trigger rule (>2pp → auto-flag)
+  · Add BD EBA graduation risk flag to COUNTRY-DB
+  · Add IN cotton duty expiry tracker field
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
           <div class="tg-btns">
             <button class="tg-btn gb" onclick="this.textContent='✅ Saved'">✅ Done — save report</button>
             <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:55</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:56</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Done — save report</span>
-          <div class="bbl-meta"><span class="bbl-ts">09:56</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:57</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -530,27 +470,25 @@ ACTIONS before release:
 </div>
 
 <script>
-  var ids = ['sv0','sv1','sv2','sv3','sv4','sv5'];
-  var navs = document.querySelectorAll('.snav');
-  var chat = document.getElementById('chat');
-  navs.forEach(function(a) {
-    a.addEventListener('click', function(e) {
+  var ids=['sv0','sv1','sv2','sv3','sv4','sv5'];
+  var navs=document.querySelectorAll('.snav');
+  var chat=document.getElementById('chat');
+  navs.forEach(function(a){
+    a.addEventListener('click',function(e){
       e.preventDefault();
-      var id = a.getAttribute('href').slice(1);
-      var el = document.getElementById(id);
-      if (el) chat.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+      var el=document.getElementById(a.getAttribute('href').slice(1));
+      if(el) chat.scrollTo({top:el.offsetTop-8,behavior:'smooth'});
     });
   });
-  chat.addEventListener('scroll', function() {
-    var top = chat.scrollTop + 50;
-    var cur = ids[0];
-    ids.forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el && el.offsetTop - chat.offsetTop <= top) cur = id;
+  chat.addEventListener('scroll',function(){
+    var top=chat.scrollTop+50,cur=ids[0];
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&el.offsetTop-chat.offsetTop<=top) cur=id;
     });
-    navs.forEach(function(a) {
+    navs.forEach(function(a){
       a.classList.remove('on');
-      if (a.getAttribute('href') === '#' + cur) a.classList.add('on');
+      if(a.getAttribute('href')==='#'+cur) a.classList.add('on');
     });
   });
 </script>
