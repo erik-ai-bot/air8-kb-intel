@@ -33,8 +33,6 @@ a { color:#3498db; text-decoration:none; }
 .kpi-val { font-size:18px; font-weight:700; color:var(--heading); margin-right:6px; }
 .meta-strip { display:flex; flex-wrap:wrap; gap:8px; font-size:11px; color:var(--muted); }
 .meta-item { background:#0a1220; padding:3px 8px; border-radius:3px; }
-
-/* ── Tables ── */
 table { width:100%; border-collapse:collapse; margin-bottom:16px; }
 th,td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
 th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:0.5px; }
@@ -81,36 +79,52 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
 .col-why { width:50%; border-right:1px solid var(--border); padding-right:20px; }
 .col-what { width:50%; padding-left:20px; }
 
+/* ── Phase separators in WHY ── */
+.why-section { margin-bottom:4px; }
+.phase-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:4px 10px; margin-bottom:6px; display:inline-block; border-radius:3px; }
+.phase-label.phase-event { background:#3d0000; color:#ff6b6b; }
+.phase-label.phase-exposure { background:#3d2a00; color:#ffb347; }
+.phase-label.phase-gap { background:#3d2a00; color:#ffb347; }
+.phase-label.phase-second { background:#2a1a3d; color:#d7bde2; }
+.phase-label.phase-gate { background:#062a28; color:#1abc9c; }
+.phase-label.phase-decision { background:#0d2a4a; color:#9ecbff; }
+
 /* ── Chain Nodes ── */
-.chain-node { margin-bottom:12px; border-left:3px solid #334455; padding:8px 12px; background:#0d1520; border-radius:0 6px 6px 0; }
+.chain-node { margin-bottom:10px; border-left:3px solid #334455; padding:7px 10px; background:#0d1520; border-radius:0 6px 6px 0; }
 .chain-node.trigger { border-left-color:var(--red); }
 .chain-node.exposure { border-left-color:var(--orange); }
 .chain-node.gap { border-left-color:var(--amber); }
 .chain-node.compound { border-left-color:var(--purple); }
-.chain-node.capacity { border-left-color:var(--red); background:#1a0808; }
-.chain-node.margins { border-left-color:var(--orange); background:#1a1200; }
+.chain-node.capacity { border-left-color:#ff6b6b; background:#1a0808; }
+.chain-node.margins { border-left-color:#ffb347; background:#1a1200; }
 .chain-node.compliance { border-left-color:var(--teal); background:#081a18; }
 .chain-node.edge { border-left-color:var(--green); }
 .chain-node.conclusion { border-left-color:var(--blue); }
-.node-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.node-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
 .trigger .node-label { color:var(--red); }
 .exposure .node-label { color:var(--orange); }
 .gap .node-label { color:var(--amber); }
 .compound .node-label { color:var(--purple); }
 .capacity .node-label { color:#ff6b6b; }
 .margins .node-label { color:#ffb347; }
-.compliance .node-label { color:var(--teal); }
+.compliance .node-label { color:var(--teal; }
 .edge .node-label { color:var(--green); }
 .conclusion .node-label { color:var(--blue); }
-.formula { display:inline-block; background:#1a1a00; color:#ffcc00; padding:2px 6px; border-radius:3px; font-family:'Courier New',monospace; font-size:11px; margin:4px 0; }
-.confidence { font-size:11px; color:var(--muted); margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
+.formula { display:inline-block; background:#1a1a00; color:#ffcc00; padding:2px 6px; border-radius:3px; font-family:'Courier New',monospace; font-size:10px; margin:3px 4px 3px 0; }
+.confidence { font-size:10px; color:var(--muted); margin-top:5px; padding-top:5px; border-top:1px solid var(--border); }
+
+/* ── Conditionality Badge ── */
+.cond-badge { display:inline-block; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; margin-left:6px; vertical-align:middle; }
+.cond-unknown { background:#2a1a00; color:#ffb347; }
+.cond-needed { background:#2a1a00; color:#ffb347; }
+.cond-clear { background:#002200; color:#7ddf7d; }
 
 /* ── Action Box ── */
 .action-box { background:#0d1520; border-radius:8px; padding:12px; margin-top:12px; }
 .action-box-title { font-size:12px; font-weight:700; color:var(--green); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.3px; }
-.act { margin-bottom:8px; padding:8px; background:#0a1220; border-radius:6px; border-left:2px solid #2a3f5f; }
+.act { margin-bottom:7px; padding:7px; background:#0a1220; border-radius:6px; border-left:2px solid #2a3f5f; }
 .act-verb { font-weight:700; color:var(--heading); }
-.act-need { font-size:10px; color:var(--muted); margin-top:4px; }
+.act-need { font-size:10px; color:var(--muted); margin-top:3px; }
 
 /* ── Decision Point ── */
 .decision-point { background:#1a2a4a; border:1px solid var(--blue); border-radius:8px; padding:12px; margin-top:12px; }
@@ -120,7 +134,8 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
 /* ── Filter Bar ── */
 .filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; padding:12px; background:var(--card-bg); border-radius:8px; border:1px solid var(--border); }
 .filter-bar label { color:var(--muted); font-size:11px; }
-.filter-bar select { background:#0a1220; color:var(--text); border:1px solid #2a3f5f; border-radius:4px; padding:4px 8px; font-size:11px; }
+.filter-bar select { background:#0a1220; color:var(--text); border:1px solid #2a3f5f; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; }
+.filter-bar select:hover { border-color:#3498db; }
 
 /* ── Section Title ── */
 .section-title { font-size:14px; font-weight:700; color:var(--heading); margin:20px 0 12px 0; padding-bottom:8px; border-bottom:1px solid var(--border); }
@@ -149,14 +164,12 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
 <div class="hero">
   <h1>⚖️ Section 301 Forced-Labor Tariff — CP5 Validation Report</h1>
   <div class="subtitle">US Section 301 FL301 effective July 24, 2026 · VN 12.5% · IN/BD 10% · HS 61/62 NOT in Annex A — fully exposed</div>
-
   <div class="meta-strip" style="margin-bottom:16px">
     <span class="meta-item">Run ID: <strong>s301-forced-labor-tariff-20260724</strong></span>
     <span class="meta-item">Generated: <strong>2026-08-20</strong></span>
     <span class="meta-item">Cards: <strong>53</strong></span>
-    <span class="meta-item" style="color:#f0883e;">Expert Changes: <strong>A–E Applied</strong></span>
+    <span class="meta-item" style="color:#f0883e;">Expert Changes: <strong>A–E Applied · BD Action: Capacity Added</strong></span>
   </div>
-
   <div class="kpi-row">
     <span class="kpi-badge"><span class="kpi-val" style="color:#ff6b6b;">1</span> COMPETITIVE PRESSURE RISK</span>
     <span class="kpi-badge"><span class="kpi-val" style="color:#7ddf7d;">2</span> EXPAND CANDIDATE</span>
@@ -164,18 +177,15 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
     <span class="kpi-badge"><span class="kpi-val" style="color:#9ecbff;">47</span> VERIFY → EXPAND</span>
     <span class="kpi-badge"><span class="kpi-val">53</span> Total</span>
   </div>
-
   <table>
     <thead><tr><th>COMBO</th><th>Clients</th><th>Signal</th><th>Expert Rule</th></tr></thead>
     <tbody>
       <tr><td>COMBO-006</td><td>1</td><td style="color:#ff6b6b;">🔴 COMPETITIVE PRESSURE RISK</td><td>Never "HURT" — per expert B</td></tr>
-      <tr><td>COMBO-003</td><td>2</td><td style="color:#7ddf7d;">🟢 EXPAND CANDIDATE</td><td>Never "beneficiary" — per expert A</td></tr>
+      <tr><td>COMBO-003</td><td>2</td><td style="color:#7ddf7d;">🟢 EXPAND CANDIDATE</td><td>Conditional — per expert A</td></tr>
       <tr><td>COMBO-002</td><td>3</td><td style="color:#ffb347;">🟡 DUAL EXPOSURE</td><td>FL301 + EBA + banking — per expert D</td></tr>
-      <tr><td>COMBO-014</td><td>47</td><td style="color:#9ecbff;">🔵 VERIFY → EXPAND</td><td>Conditional on FOB + buyer + UFLPA</td></tr>
+      <tr><td>COMBO-014</td><td>47</td><td style="color:#9ecbff;">🔵 VERIFY → EXPAND</td><td>Conditional on FOB + buyer + UFLPA + capacity</td></tr>
     </tbody>
   </table>
-
-  <!-- Facts vs Assumptions -->
   <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px;">Facts vs Assumptions — Mandatory Section (Expert E)</div>
   <div class="facts-assumptions">
     <div class="fa-box facts">
@@ -195,7 +205,6 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
       <ul class="fa-list">
         <li>Buyers will shift orders from VN to IN/BD</li>
         <li>IN/BD suppliers have capacity for additional volume</li>
-        <li>"Leveling the playing field" narrative (political framing)</li>
         <li>Actual order migration confirmed at buyer level</li>
         <li>Suppliers can fully absorb compliance costs</li>
         <li>Price negotiation pressure not yet material</li>
@@ -204,41 +213,52 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
   </div>
 </div>
 
-<!-- Supplier Readiness Heatmap -->
+<!-- Heatmap -->
 <div class="heatmap-section">
-  <div class="heatmap-title">Supplier Readiness Heatmap — UFLPA + Capacity + Margin (Expert E)</div>
+  <div class="heatmap-title">Supplier Readiness Heatmap — UFLPA + Capacity + Margin</div>
   <div class="heatmap-row"><div class="heatmap-dot" style="background:#7ddf7d;"></div><div><strong style="color:#7ddf7d;">READY</strong> — FOB + confirmed buyer shift + UFLPA docs clean + capacity verified + margin terms agreed</div></div>
   <div class="heatmap-row"><div class="heatmap-dot" style="background:#ff6b6b;"></div><div><strong style="color:#ff6b6b;">NOT READY</strong> — CMT + no UFLPA docs + unknown buyer intent + capacity unknown</div></div>
   <div class="heatmap-row"><div class="heatmap-dot" style="background:#9ecbff;"></div><div><strong style="color:#9ecbff;">UNKNOWN</strong> — Revenue band unknown + FOB/CMT unclear + no UFLPA docs + no buyer reallocation evidence</div></div>
-  <div style="margin-top:8px;font-size:11px;color:var(--muted);">Note: 47 of 53 clients are UNKNOWN readiness — BD calls required to qualify each supplier before any financing decision.</div>
+  <div style="margin-top:8px;font-size:11px;color:var(--muted);">47 of 53 clients are UNKNOWN readiness — BD calls required to qualify each supplier before any financing decision.</div>
 </div>
 
-<!-- Strategic Insight -->
+<!-- Strategic -->
 <div class="strategic-box">
   <div class="strategic-title">Strategic Insight — Resilience-Optimized vs Cost-Optimized Sourcing</div>
   <div class="strategic-text">
-    The 2.5pp tariff differential is real but <strong>not the whole story</strong>. Buyers are shifting from cost-optimized to resilience-optimized sourcing: geographic diversification · supply continuity · <strong>UFLPA compliance</strong> · raw material traceability · supply chain transparency · multi-country production capability.<br><br>
-    <strong>Long-term winners:</strong> suppliers combining competitive cost + <strong>UFLPA readiness</strong> + raw material traceability + supply chain transparency + execution capability.<br><br>
+    The 2.5pp tariff differential is real but <strong>not the whole story</strong>. Buyers are shifting from cost-optimized to resilience-optimized sourcing: geographic diversification · supply continuity · <strong>UFLPA compliance</strong> · raw material traceability · supply chain transparency.<br><br>
     <span style="color:#a78bfa;">BD is not simply advantaged:</span> FL301 + EBA graduation 2027 + banking NPL crisis = triple risk.<br>
-    <span style="color:#f0b040;">IN verticals are real opportunities but conditional</span> on cotton window, UFLPA readiness, and buyer allocation decisions.
+    <span style="color:#f0b040;">IN verticals are real opportunities but conditional</span> on cotton window, UFLPA readiness, capacity, and buyer allocation decisions.
   </div>
 </div>
 
 <!-- Filter Bar -->
 <div class="filter-bar">
-  <label>Filter by COMBO:</label>
-  <select id="comboFilter" onchange="fc()"><option value="all">All</option><option value="COMBO-002">COMBO-002</option><option value="COMBO-003">COMBO-003</option><option value="COMBO-006">COMBO-006</option><option value="COMBO-014">COMBO-014</option></select>
+  <label>COMBO:</label>
+  <select id="comboFilter" onchange="fc()">
+    <option value="all">All</option>
+    <option value="COMBO-002">COMBO-002 (BD)</option>
+    <option value="COMBO-003">COMBO-003 (IN Vertical)</option>
+    <option value="COMBO-006">COMBO-006 (VN)</option>
+    <option value="COMBO-014">COMBO-014 (IN FOB/CMT)</option>
+  </select>
   <label>Signal:</label>
-  <select id="signalFilter" onchange="fc()"><option value="all">All</option><option value="DIRECT">COMPETITIVE PRESSURE RISK</option><option value="BENEFICIARY">EXPAND CANDIDATE</option><option value="CHECK_BENEFICIARY">CHECK / OPPORTUNITY</option><option value="CHECK">CHECK</option></select>
+  <select id="signalFilter" onchange="fc()">
+    <option value="all">All</option>
+    <option value="DIRECT">COMPETITIVE PRESSURE RISK</option>
+    <option value="BENEFICIARY">EXPAND CANDIDATE</option>
+    <option value="CHECK_BENEFICIARY">CHECK / OPPORTUNITY</option>
+    <option value="CHECK">CHECK</option>
+  </select>
+  <span style="font-size:11px;color:var(--muted);margin-left:4px;">← click to filter cards</span>
 </div>
 
 <div class="section-title">Per-Client Impact Cards — 53 Clients</div>
 
-<!-- ═══════════════════════════════════════ CARDS CONTAINER ═══════════════════════════════════════════════ -->
+<!-- Cards -->
 <div id="cards-container"></div>
 
 <script>
-// ── 53 Clients Data ──────────────────────────────────────────────────────────
 var clients = [
 {name:'HOANGPHAT CO., LTD',country:'VN',combo:'COMBO-006',biz:'CMT',product:'woven',market:'APAC/US',revenue:'<$5M',signal:'DIRECT',idx:1},
 {name:'COSMO FIRST LIMITED',country:'IN',combo:'COMBO-003',biz:'Vertical',product:'woven',market:'US',revenue:'$100M+',signal:'BENEFICIARY',idx:2},
@@ -295,119 +315,141 @@ var clients = [
 {name:'PUNIT EXPORTS',country:'IN',combo:'COMBO-014',biz:'FOB',product:'woven',market:'US',revenue:'[UNKNOWN]',signal:'CHECK_BENEFICIARY',idx:53}
 ];
 
-// ── WHY Chain Templates ─────────────────────────────────────────────────────
 function cy(c){
-  var rt = c.country==='VN'?'12.5%':'10%';
-  var usTot = c.country==='VN'?'~28.5%':'~26.5%';
-  var vn = c.country==='VN';
-  var bd = c.country==='BD';
-  var ix = c.signal==='BENEFICIARY';
-  var checkIx = c.signal==='CHECK_BENEFICIARY';
+  var rt=c.country==='VN'?'12.5%':'10%';
+  var usTot=c.country==='VN'?'~28.5%':'~26.5%';
+  var vn=c.country==='VN';
+  var bd=c.country==='BD';
+  var ix=c.signal==='BENEFICIARY';
+  var checkIx=c.signal==='CHECK_BENEFICIARY';
 
-  var gapTxt, capTxt, marTxt, uflpaTxt, edgeTxt, dPost, concTxt;
+  var gapTxt,capTxt,marTxt,uflpaTxt,edgeTxt,dPost,concTxt,capCond,marCond,uflpaCond;
 
   if(vn){
-    gapTxt = c.name+' faces 12.5% additional Section 301 duty. Buyers sourcing from VN now face ~28.5% total landed cost — +2.5pp above India and Bangladesh peers. The 2.5pp spread can push buyers to reprice or shift marginal H2 orders from VN to lower-cost alternatives.';
-    capTxt = 'Benefit from buyer reallocation requires spare capacity. Revenue band '+c.revenue+' suggests capacity headroom is unknown — direct BD call required.';
-    marTxt = 'Higher US exposure does not automatically mean higher margin. Fixed-price contracts mean VN supplier absorbs the landed-cost increase. Buyer may demand price concessions to maintain order volume.';
-    uflpaTxt = '<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff. A supplier can clear the tariff check and still face US CBP detention at port.';
-    edgeTxt = 'Vulnerability: VN origin + US exposure = highest tariff pressure. '+c.name+' may face increased competitive pressure where buyers are actively reviewing sourcing allocations. Parent/HQ strategy on VN production after 12.5% is the key variable.';
-    dPost = 'HOLD / PROTECT';
-    concTxt = 'HOLD/PROTECT until parent/HQ confirms VN production strategy after 12.5%. UFLPA readiness must be collected before financing US-bound shipments.';
+    gapTxt=c.name+' faces 12.5% additional Section 301 duty. US total landed cost now ~28.5% — +2.5pp above India and Bangladesh peers. The 2.5pp spread can push buyers to reprice or shift marginal H2 orders.';
+    capTxt='Benefit from buyer reallocation requires spare capacity. Revenue band '+c.revenue+' — capacity headroom is <span class="cond-badge cond-unknown">NEEDED</span> direct BD call required.';
+    capCond='NEEDED';
+    marTxt='Higher US exposure does not automatically mean higher margin. Fixed-price contracts mean VN supplier absorbs the landed-cost increase. Buyer may demand concessions.';
+    marCond='ASSUME RISK';
+    uflpaTxt='<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff. A supplier can clear the tariff check and still face US CBP detention.';
+    uflpaCond='NEEDED';
+    edgeTxt='<strong>Competitive pressure risk:</strong> '+c.name+' may face increased competitive pressure where buyers are actively reviewing sourcing allocations. Parent/HQ strategy on VN production after 12.5% is the key variable.';
+    dPost='HOLD / PROTECT';
+    concTxt='HOLD/PROTECT until parent/HQ confirms VN production strategy. UFLPA readiness must be collected before financing US-bound shipments.';
   } else if(bd){
-    gapTxt = 'BD FL301 +10% applies — but BD is NEVER a clean beneficiary. BD faces three compounding risks: (1) FL301 on US revenue, (2) EBA graduation 2027 removing EU 0% preferential access, (3) banking NPL crisis (~BDT 400,000 crore) creating systemic financing risk. The three layers must be assessed together.';
-    capTxt = 'Short-term BD may benefit from buyer reallocation. Long-term: EBA graduation 2027 + banking crisis = triple complexity risk. Revenue band '+c.revenue+' suggests capacity unknown — direct BD call required.';
-    marTxt = 'BD may gain short-term orders from VN shift. But EBA graduation risk on EU revenue and banking receivable quality must be assessed together — not in isolation.';
-    uflpaTxt = '<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff. A supplier can clear the tariff check and still face US CBP detention at port.';
-    edgeTxt = 'BD is NOT a clean beneficiary. Three-layer risk (FL301 + EBA + banking) must be assessed independently before any ARP or expansion decision.';
-    dPost = 'VERIFY → HOLD';
-    concTxt = 'VERIFY → HOLD. BD triple-layer risk must be assessed independently. ARP core only if EU buyer confirmed + UFLPA clean + banking relationship verified.';
+    gapTxt='BD FL301 +10% applies — but BD is <strong>NEVER a clean beneficiary</strong>. Three compounding layers: (1) FL301 on US, (2) EBA graduation 2027 removing EU 0%, (3) banking NPL crisis (~BDT 400k crore). These three must be assessed together.';
+    capTxt='Short-term: BD may benefit from buyer reallocation. Long-term: EBA 2027 + banking crisis = triple complexity. Revenue band '+c.revenue+' — capacity headroom is <span class="cond-badge cond-unknown">NEEDED</span>.';
+    capCond='NEEDED';
+    marTxt='BD may gain short-term orders from VN shift. But EBA graduation risk and banking receivable quality must be assessed together.';
+    marCond='ASSUME RISK';
+    uflpaTxt='<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff.';
+    uflpaCond='NEEDED';
+    edgeTxt='<strong>Triple complexity risk:</strong> BD is NOT a clean beneficiary. All three layers must be assessed independently before any expansion decision.';
+    dPost='VERIFY → HOLD';
+    concTxt='VERIFY → HOLD. BD triple-layer risk must be assessed independently. ARP core only if EU buyer confirmed + UFLPA clean + banking verified.';
   } else if(ix){
-    gapTxt = c.name+' has gained a tariff-related cost advantage of 2.5pp vs Vietnam — conditional on buyer sourcing decisions, supplier capacity, compliance readiness, and commercial negotiations. Buyer allocation decisions and pass-through terms determine actual impact.';
-    capTxt = 'Benefit from order reallocation requires spare capacity. Revenue band '+c.revenue+' — capacity headroom generally available for vertical operators, but BD call required to confirm.';
-    marTxt = 'Higher volume does not automatically mean higher margin. Buyer may demand price concessions to capture the 2.5pp advantage. Compliance costs (UFLPA, traceability) may offset tariff benefit.';
-    uflpaTxt = '<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff. A supplier can clear the tariff check and still face US CBP detention at port.';
-    edgeTxt = 'Large vertical control + traceability + buyer relationships can win shifted H2 demand. Benefit disappears if buyer passes all duty pressure back to supplier. Cotton pre-buy window closes Oct 31 — 13 weeks remaining as of Aug 4.';
-    dPost = 'EXPAND CANDIDATE';
-    concTxt = 'Posture: EXPAND CANDIDATE. Benefit is conditional on buyer reallocation, pass-through terms, and UFLPA readiness — not automatic. H2 order acceleration must be confirmed.';
+    gapTxt=c.name+' has <strong>gained a tariff-related cost advantage of 2.5pp vs Vietnam</strong> — conditional on buyer sourcing decisions, supplier capacity, compliance readiness, and commercial negotiations.';
+    capTxt='Benefit from order reallocation requires spare capacity. Revenue band '+c.revenue+' — capacity headroom is <span class="cond-badge cond-unknown">NEEDED</span> direct BD call required.';
+    capCond='NEEDED';
+    marTxt='Higher volume does not automatically mean higher margin. Buyer may demand price concessions to capture the 2.5pp advantage. Compliance costs (UFLPA, traceability) may offset tariff benefit.';
+    marCond='NET EFFECT UNKNOWN';
+    uflpaTxt='<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff. A supplier can clear the tariff check and still face US CBP detention.';
+    uflpaCond='NEEDED';
+    edgeTxt='Large vertical control + traceability + buyer relationships can win shifted H2 demand. Benefit disappears if buyer passes all duty pressure back to supplier. Cotton pre-buy window closes Oct 31 — 13 weeks remaining.';
+    dPost='EXPAND CANDIDATE';
+    concTxt='Posture: EXPAND CANDIDATE. Benefit is conditional on buyer reallocation, pass-through terms, and UFLPA readiness — not automatic. H2 order acceleration must be confirmed.';
   } else {
-    gapTxt = checkIx
+    gapTxt=checkIx
       ? c.name+' may benefit from VN → IN order reallocation — +2.5pp cost advantage vs VN. Conditional on: FOB vs CMT structure, buyer pass-through terms, and whether orders are truly shifting or speculative.'
       : c.name+' in IN at +10% FL301. Relative advantage vs VN (+2.5pp) exists but must be verified: FOB vs CMT, fixed-price vs cost-plus, and whether buyer is actually shifting orders.';
-    capTxt = 'Benefit requires spare capacity. Revenue band '+c.revenue+' = capacity headroom unknown — BD call required. IN FOB suppliers with own procurement can scale faster than CMT operators.';
-    marTxt = 'Higher volume does not automatically mean higher margin. Buyer may demand price concessions to capture the 2.5pp advantage. Fixed-price = supplier absorbs; cost-plus = shared risk.';
-    uflpaTxt = '<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff. A supplier can clear the tariff check and still face US CBP detention at port.';
-    edgeTxt = checkIx
-      ? c.name+' as FOB operator may capture shifted VN orders — conditional on UFLPA readiness, buyer confirmation, and pricing terms.'
+    capTxt='Benefit requires spare capacity. Revenue band '+c.revenue+' — capacity headroom is <span class="cond-badge cond-unknown">NEEDED</span> direct BD call required.';
+    capCond='NEEDED';
+    marTxt='Higher volume does not automatically mean higher margin. Buyer may demand price concessions. Fixed-price = supplier absorbs; cost-plus = shared risk.';
+    marCond='ASSUME RISK';
+    uflpaTxt='<strong>UFLPA readiness, raw material traceability, and supply chain transparency</strong> are independent gates — separate from tariff.';
+    uflpaCond='NEEDED';
+    edgeTxt=checkIx
+      ? c.name+' as FOB operator may capture shifted VN orders — conditional on UFLPA readiness, capacity, buyer confirmation, and pricing terms.'
       : c.name+' must be qualified: FOB vs CMT, US revenue %, duty pass-through, H2 order shift evidence. VERIFY before any EXPAND posture.';
-    dPost = 'VERIFY → EXPAND';
-    concTxt = 'Posture: VERIFY → EXPAND. Benefit conditional on FOB structure, buyer confirmation, and UFLPA readiness — not automatic.';
+    dPost='VERIFY → EXPAND';
+    concTxt='Posture: VERIFY → EXPAND. Benefit conditional on FOB structure, buyer confirmation, UFLPA readiness, and capacity — not automatic.';
   }
 
   return [
-    '<div class="chain-node trigger"><div class="node-label">TRIGGER — What Changed</div>U.S. Section 301 forced-labor tariff effective July 24, 2026; VN 12.5%, IN/BD 10%. HS 61/62 NOT in Annex A — fully exposed.<div class="formula">'+c.country+'_rate='+rt+' → $'+(rt.replace('%',''))+' per $100 FOB</div><div class="formula">source: Federal Register/USTR Section 301 [VERIFIED]</div></div>',
+    '<div class="why-section">',
+    '<div class="phase-label phase-event">① EVENT</div>',
+    '<div class="chain-node trigger"><div class="node-label">TRIGGER — What Changed</div>U.S. Section 301 forced-labor tariff effective July 24, 2026; VN 12.5%, IN/BD 10%. HS 61/62 NOT in Annex A — fully exposed.<div class="formula">'+c.country+' FL301='+rt+' → US total '+usTot+'</div><div class="formula">source: Federal Register / USTR [VERIFIED]</div></div>',
+    '</div>',
 
-    '<div class="chain-node exposure"><div class="node-label">CLIENT EXPOSURE — Why This Row</div>'+c.name+' | '+c.country+' | '+c.combo+' | '+c.biz+' | '+c.product+' | '+c.market+'. Revenue: '+c.revenue+'.<div class="formula">country='+c.country+' x combo='+c.combo+' x product='+c.product+' x market='+c.market+'</div></div>',
+    '<div class="why-section">',
+    '<div class="phase-label phase-exposure">② CLIENT EXPOSURE</div>',
+    '<div class="chain-node exposure"><div class="node-label">CLIENT EXPOSURE — Why This Row</div>'+c.name+' | '+c.country+' | '+c.combo+' | '+c.biz+' | '+c.product+' | '+c.market+' | Revenue: '+c.revenue+'<div class="formula">country×combo×product×market = selected</div></div>',
+    '</div>',
 
-    '<div class="chain-node gap"><div class="node-label">ECONOMICS GAP — Competitive Delta</div>'+gapTxt+'<div class="formula">relative_gap='+c.country+' '+rt+'-VN 12.5%='+(vn?'基准':'-2.5pp')+'</div><div class="formula">buyer_landed_cost_delta=$2.50 per $100 FOB (IN/BD vs VN)</div></div>',
+    '<div class="why-section">',
+    '<div class="phase-label phase-gap">③ ECONOMICS GAP</div>',
+    '<div class="chain-node gap"><div class="node-label">ECONOMICS GAP — Competitive Delta</div>'+gapTxt+'<div class="formula">IN/BD vs VN = -2.5pp advantage</div><div class="formula">$2.50 per $100 FOB buyer landed cost delta</div></div>',
+    '<div class="chain-node compound"><div class="node-label">SECOND-ORDER EFFECT — Commercial Compounding</div>Tariff → buyer repricing or origin shift → supplier margin/cash cycle pressure → Air8 receivable decision gate.<div class="formula">tariff→repricing→PO_shift→financing_risk</div><div class="formula">ARP_quality=buyer_quality×docs×non-disputed</div></div>',
+    '</div>',
 
-    '<div class="chain-node compound"><div class="node-label">COMMERCIAL COMPOUNDING — Second-Order Effect</div>Tariff cost → buyer/importer landed-cost pressure → H2 repricing or origin allocation shift → supplier margin/cash cycle pressure → Air8 receivable decision gate.<div class="formula">tariff -> repricing -> PO_allocation_shift -> financing_need/risk</div><div class="formula">ARP_quality=buyer_quality x documentation x non-disputed_receivable</div></div>',
+    '<div class="why-section">',
+    '<div class="phase-label phase-second">④ RISK FACTORS</div>',
+    '<div class="chain-node capacity"><div class="node-label">CAPACITY RISK — Can They Absorb Extra Volume?</div>'+capTxt+'<div class="formula">capacity=theoretical_max - current_utilization</div><div class="formula">capacity_for_'+(c.country)+'='+capCond+'</div></div>',
+    '<div class="chain-node margins"><div class="node-label">MARGIN RISK — Higher Volume != Higher Profit</div>'+marTxt+'<div class="formula">net_margin=tariff_saving - price_concession - compliance_cost</div><div class="formula">margin_for_'+(c.country)+'='+marCond+'</div></div>',
+    '</div>',
 
-    '<div class="chain-node capacity"><div class="node-label">CAPACITY RISK — Can They Absorb Extra Volume? (Expert D)</div>'+capTxt+'<div class="formula">capacity_headroom=theoretical_max - current_utilization</div><div class="formula">Flag if: revenue='+c.revenue+' and utilization data unavailable</div></div>',
+    '<div class="why-section">',
+    '<div class="phase-label phase-gate">⑤ COMPLIANCE GATE</div>',
+    '<div class="chain-node compliance"><div class="node-label">UFLPA GATE — Independent of Tariff Check</div>'+uflpaTxt+'<div class="formula">UFLPA_status=[VERIFIED_CLEAN|DOCUMENTED|IN_PROGRESS|<span style="color:#ffb347;">UNKNOWN</span>]</div><div class="formula">raw_material_traceability+supply_chain_transparency</div><div class="formula">compliance_for_'+(c.country)+'='+uflpaCond+'</div></div>',
+    '</div>',
 
-    '<div class="chain-node margins"><div class="node-label">MARGIN RISK — Higher Volume != Higher Profit (Expert D)</div>'+marTxt+'<div class="formula">net_margin_impact=tariff_saving - price_concession - compliance_cost</div><div class="formula">Fixed-price: risk by supplier. Cost-plus: risk shared with buyer.</div></div>',
-
-    '<div class="chain-node compliance"><div class="node-label">COMPLIANCE GATE — UFLPA Independence (Expert Rule)</div>'+uflpaTxt+'<div class="formula">UFLPA_status=[VERIFIED_CLEAN / DOCUMENTED / IN_PROGRESS / UNKNOWN]</div><div class="formula">raw_material_traceability=cotton_origin + fabric_origin + mill_verification</div><div class="formula">supply_chain_transparency=full_chain_of_custody + no强迫劳动_indicators</div></div>',
-
-    '<div class="chain-node edge"><div class="node-label">WHERE CLIENT CAN STILL WIN / LOSE</div>'+edgeTxt+'<div class="formula">opportunity=US_exposure x buyer_reallocation x pricing_control</div></div>',
-
-    '<div class="chain-node conclusion"><div class="node-label">IMPACT CONCLUSION — Decision Language</div>Recommended posture: <strong>'+dPost+'</strong>. '+concTxt+'<div class="formula">posture='+dPost+' | urgency='+(vn||bd?'HIGH':'MEDIUM-HIGH')+' | combo='+c.combo+'</div><div class="confidence">Confidence: MEDIUM | Sources: TARIFF-DB · COUNTRY-DB · CLIENT-DB [VERIFIED Aug 4, 2026]</div><div class="confidence">Missing: US revenue% | buyer pass-through | Annex/TRQ | UFLPA readiness, traceability, supply chain transparency</div></div>'
+    '<div class="why-section">',
+    '<div class="phase-label phase-decision">⑥ DECISION</div>',
+    '<div class="chain-node edge"><div class="node-label">WHERE CLIENT CAN WIN / LOSE</div>'+edgeTxt+'<div class="formula">opportunity=US_exposure×buyer_reallocation×pricing_control</div></div>',
+    '<div class="chain-node conclusion"><div class="node-label">IMPACT CONCLUSION — Recommended Posture</div><strong style="font-size:14px;color:var(--blue);">'+dPost+'</strong><br><br>'+concTxt+'<div class="formula">posture='+dPost+' | combo='+c.combo+'</div><div class="confidence">Confidence: MEDIUM | Sources: TARIFF-DB · COUNTRY-DB · CLIENT-DB [VERIFIED Aug 4, 2026]</div><div class="confidence">Missing: US revenue% · buyer pass-through · UFLPA readiness · capacity headroom · traceability</div></div>',
+    '</div>'
   ].join('');
 }
 
-// ── WHAT Action Templates ────────────────────────────────────────────────────
 function cw(c){
-  var vn = c.country==='VN';
-  var bd = c.country==='BD';
-  var ix = c.signal==='BENEFICIARY';
-  var apActs, cpActs, dPost, dDetails;
+  var vn=c.country==='VN';
+  var bd=c.country==='BD';
+  var ix=c.signal==='BENEFICIARY';
+  var apActs,cpActs,dPost,dDetails;
 
   if(vn){
-    apActs='<div class="act"><span class="act-verb">Request</span> Confirm US buyer/program share and whether buyer is shifting H2 POs away from VN.<div class="act-need">Need: direct BD/client answer. If unavailable: keep HOLD/PROTECT posture.</div></div><div class="act"><span class="act-verb">Request</span> Ask parent/HQ whether VN production is still strategic after 12.5% rate.<div class="act-need">Need: direct BD answer. If unavailable: keep HOLD/PROTECT.</div></div><div class="act"><span class="act-verb">Validate</span> Check UFLPA/country-of-origin documentation before financing US-bound shipments.<div class="act-need">UFLPA readiness, raw material traceability, supply chain transparency must be verified independently.</div></div>';
+    apActs='<div class="act"><span class="act-verb">Request</span> Confirm US buyer/program share — is buyer shifting H2 POs away from VN?<div class="act-need">Need: direct BD answer. If unavailable: keep HOLD/PROTECT.</div></div><div class="act"><span class="act-verb">Request</span> Ask parent/HQ whether VN production is still strategic after 12.5%.<div class="act-need">Need: parent/HQ decision owner + retained/shifted H2 program list.</div></div><div class="act"><span class="act-verb">Validate</span> Check UFLPA/country-of-origin documentation before US-bound shipments.<div class="act-need">UFLPA readiness + raw material traceability + supply chain transparency = independent gates.</div></div>';
     cpActs='<div class="act"><span class="act-verb">Escalate</span> Confirm parent/HQ position on VN production after 12.5%.<div class="act-need">Output: parent/HQ decision owner + retained/shifted H2 program list.</div></div><div class="act"><span class="act-verb">Document</span> Prepare UFLPA/COO evidence for US-bound shipments.<div class="act-need">Target: prevent financing on shipments that could be detained.</div></div><div class="act"><span class="act-verb">Negotiate</span> Clarify buyer/importer absorbs duty or requires supplier discount.<div class="act-need">Target: protect margin and avoid receivable quality deterioration.</div></div>';
     dPost='HOLD / PROTECT';
-    dDetails=[['Eligible now:','None for expansion until parent/HQ + buyer confirmed'],['Conditional:','ARP if retained US program + buyer quality + UFLPA docs clean'],['Blocked:','Pre-shipment if parent is shifting production away from VN'],['Decision gate:','Parent/HQ production decision + buyer duty absorption + UFLPA docs'],['Next review:','Immediate BD escalation; next review after H2 buyer allocation confirmed']];
+    dDetails=[['Eligible now:','None for expansion until parent/HQ + buyer confirmed'],['Conditional:','ARP if retained US program + buyer quality + UFLPA docs clean'],['Blocked:','Pre-shipment if parent is shifting production away from VN'],['Decision gate:','Parent/HQ decision + buyer duty absorption + UFLPA docs'],['Next review:','Immediate BD escalation; next review after H2 buyer allocation confirmed']];
   } else if(bd){
-    apActs='<div class="act"><span class="act-verb">Request</span> Confirm top US and EU buyers and contract price pass-through.<div class="act-need">EBA timeline and banking receivable quality also required.</div></div><div class="act"><span class="act-verb">Request</span> Confirm EBA graduation impact — what % of EU sales use 0% duty?<div class="act-need">EBA 2027 graduation is independent of FL301 — both must be assessed.</div></div><div class="act"><span class="act-verb">Validate</span> Check UFLPA/country-of-origin documentation before US-bound shipments.<div class="act-need">UFLPA readiness, raw material traceability, supply chain transparency as independent gates.</div></div>';
+    apActs='<div class="act"><span class="act-verb">Request</span> Confirm top US and EU buyers and contract price pass-through.<div class="act-need">EBA timeline and banking receivable quality also required.</div></div><div class="act"><span class="act-verb">Request</span> Confirm EBA graduation impact — what % of EU sales use 0% duty?<div class="act-need">EBA 2027 graduation is independent of FL301 — both must be assessed.</div></div><div class="act"><span class="act-verb">Validate</span> Check UFLPA/country-of-origin documentation before US-bound shipments.<div class="act-need">UFLPA readiness + raw material traceability + supply chain transparency as independent gates.</div></div>';
     cpActs='<div class="act"><span class="act-verb">Assess</span> Quantify EBA graduation impact on EU sales.<div class="act-need">Output: EU revenue at risk if EBA graduates; mitigation options.</div></div><div class="act"><span class="act-verb">Document</span> Provide UFLPA readiness package for US-bound shipments.<div class="act-need">Target: clear UFLPA as independent gate before financing decision.</div></div><div class="act"><span class="act-verb">Verify</span> Confirm banking relationship quality and receivable history.<div class="act-need">Target: flag receivable quality deterioration before ARP discussion.</div></div>';
     dPost='VERIFY → HOLD';
-    dDetails=[['Eligible now:','None for new expansion until triple-layer risk is assessed'],['Conditional:','ARP core only if EU buyer confirmed + UFLPA clean + banking verified'],['Blocked:','Any pre-shipment without full BD risk assessment'],['Decision gate:','FL301 impact + EBA timeline + banking receivable + UFLPA status'],['Next review:','After BD call with full three-layer risk assessment']];
+    dDetails=[['Eligible now:','None for new expansion until triple-layer risk assessed'],['Conditional:','ARP core only if EU buyer + UFLPA clean + banking verified'],['Blocked:','Any pre-shipment without full BD risk assessment'],['Decision gate:','FL301 impact + EBA timeline + banking receivable + UFLPA status'],['Next review:','After BD call with full three-layer risk assessment']];
   } else if(ix){
-    apActs='<div class="act"><span class="act-verb">Request</span> Confirm top US buyers and contract price pass-through.<div class="act-need">Need: direct BD/client answer. If unavailable: keep EXPAND CANDIDATE posture.</div></div><div class="act"><span class="act-verb">Request</span> Confirm cotton/fabric origin and UFLPA-ready traceability.<div class="act-need">UFLPA readiness, raw material traceability, supply chain transparency as independent gates.</div></div><div class="act"><span class="act-verb">Validate</span> Check if H2 orders increased or accelerated after July 24.<div class="act-need">Cotton pre-buy window closes Oct 31 — time-sensitive opportunity.</div></div>';
+    apActs='<div class="act"><span class="act-verb">Request</span> Confirm top US buyers and contract price pass-through.<div class="act-need">Need: direct BD answer. If unavailable: keep EXPAND CANDIDATE posture.</div></div><div class="act"><span class="act-verb">Request</span> Confirm cotton/fabric origin and UFLPA-ready traceability.<div class="act-need">UFLPA readiness + raw material traceability + supply chain transparency as independent gates.</div></div><div class="act"><span class="act-verb">Request</span> Confirm production capacity headroom — can absorb +20% volume without quality risk?<div class="act-need">Need: utilization rate or monthly output ceiling. If unavailable: flag as UNKNOWN.</div></div><div class="act"><span class="act-verb">Validate</span> Check if H2 orders increased or accelerated after July 24.<div class="act-need">Cotton pre-buy window closes Oct 31 — time-sensitive opportunity.</div></div>';
     cpActs='<div class="act"><span class="act-verb">Prove</span> Show H2 US order increase or acceleration after July 24.<div class="act-need">Output: buyer PO/order book comparison pre/post event.</div></div><div class="act"><span class="act-verb">Document</span> Provide UFLPA readiness + traceability + supply chain transparency package.<div class="act-need">Target: turn compliance capacity into buyer confidence and financing eligibility.</div></div><div class="act"><span class="act-verb">Size</span> Map ARP/OBF need against confirmed PO and buyer payment terms.<div class="act-need">Target: finance clean growth without overextending pre-shipment exposure.</div></div>';
     dPost='EXPAND CANDIDATE';
-    dDetails=[['Eligible now:','ARP on clean receivables; OBF candidate only with confirmed PO'],['Conditional:','OBF if existing ARP + buyer quality + cotton/fabric origin docs confirmed'],['Blocked:','ESG finance unless separate ESG trigger and IFC criteria proven'],['Decision gate:','Top US buyers, pass-through terms, H2 order acceleration, UFLPA readiness'],['Next review:','7 days after BD call or when buyer order change confirmed']];
+    dDetails=[['Eligible now:','ARP on clean receivables; OBF candidate only with confirmed PO'],['Conditional:','OBF if existing ARP + buyer quality + cotton/fabric origin docs confirmed'],['Blocked:','ESG finance unless separate ESG trigger and IFC criteria proven'],['Decision gate:','Top US buyers + pass-through + H2 order acceleration + UFLPA + capacity'],['Next review:','7 days after BD call or when buyer order change confirmed']];
   } else {
-    apActs='<div class="act"><span class="act-verb">Request</span> Confirm US revenue % and top buyer concentration.<div class="act-need">Need: direct BD/client answer. If unavailable: keep VERIFY→EXPAND posture.</div></div><div class="act"><span class="act-verb">Request</span> Confirm fixed-price vs cost-plus; who absorbs the 10% landed-cost hit?<div class="act-need">Fixed-price = supplier absorbs risk; cost-plus = shared risk.</div></div><div class="act"><span class="act-verb">Validate</span> Verify whether buyer is moving H2 orders from VN/CN into India.<div class="act-need">Confirmed buyer reallocation required before any EXPAND posture.</div></div>';
+    apActs='<div class="act"><span class="act-verb">Request</span> Confirm US revenue % and top buyer concentration.<div class="act-need">Need: direct BD answer. If unavailable: keep VERIFY→EXPAND posture.</div></div><div class="act"><span class="act-verb">Request</span> Confirm fixed-price vs cost-plus — who absorbs the 10% landed-cost hit?<div class="act-need">Fixed-price = supplier absorbs risk; cost-plus = shared risk.</div></div><div class="act"><span class="act-verb">Request</span> Confirm production capacity headroom — can absorb increased volume without quality risk?<div class="act-need">Need: utilization rate or monthly output ceiling. If unavailable: flag as UNKNOWN.</div></div><div class="act"><span class="act-verb">Validate</span> Verify whether buyer is moving H2 orders from VN/CN into India.<div class="act-need">Confirmed buyer reallocation required before any EXPAND posture.</div></div>';
     cpActs='<div class="act"><span class="act-verb">Verify</span> Confirm whether orders are true FOB or CMT/buyer-nominated.<div class="act-need">Output: FOB vs CMT order breakdown and procurement owner.</div></div><div class="act"><span class="act-verb">Ask</span> Confirm if US buyer requested repricing or shifted orders.<div class="act-need">Target: distinguish real opportunity from generic tariff noise.</div></div><div class="act"><span class="act-verb">Collect</span> Provide buyer split, PO list, payment terms, GST/bank evidence.<div class="act-need">Target: size ARP and decide if RT2C is even eligible.</div></div>';
     dPost='VERIFY → EXPAND';
-    dDetails=[['Eligible now:','ARP core cashflow bridge after buyer quality and docs check'],['Conditional:','RT2C only if existing ARP track record and supplier controls procurement'],['Blocked:','PreShip if CMT/buyer-nominated fabric or no confirmed PO'],['Decision gate:','FOB vs CMT proof, US revenue %, duty pass-through, H2 order shift evidence'],['Next review:','Within 7–14 days after BD R1 qualification']];
+    dDetails=[['Eligible now:','ARP core cashflow bridge after buyer quality and docs check'],['Conditional:','RT2C only if existing ARP track record and supplier controls procurement'],['Blocked:','PreShip if CMT/buyer-nominated fabric or no confirmed PO'],['Decision gate:','FOB vs CMT + US revenue% + duty pass-through + H2 order shift + capacity'],['Next review:','Within 7–14 days after BD R1 qualification']];
   }
 
-  var dHtml = dDetails.map(function(d){return'<div class="decision-detail"><strong>'+d[0]+'</strong> '+d[1]+'</div>';}).join('');
-
-  return '<div class="action-box"><div class="action-box-title">Air8 / BD Actions — Ask, Collect, Decide</div>'+apActs+'<div class="decision-point"><div class="decision-posture">Air8 Financing Decision Point — '+dPost+'</div>'+dHtml+'</div></div><div class="action-box"><div class="action-box-title">Client Actions — What Supplier Should Do Now</div>'+cpActs+'</div>';
+  var dHtml=dDetails.map(function(d){return'<div class="decision-detail"><strong>'+d[0]+'</strong> '+d[1]+'</div>';}).join('');
+  return '<div class="action-box"><div class="action-box-title">Air8 / BD Actions — Ask, Collect, Decide</div>'+apActs+'<div class="decision-point"><div class="decision-posture">Air8 Financing Decision — '+dPost+'</div>'+dHtml+'</div></div><div class="action-box"><div class="action-box-title">Client Actions — What Supplier Should Do Now</div>'+cpActs+'</div>';
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
 function rc(){
   var c=document.getElementById('cards-container');
   var h='';
   for(var i=0;i<clients.length;i++){
     var d=clients[i];
-    var badgeClass = d.signal==='DIRECT'?'badge-threat-high':d.signal==='BENEFICIARY'?'badge-opportunity':d.signal==='CHECK'?'badge-check-medium':'badge-check-medium';
-    var badgeTxt = d.signal==='DIRECT'?'COMPETITIVE PRESSURE RISK':d.signal==='BENEFICIARY'?'EXPAND CANDIDATE':d.signal==='CHECK'?'CHECK':'CHECK / OPPORTUNITY';
-    var tl=d.signal==='DIRECT'?'may face increased competitive pressure where buyers are reviewing sourcing allocations':d.signal==='BENEFICIARY'?'gained tariff-related cost advantage · conditional on buyer decisions':d.country==='BD'?'BD triple-layer risk — FL301 + EBA + banking compound':'conditional advantage · verify before expand';
+    var badgeClass=d.signal==='DIRECT'?'badge-threat-high':d.signal==='BENEFICIARY'?'badge-opportunity':'badge-check-medium';
+    var badgeTxt=d.signal==='DIRECT'?'COMPETITIVE PRESSURE RISK':d.signal==='BENEFICIARY'?'EXPAND CANDIDATE':'CHECK';
     var countryColor=d.country==='VN'?'#ff6b6b':d.country==='BD'?'#a78bfa':'#f0b040';
     h+='<div class="client-card" data-combo="'+d.combo+'" data-signal="'+d.signal+'">'+
       '<div class="card-header">'+
@@ -415,7 +457,7 @@ function rc(){
         '<span class="badge badge-workstream">TARIFF</span>'+
         '<span class="badge badge-workstream">SOURCING</span>'+
         '<span class="badge badge-workstream">COMMERCIAL</span>'+
-        '<span class="badge badge-data">[VERIFIED] DB Match · '+d.revenue+' Revenue</span>'+
+        '<span class="badge badge-data">[VERIFIED] '+d.revenue+' Revenue</span>'+
         '<div class="card-title">'+d.name+'</div>'+
         '<div class="meta-strip">'+
           '<span class="meta-item" style="color:'+countryColor+';font-weight:700;">'+d.country+'</span>'+
@@ -444,7 +486,6 @@ function fc(){
 rc();
 </script>
 
-<!-- KB-GAP Proposals -->
 <div class="kb-gap">
   <div class="kb-gap-title">KB-GAP Proposals — CLIENT-DB Field Additions (post-run)</div>
   <div class="kb-gap-item"><strong style="color:#79c0ff;">GAP-1:</strong> UFLPA readiness status — per supplier (VERIFIED CLEAN / DOCUMENTED / IN PROGRESS / UNKNOWN)</div>
@@ -455,21 +496,20 @@ rc();
   <div class="kb-gap-item"><strong style="color:#79c0ff;">GAP-6:</strong> IN cotton pre-buy status — has supplier pre-buy cotton before Oct 31? (Y / N / UNKNOWN)</div>
 </div>
 
-<!-- Appendix — Financing Products (one place, not per-card) -->
 <div class="appendix">
   <h2>Appendix — Air8 Financing Products Reference (shown once, not per-card)</h2>
   <h3>ARP — Accounts Receivable Purchase</h3>
-  <p>Air8 purchases approved receivables from the supplier at a discount. Supplier gets immediate cash; Air8 collects from buyer at maturity. <strong>Eligibility:</strong> existing ARP track record + confirmed buyer + clean documentation. <strong>Decision gate:</strong> buyer quality + receivable non-dispute history.</p>
+  <p>Air8 purchases approved receivables. <strong>Eligibility:</strong> existing ARP track record + confirmed buyer + clean documentation. <strong>Decision gate:</strong> buyer quality + receivable non-dispute history.</p>
   <h3>OBF — Order-Based Financing</h3>
-  <p>Financing linked to confirmed purchase orders. Air8 advances against confirmed PO from approved buyers. <strong>Eligibility:</strong> confirmed PO + existing buyer relationship + supplier has produced for this buyer before. <strong>Decision gate:</strong> PO confirmation + buyer credit quality + COO documentation.</p>
+  <p>Financing against confirmed PO. <strong>Eligibility:</strong> confirmed PO + existing buyer relationship. <strong>Decision gate:</strong> PO confirmation + buyer credit quality + COO documentation.</p>
   <h3>PreShip — Pre-Shipment Financing</h3>
-  <p>Financing to fund production ahead of shipment. <strong>Eligibility:</strong> confirmed orders + supplier has demonstrated execution capability + raw material procurement plan. <strong>Blocked:</strong> CMT with buyer-nominated fabric + no confirmed PO + UFLPA unresolved.</p>
+  <p>Funds production ahead of shipment. <strong>Blocked:</strong> CMT with buyer-nominated fabric + no confirmed PO + UFLPA unresolved.</p>
   <h3>RT2C — Request to Charge (Supplier)</h3>
-  <p>Air8 validates and certifies supplier receivable package, then offers it to Buyside Capital for financing. <strong>Eligibility:</strong> existing ARP track record + supplier controls procurement (FOB) + UFLPA/COO docs in order. <strong>Blocked:</strong> CMT suppliers where buyer controls fabric and pricing.</p>
+  <p>Air8 validates receivable package for Buyside Capital financing. <strong>Blocked:</strong> CMT suppliers where buyer controls fabric and pricing.</p>
   <h3>ESG Finance</h3>
-  <p>Linked to ESG/certification triggers (GOTS, OEKO-TEX, Fair Trade, Better Cotton, etc.). <strong>Blocked:</strong> ESG finance without separate ESG trigger and IFC criteria proof. Not triggered by Section 301 tariff alone.</p>
+  <p>Linked to ESG/certification triggers. <strong>Blocked:</strong> ESG finance without separate ESG trigger and IFC criteria proof. Not triggered by Section 301 alone.</p>
   <h3>Key Decision Gates — Independence Rule</h3>
-  <p>Every financing decision requires: <strong>(1)</strong> confirmed buyer and order, <strong>(2)</strong> UFLPA readiness + raw material traceability + supply chain transparency, <strong>(3)</strong> pricing terms (FOB vs CMT) and pass-through clarity, <strong>(4)</strong> capacity headroom evidence, <strong>(5)</strong> receivable quality check. These gates are <strong>independent</strong> — clearing the tariff check does not clear UFLPA, capacity, or margin gates.</p>
+  <p>Every financing decision requires: <strong>(1)</strong> confirmed buyer and order, <strong>(2)</strong> UFLPA readiness + traceability + supply chain transparency, <strong>(3)</strong> pricing terms (FOB vs CMT), <strong>(4)</strong> capacity headroom evidence, <strong>(5)</strong> receivable quality check. These gates are <strong>independent</strong> — clearing the tariff check does not clear UFLPA, capacity, or margin gates.</p>
 </div>
 
 </body>
