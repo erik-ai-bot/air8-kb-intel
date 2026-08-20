@@ -79,15 +79,8 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
 .col-why { width:50%; border-right:1px solid var(--border); padding-right:20px; }
 .col-what { width:50%; padding-left:20px; }
 
-/* ── Phase separators in WHY ── */
-.why-section { margin-bottom:4px; }
-.phase-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:4px 10px; margin-bottom:6px; display:inline-block; border-radius:3px; }
-.phase-label.phase-event { background:#3d0000; color:#ff6b6b; }
-.phase-label.phase-exposure { background:#3d2a00; color:#ffb347; }
-.phase-label.phase-gap { background:#3d2a00; color:#ffb347; }
-.phase-label.phase-second { background:#2a1a3d; color:#d7bde2; }
-.phase-label.phase-gate { background:#062a28; color:#1abc9c; }
-.phase-label.phase-decision { background:#0d2a4a; color:#9ecbff; }
+/* ── Chain section grouping (subtle) ── */
+.why-section { margin-bottom:2px; }
 
 /* ── Chain Nodes ── */
 .chain-node { margin-bottom:10px; border-left:3px solid #334455; padding:7px 10px; background:#0d1520; border-radius:0 6px 6px 0; }
@@ -107,7 +100,7 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
 .compound .node-label { color:var(--purple); }
 .capacity .node-label { color:#ff6b6b; }
 .margins .node-label { color:#ffb347; }
-.compliance .node-label { color:var(--teal; }
+.compliance .node-label { color:var(--teal); }
 .edge .node-label { color:var(--green); }
 .conclusion .node-label { color:var(--blue); }
 .formula { display:inline-block; background:#1a1a00; color:#ffcc00; padding:2px 6px; border-radius:3px; font-family:'Courier New',monospace; font-size:10px; margin:3px 4px 3px 0; }
@@ -131,11 +124,17 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
 .decision-posture { font-size:13px; font-weight:700; color:var(--blue); margin-bottom:8px; }
 .decision-detail { font-size:11px; color:var(--muted); margin-bottom:4px; }
 
-/* ── Filter Bar ── */
-.filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; padding:12px; background:var(--card-bg); border-radius:8px; border:1px solid var(--border); }
-.filter-bar label { color:var(--muted); font-size:11px; }
-.filter-bar select { background:#0a1220; color:var(--text); border:1px solid #2a3f5f; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; }
-.filter-bar select:hover { border-color:#3498db; }
+/* ── Clickable Filter ── */
+.kpi-badge { cursor:pointer; transition:all 0.15s; user-select:none; }
+.kpi-badge:hover { border-color:#3498db; transform:translateY(-1px); }
+.kpi-badge.active { border-color:#3498db; box-shadow:0 0 0 2px rgba(52,152,219,0.4); }
+.kpi-badge.dimmed { opacity:0.35; }
+table tr.clickable-row { cursor:pointer; transition:background 0.1s; }
+table tr.clickable-row:hover td { background:rgba(52,152,219,0.07); }
+table tr.clickable-row.active td { background:rgba(52,152,219,0.13); }
+table tr.clickable-row.dimmed td { opacity:0.35; }
+.filter-hint { font-size:11px; color:var(--muted); margin-bottom:12px; padding:8px 12px; background:var(--card-bg); border-radius:6px; border:1px solid var(--border); }
+/* ── Phase labels REMOVED — colored node borders already distinguish sections ── */
 
 /* ── Section Title ── */
 .section-title { font-size:14px; font-weight:700; color:var(--heading); margin:20px 0 12px 0; padding-bottom:8px; border-bottom:1px solid var(--border); }
@@ -171,19 +170,19 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
     <span class="meta-item" style="color:#f0883e;">Expert Changes: <strong>A–E Applied · BD Action: Capacity Added</strong></span>
   </div>
   <div class="kpi-row">
-    <span class="kpi-badge"><span class="kpi-val" style="color:#ff6b6b;">1</span> COMPETITIVE PRESSURE RISK</span>
-    <span class="kpi-badge"><span class="kpi-val" style="color:#7ddf7d;">2</span> EXPAND CANDIDATE</span>
-    <span class="kpi-badge"><span class="kpi-val" style="color:#ffb347;">3</span> DUAL EXPOSURE</span>
-    <span class="kpi-badge"><span class="kpi-val" style="color:#9ecbff;">47</span> VERIFY → EXPAND</span>
-    <span class="kpi-badge"><span class="kpi-val">53</span> Total</span>
+    <span class="kpi-badge" onclick="fkpi(this,'DIRECT')" title="Filter: Competitive Pressure Risk"><span class="kpi-val" style="color:#ff6b6b;">1</span> COMPETITIVE PRESSURE RISK</span>
+    <span class="kpi-badge" onclick="fkpi(this,'BENEFICIARY')" title="Filter: Expand Candidate"><span class="kpi-val" style="color:#7ddf7d;">2</span> EXPAND CANDIDATE</span>
+    <span class="kpi-badge" onclick="fkpi(this,'CHECK_BD')" title="Filter: Dual Exposure (BD)"><span class="kpi-val" style="color:#ffb347;">3</span> DUAL EXPOSURE</span>
+    <span class="kpi-badge" onclick="fkpi(this,'CHECK_BENEFICIARY_OR_CHECK')" title="Filter: Verify → Expand"><span class="kpi-val" style="color:#9ecbff;">47</span> VERIFY → EXPAND</span>
+    <span class="kpi-badge" onclick="fkpi(this,'all')" title="Show all"><span class="kpi-val">53</span> Total</span>
   </div>
   <table>
     <thead><tr><th>COMBO</th><th>Clients</th><th>Signal</th><th>Expert Rule</th></tr></thead>
     <tbody>
-      <tr><td>COMBO-006</td><td>1</td><td style="color:#ff6b6b;">🔴 COMPETITIVE PRESSURE RISK</td><td>Never "HURT" — per expert B</td></tr>
-      <tr><td>COMBO-003</td><td>2</td><td style="color:#7ddf7d;">🟢 EXPAND CANDIDATE</td><td>Conditional — per expert A</td></tr>
-      <tr><td>COMBO-002</td><td>3</td><td style="color:#ffb347;">🟡 DUAL EXPOSURE</td><td>FL301 + EBA + banking — per expert D</td></tr>
-      <tr><td>COMBO-014</td><td>47</td><td style="color:#9ecbff;">🔵 VERIFY → EXPAND</td><td>Conditional on FOB + buyer + UFLPA + capacity</td></tr>
+      <tr class="clickable-row" onclick="fcombo(this,'COMBO-006')" title="Click to filter COMBO-006"><td>COMBO-006</td><td>1</td><td style="color:#ff6b6b;">🔴 COMPETITIVE PRESSURE RISK</td><td>Never "HURT" — per expert B</td></tr>
+      <tr class="clickable-row" onclick="fcombo(this,'COMBO-003')" title="Click to filter COMBO-003"><td>COMBO-003</td><td>2</td><td style="color:#7ddf7d;">🟢 EXPAND CANDIDATE</td><td>Conditional — per expert A</td></tr>
+      <tr class="clickable-row" onclick="fcombo(this,'COMBO-002')" title="Click to filter COMBO-002"><td>COMBO-002</td><td>3</td><td style="color:#ffb347;">🟡 DUAL EXPOSURE</td><td>FL301 + EBA + banking — per expert D</td></tr>
+      <tr class="clickable-row" onclick="fcombo(this,'COMBO-014')" title="Click to filter COMBO-014"><td>COMBO-014</td><td>47</td><td style="color:#9ecbff;">🔵 VERIFY → EXPAND</td><td>Conditional on FOB + buyer + UFLPA + capacity</td></tr>
     </tbody>
   </table>
   <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px;">Facts vs Assumptions — Mandatory Section (Expert E)</div>
@@ -232,26 +231,7 @@ th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacin
   </div>
 </div>
 
-<!-- Filter Bar -->
-<div class="filter-bar">
-  <label>COMBO:</label>
-  <select id="comboFilter" onchange="fc()">
-    <option value="all">All</option>
-    <option value="COMBO-002">COMBO-002 (BD)</option>
-    <option value="COMBO-003">COMBO-003 (IN Vertical)</option>
-    <option value="COMBO-006">COMBO-006 (VN)</option>
-    <option value="COMBO-014">COMBO-014 (IN FOB/CMT)</option>
-  </select>
-  <label>Signal:</label>
-  <select id="signalFilter" onchange="fc()">
-    <option value="all">All</option>
-    <option value="DIRECT">COMPETITIVE PRESSURE RISK</option>
-    <option value="BENEFICIARY">EXPAND CANDIDATE</option>
-    <option value="CHECK_BENEFICIARY">CHECK / OPPORTUNITY</option>
-    <option value="CHECK">CHECK</option>
-  </select>
-  <span style="font-size:11px;color:var(--muted);margin-left:4px;">← click to filter cards</span>
-</div>
+<div class="filter-hint">💡 Click a row in the summary table above, or a KPI badge, to filter cards below. Click again to reset.</div>
 
 <div class="section-title">Per-Client Impact Cards — 53 Clients</div>
 
@@ -376,38 +356,15 @@ function cy(c){
   }
 
   return [
-    '<div class="why-section">',
-    '<div class="phase-label phase-event">① EVENT</div>',
     '<div class="chain-node trigger"><div class="node-label">TRIGGER — What Changed</div>U.S. Section 301 forced-labor tariff effective July 24, 2026; VN 12.5%, IN/BD 10%. HS 61/62 NOT in Annex A — fully exposed.<div class="formula">'+c.country+' FL301='+rt+' → US total '+usTot+'</div><div class="formula">source: Federal Register / USTR [VERIFIED]</div></div>',
-    '</div>',
-
-    '<div class="why-section">',
-    '<div class="phase-label phase-exposure">② CLIENT EXPOSURE</div>',
     '<div class="chain-node exposure"><div class="node-label">CLIENT EXPOSURE — Why This Row</div>'+c.name+' | '+c.country+' | '+c.combo+' | '+c.biz+' | '+c.product+' | '+c.market+' | Revenue: '+c.revenue+'<div class="formula">country×combo×product×market = selected</div></div>',
-    '</div>',
-
-    '<div class="why-section">',
-    '<div class="phase-label phase-gap">③ ECONOMICS GAP</div>',
-    '<div class="chain-node gap"><div class="node-label">ECONOMICS GAP — Competitive Delta</div>'+gapTxt+'<div class="formula">IN/BD vs VN = -2.5pp advantage</div><div class="formula">$2.50 per $100 FOB buyer landed cost delta</div></div>',
-    '<div class="chain-node compound"><div class="node-label">SECOND-ORDER EFFECT — Commercial Compounding</div>Tariff → buyer repricing or origin shift → supplier margin/cash cycle pressure → Air8 receivable decision gate.<div class="formula">tariff→repricing→PO_shift→financing_risk</div><div class="formula">ARP_quality=buyer_quality×docs×non-disputed</div></div>',
-    '</div>',
-
-    '<div class="why-section">',
-    '<div class="phase-label phase-second">④ RISK FACTORS</div>',
-    '<div class="chain-node capacity"><div class="node-label">CAPACITY RISK — Can They Absorb Extra Volume?</div>'+capTxt+'<div class="formula">capacity=theoretical_max - current_utilization</div><div class="formula">capacity_for_'+(c.country)+'='+capCond+'</div></div>',
-    '<div class="chain-node margins"><div class="node-label">MARGIN RISK — Higher Volume != Higher Profit</div>'+marTxt+'<div class="formula">net_margin=tariff_saving - price_concession - compliance_cost</div><div class="formula">margin_for_'+(c.country)+'='+marCond+'</div></div>',
-    '</div>',
-
-    '<div class="why-section">',
-    '<div class="phase-label phase-gate">⑤ COMPLIANCE GATE</div>',
-    '<div class="chain-node compliance"><div class="node-label">UFLPA GATE — Independent of Tariff Check</div>'+uflpaTxt+'<div class="formula">UFLPA_status=[VERIFIED_CLEAN|DOCUMENTED|IN_PROGRESS|<span style="color:#ffb347;">UNKNOWN</span>]</div><div class="formula">raw_material_traceability+supply_chain_transparency</div><div class="formula">compliance_for_'+(c.country)+'='+uflpaCond+'</div></div>',
-    '</div>',
-
-    '<div class="why-section">',
-    '<div class="phase-label phase-decision">⑥ DECISION</div>',
+    '<div class="chain-node gap"><div class="node-label">ECONOMICS GAP — Competitive Delta</div>'+gapTxt+'<div class="formula">IN/BD vs VN = -2.5pp advantage | $2.50 per $100 FOB</div></div>',
+    '<div class="chain-node compound"><div class="node-label">COMMERCIAL COMPOUNDING — Second-Order Effect</div>Tariff → buyer repricing or origin shift → supplier margin/cash cycle pressure → Air8 receivable decision gate.<div class="formula">tariff→repricing→PO_shift→financing_risk</div></div>',
+    '<div class="chain-node capacity"><div class="node-label">CAPACITY RISK — Can They Absorb Extra Volume?</div>'+capTxt+'<div class="formula">capacity=theoretical_max - current_utilization | status='+capCond+'</div></div>',
+    '<div class="chain-node margins"><div class="node-label">MARGIN RISK — Higher Volume != Higher Profit</div>'+marTxt+'<div class="formula">net_margin=tariff_saving - price_concession - compliance_cost | status='+marCond+'</div></div>',
+    '<div class="chain-node compliance"><div class="node-label">UFLPA GATE — Independent of Tariff Check</div>'+uflpaTxt+'<div class="formula">UFLPA_status=[VERIFIED_CLEAN|DOCUMENTED|IN_PROGRESS|UNKNOWN] | current='+uflpaCond+'</div></div>',
     '<div class="chain-node edge"><div class="node-label">WHERE CLIENT CAN WIN / LOSE</div>'+edgeTxt+'<div class="formula">opportunity=US_exposure×buyer_reallocation×pricing_control</div></div>',
-    '<div class="chain-node conclusion"><div class="node-label">IMPACT CONCLUSION — Recommended Posture</div><strong style="font-size:14px;color:var(--blue);">'+dPost+'</strong><br><br>'+concTxt+'<div class="formula">posture='+dPost+' | combo='+c.combo+'</div><div class="confidence">Confidence: MEDIUM | Sources: TARIFF-DB · COUNTRY-DB · CLIENT-DB [VERIFIED Aug 4, 2026]</div><div class="confidence">Missing: US revenue% · buyer pass-through · UFLPA readiness · capacity headroom · traceability</div></div>',
-    '</div>'
+    '<div class="chain-node conclusion"><div class="node-label">IMPACT CONCLUSION — Recommended Posture</div><strong style=\"font-size:14px;color:var(--blue);\">'+dPost+'</strong><br><br>'+concTxt+'<div class="formula">posture='+dPost+' | combo='+c.combo+'</div><div class="confidence">Confidence: MEDIUM | Sources: TARIFF-DB · COUNTRY-DB · CLIENT-DB [VERIFIED Aug 4, 2026]</div><div class="confidence">Missing: US revenue% · buyer pass-through · UFLPA readiness · capacity headroom · traceability</div></div>'
   ].join('');
 }
 
@@ -443,6 +400,45 @@ function cw(c){
   return '<div class="action-box"><div class="action-box-title">Air8 / BD Actions — Ask, Collect, Decide</div>'+apActs+'<div class="decision-point"><div class="decision-posture">Air8 Financing Decision — '+dPost+'</div>'+dHtml+'</div></div><div class="action-box"><div class="action-box-title">Client Actions — What Supplier Should Do Now</div>'+cpActs+'</div>';
 }
 
+function fkpi(el,sig){
+  var badges=document.querySelectorAll('.kpi-badge');
+  var rows=document.querySelectorAll('.clickable-row');
+  if(el.classList.contains('active')){
+    badges.forEach(function(b){b.classList.remove('active','dimmed');});
+    rows.forEach(function(r){r.classList.remove('active','dimmed');});
+    filterActive=null;
+    document.querySelectorAll('.client-card').forEach(function(c){c.style.display='';});
+    return;
+  }
+  badges.forEach(function(b){b.classList.remove('active','dimmed');});
+  rows.forEach(function(r){r.classList.remove('active','dimmed');});
+  el.classList.add('active');
+  filterActive=sig;
+  document.querySelectorAll('.client-card').forEach(function(card){
+    var show=sig==='all'
+      ||card.dataset.signal===sig
+      ||(sig==='CHECK_BD'&&card.dataset.combo==='COMBO-002')
+      ||(sig==='CHECK_BENEFICIARY_OR_CHECK'&&(card.dataset.signal==='CHECK_BENEFICIARY'||card.dataset.signal==='CHECK'));
+    card.style.display=show?'':'none';
+  });
+}
+function fcombo(row,combo){
+  var badges=document.querySelectorAll('.kpi-badge');
+  var rows=document.querySelectorAll('.clickable-row');
+  if(row.classList.contains('active')){
+    badges.forEach(function(b){b.classList.remove('active','dimmed');});
+    rows.forEach(function(r){r.classList.remove('active','dimmed');});
+    document.querySelectorAll('.client-card').forEach(function(c){c.style.display='';});
+    return;
+  }
+  badges.forEach(function(b){b.classList.remove('active','dimmed');});
+  rows.forEach(function(r){r.classList.remove('active','dimmed');});
+  row.classList.add('active');
+  document.querySelectorAll('.client-card').forEach(function(card){
+    card.style.display=card.dataset.combo===combo?'':'none';
+  });
+}
+var filterActive=null;
 function rc(){
   var c=document.getElementById('cards-container');
   var h='';
