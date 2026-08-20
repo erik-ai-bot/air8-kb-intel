@@ -1,696 +1,521 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FL301 Event Validation — CP0→CP5 Chat Flow</title>
-<style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Section 301 Event Validation — Full Telegram Flow</title><style>
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; }
-body {
-  background: #e5ddd5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px;
-  color: #000;
-  height:100%;
-  overflow:hidden;
-}
-
-/* ── Telegram chrome ── */
-.tg-app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-.tg-header {
-  background: linear-gradient(180deg,#527fa4 0%,#476b8d 100%);
-  color: #fff;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-  border-bottom: 1px solid #3a6a8e;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.tg-header-avatar {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg,#6baed6,#527fa4);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:700; font-size:18px; color:#fff; flex-shrink:0;
-}
-.tg-header-info { flex:1; }
-.tg-header-name { font-weight:600; font-size:15px; }
-.tg-header-status { font-size:12px; color:#c8dff5; }
-.tg-header-status.online { color:#a8d8b5; }
-.tg-header-dots { color:#c8dff5; font-size:18px; letter-spacing:2px; }
-
-.tg-body {
-  flex:1;
-  overflow-y: auto;
-  padding: 12px 8px 60px;
-  scroll-behavior: smooth;
-}
-
-/* ── Chat layout ── */
-.chat-row { display:flex; margin-bottom:6px; }
-.chat-row.yeti { justify-content:flex-start; }
-.chat-row.jerri { justify-content:flex-end; }
-.chat-row.system { justify-content:center; margin:12px 0; }
-
-.chat-bubble-wrap { max-width:75%; position:relative; }
-.yeti .chat-bubble-wrap { padding-left:32px; }
-.jerri .chat-bubble-wrap { padding-right:32px; }
-
-.chat-avatar {
-  position:absolute;
-  bottom:0;
-  width:28px; height:28px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:12px; font-weight:700; color:#fff;
-  flex-shrink:0;
-}
-.yeti .chat-avatar { left:0; background:linear-gradient(135deg,#6baed6,#527fa4); }
-.jerri .chat-avatar { right:0; background:linear-gradient(135deg,#7dcea0,#27ae60); }
-
-.chat-bubble {
-  padding:8px 12px;
-  border-radius:11px;
-  position:relative;
-  box-shadow:0 1px 1px rgba(0,0,0,0.08);
-  line-height:1.5;
-  word-break:break-word;
-  white-space:pre-wrap;
-}
-.yeti .chat-bubble {
-  background:#fff;
-  border-bottom-left-radius:2px;
-}
-.jerri .chat-bubble {
-  background:#dcf8c6;
-  border-bottom-right-radius:2px;
-}
-
-.chat-time {
-  font-size:10px; color:#81a2c1;
-  margin-top:3px;
-  white-space:nowrap;
-}
-.yeti .chat-time { text-align:left; margin-left:32px; }
-.jerri .chat-time { text-align:right; margin-right:32px; }
-
-.chat-tick { font-size:12px; vertical-align:-1px; }
-
-/* ── System step markers ── */
-.step-marker {
-  display:inline-flex; align-items:center; gap:6px;
-  background:rgba(0,0,0,0.06);
-  border-radius:12px;
-  padding:4px 12px;
-  font-size:11px;
-  color:#666;
-  margin:10px 0;
-}
-.step-marker .step-badge {
-  background:#527fa4;
-  color:#fff;
-  border-radius:8px;
-  padding:1px 6px;
-  font-size:10px;
-  font-weight:700;
-}
-.step-marker.cp0 .step-badge { background:#3498db; }
-.step-marker.cp1 .step-badge { background:#9b59b6; }
-.step-marker.cp2 .step-badge { background:#e67e22; }
-.step-marker.cp3 .step-badge { background:#16a085; }
-.step-marker.cp4 .step-badge { background:#c0392b; }
-.step-marker.cp5 .step-badge { background:#2ecc71; }
+body { background:#e5ddd5; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:14px; color:#000; height:100%; overflow:hidden; }
+.tg-app { display:flex; flex-direction:column; height:100vh; }
+.tg-header { background:linear-gradient(180deg,#527fa4 0%,#476b8d 100%); color:#fff; padding:10px 16px; display:flex; align-items:center; gap:12px; flex-shrink:0; border-bottom:1px solid #3a6a8e; position:sticky; top:0; z-index:10; }
+.tg-header-avatar { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#6baed6,#527fa4); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:#fff; flex-shrink:0; }
+.tg-header-info { flex:1; } .tg-header-name { font-weight:600; font-size:15px; } .tg-header-status { font-size:12px; color:#a8d8b5; } .tg-header-dots { color:#c8dff5; font-size:18px; letter-spacing:2px; }
+.tg-body { flex:1; overflow-y:auto; padding:12px 8px 70px; scroll-behavior:smooth; background-image: radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px); background-size:18px 18px; }
+.chat-row { display:flex; margin-bottom:7px; } .chat-row.yeti { justify-content:flex-start; } .chat-row.jerri { justify-content:flex-end; } .chat-row.system { justify-content:center; margin:14px 0 8px; }
+.chat-bubble-wrap { max-width:76%; position:relative; } .yeti .chat-bubble-wrap { padding-left:32px; } .jerri .chat-bubble-wrap { padding-right:32px; }
+.chat-avatar { position:absolute; bottom:0; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+.yeti .chat-avatar { left:0; background:linear-gradient(135deg,#6baed6,#527fa4); } .jerri .chat-avatar { right:0; background:linear-gradient(135deg,#7dcea0,#27ae60); }
+.chat-bubble { padding:9px 12px; border-radius:11px; position:relative; box-shadow:0 1px 1px rgba(0,0,0,0.08); line-height:1.5; word-break:break-word; white-space:pre-wrap; }
+.yeti .chat-bubble { background:#fff; border-bottom-left-radius:2px; } .jerri .chat-bubble { background:#dcf8c6; border-bottom-right-radius:2px; }
+.chat-time { font-size:10px; color:#81a2c1; margin-top:3px; white-space:nowrap; } .yeti .chat-time { text-align:left; margin-left:32px; } .jerri .chat-time { text-align:right; margin-right:32px; } .chat-tick { font-size:12px; vertical-align:-1px; }
+.step-marker { display:inline-flex; align-items:center; gap:6px; background:rgba(0,0,0,0.06); border-radius:12px; padding:4px 12px; font-size:11px; color:#666; }
+.step-marker .step-badge { background:#527fa4; color:#fff; border-radius:8px; padding:1px 6px; font-size:10px; font-weight:700; }
+.step-marker.cp0 .step-badge { background:#3498db; } .step-marker.cp1 .step-badge { background:#9b59b6; } .step-marker.cp2 .step-badge { background:#e67e22; } .step-marker.cp3 .step-badge { background:#16a085; } .step-marker.cp35 .step-badge { background:#117a65; } .step-marker.cp4 .step-badge { background:#c0392b; } .step-marker.cp5 .step-badge { background:#2ecc71; }
 .step-marker .step-label { font-weight:600; color:#333; }
-
-/* ── KB data blocks ── */
-.kb-block {
-  background:#f0f4f8;
-  border:1px solid #d0dce8;
-  border-radius:8px;
-  padding:10px 12px;
-  margin:6px 0;
-  font-size:12px;
-  font-family:'Courier New',monospace;
-  color:#1a2a4a;
-  overflow-x:auto;
-  white-space:pre-wrap;
-}
-.kb-block .kb-label {
-  font-size:10px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  color:#527fa4;
-  margin-bottom:6px;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-}
-.kb-block .kb-src {
-  font-size:10px;
-  color:#81a2c1;
-  margin-top:6px;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-}
-
-/* ── Approval / action banners ── */
-.approval-banner {
-  display:flex; align-items:center; gap:8px;
-  background:linear-gradient(90deg,#d4edda,#c3e6cb);
-  border:1px solid #a3d4a7;
-  border-radius:8px;
-  padding:6px 12px;
-  font-size:12px;
-  color:#155724;
-  margin:8px 0;
-}
-.approval-banner.auto { background:linear-gradient(90deg,#e8f4fd,#d0e8fa); border-color:#a0c9e8; color:#1a5276; }
-.approval-icon { font-size:14px; }
-
-/* ── Chat separator ── */
-.chat-sep { text-align:center; margin:14px 0 6px; }
-
-/* ── Mini hero cards in chat ── */
-.mini-kpi { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
-.mini-badge { background:#1a2a4a; color:#fff; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:600; }
-.mini-badge.red { background:#8b0000; }
-.mini-badge.orange { background:#e67e22; }
-.mini-badge.green { background:#1e8449; }
-.mini-badge.blue { background:#2471a3; }
-.mini-badge.purple { background:#6c3483; }
-
-/* ── Responsive ── */
-@media(max-width:600px){
-  .chat-bubble-wrap { max-width:88%; }
-  .kb-block { font-size:11px; }
-}
-</style>
-</head>
-<body>
-<div class="tg-app">
-
-<!-- Telegram header -->
-<div class="tg-header">
-  <div class="tg-header-avatar">Y</div>
-  <div class="tg-header-info">
-    <div class="tg-header-name">Yeti — Air8 Validation Agent</div>
-    <div class="tg-header-status online">● online</div>
-  </div>
-  <div class="tg-header-dots">⋮</div>
-</div>
-
-<!-- Chat body -->
-<div class="tg-body" id="chatBody">
-
-<!-- ═══════════════ CP0: News Trigger + Enrichment ═══════════════ -->
-<div class="step-marker cp0">
-  <span class="step-badge">CP0</span>
-  <span class="step-label">News Trigger → KB Enrichment</span>
-</div>
-
-<!-- Yeti: News trigger -->
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>📰 News Trigger Detected</strong>
-
-<strong>USTR Federal Register — Section 301 Forced Labor Tariff</strong>
-
-<em>Federal Register / USTR Publication — July 24, 2026</em>
-
-U.S. Trade Representative imposed additional tariffs under Section 301 on countries identified by CBP as high-risk for customs evasion and forced labor practices in supply chains:
-
-• <strong>Vietnam (VN):</strong> +12.5% → US Total ~28.5%
-• <strong>India / Bangladesh:</strong> +10% → US Total ~26.5%
-• <strong>China:</strong> Already covered under existing S301; additional FL301 overlap where applicable
-
-<em>Scope: HS 61, 62 (apparel) NOT in Annex A — fully exposed</em>
-
-<strong>Effective: July 24, 2026</strong>
-
-Running event enrichment against TARIFF-DB...</div>
-    <div class="chat-time">10:02 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- Yeti: KB Enrichment result -->
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>✅ KB Enrichment — TARIFF-DB Verified</strong></div>
-    <div class="chat-time">10:02 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">TARIFF-DB — PART 1 Apparel HS 61/62</div>┌─────────────────────────────────────────────────────┐
-│ ORIGIN  │ MFN    │ S301 │ FL301 │ US TOTAL  │ EU        │
-├─────────┼────────┼──────┼───────┼───────────┼───────────┤
-│ CN      │ 12-32% │ +25% │+12.5% │ ~50–70%   │ 12% MFN   │
-│ IN      │ 12-32% │  —   │ +10%  │ ~26.5%    │ 9.6% GSP  │
-│ VN      │ 12-32% │  —   │+12.5% │ ~28.5%    │ 0-12%     │
-│ BD      │ 12-32% │  —   │ +10%  │ ~26.5%    │ 0% EBA⚠️  │
-└─────────────────────────────────────────────────────┘
-Source: USTR Federal Register · Verified Aug 4, 2026</div>
-    </div>
-    <div class="chat-time">10:02 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">COUNTRY-DB — VN / IN / BD Risk Signals</div>VN: FL301 12.5% = HIGHER tier vs IN/BD at 10%. VN buyers already at ~28.5% total. S301 investigation open (Jun 2). IP Priority Foreign Country designation. Origin-washing scrutiny.
-
-IN: FL301 +10% (vs CN 37.5%). Cotton duty waiver ACTIVE Jun–Oct 31 (13 weeks remaining as of Aug 4). Mills should pre-buy cotton before Nov 1 = +16% reinstatement. INR ~83-84, slight weakness favorable for exporters.
-
-BD: FL301 +10% BUT double exposure — EBA 0% at risk (LDC graduation 2027) + banking NPL crisis ~BDT 400,000 crore. EU 0% not clean benefit. ARP highly attractive for BD clients.
-
-Source: COUNTRY-DB · Verified Aug 4, 2026</div>
-    </div>
-    <div class="chat-time">10:02 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- Jerri: go -->
-<div class="chat-row jerri">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">J</div>
-    <div class="chat-bubble">CP0 looks good. <strong>GO</strong> — run CP1, CP2, CP3 in sequence. Show me the real KB returns at each step. I'll review before moving to CP4.</div>
-    <div class="chat-time">10:03 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- Approval banner -->
-<div class="approval-banner auto">
-  <span class="approval-icon">🤖</span>
-  <span><strong>Auto-Approved</strong> — CP0 confirmed · Jerri: "GO"</span>
-</div>
-
-<!-- ═══════════════ CP1: Parse Event Fields ═══════════════ -->
-<div class="step-marker cp1">
-  <span class="step-badge">CP1</span>
-  <span class="step-label">Parse Event Fields → SV1 Score</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>CP1 — Parsing FL301 event fields against SV1 schema...</strong></div>
-    <div class="chat-time">10:04 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">SV1 Detect — FL301 Parsed Fields</div>EVENT_TYPE      = TARIFF_301_FL
-SEVERITY        = HIGH
-COUNTRY_LIST     = VN(+12.5%), IN(+10%), BD(+10%)
-HS_SCOPE         = 61,62 NOT in Annex A — fully exposed
-EFFECTIVE_DATE   = 2026-07-24
-RATE_VS_BASELINE = VN +12.5% → +2.5pp above IN/BD tier
-EU_EBA_IMPACT    = BD only (EBA at risk 2027)
-LEGAL_STATUS     = Active; legal challenge filed Aug 3, 2026
-SUPPLIER_DIRECTION = VN → COST PRESSURE / IN-BD → CONDITIONAL OPPORTUNITY
-SV1_SCORE        = 78 / 100 — HIGH
-ALERT_CLASS      = TARIFF-SOURCING-REPRICING-EVENT</div>
-    </div>
-    <div class="chat-time">10:04 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>SV1 Score: 78/100 — HIGH</strong>
-
-5 sub-signals triggered:
-• S1: VN at +12.5% → VN competitive disadvantage +2.5pp vs IN/BD
-• S2: HS 61/62 not in Annex A → full apparel exposure
-• S3: BD double exposure — FL301 + EBA + banking crisis
-• S4: IN cotton window closing — 13 weeks to Oct 31
-• S5: FL301 legal challenge pending (25 states, Aug 3)</div>
-    <div class="chat-time">10:04 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row jerri">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">J</div>
-    <div class="chat-bubble">SV1 78 HIGH is right. Note: <strong>UFLPA should be its own gate</strong>, separate from tariff — don't roll it into S1-S5. Keep it independent. GO to CP2.</div>
-    <div class="chat-time">10:05 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- ═══════════════ CP2: KB Event Validation ═══════════════ -->
-<div class="step-marker cp2">
-  <span class="step-badge">CP2</span>
-  <span class="step-label">KB Event Validation — Event Family Cross-Reference</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>CP2 — Querying KB for existing FL301 event records...</strong></div>
-    <div class="chat-time">10:05 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">KB Event Family Query — EVT-FL301</div>EVENT_FAMILY   = EVT-TARIFF-301-FL
-QUERY_SCOPE    = EVT-TARIFF / EVT-REGULATION / EVT-INPUT
-KB_SOURCE      = air8-databases/TARIFF-DB.md · air8-databases/COUNTRY-DB.md
-
-MATCHED EVENTS:
-  EVT-S301-CN        → CN +25% active 2020-2026 | USTR
-  EVT-FL301-VN-BD-IN → NEW (Jul 24, 2026) | Federal Register
-  EVT-COTTON-DUTY-IN → IN cotton duty waiver ACTIVE | India Budget 2026
-  EVT-EBA-BD         → BD EBA 0% at risk 2027 | EC Trade
-  EVT-BD-BANKING     → BD banking NPL ~BDT 400k crore | BGMEA
-
-CROSS_REFERENCE: FL301 × Cotton × EBA × Banking = COMPOUNDING
-CROSS_REFERENCE: HS 61/62 NOT in Annex A confirmed | USTR Federal Register</div>
-    </div>
-    <div class="chat-time">10:05 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">SV2 Detect — 6 Signals + Hard Stops</div>┌────┬────────────────────────────────────────────┬────────┐
-│ E1 │ VN competitive disadvantage (+2.5pp)     │ ⚠️RISK│
-│ E2 │ BD double exposure (FL301+EBA+banking)  │ 🔴HARD│
-│ E3 │ IN cotton window closing (13 weeks)      │ ⏰TIME │
-│ E4 │ UFLPA — independent gate (per Jerri)     │ 🔴HARD│
-│ E5 │ FL301 legal challenge (25 states Aug 3) │ ⚠️RISK│
-│ E6 │ BD EBA 2027 graduation risk              │ ⚠️RISK│
-└────┴────────────────────────────────────────────┴────────┘
-
-SV2_SCORE = 82/100 — VERY HIGH
-→ Event is VALID and NOVEL. Cross-reference confirms compounding complexity.</div>
-    </div>
-    <div class="chat-time">10:05 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row jerri">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">J</div>
-    <div class="chat-bubble">E2 hard stop is right. BD EBA and banking should be in E2 alongside FL301 — they compound. CP2 confirmed. <strong>GO to CP3.</strong></div>
-    <div class="chat-time">10:06 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- ═══════════════ CP3: KB Client Lookup ═══════════════ -->
-<div class="step-marker cp3">
-  <span class="step-badge">CP3</span>
-  <span class="step-label">KB Client Lookup — COMBO Exposure Match</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>CP3 — Querying CLIENT-DB for FL301-exposed combos...</strong></div>
-    <div class="chat-time">10:07 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">CLIENT-DB — FL301 COMBO Match Results</div>QUERY = country IN [VN,IN,BD] AND product IN [woven,knit,denim]
-RESULTS:
-
-COMBO-006 | VN | woven/CMT | US/APAC | HOANGPHAT CO., LTD
-  → Signal: DIRECT | VN +12.5% | US exposure = HIGH SENSITIVITY
-  → 1 client
-
-COMBO-003 | IN | vertical/denim | US | COSMO FIRST + SAHU GLOBAL
-  → Signal: BEN_UP | IN +10% | EU access (GSP) | Cotton supplier
-  → 2 clients
-
-COMBO-002 | BD | denim/CMT/FOB | US/EU | MEGHNA DENIMS + DRESSMEN + ANANTA
-  → Signal: BEN_CM | BD +10% | EU 0% (EBA at risk) | Banking NPL
-  → 3 clients
-
-COMBO-014 | IN | FOB/CMT/woven | US | 47 IN suppliers
-  → Signal: MIXED | IN +10% | FOB vs CMT mixed | Revenue unknown
-  → 47 clients
-
-TOTAL: 4 combos · 53 clients</div>
-    </div>
-    <div class="chat-time">10:07 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="mini-kpi">
-  <span class="mini-badge red">1 VN DIRECT EXPOSURE</span>
-  <span class="mini-badge green">2 IN BENEFICIARY CANDIDATE</span>
-  <span class="mini-badge orange">3 BD DUAL EXPOSURE</span>
-  <span class="mini-badge blue">47 IN VERIFY BEFORE EXPAND</span>
-</div>
-Portfolio: 6 VN · 9 IN · 11 BD NEXT suppliers
-Net VN disadvantage: +2.5pp vs IN/BD tier</div>
-    <div class="chat-time">10:07 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row jerri">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">J</div>
-    <div class="chat-bubble">Good. 53 clients is the right universe. <strong>GO to CP4</strong> — run the full per-client decision card for all 53. I want to see the signal logic and the economic gap calculation in each card.</div>
-    <div class="chat-time">10:08 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- ═══════════════ CP3.5: Signal Reframe ═══════════════ -->
-<div class="step-marker cp3">
-  <span class="step-badge">CP3.5</span>
-  <span class="step-label">Signal Label Reframe — Expert Review Applied</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>Applying expert signal reframe before CP4 generation...</strong></div>
-    <div class="chat-time">10:08 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">Signal Reframe — Expert A + B Applied</div>OLD LABEL          → NEW LABEL
-─────────────────────────────────────────────────────
-BENEFICIARY         → EXPAND CANDIDATE (conditional)
-BENEFICIARY/⚠️CHECK → EXPAND CANDIDATE (conditional) + UFLPA gate
-HURT                → COMPETITIVE PRESSURE RISK
-
-REASONING:
-• "Beneficiary" implies automatic gain — wrong framing
-• "Gained tariff-related cost advantage · conditional on buyer decisions"
-• VN clients "may face increased competitive pressure where buyers are actively reviewing sourcing allocations"
-• UFLPA readiness + raw material traceability + supply chain transparency = independent gates
-• Never "HURT" — per Expert B</div>
-    </div>
-    <div class="chat-time">10:08 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- ═══════════════ CP4: Per-Client Decision Cards ═══════════════ -->
-<div class="step-marker cp3">
-  <span class="step-badge">CP4</span>
-  <span class="step-label">Per-Client Decision Cards — All 53 Clients</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>CP4 — Generating per-client decision cards for all 53 clients...</strong></div>
-    <div class="chat-time">10:09 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>4 WHY-chain templates built for 4 client types:</strong>
-
-<strong>TYPE 1 — VN / DIRECT EXPOSURE (COMBO-006, 1 client)</strong>
-→ Posture: HOLD / PROTECT
-→ VN 12.5% + US ~28.5% → buyers reviewing VN sourcing
-→ 2.5pp disadvantage vs IN/BD
-→ UFLPA readiness + raw material traceability + supply chain transparency = independent gates
-→ Capacity risk + margin risk checked
-→ BD: never clean beneficiary — FL301+EBA+banking compound
-
-<strong>TYPE 2 — IN / BEN UP (COMBO-003, 2 clients)</strong>
-→ Posture: EXPAND CANDIDATE (conditional)
-→ Gained 2.5pp cost advantage vs VN — conditional on buyer decisions
-→ UFLPA readiness + raw material traceability + supply chain transparency = independent gates
-→ Cotton pre-buy window: 13 weeks to Oct 31
-→ H2 order increase or acceleration must be confirmed
-
-<strong>TYPE 3 — BD / DUAL EXPOSURE (COMBO-002, 3 clients)</strong>
-→ Posture: VERIFY → HOLD
-→ BD FL301 + EBA 2027 + banking NPL = triple complexity
-→ EU 0% not clean benefit — EBA graduation risk
-→ ARP attractive for early payment given banking crisis
-
-<strong>TYPE 4 — IN / FOB+CMT MIXED (COMBO-014, 47 clients)</strong>
-→ Posture: VERIFY → EXPAND
-→ IN +10% advantage conditional on: FOB vs CMT · buyer pass-through · UFLPA docs
-→ Revenue unknown = capacity unknown
-→ BD call required to qualify each</div>
-    <div class="chat-time">10:09 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">Economic Gap Calculation — Real Data (per TARIFF-DB)</div>┌──────────┬───────────┬────────────────┬──────────────────┐
-│ Country  │ FL301 Rate│ US Total (HS61)│ vs VN Advantage │
-├──────────┼───────────┼────────────────┼──────────────────┤
-│ VN       │ +12.5%     │ ~28.5%         │基准              │
-│ IN       │ +10%       │ ~26.5%         │+2.5pp advantage  │
-│ BD       │ +10%       │ ~26.5%         │+2.5pp advantage  │
-│ CN       │ +12.5%     │ ~50–70%        │VN at -21pp vs CN │
-└──────────┴───────────┴────────────────┴──────────────────┘
-
-Buyer landed cost delta: $2.50 per $100 FOB for IN/BD vs VN
-Net VN disadvantage in APAC/US mixed portfolio: +2.5pp
-
-Note: buyer pass-through terms (fixed-price vs cost-plus) not yet confirmed
-for any of the 53 clients — BD calls required.</div>
-    </div>
-    <div class="chat-time">10:09 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row jerri">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">J</div>
-    <div class="chat-bubble">Economic gap is correct. The BD triple complexity framing is right too. <strong>GO to CP5</strong> — generate the HTML. Remember: don't repeat ARP/OBF logic in every card. Put it in the appendix once.</div>
-    <div class="chat-time">10:10 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- ═══════════════ CP5: Expert Review + Expert A-E Applied ═══════════════ -->
-<div class="step-marker cp5">
-  <span class="step-badge">CP5</span>
-  <span class="step-label">CP5 Output — Expert Review A–E Applied</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble"><strong>CP5 — Generating HTML with all 9 expert changes applied...</strong></div>
-    <div class="chat-time">10:11 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<strong>Expert Changes A–E — Confirmed Applied:</strong>
-
-<strong>Must Change A</strong> ✅
-→ "BENEFICIARY" → "gained tariff-related cost advantage · conditional on buyer decisions"
-→ All 53 cards: consistent conditional language
-
-<strong>Must Change B</strong> ✅
-→ "HURT" → "may face increased competitive pressure where buyers are actively reviewing sourcing allocations"
-→ HOANGPHAT CO., LTD: HOLD / PROTECT posture retained
-
-<strong>Must Change C</strong> ✅
-→ Generic "traceability" → "UFLPA readiness, raw material traceability, and supply chain transparency"
-→ All 53 cards: consistent across WHY chain
-
-<strong>Must Change D</strong> ✅
-→ ARP/OBF/PreShip logic removed from per-card repetition
-→ Single Appendix at bottom: all financing product reference (shown once)
-→ Facts vs Assumptions added to hero section
-
-<strong>Should Add D</strong> ✅
-→ Capacity Risk node added to every WHY chain
-→ Margin Risk node added to every WHY chain
-
-<strong>Should Add E</strong> ✅
-→ Supplier Readiness Heatmap added to hero section
-→ 47 of 53 clients = UNKNOWN readiness (no BD call yet)
-→ Strategic Insight: "Resilience-Optimized vs Cost-Optimized Sourcing"</div>
-    <div class="chat-time">10:11 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">KB-GAP Proposals — CLIENT-DB Field Additions</div>POST-RUN, 6 gaps identified for KB evolution:
-
-GAP-1 → UFLPA readiness status per supplier (VERIFIED CLEAN / DOCUMENTED / IN PROGRESS / UNKNOWN)
-GAP-2 → Raw material traceability tier — cotton/fabric origin proof level (Tier 1–4)
-GAP-3 → Supplier capacity headroom — can absorb +20% volume? (Y / N / UNKNOWN)
-GAP-4 → Buyer duty pass-through terms — fixed price vs cost-plus (per top-3 buyers)
-GAP-5 → US buyer reallocation evidence — confirmed vs speculative (per top buyer)
-GAP-6 → IN cotton pre-buy status — has supplier pre-buy cotton before Oct 31? (Y / N / UNKNOWN)</div>
-    </div>
-    <div class="chat-time">10:11 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-<!-- Final approval banner -->
-<div class="approval-banner auto">
-  <span class="approval-icon">🤖</span>
-  <span><strong>Auto-Approved</strong> — CP5 complete · 53 cards generated · Expert A–E applied</span>
-</div>
-
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">✅ <strong>CP5 HTML generated and deploying...</strong>
-
-📄 <strong>CP5 Output:</strong> <code>s301-fl301-cp5-v2.html</code>
-📊 53 client cards · 4 COMBOs · Facts/Assumptions hero · Supplier Readiness Heatmap · Strategic Insight · Appendix (one place, not per-card)
-
-Live URL will be sent once GitHub Pages deploy completes (~2 min).</div>
-    <div class="chat-time">10:12 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
-</div><!-- /chatBody -->
-</div><!-- /tg-app -->
-<script>
-function scrollBottom(){ document.getElementById('chatBody').scrollTop=1e9; }
-scrollBottom();
-</script>
-</body>
-</html>
+.md h2 { font-size:16px; margin:0 0 8px; color:#1b4f72; } .md strong { font-weight:700; } .md code { background:#f0f4f8; border-radius:3px; padding:1px 4px; }
+.bubble-title { font-weight:700; color:#1b4f72; margin-bottom:4px; }
+.actions-inline { background:#f0f4f8; border:1px solid #d0dce8; border-radius:8px; padding:8px; margin-top:8px; color:#155724; font-weight:600; }
+.link-card { background:#f7fbff; border:1px solid #c8dff5; border-radius:8px; padding:8px; margin-top:8px; font-family:'Courier New',monospace; font-size:11px; color:#1a5276; white-space:pre-wrap; }
+.footer-note { text-align:center; color:#666; font-size:11px; padding:8px; }
+@media(max-width:760px){ .chat-bubble-wrap { max-width:92%; } body{font-size:13px;} }
+</style></head><body><div class="tg-app"><div class="tg-header"><div class="tg-header-avatar">Y</div><div class="tg-header-info"><div class="tg-header-name">Yeti — Air8 Validation Agent</div><div class="tg-header-status">● online · prepared demo flow</div></div><div class="tg-header-dots">⋮</div></div><div class="tg-body" id="chatBody"><div class="footer-note">Prepared transcript from real Section 301 CP0→CP5 run · only relevant selected chat content</div><div class="chat-row system"><div class="step-marker cp0"><span class="step-badge">CP0</span><span class="step-label">News Trigger → Source Validation</span></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">lets do news event trigger validation 1. US Section 301 Forced-Labor Tariff — Live July 24 Replaced Section 122. New duties: Vietnam 12.5%, India &amp; Bangladesh 10%, 60+ economies total. The spread is narrow enough that it partially levels the playing field again — but Vietnam remains the most penalized among the top 3 alternates. Sourcing planners are still scrambling to reprice H2 orders.</div><div class="chat-time">10:03 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP0 — Event Enrichment</span>
+
+🎯 What this step does
+- Verify the news/event claim against official sources.
+- Separate official facts from Air8 interpretation/hypothesis.
+- Prepare the event for CP1 parsing; no KB family activation yet.
+
+📚 KB / data referenced
+- CP0 source validation first.
+- Official sources checked:
+  - Federal Register / USTR notice of action: 2026-15181
+  - Presidential memorandum: 2026-15274
+  - Prior USTR determinations/request for comments: 2026-11296
+
+🧮 Key logic / criteria
+- Treat tariff rates/effective dates as verified only if present in official FR/USTR text.
+- Treat business claims like “levels the playing field” or “scrambling to reprice” as impact hypotheses until CP4/CP5 data supports them.
+- Do not treat “Replaced Section 122” as verified unless an official/source document supports that phrasing.
+
+📊 Output summary
+
+Verified official facts:
+- Section 301 action on forced-labor import prohibition failures: ✅ Verified
+- 60 investigations/economies: ✅ Verified
+- Tariffs apply from 12:01 a.m. ET July 24, 2026 for covered entries, with in-transit exception through July 28: ✅ Verified
+- Bangladesh tariff: ✅ 10%
+- India tariff: ✅ 10%
+- Vietnam tariff: ✅ 12.5%
+- Bangladesh / Cambodia / Indonesia / Malaysia TRQ mechanism for textiles/apparel/cotton when feasible: ✅ Verified
+- Product exemptions / Annexes exist: ✅ Verified
+
+Claims not yet verified as official wording:
+- “Replaced Section 122”: ⚠️ Not found in official FR text inspected; treat as user/business shorthand until sourced.
+- “Spread partially levels the playing field again”: 🧠 Air8 impact hypothesis for CP4/CP5.
+- “Sourcing planners scrambling to reprice H2 orders”: 🧠 Market-behavior hypothesis; needs CP4/CP5 evidence or client data.
+
+Initial event shape:
+- Event name: US Section 301 forced-labor tariff action
+- Mechanism: additional Section 301 duties on all goods of investigated economies, subject to exemptions / net-of-MFN caps / future TRQs
+- Primary Air8 countries in user event:
+  - Vietnam: 12.5%
+  - India: 10%
+  - Bangladesh: 10%
+- Likely Air8 impact vector: landed-cost repricing, buyer sourcing spread compression, Vietnam penalty vs India/Bangladesh, H2 order repricing, textile/apparel TRQ monitoring.
+
+🚩 KB gaps / proxies
+- Potential CP2 gap to track later:
+  - KBG-S301-FORCED-LABOR-SUBTYPE: if KB lacks a clean subtype for “forced-labor import-prohibition Section 301 tariff”.
+  - KBG-TARIFF-TRQ-TEXTILE-MECHANISM: if KB lacks TRQ-driven textile/apparel routing logic.
+- Not merging anything now; these will be confirmed in CP2/CP3.
+
+🔎 More detail
+- CP0 artifact:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp0-enrichment.md
+- Run state:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-state.json
+
+Actions: <span class="actions-inline">[✅ Confirm] [✏️ Adjust] [⏭️ Skip]</span></div><div class="chat-time">10:04 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">confirm</div><div class="chat-time">10:05 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp1"><span class="step-badge">CP1</span><span class="step-label">Event Parse</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP1 — Event Parse</span>
+
+🎯 What this step does
+- Convert the verified news item into structured event fields.
+- Define what is official scope vs Air8-specific focus.
+- Carry unknown/inferred fields forward for human review.
+
+📚 KB / data referenced
+- validation-agent/CP1-EVENT-PARSE.md
+- CP0 official-source enrichment:
+  s301-forced-labor-tariff-20260724-cp0-enrichment.md
+
+🧮 Key logic / criteria
+- CP1 is text/event parsing only — no family activation yet.
+- Official mechanism is broader than Air8’s target sector:
+  - official scope: all goods of investigated economies, with exemptions/caps/TRQs;
+  - Air8 focus: textile/apparel/home-textile/cotton-input landed-cost and sourcing impact.
+- Unknowns are retained instead of guessed.
+
+📊 Output summary
+
+Parsed fields:
+- supplier_country: User focus VN, IN, BD; official scope 60 investigated economies — ✅ Verified/scoped
+- buyer_geo: US import market — inferred from U.S. import tariff mechanism
+- product_category: Official all goods; Air8 focus apparel, textiles, home textiles, cotton/textile inputs — verified + Air8 scoped
+- material: cotton/textile inputs as TRQ hook — partial; specific product material requires CP3.5/CP4
+- supplier_tier: [UNKNOWN] — needs client/supplier mapping
+- company_type: [UNKNOWN] — needs transaction/supplier profile
+- event_mechanism: Section 301 additional duties tied to forced-labor import-prohibition investigations — ✅ Verified
+- timing: effective 2026-07-24 00:01 ET; FR publication 2026-07-28 — ✅ Verified
+
+User-focus rate map:
+- Vietnam: 12.5%
+- India: 10%
+- Bangladesh: 10%
+
+Downstream trace:
+Section 301 forced-labor tariff
+→ country-specific landed-cost delta
+→ buyer repricing / margin compression
+→ sourcing allocation shift
+→ textile/apparel/home-textile supplier impact
+
+For the user’s top-3 alternate-country framing:
+Vietnam 12.5% vs India/Bangladesh 10%
+→ Vietnam remains 2.5pp more penalized
+→ India/Bangladesh gain relative landed-cost advantage vs Vietnam
+
+🚩 KB gaps / proxies
+- Potential CP2 gap to validate:
+  - KBG-S301-FORCED-LABOR-SUBTYPE: may need a clean event subtype for “forced-labor import-prohibition Section 301 tariff.”
+- Proxy currently used: tariff/regulation/labor-compliance-driven trade action seed from CP0, pending CP2 family activation.
+
+🔎 More detail
+- CP1 artifact:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp1-event-parse.md
+- Run state updated:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-state.json
+
+Actions: <span class="actions-inline">[✅ Confirm] [✏️ Adjust] [⏭️ Skip]</span></div><div class="chat-time">10:06 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">confirm</div><div class="chat-time">10:07 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp2"><span class="step-badge">CP2</span><span class="step-label">Family Activation</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP2 — Family Activation</span>
+
+🎯 What this step does
+- Check all 6 Air8 event families against the parsed event.
+- Activate only STRONG/MODERATE families.
+- Identify exact subtype hits vs approximate KB coverage.
+- Flag KB gaps without blocking the run.
+
+📚 KB / data referenced
+- validation-agent/CP2-FAMILY-ACTIVATION.md
+- layer-1-reasoning/EVENT-TYPES.md
+- layer-1-reasoning/EVENT-CLUSTERS.md
+- CP1 parsed state:
+  s301-forced-labor-tariff-20260724-state.json
+
+🧮 Key logic / criteria
+- EVT-TARIFF activates when there is any duty/tax/levy change affecting cost.
+- EVT-REGULATION activates when compliance/labor-import-prohibition mechanism is meaningful.
+- EVT-MARKET-SHIFT activates when buyer sourcing or allocation behavior is plausibly shifted by the event.
+- Weak/tangential families are not activated.
+
+📊 Output summary
+
+Activated families:
+- EVT-TARIFF — STRONG — subtype section_301 — exact family, subtype usable but narrow.
+  Rule/principle chain: RP-EVT-DUTY-01; country exposure 0.5, product tariff 0.3, supplier resilience 0.2.
+- EVT-REGULATION — MODERATE — subtype traceability — approximate.
+  Rule/principle chain: RP-EVT-TRACE-01; compliance cost 0.5, product tariff 0.3, buyer geo exposure 0.2.
+- EVT-MARKET-SHIFT — MODERATE — subtype tariff_driven_diversion — exact.
+  Rule/principle chain: RP-EVT-SOURCSHIFT-01 + seasonal-lock check; buyer geo 0.4, country exposure 0.4, supplier resilience 0.2.
+
+Not activated:
+- EVT-CURRENCY: no FX/devaluation/currency-control mechanism.
+- EVT-ESG-CERT: forced-labor theme exists, but no buyer ESG certification mandate or certification-standard change.
+- EVT-SUPPLY-DISRUPTION: no physical production/logistics disruption or raw-material shortage stated.
+
+Cluster match:
+- CLUSTER-US-DECOUPLING — Partial match.
+- KB cluster includes Section 301 / forced-labor tariff + UFLPA as two U.S. decoupling levers. This event activates the tariff lever. If combined with UFLPA, CP4/CP5 should analyze tariff cost penalty + access-denial documentation risk together.
+
+🚩 KB gaps / proxies
+1. KBG-CP2-S301-FORCED-LABOR-SUBTYPE — High
+   Current section_301 subtype is China-focused. Need subtype like forced_labor_tariff or broaden section_301.
+2. KBG-CP2-S301-REG-FORCED-LABOR-IMPORT-PROHIBITION — Medium
+   Regulation family lacks a clean subtype for foreign economy failure to impose/effectively enforce forced-labor import prohibition. Used traceability as proxy.
+3. KBG-CP2-S301-TEXTILE-TRQ-MECHANISM — Medium
+   Need explicit overlay for textile/apparel/cotton TRQs tied to U.S. input usage for Bangladesh, Cambodia, Indonesia, Malaysia.
+
+🔎 More detail
+- CP2 artifact:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp2-family-activation.md
+- Run state updated:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-state.json
+
+Actions: <span class="actions-inline">[✅ Confirm] [✏️ Adjust] [⏭️ Skip]</span></div><div class="chat-time">10:08 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">confirm</div><div class="chat-time">10:09 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp3"><span class="step-badge">CP3</span><span class="step-label">Entity Fetch Plan</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP3 — Entity Fetch Plan</span>
+
+🎯 What this step does
+- Translate CP2 families into the KB entities needed for CP4 extraction.
+- Rank which country/product/persona/buyer entities matter most.
+- Identify missing KB coverage and proxy sources before client mapping.
+
+📚 KB / data referenced
+- validation-agent/CP3-ENTITY-PLAN.md
+- layer-1-reasoning/PRINCIPLES.md
+- Country nodes: VN, IN, BD
+- Product nodes: APPAREL, woven, knit, home textiles
+- Persona nodes: COMBO-006, COMBO-014, COMBO-003, COMBO-002
+- Buyer support nodes: USMassRetail, USPremiumHome
+
+🧮 Key logic / criteria
+- Entity weights are derived from CP2 activated principles:
+  - tariff family: country + product + persona;
+  - regulation proxy: compliance/product/buyer-geo;
+  - market-shift: buyer-geo + supplier-origin country + persona.
+- Highest-weight entity types drive CP4 extraction order.
+- Missing entity files become KB gaps; reasoning continues with explicit proxies.
+
+📊 Output summary
+
+Entity type weights:
+- product_category: 0.85
+- persona_combo: 0.65
+- supplier_origin_country: 0.63
+- buyer_geo_country: 0.60
+- financing_product: 0.00
+
+Ranked CP4 fetch queue:
+1. Apparel / woven / knit / home textiles — ✅ HIT
+   Product tariff + compliance cost are highest-weighted; official TRQ also points to textiles/apparel/cotton inputs.
+2. COMBO-006 Vietnam FDI Knit — ✅ HIT
+   Vietnam has 12.5% rate; key relative loser / most penalized top-3 alternate.
+3. COMBO-014 India Small Woven — ✅ HIT
+   India has 10%; possible relative winner vs Vietnam, but small exporters are sensitive to US buyer consolidation.
+4. COMBO-003 India Large Vertical — ✅ HIT
+   India 10%; stronger compliance/traceability and buyer resilience vs smaller exporters.
+5. COMBO-002 Bangladesh LC-dependent factory — ✅ HIT
+   Bangladesh 10%; potential relative gain vs Vietnam, but US exposure + TRQ + compliance checks matter.
+6. VN / IN / BD country nodes — ✅ HIT
+   Origin-country rate differences drive tariff exposure.
+7. US buyer/import jurisdiction — ⚠️ MISS / proxy
+   No standalone U.S. country/import-jurisdiction file found; use CP0 official FR/USTR sources.
+8. USMassRetail / USPremiumHome buyer types — ✅ Supporting HIT
+   Needed to interpret buyer landed-cost pass-through and sourcing repricing behavior.
+9. Cotton/textile inputs + traceability nodes — ✅ Supporting HIT
+   Needed for forced-labor / TRQ / UFLPA-adjacent overlay checks.
+
+CP4 recommended scope:
+Use US-buyer-exposed Air8 clients in VN / IN / BD apparel, textiles, and home textiles.
+
+Primary COMBOs:
+- COMBO-006 — Vietnam FDI Knit
+- COMBO-014 — India Small Woven
+- COMBO-003 — India Large Vertical
+- COMBO-002 — Bangladesh Bank-LC Dependent
+
+Supporting / conditional:
+- COMBO-008 India Organic Cotton if organic/sustainable cotton appears in client data
+- COMBO-001 South Asian Small Knit if small BD/SA knit clients appear
+
+Default exclusion:
+- Do not run full CP4 for all 60 economies unless scope expands.
+
+🚩 KB gaps / proxies
+1. KBG-CP2-S301-FORCED-LABOR-SUBTYPE — High
+2. KBG-CP2-S301-REG-FORCED-LABOR-IMPORT-PROHIBITION — Medium
+3. KBG-CP2-S301-TEXTILE-TRQ-MECHANISM — Medium
+4. KBG-CP3-US-IMPORT-JURISDICTION-COUNTRY-FILE — High
+5. KBG-CP3-S301-60-ECONOMY-RATE-MATRIX — Medium
+
+🔎 More detail
+- CP3 artifact:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp3-entity-plan.md
+- Run state updated:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-state.json
+
+Actions: <span class="actions-inline">[✅ Confirm] [✏️ Adjust] [⏭️ Skip]</span></div><div class="chat-time">10:10 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">confirm</div><div class="chat-time">10:11 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp35"><span class="step-badge">CP3.5</span><span class="step-label">Client Mapping</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP3.5 — Client Mapping</span>
+
+🎯 What this step does
+- Map the CP3 entity plan to actual Air8 clients.
+- Keep the default scope focused on VN / IN / BD + apparel/textiles/home-textiles + U.S.-exposed target market.
+- Split clients into CP4-priority vs monitor, instead of dumping full client lists in chat.
+
+📚 KB / data referenced
+- validation-agent/CP3.5-CLIENT-MAPPING.md
+- air8-databases/CLIENT-DB.md
+- air8-databases/client-db-import.csv
+- CP3 entity plan:
+  - COMBO-006 Vietnam FDI Knit
+  - COMBO-014 India Small Woven
+  - COMBO-003 India Large Vertical
+  - COMBO-002 Bangladesh Bank-LC Dependent
+
+🧮 Key logic / criteria
+- Primary filters:
+  - country: VN, IN, BD
+  - product: woven, knit, home-textile, denim
+  - COMBO: COMBO-006, COMBO-014, COMBO-003, COMBO-002
+- CP4 priority filter:
+  - target market contains clear U.S. exposure: US, APAC/US, EU/US
+- multi target market is treated as monitor because U.S. exposure is possible but not confirmed.
+- Official all-goods scope outside apparel/textile is saved separately as monitor, not included in CP4 by default.
+
+📊 Output summary
+
+Fetch trace:
+[Client DB] → load client-db-import.csv                         ✅ 320 rows
+[Client DB] → filter DIM-1 in VN/IN/BD                          ✅ scoped
+[Client DB] → filter DIM-4 in woven/knit/home-textile/denim      ✅ scoped
+[Client DB] → filter COMBO in activated COMBO IDs                ✅ 112 mapped clients
+[Client DB] → filter target market US/APAC-US/EU-US              ✅ 53 CP4-priority clients
+
+Mapping result:
+- CP3-scope mapped clients: 112
+- CP4-priority U.S.-exposed clients: 53
+- Monitor — non-U.S. or U.S. unknown: 59
+- Country-only official-scope monitor: 9
+
+CP4-priority breakdown:
+- Country: IN 49, BD 3, VN 1
+- COMBO: COMBO-014 47, COMBO-002 3, COMBO-003 2, COMBO-006 1
+- Product: woven 49, denim 2, home-textile 2
+- Target market: US 45, APAC/US 6, EU/US 2
+- Revenue band: &lt;$5M 39, [UNKNOWN] 10, $100M+ 2, $20-100M 1, $5-20M 1
+
+Initial interpretation:
+- India dominates the CP4 priority set because the client DB has many India woven / U.S.-exposed rows mapped to COMBO-014.
+- Vietnam appears underrepresented in the current client DB: only 1 CP4-priority mapped client under the activated Vietnam COMBO.
+- Bangladesh has few U.S.-exposed priority rows; most BD rows are monitor because target market is EU/UK, EU, APAC, or multi.
+- CP4 should focus on:
+  1. India small-woven U.S. landed-cost / repricing exposure;
+  2. whether India’s 10% rate is still manageable vs Vietnam’s 12.5%;
+  3. Vietnam single-client risk as high-signal but low-count;
+  4. Bangladesh selective U.S. exposure + TRQ/watch logic.
+
+🚩 KB gaps / proxies
+- Existing CP2/CP3 gaps remain.
+- New CP3.5 observation:
+  - Client DB has very thin Vietnam apparel coverage despite Vietnam being a major country in the event. This is a data coverage gap, not a KB logic gap.
+  - multi target market needs buyer-country enrichment before deciding whether to include in CP4.
+
+🔎 More detail
+- CP3.5 summary artifact:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp35-client-mapping.md
+- Full mapped CSV:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp35-client-mapping.csv
+- CP4 priority CSV:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp35-priority-clients.csv
+- Monitor CSV:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp35-monitor-clients.csv
+
+Actions: <span class="actions-inline">[✅ Confirm] [✏️ Adjust filters] [➕ Add manual client] [⏭️ Skip]</span></div><div class="chat-time">10:12 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">confirm</div><div class="chat-time">10:13 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp4"><span class="step-badge">CP4</span><span class="step-label">Data Extract</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP4 — Data Extract</span>
+
+🎯 What this step does
+- Extract the 53 CP4-priority clients into impact groups.
+- Calculate the basic tariff spread effect.
+- Generate per-client R1 questions for BD/client follow-up.
+- Save detailed CP4 extracted insight rows for CP5 card assembly.
+
+📚 KB / data referenced
+- validation-agent/CP4-DATA-EXTRACT.md
+- CP3.5 priority client CSV
+- Official FR/USTR tariff sources from CP0
+- Country/persona/product nodes from CP3:
+  - COMBO-006, COMBO-014, COMBO-003, COMBO-002
+  - VN, IN, BD
+  - apparel / woven / home textile / denim nodes
+- Buyer/product support:
+  - USMassRetail
+  - USPremiumHome
+  - PROD-ARP
+  - PROD-PRESHIP-RT2C
+  - PROD-PRESHIP-OBF
+
+🧮 Key logic / criteria
+- Vietnam rate: 12.5%
+- India / Bangladesh rate: 10%
+- Relative spread: 2.5pp
+- Illustrative landed-cost math:
+  - Vietnam: $12.50 duty per $100 FOB
+  - India / Bangladesh: $10.00 duty per $100 FOB
+  - India / Bangladesh relative advantage vs Vietnam: $2.50 per $100 FOB
+- Final signal depends on:
+  - true U.S. buyer exposure;
+  - buyer vs supplier pass-through;
+  - CMT vs FOB control;
+  - buyer H2 repricing / origin reallocation;
+  - exemptions / TRQ treatment;
+  - UFLPA / origin documentation for U.S.-bound cotton goods.
+
+📊 Output summary
+
+CP4 priority set:
+- CP4 priority clients extracted: 53
+- India: 49
+- Bangladesh: 3
+- Vietnam: 1
+
+Signal distribution:
+- ⚠️ CHECK: 34 — likely small/CMT rows; need buyer pass-through and actual U.S. exposure before action
+- 🟢 BENEFICIARY / ⚠️ CHECK: 13 — India FOB rows with relative advantage vs Vietnam, but need buyer/order confirmation
+- 🟡 MONITOR / 🟢 SELECTIVE BENEFICIARY: 3 — Bangladesh rows; selective opportunity, TRQ/U.S. exposure needs verification
+- 🟢 BENEFICIARY: 2 — India vertical rows; stronger potential winner vs Vietnam
+- 🔴 HURT: 1 — Vietnam row directly penalized at 12.5%
+
+COMBO-level interpretation:
+- COMBO-014 India Small Woven — 47 clients. Main priority population. Relative advantage vs Vietnam, but many are small/CMT; validate pricing control and buyer allocation before “expand.”
+- COMBO-003 India Large Vertical — 2 clients. Stronger relative beneficiary: scale + traceability + vertical control make diversion capture more plausible.
+- COMBO-002 Bangladesh LC-dependent — 3 clients. Selective beneficiary vs Vietnam, but low U.S.-priority count; verify U.S. buyer exposure and TRQ relevance.
+- COMBO-006 Vietnam FDI — 1 client. Directly hurt: 12.5% rate and +2.5pp disadvantage vs India/Bangladesh. Urgent H2 order-retention check.
+
+Revenue lookup result:
+- Known from client DB: 43
+- Unknown revenue public lookup attempted: 10
+- Reliable public revenue found: 0
+- These remain [UNKNOWN] and go to R1 follow-up rather than being guessed.
+
+Common R1 queue for BD/client calls:
+1. What % of revenue is truly U.S.-buyer / U.S.-import exposed?
+2. Who absorbs the new duty in H2 pricing: buyer/importer, supplier discount, or shared?
+3. Have buyers requested H2 repricing or origin reallocation since July 24?
+4. Are any products covered by Annex exemptions or future textile/apparel TRQ logic?
+5. For cotton goods, is UFLPA / chain-of-custody documentation available for U.S.-bound shipments?
+
+🚩 KB gaps / proxies
+- Existing CP2/CP3 gaps remain.
+- New CP4 data gap:
+  - unknown revenue remained unresolved for 10 priority clients after public lookup attempt; needs BD/client confirmation.
+
+🔎 More detail
+- CP4 artifact:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp4-data-extract.md
+- Extracted per-client CP4 CSV:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp4-extracted-client-insights.csv
+- CP4 summary JSON:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp4-summary.json
+- Run state updated:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-state.json
+
+Actions: <span class="actions-inline">[✅ Confirm] [✏️ Adjust] [⏭️ Skip]</span></div><div class="chat-time">10:14 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row jerri"><div class="chat-bubble-wrap"><div class="chat-avatar">J</div><div class="chat-bubble md">confirm</div><div class="chat-time">10:15 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp5"><span class="step-badge">CP5</span><span class="step-label">Insight Assembly + HTML Output</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble md"><span class="bubble-title">CP5 — Insight Assembly</span>
+
+🎯 What this step does
+- Assemble CP0–CP4 into final Air8 decision output.
+- Generate compact dark HTML supplier decision cards.
+- Verify every CP4-priority client has a card before delivery.
+
+📚 KB / data referenced
+- validation-agent/CP5-INSIGHT-ASSEMBLY.md
+- layer-1-reasoning/SOLUTIONS.md
+- CP4 extracted client insights CSV
+- COMBO KB:
+  - COMBO-006
+  - COMBO-014
+  - COMBO-003
+  - COMBO-002
+- Official FR/USTR source facts from CP0.
+
+🧮 Key logic / criteria
+- Card count must equal CP4 priority count: 53.
+- Every card includes:
+  - WHY / HOW calculation chain;
+  - Air8 financing decision;
+  - ask / collect / decide questions;
+  - supplier actions;
+  - evidence trace + assumptions;
+  - official-vs-hypothesis separation.
+- No financing is treated as final approval without buyer quality, insurance, documentation, and transaction evidence.
+
+📊 Output summary
+
+COMBO summary:
+- COMBO-006 — Vietnam FDI factory — 1 client — 🔴 HURT — ARP only after parent/HQ + buyer/order clearance — Act now / risk review
+- COMBO-003 — India large vertical — 2 clients — 🟢 BENEFICIARY — ARP; OBF conditional — Act now / expand candidate
+- COMBO-014 — India small woven/home textile — 47 clients — ⚠️ CHECK / 🟢 selective beneficiary — ARP lead; RT2C conditional — Verify then expand
+- COMBO-002 — Bangladesh LC-dependent — 3 clients — 🟡 MONITOR / 🟢 selective beneficiary — ARP; RT2C/PayGuard conditional — Monitor + selective verify
+
+Signal distribution:
+- ⚠️ CHECK: 34
+- 🟢 BENEFICIARY / ⚠️ CHECK: 13
+- 🟡 MONITOR / 🟢 SELECTIVE BENEFICIARY: 3
+- 🟢 BENEFICIARY: 2
+- 🔴 HURT: 1
+
+Core CP5 takeaway:
+- Vietnam: direct relative loser — 12.5%, or $12.50 per $100 FOB, and +2.5pp vs India/Bangladesh. Treat as parent/HQ risk conversation.
+- India: dominant Air8 priority set — 49 / 53 cards. Potential relative beneficiary vs Vietnam, but most rows need confirmation of true U.S. exposure, FOB vs CMT, and buyer pass-through.
+- Bangladesh: selective opportunity — only 3 U.S.-priority rows; verify TRQ relevance, U.S. buyer exposure, and UFLPA/COO documentation.
+
+🚩 KB gaps / proxies
+- 6 gaps routed:
+  - HIGH: 2
+  - MEDIUM: 4
+- Main high-priority gaps:
+  - missing exact forced-labor Section 301 tariff subtype;
+  - missing U.S. import-jurisdiction country file.
+
+✅ Quality validation
+- HTML card count expected: 53
+- HTML card count actual: 53
+- WHY/HOW section on every card: ✅
+- Air8 financing decision on every card: ✅
+- Supplier actions on every card: ✅
+- Evidence/assumptions on every card: ✅
+- All client names present: ✅
+- Quality check passed: ✅
+
+🔎 Artifacts
+- Full CP5 combo analytics:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp5-combo-analytics.md
+- Template-matched final HTML cards:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp5-supplier-decision-cards-TEMPLATE-MATCHED.html
+- Quality check:
+  /Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp5-template-matched-quality-check.json</div><div class="chat-time">10:16 <span class="chat-tick">✓✓</span></div></div></div><div class="chat-row system"><div class="step-marker cp5"><span class="step-badge">LINKS</span><span class="step-label">Final artifacts</span></div></div><div class="chat-row yeti"><div class="chat-bubble-wrap"><div class="chat-avatar">Y</div><div class="chat-bubble"><strong>Share links / artifacts</strong><div class="link-card">Template-matched CP5 HTML cards:
+/Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp5-supplier-decision-cards-TEMPLATE-MATCHED.html
+
+Quality check:
+/Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-cp5-template-matched-quality-check.json
+
+This full Telegram-style flow page:
+/Users/erikkwok/Projects/k8-validation-agent/air8-insights/s301-forced-labor-tariff-20260724-full-telegram-flow.html</div></div><div class="chat-time">10:17 <span class="chat-tick">✓✓</span></div></div></div></div></div></body></html>
