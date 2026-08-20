@@ -6,198 +6,109 @@
   <title>Air8 · Section 301 Event Validation</title>
   <style>
     :root {
-      --bg:        #0e1621;
-      --tg-header: #17212b;
-      --tg-chat:   #0e1621;
-      --b-agent:   #182533;
-      --b-user:    #2b5278;
+      --bg: #0e1621;
+      --sidebar: #17212b;
+      --b-agent: #182533;
+      --b-user: #2b5278;
       --b-confirm: #1a2e22;
-      --border:    #1e2c3a;
-      --text:      #e2e5e9;
-      --muted:     #788999;
-      --dim:       #3d5163;
-      --orange:    #f97316;
-      --green:     #4ade80;
-      --yellow:    #f2c94c;
-      --red:       #eb5757;
+      --border: #1e2c3a;
+      --text: #e2e5e9;
+      --muted: #788999;
+      --dim: #3d5163;
+      --orange: #f97316;
+      --green: #4ade80;
+      --yellow: #f2c94c;
+      --red: #eb5757;
       --blue-tick: #5aabff;
-      --code-bg:   #111a23;
+      --code-bg: #111a23;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; background: #0b1118; font-family: -apple-system, 'Segoe UI', sans-serif; }
-
     .page { display: flex; height: 100vh; }
 
-    /* ── Side nav ── */
+    /* ── Sidebar ── */
     .sidenav {
-      width: 148px; min-width: 148px;
-      background: #111820;
-      border-right: 1px solid #1a2535;
-      padding: 20px 0;
-      display: flex; flex-direction: column; gap: 2px;
+      width: 152px; min-width: 152px;
+      background: #111820; border-right: 1px solid #1a2535;
+      padding: 20px 0; display: flex; flex-direction: column; gap: 2px;
     }
-    .sidenav-title {
-      font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
-      color: var(--dim); text-transform: uppercase;
-      padding: 0 14px 12px;
-    }
-    .snav {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 14px; cursor: pointer; text-decoration: none;
-      border-left: 2px solid transparent;
-      transition: all 0.12s;
-    }
+    .sidenav-title { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; color: var(--dim); text-transform: uppercase; padding: 0 14px 12px; }
+    .snav { display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer; text-decoration: none; border-left: 2px solid transparent; transition: all 0.12s; }
     .snav:hover { background: rgba(255,255,255,0.04); }
-    .snav.done  { border-left-color: #2a4a33; }
-    .snav.on    { background: rgba(249,115,22,0.1); border-left-color: var(--orange); }
-    .sdot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--dim); flex-shrink: 0; transition: background 0.12s;
-    }
+    .snav.done { border-left-color: #2a4a33; }
+    .snav.on { background: rgba(249,115,22,0.1); border-left-color: var(--orange); }
+    .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
     .snav.done .sdot { background: #2a5e38; }
-    .snav.on   .sdot { background: var(--orange); }
+    .snav.on .sdot { background: var(--orange); }
     .slabel { font-size: 11px; color: var(--muted); line-height: 1.3; }
     .snav.on .slabel { color: var(--text); font-weight: 500; }
 
-    /* ── Chat frame ── */
-    .frame-wrap {
-      flex: 1; display: flex; align-items: flex-start;
-      justify-content: flex-start; overflow: hidden;
-      padding: 0;
-    }
-    .tg-window {
-      width: 100%; max-width: 480px;
-      height: 100vh; display: flex; flex-direction: column;
-      background: var(--tg-chat);
-      border-right: 1px solid var(--border);
-    }
+    /* ── Chat Window ── */
+    .frame-wrap { flex: 1; display: flex; overflow: hidden; }
+    .tg-window { width: 100%; max-width: 500px; height: 100vh; display: flex; flex-direction: column; background: var(--bg); border-right: 1px solid var(--border); }
 
-    /* TG header */
     .tg-head {
-      background: var(--tg-header);
-      padding: 10px 14px;
-      display: flex; align-items: center; gap: 10px;
-      flex-shrink: 0;
+      background: var(--sidebar); padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
       border-bottom: 1px solid var(--border);
     }
-    .back-arrow { color: var(--blue-tick); font-size: 18px; cursor: pointer; line-height: 1; }
-    .tg-avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: linear-gradient(135deg, #f97316, #ea6c0f);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
+    .back-arrow { color: var(--blue-tick); font-size: 20px; cursor: pointer; }
+    .tg-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#f97316,#ea6c0f); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
     .tg-head-info { flex: 1; }
-    .tg-head-name { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; }
+    .tg-head-name { font-size: 15px; font-weight: 600; color: var(--text); }
     .tg-head-status { font-size: 12px; color: #5cbbff; }
-    .tg-head-icons { display: flex; gap: 16px; color: var(--muted); font-size: 18px; cursor: pointer; }
+    .tg-head-icons { color: var(--muted); font-size: 18px; cursor: pointer; display: flex; gap: 14px; }
 
-    /* chat scroll */
-    .tg-scroll {
-      flex: 1; overflow-y: auto; padding: 8px 10px 16px;
-      scroll-behavior: smooth;
-    }
+    .tg-scroll { flex: 1; overflow-y: auto; padding: 8px 10px 20px; scroll-behavior: smooth; }
 
-    /* date divider */
-    .date-div {
-      display: flex; align-items: center; justify-content: center;
-      margin: 12px 0 8px;
-    }
-    .date-pill {
-      background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);
-      color: var(--muted); font-size: 11px; font-weight: 500;
-      padding: 4px 10px; border-radius: 20px;
-    }
+    .date-div { display: flex; align-items: center; justify-content: center; margin: 12px 0 8px; }
+    .date-pill { background: rgba(0,0,0,0.35); color: var(--muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; }
 
-    /* step divider (like tg service msg) */
-    .step-div {
-      display: flex; align-items: center; justify-content: center;
-      margin: 14px 0 6px;
-    }
-    .step-pill {
-      background: rgba(249,115,22,0.15);
-      border: 1px solid rgba(249,115,22,0.25);
-      color: var(--orange); font-size: 10px; font-weight: 600;
-      padding: 3px 10px; border-radius: 20px;
-      letter-spacing: 0.06em;
-    }
+    .step-div { display: flex; align-items: center; justify-content: center; margin: 16px 0 6px; }
+    .step-pill { background: rgba(249,115,22,0.13); border: 1px solid rgba(249,115,22,0.22); color: var(--orange); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.06em; }
 
-    /* message row */
     .row { display: flex; margin-bottom: 3px; }
     .row.agent { justify-content: flex-start; }
     .row.user  { justify-content: flex-end; }
-    .row + .row.agent { margin-top: 2px; }
 
-    /* bubble */
-    .bbl {
-      max-width: 88%;
-      border-radius: 12px;
-      padding: 8px 10px 6px;
-      font-size: 14px; line-height: 1.55;
-      position: relative;
-    }
-    .bbl.agent  { background: var(--b-agent);   border-top-left-radius: 3px; }
-    .bbl.user   { background: var(--b-user);    border-top-right-radius: 3px; }
-    .bbl.confirm{ background: var(--b-confirm); border-top-right-radius: 3px; }
+    .bbl { max-width: 90%; border-radius: 12px; padding: 8px 10px 6px; font-size: 14px; line-height: 1.55; position: relative; }
+    .bbl.agent   { background: var(--b-agent);   border-top-left-radius: 3px; }
+    .bbl.user    { background: var(--b-user);    border-top-right-radius: 3px; }
+    .bbl.confirm { background: var(--b-confirm); border-top-right-radius: 3px; }
 
     .bbl-name { font-size: 12px; font-weight: 600; color: var(--orange); margin-bottom: 3px; }
-
-    .bbl-meta {
-      display: flex; align-items: center; justify-content: flex-end;
-      gap: 4px; margin-top: 3px;
-    }
+    .bbl-meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 3px; }
     .bbl-ts { font-size: 11px; color: var(--muted); }
     .bbl-tick { font-size: 13px; color: var(--blue-tick); }
 
-    /* code block inside bubble */
     .cbl {
-      background: var(--code-bg);
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-      font-size: 12px; line-height: 1.75;
-      color: #8cb8d8;
-      margin: 6px 0 4px;
-      white-space: pre-wrap;
-      overflow-x: auto;
+      background: var(--code-bg); border-radius: 6px;
+      padding: 10px 12px; font-family: 'SF Mono','Fira Code','Courier New',monospace;
+      font-size: 12px; line-height: 1.75; color: #8cb8d8;
+      margin: 6px 0 4px; white-space: pre-wrap; overflow-x: auto;
     }
     .g { color: #6fcf97; }
     .y { color: #f2c94c; }
     .r { color: #eb5757; }
     .o { color: #f97316; font-weight: 600; }
     .d { color: #3d5163; }
-    .b { color: #56ccf2; }
     .w { color: #e2e5e9; }
-    .h { color: #a8c7e8; font-weight: 600; } /* heading */
+    .h { color: #a8c7e8; font-weight: 600; }
 
-    /* tg inline buttons */
     .tg-btns { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
     .tg-btn {
-      flex: 1; min-width: 0;
-      background: rgba(90,171,255,0.12);
-      border: 1px solid rgba(90,171,255,0.2);
-      color: #5aabff; font-size: 12.5px; font-weight: 500;
-      padding: 7px 8px; border-radius: 7px; cursor: pointer;
-      text-align: center; font-family: inherit;
-      transition: background 0.1s; white-space: nowrap;
+      flex: 1; min-width: 0; background: rgba(90,171,255,0.12); border: 1px solid rgba(90,171,255,0.2);
+      color: #5aabff; font-size: 12.5px; font-weight: 500; padding: 7px 8px; border-radius: 7px;
+      cursor: pointer; text-align: center; font-family: inherit; transition: background 0.1s; white-space: nowrap;
     }
     .tg-btn:hover { background: rgba(90,171,255,0.2); }
-    .tg-btn.g-btn {
-      background: rgba(74,222,128,0.10);
-      border-color: rgba(74,222,128,0.2);
-      color: #4ade80;
-    }
-    .tg-btn.g-btn:hover { background: rgba(74,222,128,0.18); }
-    .tg-btn.w-btn {
-      background: rgba(242,201,76,0.08);
-      border-color: rgba(242,201,76,0.2);
-      color: #f2c94c;
-    }
+    .tg-btn.gb { background: rgba(74,222,128,0.10); border-color: rgba(74,222,128,0.2); color: #4ade80; }
+    .tg-btn.gb:hover { background: rgba(74,222,128,0.18); }
+    .tg-btn.yb { background: rgba(242,201,76,0.08); border-color: rgba(242,201,76,0.2); color: #f2c94c; }
 
-    /* confirm bubble text */
     .confirm-text { color: #6fcf97; font-size: 14px; }
 
-    @media (max-width: 640px) {
+    @media (max-width: 600px) {
       .sidenav { width: 44px; min-width: 44px; }
       .sidenav-title, .slabel { display: none; }
       .snav { justify-content: center; padding: 10px 0; }
@@ -210,7 +121,7 @@
 <body>
 <div class="page">
 
-  <!-- Side nav -->
+  <!-- Sidebar -->
   <nav class="sidenav">
     <div class="sidenav-title">Steps</div>
     <a class="snav done" href="#sv0"><div class="sdot"></div><div class="slabel">SV0 · Intake</div></a>
@@ -221,11 +132,9 @@
     <a class="snav on"   href="#sv5"><div class="sdot"></div><div class="slabel">SV5 · Output</div></a>
   </nav>
 
-  <!-- Telegram window -->
+  <!-- Chat -->
   <div class="frame-wrap">
   <div class="tg-window">
-
-    <!-- TG header -->
     <div class="tg-head">
       <div class="back-arrow">‹</div>
       <div class="tg-avatar">AI</div>
@@ -233,26 +142,20 @@
         <div class="tg-head-name">Validation Agent</div>
         <div class="tg-head-status">online</div>
       </div>
-      <div class="tg-head-icons">
-        <span>🔍</span>
-        <span>⋮</span>
-      </div>
+      <div class="tg-head-icons"><span>🔍</span><span>⋮</span></div>
     </div>
 
-    <!-- Chat -->
     <div class="tg-scroll" id="chat">
 
-      <div class="date-div">
-        <div class="date-pill">Thu, 20 Aug 2026</div>
-      </div>
+      <div class="date-div"><div class="date-pill">Wed, 19 Aug 2026</div></div>
 
       <!-- ══ SV0 ══ -->
       <div id="sv0" class="step-div"><div class="step-pill">SV0 · INTAKE</div></div>
 
       <div class="row user">
         <div class="bbl user">
-          Please run an event validation on the Section 301 tariff update. Buyers in scope: NEXT Retail.
-          <div class="bbl-meta"><span class="bbl-ts">10:05</span><span class="bbl-tick">✓✓</span></div>
+          I have a news event on Section 301 tariff update, need to run an event validation. NEXT Retail suppliers are in scope.
+          <div class="bbl-meta"><span class="bbl-ts">09:41</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -261,27 +164,29 @@
           <div class="bbl-name">Validation Agent</div>
           📥 <b>SV0 · Intake</b><br>
           <span style="font-size:11px;color:var(--muted);">[KB: air8-databases/SHI-KB/]</span>
-          <div class="cbl"><span class="g">✓</span> Event:   <span class="w">Section 301 Tariff Update</span>
-<span class="g">✓</span> Date:    <span class="w">2026-08-19</span>
-<span class="g">✓</span> Buyer:   <span class="w">NEXT Retail</span>
+          <div class="cbl"><span class="g">✓</span> Event:    <span class="w">Section 301 Tariff Update</span>
+<span class="g">✓</span> Date:     <span class="w">2026-08-19</span>
+<span class="g">✓</span> Scope:    <span class="w">NEXT Retail supplier portfolio</span>
+<span class="g">✓</span> Type:     <span class="w">Trade policy · Tariff regime change</span>
 
-<span class="d">Documents received:</span>
-  1. Section 301 news article      [Article]
-  2. Air8 TARIFF-DB                [KB]
-  3. Air8 COUNTRY-DB               [KB]
-  4. Air8 CLIENT-DB (47 suppliers) [KB]</div>
+<span class="d">Sources to process:</span>
+  1. Section 301 USTR announcement    [Article]
+  2. Air8 TARIFF-DB                   [KB]
+  3. Air8 COUNTRY-DB                  [KB]
+  4. Air8 COMMODITY-DB                [KB]
+  5. Air8 CLIENT-DB                   [KB · NEXT suppliers]</div>
           <div class="tg-btns">
-            <button class="tg-btn g-btn">✅ Confirmed — go to SV1</button>
-            <button class="tg-btn w-btn">⚠️ Adjust</button>
+            <button class="tg-btn gb">✅ Confirmed — go to SV1</button>
+            <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">10:05</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:41</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV1</span>
-          <div class="bbl-meta"><span class="bbl-ts">10:06</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:42</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -292,32 +197,44 @@
         <div class="bbl agent">
           <div class="bbl-name">Validation Agent</div>
           🔍 <b>SV1 · Parse</b><br>
-          <span style="font-size:11px;color:var(--muted);">[KB: NODE-terminology.md · Part A + B]</span>
-          <div class="cbl"><span class="h">TARIFF-DB</span>
-  VN (HS 61/62)   <span class="y">12.5%</span>
-  IN (HS 61/62)   <span class="g">10.0%</span>
-  BD (HS 61/62)   <span class="g">10.0%</span>
-  differential    <span class="o">+2.5pp</span>  VN vs IN/BD
+          <span style="font-size:11px;color:var(--muted);">[KB: NODE-terminology.md · TARIFF-DB · COUNTRY-DB]</span>
+          <div class="cbl"><span class="h">Tariff Structure (TARIFF-DB)</span>
+  Framework:    Section 301 Forced Labour Tariff
+  Effective:    Post July 24, 2026
+  Structure:    Two-tier additional duty stacked on MFN
 
-<span class="h">COUNTRY-DB</span>
-  Vietnam     MEDIUM risk    · UFLPA standard
-  India       MEDIUM-HIGH    · UFLPA variable
-  Bangladesh  MEDIUM-HIGH    · UFLPA <span class="r">elevated</span>
+  <span class="y">Tier 2</span>  +12.5%  No forced labour ban · No ART signed
+    → Vietnam · Philippines · Thailand
 
-<span class="h">CLIENT-DB  (in scope)</span>
-  VN: 6 suppliers · IN: 9 · BD: 11</div>
+  <span class="g">Tier 1</span>  +10.0%  Forced labour ban OR ART signed
+    → Cambodia · Indonesia · Malaysia
+
+  <span class="d">Note: India, Bangladesh — non-ASEAN, not in Tier 1/2.
+        Face lower existing MFN rates on HS 61/62.</span>
+  <span class="o">Net differential: +2.5pp (VN vs IN/BD) on apparel HS 61/62</span>
+
+<span class="h">Country Risk (COUNTRY-DB)</span>
+  Vietnam      MEDIUM risk   · UFLPA: standard exposure
+  India        MEDIUM-HIGH   · UFLPA: variable · compliance improving
+  Bangladesh   MEDIUM-HIGH   · UFLPA: <span class="r">elevated</span> · priority monitoring
+
+<span class="h">Portfolio Scope (CLIENT-DB · NEXT)</span>
+  Total NEXT suppliers in scope:  47
+  Vietnam:     6 suppliers  (HS 61/62 apparel — Tier 2 exposed)
+  India:       9 suppliers  (non-ASEAN, cost advantage vs VN)
+  Bangladesh: 11 suppliers  (non-ASEAN, cost advantage + UFLPA flag)</div>
           <div class="tg-btns">
-            <button class="tg-btn g-btn">✅ Confirmed — go to SV2</button>
-            <button class="tg-btn w-btn">⚠️ Adjust</button>
+            <button class="tg-btn gb">✅ Confirmed — go to SV2</button>
+            <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">10:06</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:44</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV2</span>
-          <div class="bbl-meta"><span class="bbl-ts">10:07</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:45</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -328,33 +245,43 @@
         <div class="bbl agent">
           <div class="bbl-name">Validation Agent</div>
           ⚠️ <b>SV2 · Detect</b><br>
-          <span style="font-size:11px;color:var(--muted);">[KB: NODE-risk-categories.md · R1–R9]</span>
-          <div class="cbl"><span class="y">R3</span> Competitive Position Shift
-  VN 12.5% vs IN/BD 10.0%
-  → <span class="o">2.5pp tariff disadvantage confirmed</span>
+          <span style="font-size:11px;color:var(--muted);">[KB: NODE-risk-categories.md · L1-reasoning-principles.md]</span>
+          <div class="cbl"><span class="h">Signals detected:</span>
 
-<span class="y">R5</span> Compliance Selection Criteria
-  BD flagged <span class="r">UFLPA elevated risk</span>
-  → Cost advantage ≠ compliance qualification
+<span class="y">E1</span> · Competitive Position Shift
+  Vietnam HS 61/62 now +2.5pp more expensive than IN/BD
+  6 NEXT Vietnam suppliers exposed to cost disadvantage
+  Buyers reviewing sourcing allocations may act on this differential
 
-<span class="y">R7</span> Assumption Gap
-  No confirmed buyer sourcing decisions
-  → <span class="r">Order migration is inference, not fact</span>
+<span class="y">E2</span> · Compliance Readiness Gap
+  Bangladesh carries <span class="r">elevated UFLPA risk</span> in COUNTRY-DB
+  India compliance: variable — not all suppliers audit-ready
+  Tariff advantage means nothing if buyer rejects on compliance
 
-<span class="h">Hard Stop (HS1–HS5)</span>
-  <span class="g">→ None triggered · Proceed to SV3</span></div>
+<span class="y">E3</span> · Capacity & Margin Uncertainty
+  No capacity data available for potential IN/BD beneficiaries
+  Higher volume ≠ higher profitability (buyer price renegotiation risk)
+  Working capital requirements may rise with volume increase
+
+<span class="y">E4</span> · Assumption Gap in Analysis
+  No confirmed buyer sourcing decisions found
+  <span class="r">Order migration is inference, not confirmed fact</span>
+  Report must separate facts from assumptions
+
+<span class="h">Hard Stop Check:</span>
+  <span class="g">→ No sanctions, no FATF flags, no hard stops · Proceed to SV3</span></div>
           <div class="tg-btns">
-            <button class="tg-btn g-btn">✅ Confirmed — go to SV3</button>
-            <button class="tg-btn w-btn">⚠️ Adjust</button>
+            <button class="tg-btn gb">✅ Confirmed — go to SV3</button>
+            <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">10:07</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:47</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV3</span>
-          <div class="bbl-meta"><span class="bbl-ts">10:08</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:48</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -366,29 +293,41 @@
           <div class="bbl-name">Validation Agent</div>
           🔎 <b>SV3 · Resolve</b><br>
           <span style="font-size:11px;color:var(--muted);">[KB: L1-reasoning-principles.md]</span>
-          <div class="cbl"><span class="y">R3</span> Decision: <span class="y">HOLD 🟡</span>
-  Differential confirmed. Migration unconfirmed.
-  → Conditional language required
+          <div class="cbl"><span class="y">E1</span> Competitive Position Shift
+  Decision: <span class="y">HOLD 🟡</span>
+  Cost differential confirmed. Order migration not confirmed.
+  → Language must be conditional:
+    "may face competitive pressure" not "will lose orders"
+    "gained a cost advantage" not "are beneficiaries"
 
-<span class="y">R5</span> Decision: <span class="y">HOLD 🟡</span>
-  UFLPA is an independent selection gate
-  → Separate risk dimension, not a footnote
+<span class="y">E2</span> Compliance Readiness Gap
+  Decision: <span class="y">HOLD 🟡</span>
+  UFLPA readiness is an independent selection gate — not a tariff footnote.
+  → Must appear as separate risk dimension in report output
+  → BD supplier heatmap required: UFLPA + traceability + capacity readiness
 
-<span class="y">R7</span> Decision: <span class="r">ESCALATE 🔴</span>
-  Migration stated as fact in draft report
-  → Must add Facts vs Assumptions section</div>
+<span class="y">E3</span> Capacity & Margin Uncertainty
+  Decision: <span class="y">HOLD 🟡</span>
+  Capacity and margin risk currently unvalidated.
+  → Add dedicated sections: capacity risk, margin risk
+
+<span class="r">E4</span> Assumption Gap
+  Decision: <span class="r">ESCALATE 🔴</span>
+  Current report draft treats migration as fact.
+  → Must add Facts vs Assumptions section before release
+  → Management will ask for portfolio numbers — add exposure summary</div>
           <div class="tg-btns">
-            <button class="tg-btn g-btn">✅ Confirmed — go to SV4</button>
-            <button class="tg-btn w-btn">⚠️ Adjust</button>
+            <button class="tg-btn gb">✅ Confirmed — go to SV4</button>
+            <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">10:08</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:50</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV4</span>
-          <div class="bbl-meta"><span class="bbl-ts">10:09</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:51</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -400,28 +339,41 @@
           <div class="bbl-name">Validation Agent</div>
           📎 <b>SV4 · Evidence Check</b><br>
           <span style="font-size:11px;color:var(--muted);">[KB: L1-evidence-discipline.md]</span>
-          <div class="cbl"><span class="g">R3</span> [TARIFF-DB · 2026-08-19 · Air8 KB]
-   <span class="g">→ SUFFICIENT ✅</span>
+          <div class="cbl"><span class="g">E1</span> Tariff Rates
+  [TARIFF-DB · 2026-08-19 · Air8 KB · sourced from USTR]
+  <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="g">R5</span> [COUNTRY-DB · 2026-08-01 · Air8 KB]
-   <span class="g">→ SUFFICIENT ✅</span>
+<span class="g">E2</span> UFLPA / Country Risk Flags
+  [COUNTRY-DB · 2026-08-01 · Air8 KB]
+  <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="r">R7</span> [Article · news inference only]
-   <span class="r">→ INSUFFICIENT ⚠️</span>
-   Need: buyer intent · supplier capacity
-         12-month order trend (CLIENT-DB)</div>
+<span class="y">E3</span> Capacity & Margin Risk
+  No field data available
+  <span class="y">→ PARTIAL ⚠️  — add note: requires BD field validation</span>
+
+<span class="r">E4</span> Order Migration Claim
+  Source: news article inference only
+  No buyer sourcing intent confirmation
+  No historical trend data cross-checked
+  <span class="r">→ INSUFFICIENT ⚠️</span>
+
+<span class="h">What is needed before final release:</span>
+  1. NEXT buying team — directional sourcing intent
+  2. IN/BD supplier capacity self-assessment
+  3. 12-month order trend from CLIENT-DB
+  4. Margin impact model (buyer price negotiation risk)</div>
           <div class="tg-btns">
-            <button class="tg-btn g-btn">✅ Confirmed — go to SV5</button>
-            <button class="tg-btn w-btn">⚠️ Adjust</button>
+            <button class="tg-btn gb">✅ Confirmed — go to SV5</button>
+            <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">10:09</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:53</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Confirmed — go to SV5</span>
-          <div class="bbl-meta"><span class="bbl-ts">10:10</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:54</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
@@ -433,96 +385,111 @@
           <div class="bbl-name">Validation Agent</div>
           ✅ <b>SV5 · Output</b><br>
           <span style="font-size:11px;color:var(--muted);">[KB: air8-databases/SHI-KB/]</span>
-          <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHI — Section 301 → NEXT Retail
-Date: 2026-08-19
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Event Validation — Section 301 Tariff Update
+Scope: NEXT Retail · 47 suppliers
+Date:  2026-08-19
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OVERALL: <span class="y">HOLD 🟡</span>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Conditional findings — buyer validation required
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<span class="h">FACTS</span>
-  ✓ VN 12.5% · IN 10% · BD 10%
-  ✓ 2.5pp cost advantage exists
-  ✓ BD UFLPA elevated risk
+<span class="h">FACTS (confirmed)</span>
+  ✓ VN HS 61/62 = Tier 2 · +12.5% Section 301 duty
+  ✓ IN/BD non-ASEAN · net tariff lower by ~2.5pp vs VN
+  ✓ 2.5pp cost differential exists on apparel
+  ✓ BD UFLPA elevated risk (COUNTRY-DB)
+  ✓ 6 VN / 9 IN / 11 BD NEXT suppliers in scope
 
-<span class="h">ASSUMPTIONS (not confirmed)</span>
-  ? Buyers will shift orders
-  ? Suppliers can absorb volume
-  ? Cost advantage → margin gain
+<span class="h">ASSUMPTIONS (not yet confirmed)</span>
+  ? Buyers will shift orders to IN/BD
+  ? IN/BD suppliers can absorb additional volume
+  ? Cost advantage translates to higher margin
+  ? UFLPA compliance can be met quickly
 
-─────────────────────────────
+─────────────────────────────────
 
-<span class="y">R3</span> Competitive Position Shift
+<span class="y">E1</span> Competitive Position
   Decision: <span class="y">HOLD 🟡</span>
-  Rule: conditional framing required
+  VN suppliers may face increased competitive pressure
+  where buyers are reviewing sourcing allocations.
   Evidence: [TARIFF-DB · Air8 KB]
 
-<span class="y">R5</span> Compliance Selection Gate
+<span class="y">E2</span> Compliance Selection Gate
   Decision: <span class="y">HOLD 🟡</span>
-  Rule: UFLPA assessed independently
+  UFLPA readiness assessed independently of cost.
+  Supplier readiness heatmap required.
   Evidence: [COUNTRY-DB · Air8 KB]
 
-<span class="r">R7</span> Assumption Gap
+<span class="y">E3</span> Capacity & Margin Risk
+  Decision: <span class="y">HOLD 🟡</span>
+  Cannot confirm beneficiary suppliers can execute.
+  Margin risk: buyers may demand lower prices.
+  Evidence: partial — BD field validation needed
+
+<span class="r">E4</span> Assumption Gap
   Decision: <span class="r">ESCALATE 🔴</span>
-  Rule: facts/assumptions must be separated
-  Evidence: insufficient
+  Report must add Facts vs Assumptions section.
+  Migration language must be conditional.
+  Evidence: insufficient — see SV4
 
-─────────────────────────────
+─────────────────────────────────
 
-ACTIONS:
+ACTIONS before release:
   1. Add Facts vs Assumptions section
   2. Reframe migration language → conditional
-  3. Add UFLPA as standalone dimension
-  4. Validate buyer intent before release
+  3. Add UFLPA as standalone risk dimension
+  4. Add capacity + margin risk sections
+  5. Add portfolio exposure summary for mgmt
+  6. Validate buyer intent before final publish
 
 KB PROPOSALS:
-  · R3 auto-trigger rule when diff > 2pp
+  · Add tariff diff >2pp as event auto-flag rule
   · Add UFLPA readiness field to COUNTRY-DB
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
           <div class="tg-btns">
-            <button class="tg-btn g-btn" onclick="this.textContent='✅ Saved'">✅ Done — save report</button>
-            <button class="tg-btn w-btn">⚠️ Adjust</button>
+            <button class="tg-btn gb" onclick="this.textContent='✅ Saved'">✅ Done — save report</button>
+            <button class="tg-btn yb">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">10:10</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:55</span></div>
         </div>
       </div>
 
       <div class="row user">
         <div class="bbl confirm">
           <span class="confirm-text">✅ Done — save report</span>
-          <div class="bbl-meta"><span class="bbl-ts">10:11</span><span class="bbl-tick">✓✓</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:56</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
 
-      <div style="height: 24px;"></div>
-    </div><!-- /tg-scroll -->
-  </div><!-- /tg-window -->
-  </div><!-- /frame-wrap -->
-
-</div><!-- /page -->
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+  </div>
+</div>
 
 <script>
-  var nav = document.querySelectorAll('.snav');
   var ids = ['sv0','sv1','sv2','sv3','sv4','sv5'];
+  var navs = document.querySelectorAll('.snav');
   var chat = document.getElementById('chat');
 
-  nav.forEach(function(a) {
+  navs.forEach(function(a) {
     a.addEventListener('click', function(e) {
       e.preventDefault();
       var id = a.getAttribute('href').slice(1);
       var el = document.getElementById(id);
-      if (el) { chat.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' }); }
+      if (el) chat.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
     });
   });
 
   chat.addEventListener('scroll', function() {
-    var top = chat.scrollTop;
+    var top = chat.scrollTop + 50;
     var cur = ids[0];
     ids.forEach(function(id) {
       var el = document.getElementById(id);
-      if (el && el.offsetTop - chat.offsetTop <= top + 50) cur = id;
+      if (el && el.offsetTop - chat.offsetTop <= top) cur = id;
     });
-    nav.forEach(function(a) {
+    navs.forEach(function(a) {
       a.classList.remove('on');
       if (a.getAttribute('href') === '#' + cur) a.classList.add('on');
     });
