@@ -43,7 +43,7 @@
     /* Chat window */
     .frame-wrap { flex: 1; display: flex; overflow: hidden; }
     .tg-window {
-      width: 100%; max-width: 520px; height: 100vh;
+      width: 100%; max-width: 580px; height: 100vh;
       display: flex; flex-direction: column;
       background: var(--bg);
       background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b0a090' fill-opacity='0.12'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-9.5zm-2 5.5h-1v-5h1v5zm-2 0h-1v-5h1v5zM0 5h1v5H0V5zm2 0h1v5H2V5zm2 0h1v5H4V5zM4 0h1v3H4V0zm2 0h1v3H6V0zm2 0h1v3H8V0z'/%3E%3C/g%3E%3C/svg%3E");
@@ -98,7 +98,8 @@
       background: var(--code-bg); border: 1px solid #e4e4e4; border-radius: 6px;
       padding: 9px 11px; font-family: 'SF Mono','Fira Code',monospace;
       font-size: 11px; line-height: 1.8; color: #1a1a2e;
-      margin: 5px 0 3px; white-space: pre-wrap; overflow-x: auto;
+      margin: 5px 0 3px; white-space: pre; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .g  { color: #1a7a40; }
     .y  { color: #a05c00; }
@@ -183,7 +184,7 @@
 <span class="g">✓</span> Source:   USTR announcement · June 2, 2026 findings
 <span class="g">✓</span> Effective: July 24, 2026
 <span class="g">✓</span> Buyer:    NEXT Retail
-<span class="g">✓</span> Scope:    VN · IN · BD — HS 61/62 apparel suppliers
+<span class="g">✓</span> Scope:    VN · IN · BD - HS 61/62 apparel suppliers
 <span class="g">✓</span> Docs:    News article · TARIFF-DB · COUNTRY-DB
 
 <span class="lbl">KB sources to process:</span>
@@ -192,7 +193,7 @@
   3. COUNTRY-DB                      [KB · verified Aug 4]
   4. CLIENT-DB · NEXT                [KB · supplier list]</div>
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV1</button>
+            <button class="btn ok">✅ Confirmed - go to SV1</button>
             <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:41</span></div>
@@ -208,43 +209,38 @@
           <div class="sender-name">Yeti Dev</div>
           🔍 SV1 · Parse
           <span class="lbl">[KB: TARIFF-DB · COUNTRY-DB · EVENT T2-VN / T2-IN / T2-BD]</span>
-          <div class="cbl"><span class="h">── Tariff Structure (TARIFF-DB · HS 61/62 apparel) ──</span>
-  VN  MFN 12–32% + FL301 <span class="r">+12.5%</span>  = US Total <span class="r">~28.5%</span>  [Tier 2]
-  IN  MFN 12–32% + FL301 <span class="g">+10.0%</span>  = US Total <span class="g">~26.5%</span>  [Tier 1]
-  BD  MFN 12–32% + FL301 <span class="g">+10.0%</span>  = US Total <span class="g">~26.5%</span>  [Tier 1]
+          <div class="cbl"><span class="h">── Tariff (TARIFF-DB · HS 61/62 apparel) ──</span>
+  Country  FL301    US Total  Tier
+  VN       <span class="r">+12.5%</span>   <span class="r">~28.5%</span>    Tier 2
+  IN       <span class="g">+10.0%</span>   <span class="g">~26.5%</span>    (non-ASEAN)
+  BD       <span class="g">+10.0%</span>   <span class="g">~26.5%</span>    (non-ASEAN)
 
-  <span class="o">→ VN carries +2.5pp additional US tariff vs IN/BD</span>
-  Note: India and Bangladesh are <span class="d">non-ASEAN</span> — not in the original USTR
-         60-economy list; their +10% comes from separate FL301 designation.
-         The Tier 1/2 framing in the compliance brief = ASEAN countries only.
+  <span class="o">→ VN +2.5pp vs IN/BD on every HS 61/62 line</span>
+  <span class="d">⚠️ FL301 legal challenge: 25 states (Aug 3, 2026)</span>
+  <span class="d">   Rates active · injunction not yet granted</span>
 
-<span class="h">── Country Risk Signals (COUNTRY-DB · Aug 4, 2026) ──</span>
-  VN  · FL301 highest burden (+12.5%) among Air8 sourcing countries
-       · USTR S301 investigation open — bilateral tension (Jun 2, 2026)
-       · Air8 signal: "Erodes VN diversification advantage over CN"
-       · VND stable · SBV managing range · export-favorable
+<span class="h">── Country Signals (COUNTRY-DB · Aug 4) ──</span>
+  VN  FL301 highest burden among Air8 countries
+      S301 investigation open · bilateral tension
+      Air8: "Erodes VN diversification vs CN"
 
-  BD  · FL301 +10% on US-bound exports — immediate hit
-       · <span class="r">EBA 0% at risk</span> — LDC graduation 2027+ · EU preference exposure
-       · Banking sector crisis · BDT 400,000 crore total bank exposure
-       · <span class="r">85%+ of BD exports are RMG</span> — extreme concentration
-       · Air8 signal: "Double pressure: FL301 US + EBA EU + banking risk"
+  BD  FL301 +10% on US → immediate revenue hit
+      <span class="r">EBA 0% at risk</span> · LDC graduation 2027+
+      Banking crisis: BDT 400,000cr exposure
+      <span class="r">85%+ RMG concentration</span> · extreme dependency
+      UFLPA: <span class="r">elevated risk</span> (CBP priority monitoring)
 
-  IN  · FL301 +10% — erodes diversification advantage vs CN
-       · Cotton duty waiver <span class="y">expires Oct 31, 2026</span> — 13 weeks from now
-       · Nov 1 onwards: +16% on raw cotton input (BCD 11% + AIDC 5%)
-       · Mills face +8–12% input cost spike if no pre-buy
-       · Air8 signal: "13-week pre-buy window before reinstatement"
+  IN  FL301 +10% · erodes diversification vs CN
+      Cotton waiver <span class="y">expires Oct 31</span> (13 wks)
+      Nov 1: +16% raw cotton (BCD 11% + AIDC 5%)
+      UFLPA: variable · not all suppliers audit-ready
+      Air8: "13-week pre-buy window before spike"
 
-  IN  · UFLPA: variable compliance · not all suppliers audit-ready
-  BD  · UFLPA: <span class="r">elevated risk</span> · priority monitoring in COUNTRY-DB
-       · VN  · UFLPA: standard exposure
-
-<span class="h">── Portfolio (CLIENT-DB · NEXT Retail) ──</span>
-  VN:  6 suppliers  · BD: 11 suppliers  · IN:  9 suppliers
-  Total in scope: 47 suppliers · all HS 61/62 apparel</div>
+<span class="h">── Portfolio (CLIENT-DB · NEXT) ──</span>
+  VN  6 suppliers   IN  9 suppliers   BD  11 suppliers
+  Total in scope: 47 suppliers · HS 61/62 apparel</div>
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV2</button>
+            <button class="btn ok">✅ Confirmed - go to SV2</button>
             <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:44</span></div>
@@ -255,7 +251,7 @@
         <div class="av-mini jz">JZ</div>
         <div class="bbl user">
           <div class="sender-name jz">Jerri Zhou</div>
-          BD is NOT simply advantaged. They have double exposure — FL301 on US plus EBA at risk on EU. That's a different risk dimension from VN.
+          BD is NOT simply advantaged. They have double exposure - FL301 on US plus EBA at risk on EU. That's a different risk dimension from VN.
           <div class="bbl-meta"><span class="bbl-ts">09:45</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
@@ -264,9 +260,9 @@
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Understood — correcting BD signal. BD is not a clean beneficiary. FL301 on US + EBA at risk on EU + banking sector stress = three-layer exposure. Not a simple tariff advantage story.
+          Understood - correcting BD signal. BD is not a clean beneficiary. FL301 on US + EBA at risk on EU + banking sector stress = three-layer exposure. Not a simple tariff advantage story.
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV2</button>
+            <button class="btn ok">✅ Confirmed - go to SV2</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:45</span></div>
         </div>
@@ -283,48 +279,47 @@
           <span class="lbl">[KB: NODE-risk-categories · L1-reasoning-principles]</span>
           <div class="cbl"><span class="h">── Exception / Signal Detection ──</span>
 
-<span class="y">E1</span> · Competitive Position Shift — R6 / Freight Cost
-  VN FL301 = 12.5% vs IN/BD = 10% → net VN disadvantage +2.5pp
-  6 NEXT VN suppliers face higher US tariff burden post Jul 24
-  S301 investigation open on VN adds bilateral uncertainty
-  Buyers reviewing sourcing allocations may act on this differential
+<span class="y">E1</span> VN Competitive Position - R6
+    VN FL301 +12.5% vs IN/BD +10% = <span class="r">+2.5pp gap</span>
+    6 NEXT VN suppliers at higher US tariff post Jul 24
+    VN S301 investigation open → bilateral uncertainty
 
-<span class="y">E2</span> · BD Double Exposure — R4 / Regulatory Compliance
-  BD: FL301 + EBA loss risk + banking sector = three distinct risk layers
-  Not simply "advantaged by VN's higher tariff" — different risk profile
-  ARP (early payment) product highly relevant given banking stress
+<span class="y">E2</span> BD Double Exposure - R4
+    FL301 +10% on US-bound volume (immediate hit)
+    EBA 0% at risk → LDC graduation 2027+ (EU)
+    Banking crisis: BDT 400,000cr total exposure
+    <span class="r">→ Not a clean beneficiary - three-layer risk</span>
 
-<span class="y">E3</span> · IN Input Cost Window — R4 / Regulatory Compliance
-  Cotton duty waiver expires Oct 31 · 13 weeks remaining
-  Mills that don't pre-buy face +8–12% raw cotton cost spike from Nov 1
-  Q4 margin impact likely if procurement doesn't act before deadline
+<span class="y">E3</span> IN Cotton Input Window - R4
+    Cotton waiver expires <span class="y">Oct 31</span> · 13 weeks left
+    Nov 1: +16% raw cotton (BCD 11% + AIDC 5%)
+    Mills face +8-12% input spike → Q4 margin risk
 
-<span class="y">E4</span> · UFLPA as Independent Compliance Gate
-  COUNTRY-DB: BD = elevated UFLPA risk · IN = variable compliance
-  UFLPA clearance is a separate buyer selection gate from tariff cost
-  A supplier can have tariff advantage and still fail UFLPA gate
+<span class="y">E4</span> UFLPA as Independent Gate - R4
+    BD = elevated UFLPA risk (COUNTRY-DB)
+    IN = variable compliance, not all audit-ready
+    UFLPA gate is separate from tariff cost analysis
+    Tariff advantage ≠ buyer qualification
 
-<span class="r">E5</span> · FL301 Legal Challenge — Regulatory Uncertainty
-  25 states filed challenge Aug 3, 2026 v. Trump admin
-  Rates currently active — injunction not yet granted
-  All tariff-based conclusions are contingent on rates surviving challenge
-  <span class="r">→ PROVISIONAL status on all E1–E3 conclusions</span>
+<span class="r">E5</span> FL301 Legal Uncertainty - R4
+    25 states filed challenge Aug 3, 2026
+    Rates active · injunction not yet granted
+    <span class="r">→ E1-E3 conclusions are PROVISIONAL</span>
 
-<span class="r">E6</span> · Assumption Gap — No Buyer Sourcing Confirmation
-  No confirmed NEXT buyer sourcing intent in CLIENT-DB
-  Order migration from VN to IN/BD = inference, not confirmed fact
-  Report draft currently treats migration as fact → needs correction
+<span class="r">E6</span> Assumption Gap - R4
+    No confirmed NEXT buyer intent in CLIENT-DB
+    Order migration VN→IN/BD = <span class="r">inference not fact</span>
+    Report draft treats migration as confirmed
 
-<span class="h">── Hard Stop Pre-check (HS1–HS5) ──</span>
-  HS1: No sanctioned country → PASS ✅
-  HS2: No FATF alert → PASS ✅
-  HS3: No CBP detention active → PASS ✅
-  HS4: No hard stop docs → PASS ✅
-  HS5: No entity list hit → PASS ✅
-
-  <span class="g">→ No hard stops · Proceed to SV3</span></div>
+<span class="h">── Hard Stop Pre-check ──</span>
+  HS1 Sanctions     → PASS ✅
+  HS2 FATF          → PASS ✅
+  HS3 CBP detention → PASS ✅
+  HS4 Hard stop doc → PASS ✅
+  HS5 Entity list   → PASS ✅
+  <span class="g">→ No hard stops · proceed to SV3</span></div>
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV3</button>
+            <button class="btn ok">✅ Confirmed - go to SV3</button>
             <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:48</span></div>
@@ -342,56 +337,42 @@
           <span class="lbl">[KB: L1-reasoning-principles · reasoning hierarchy: hard stop → buyer rule → auto-pass → risk node]</span>
           <div class="cbl"><span class="h">── Resolution per Signal ──</span>
 
-<span class="y">E1</span> · VN Competitive Position Shift
-  Decision:  <span class="y">HOLD 🟡</span>
-  Rule:      R6 — No auto-pass for cost disadvantage above 2pp
-  Rationale: 2.5pp differential is real and confirmed by TARIFF-DB.
-             However, no confirmed buyer decision to act on it yet.
-  Language:  <span class="d">"may face increased competitive pressure" NOT "will lose orders"</span>
-             <span class="d">"gained a cost advantage" NOT "are clean beneficiaries"</span>
-  Action:    Flag VN clients with >60% US-bound concentration for BD/IN
-             conversation. Add sourcing diversification note to report.
+<span class="y">E1</span> VN Competitive Position
+    Decision: <span class="y">HOLD 🟡</span>  Rule: R6
+    Rationale: 2.5pp gap confirmed. No buyer decision yet.
+    Language: "may face pressure" not "will lose orders"
+    Action: Flag VN >60% US concentration → BD/IN talk
 
-<span class="y">E2</span> · BD Double Exposure
-  Decision:  <span class="y">HOLD 🟡</span>
-  Rule:      R4 — No auto-pass when multiple regulatory risk layers present
-  Rationale: BD faces three distinct risk dimensions (FL301 + EBA + banking).
-             Treating as "advantaged" understates actual risk profile.
-  Action:    Add BD as three-layer risk in report. ARP product relevant.
-             Flag BD clients with >70% US concentration as high sensitivity.
+<span class="y">E2</span> BD Double Exposure
+    Decision: <span class="y">HOLD 🟡</span>  Rule: R4
+    Three layers: FL301 + EBA risk + banking stress
+    Not "advantaged" - list as three-layer risk profile
+    Action: ARP early payment relevant · flag BD >70% US
 
-<span class="y">E3</span> · IN Cotton Duty Window
-  Decision:  <span class="y">HOLD 🟡</span>  · time-sensitive
-  Rule:      R4 — Cotton input cost spike is a margin risk event
-  Rationale: 13 weeks is actionable lead time. Pre-buy decision is real.
-  Action:    Alert IN apparel suppliers to raw cotton procurement schedule.
-             Add capacity note: mills without cotton stock may face Nov cost spike.
+<span class="y">E3</span> IN Cotton Duty Window  ⚠️ time-sensitive
+    Decision: <span class="y">HOLD 🟡</span>  Rule: R4
+    13 weeks actionable · pre-buy decision is real
+    Action: Alert IN suppliers → pre-buy cotton now
+    Add: mills without stock face Nov Q4 cost spike
 
-<span class="y">E4</span> · UFLPA as Independent Gate
-  Decision:  <span class="y">HOLD 🟡</span>
-  Rule:      R4 — UFLPA clearance is a buyer selection gate (separate from tariff)
-  Rationale: Buyers gate suppliers on UFLPA independently of cost. A supplier
-             may clear tariff differential and still fail buyer qualification.
-  Action:    Add UFLPA as standalone risk dimension in report.
-             Add supplier readiness heatmap: BD elevated · IN variable.
+<span class="y">E4</span> UFLPA Independent Gate
+    Decision: <span class="y">HOLD 🟡</span>  Rule: R4
+    UFLPA = standalone buyer gate (not tariff footnote)
+    BD elevated · IN variable (COUNTRY-DB)
+    Action: Add UFLPA as own risk dim + readiness heatmap
 
-<span class="r">E5</span> · FL301 Legal Challenge
-  Decision:  <span class="r">ESCALATE 🔴</span>
-  Rule:      R4 — Regulatory uncertainty + pending court = must flag to management
-  Rationale: If rates voided: VN returns to pre-FL301 baseline, IN/BD lose their
-             cost advantage. All current conclusions contingent.
-  Action:    All tariff-based conclusions labeled PROVISIONAL in report.
-             Legal outcome tracker needed.
+<span class="r">E5</span> FL301 Legal Challenge
+    Decision: <span class="r">ESCALATE 🔴</span>  Rule: R4
+    Voided → VN baseline restored, IN/BD lose advantage
+    Action: Label E1-E3 PROVISIONAL · add legal tracker
 
-<span class="r">E6</span> · Assumption Gap
-  Decision:  <span class="r">ESCALATE 🔴</span>
-  Rule:      R4 — Assumption treated as fact in report = must correct before release
-  Rationale: Current draft report states VN → IN/BD order migration as fact.
-             No buyer sourcing intent confirmed in CLIENT-DB.
-  Action:    Add Facts vs Assumptions section before report release.
-             Add portfolio exposure summary numbers for management.</div>
+<span class="r">E6</span> Assumption Gap
+    Decision: <span class="r">ESCALATE 🔴</span>  Rule: R4
+    Draft treats VN→IN/BD migration as fact - not confirmed
+    Action: Add Facts vs Assumptions section before release
+            Add portfolio exposure numbers for management</div>
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV4</button>
+            <button class="btn ok">✅ Confirmed - go to SV4</button>
             <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:51</span></div>
@@ -402,7 +383,7 @@
         <div class="av-mini jz">JZ</div>
         <div class="bbl user">
           <div class="sender-name jz">Jerri Zhou</div>
-          E4 is right — UFLPA is always a separate gate. Doesn't matter what the tariff says. Any supplier can get blocked on UFLPA even with a cost advantage. Keep it as HOLD and make sure the report treats it as independent.
+          E4 is right - UFLPA is always a separate gate. Doesn't matter what the tariff says. Any supplier can get blocked on UFLPA even with a cost advantage. Keep it as HOLD and make sure the report treats it as independent.
           <div class="bbl-meta"><span class="bbl-ts">09:52</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
@@ -411,9 +392,9 @@
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Confirmed — UFLPA is a standalone buyer gate, always separate from tariff. Report will list it as its own risk dimension under E4. Not a footnote.
+          Confirmed - UFLPA is a standalone buyer gate, always separate from tariff. Report will list it as its own risk dimension under E4. Not a footnote.
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV4</button>
+            <button class="btn ok">✅ Confirmed - go to SV4</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:52</span></div>
         </div>
@@ -430,45 +411,43 @@
           <span class="lbl">[KB: L1-evidence-discipline · evidence ranking by source type]</span>
           <div class="cbl"><span class="h">── Evidence per Signal ──</span>
 
-<span class="g">E1</span> · VN tariff differential +2.5pp
-  Evidence:  [TARIFF-DB · Aug 4, 2026 · USTR / tariffstool.com]
-  TARIFF-DB shows VN FL301 = 12.5% · IN/BD = 10% confirmed
-  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+<span class="g">E1</span> VN tariff differential +2.5pp
+    [TARIFF-DB · Aug 4, 2026 · USTR / tariffstool.com]
+    VN 12.5% vs IN/BD 10% confirmed in TARIFF-DB
+    <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="g">E2</span> · BD double exposure (FL301 + EBA + banking)
-  Evidence:  [COUNTRY-DB · Aug 4, 2026 · BGMEA / EC Trade / FashionatingWorld]
-  FL301 rate confirmed TARIFF-DB · EBA risk from EC Trade notice
-  Banking crisis: BDT 400,000 crore total bank exposure documented
-  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+<span class="g">E2</span> BD double exposure
+    [COUNTRY-DB · Aug 4 · BGMEA / EC Trade / FashionatingWorld]
+    FL301 rate ✅ · EBA risk ✅ · banking crisis ✅
+    BDT 400,000cr documented
+    <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="g">E3</span> · IN cotton duty waiver expiry Oct 31
-  Evidence:  [COUNTRY-DB · Aug 4, 2026 · India Budget 2026 · TBSNews]
-  Cotton BCD+AIDC waiver: Jun 1–Oct 31, 2026 per India Budget 2026
-  Reinstatement Nov 1: +16% on raw cotton (BCD 11% + AIDC 5%)
-  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+<span class="g">E3</span> IN cotton duty expiry Oct 31
+    [COUNTRY-DB · India Budget 2026 · TBSNews]
+    BCD+AIDC waiver Jun 1–Oct 31 confirmed
+    Reinstatement Nov 1 = +16% on raw cotton
+    <span class="g">→ SUFFICIENT ✅</span>
 
-<span class="g">E4</span> · UFLPA as independent gate
-  Evidence:  [COUNTRY-DB · Aug 4, 2026 · CBP / UFLPA entity list]
-  BD: elevated UFLPA risk · IN: variable compliance
-  UFLPA clearance requirements documented in UFLPA enforcement guidance
-  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+<span class="g">E4</span> UFLPA as independent gate
+    [COUNTRY-DB · Aug 4 · CBP enforcement guidance]
+    BD elevated ✅ · IN variable ✅ (COUNTRY-DB)
+    <span class="g">→ SUFFICIENT ✅</span>  (per-supplier audit: needed)
 
-<span class="y">E5</span> · FL301 legal challenge pending
-  Evidence:  [TARIFF-DB footnote · Aug 3, 2026 · 25 states filing]
-  Court proceedings active — outcome undetermined
-  <span class="y">→ PARTIAL · All E1–E3 conclusions provisional ⚠️</span>
-  Required: legal outcome tracker · re-run trigger conditions
+<span class="y">E5</span> FL301 legal challenge
+    [TARIFF-DB footnote · Aug 3, 2026 · 25 states]
+    Court active · injunction not yet granted
+    <span class="y">→ PARTIAL ⚠️  — conclusions labeled PROVISIONAL</span>
+    Need: legal outcome tracker + re-run trigger
 
-<span class="r">E6</span> · Buyer sourcing intent
-  Evidence:  [CLIENT-DB · no NEXT buyer communication on record]
-  No confirmed buyer sourcing decision · no order shift data
-  <span class="r">→ INSUFFICIENT · Order migration = inference ⚠️</span>
-  Needed:    NEXT buying team directional intent
-             IN/BD supplier capacity self-assessment
-             12-month order trend from CLIENT-DB
-             Buyer price negotiation risk model</div>
+<span class="r">E6</span> Buyer sourcing intent
+    [CLIENT-DB · no NEXT communication on record]
+    No buyer decision confirmed · no order shift data
+    <span class="r">→ INSUFFICIENT ⚠️</span>
+    Need: NEXT buying team intent
+          IN/BD supplier capacity assessment
+          12-month order trend from CLIENT-DB</div>
           <div class="btns">
-            <button class="btn ok">✅ Confirmed — go to SV5</button>
+            <button class="btn ok">✅ Confirmed - go to SV5</button>
             <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:54</span></div>
@@ -482,7 +461,7 @@
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          ✅ SV5 · Output — ready for review
+          ✅ SV5 · Output - ready for review
           <span class="lbl">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB · CLIENT-DB]</span>
           <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EVENT VALIDATION REPORT
@@ -492,7 +471,7 @@ Scope:     NEXT Retail · VN/IN/BD · 47 suppliers
 Date:      2026-08-19   KB: Aug 4, 2026
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OVERALL:   <span class="y">HOLD 🟡</span>
-           ⚠️ provisional — FL301 legal challenge pending
+           ⚠️ provisional - FL301 legal challenge pending
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 <span class="h">FACTS (TARIFF-DB + COUNTRY-DB · verified)</span>
@@ -517,14 +496,14 @@ OVERALL:   <span class="y">HOLD 🟡</span>
 <span class="y">E1</span> · VN Competitive Position Shift
   Found:     VN +2.5pp vs IN/BD on US tariff
   Decision:   <span class="y">HOLD 🟡</span>
-  Rule:       R6 — cost disadvantage above 2pp · no auto-pass
+  Rule:       R6 - cost disadvantage above 2pp · no auto-pass
   Action:     Flag VN clients >60% US concentration for BD/IN
               conversation. Use conditional language in report.
 
 <span class="y">E2</span> · BD Double Exposure
   Found:     FL301 + EBA at risk + banking sector stress
   Decision:   <span class="y">HOLD 🟡</span>
-  Rule:       R4 — multiple regulatory risk layers · no auto-pass
+  Rule:       R4 - multiple regulatory risk layers · no auto-pass
   Action:     BD is not a clean beneficiary. List as three-layer risk.
               ARP early payment highly relevant for BD clients.
               Flag BD clients >70% US concentration.
@@ -532,36 +511,36 @@ OVERALL:   <span class="y">HOLD 🟡</span>
 <span class="y">E3</span> · IN Cotton Duty Window Closing
   Found:     Waiver expires Oct 31 · +16% on raw cotton from Nov 1
   Decision:   <span class="y">HOLD 🟡</span>  · time-sensitive
-  Rule:       R4 — input cost spike = margin risk event
+  Rule:       R4 - input cost spike = margin risk event
   Action:     Alert IN apparel suppliers to pre-buy cotton now.
               Add note: mills without stock face Q4 cost spike.
 
 <span class="y">E4</span> · UFLPA as Independent Compliance Gate
   Found:     BD elevated · IN variable · VN standard
   Decision:   <span class="y">HOLD 🟡</span>
-  Rule:       R4 — UFLPA clearance = standalone buyer gate
+  Rule:       R4 - UFLPA clearance = standalone buyer gate
   Action:     UFLPA listed as its own risk dimension (not a tariff footnote).
               Supplier readiness heatmap: BD elevated · IN variable.
-              Independent of E1–E3 tariff cost conclusions.
+              Independent of E1-E3 tariff cost conclusions.
 
 <span class="r">E5</span> · FL301 Legal Challenge
   Found:     25 states · Aug 3, 2026 · rates active pending injunction
   Decision:   <span class="r">ESCALATE 🔴</span>
-  Rule:       R4 — regulatory uncertainty + court = management alert
-  Action:     All E1–E3 tariff-based conclusions labeled PROVISIONAL.
+  Rule:       R4 - regulatory uncertainty + court = management alert
+  Action:     All E1-E3 tariff-based conclusions labeled PROVISIONAL.
               Add legal outcome tracker. Set re-run trigger.
 
 <span class="r">E6</span> · Assumption Gap
   Found:     No confirmed buyer intent · migration stated as fact
   Decision:   <span class="r">ESCALATE 🔴</span>
-  Rule:       R4 — assumption as fact = report integrity risk
+  Rule:       R4 - assumption as fact = report integrity risk
   Action:     Add Facts vs Assumptions section before release.
               Add portfolio exposure summary for management.
               Validate buyer intent before final publish.
 
 ──────────────────────────────────────────
 ACTIONS before release:
-  1. Label E1–E3 tariff conclusions PROVISIONAL (E5 active)
+  1. Label E1-E3 tariff conclusions PROVISIONAL (E5 active)
   2. Add Facts vs Assumptions section (E6)
   3. Reframe migration language → always conditional
   4. List UFLPA as standalone risk dimension (E4)
@@ -577,7 +556,7 @@ KB PROPOSALS (do not self-modify KB):
   · Add IN cotton duty expiry tracker field
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
           <div class="btns">
-            <button class="btn ok" onclick="this.textContent='✅ saved'">✅ Done — save report</button>
+            <button class="btn ok" onclick="this.textContent='✅ saved'">✅ Done - save report</button>
             <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:56</span></div>
