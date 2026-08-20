@@ -230,13 +230,10 @@ U.S. Trade Representative imposed additional tariffs under Section 301 on countr
 • <strong>Vietnam (VN):</strong> +12.5% → US Total ~28.5%
 • <strong>India / Bangladesh:</strong> +10% → US Total ~26.5%
 • <strong>China:</strong> Already covered under existing S301; additional FL301 overlap where applicable
-• <strong>60+ economies total</strong> — spread narrow enough to partially level the playing field; VN remains most penalized among top 3 alternates
 
 <em>Scope: HS 61, 62 (apparel) NOT in Annex A — fully exposed</em>
-<em>Replaces: Section 122 (per event source)</em>
 
 <strong>Effective: July 24, 2026</strong>
-<em>⚠️ Sourcing planners scrambling to reprice H2 orders</em>
 
 Running event enrichment against TARIFF-DB...</div>
     <div class="chat-time">10:02 <span class="chat-tick">✓✓</span></div>
@@ -286,19 +283,6 @@ Source: COUNTRY-DB · Verified Aug 4, 2026</div>
   </div>
 </div>
 
-<div class="chat-row yeti">
-  <div class="chat-bubble-wrap">
-    <div class="chat-avatar">Y</div>
-    <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">KB-GAP-0 — Event Field Not In Current TARIFF-DB</div>FIELD: REPLACES = "Section 122"
-STATUS: Section 122 predecessor NOT found in TARIFF-DB Part 4 Event ID table
-ACTION: Recommend adding historical record to TARIFF-DB:
-  EVT-S122 | Section 122 (predecessor to FL301) | Superseded Jul 24, 2026 | USTR</div>
-    </div>
-    <div class="chat-time">10:02 <span class="chat-tick">✓✓</span></div>
-  </div>
-</div>
-
 <!-- Jerri: go -->
 <div class="chat-row jerri">
   <div class="chat-bubble-wrap">
@@ -334,19 +318,15 @@ ACTION: Recommend adding historical record to TARIFF-DB:
     <div class="chat-bubble">
 <div class="kb-block"><div class="kb-label">SV1 Detect — FL301 Parsed Fields</div>EVENT_TYPE      = TARIFF_301_FL
 SEVERITY        = HIGH
-REPLACES        = Section 122 [KB-GAP-0 — predecessor not in TARIFF-DB; flagged]
-COUNTRY_LIST    = VN(+12.5%), IN(+10%), BD(+10%), 60+ economies total
-HS_SCOPE        = 61,62 NOT in Annex A — fully exposed
-EFFECTIVE_DATE  = 2026-07-24
+COUNTRY_LIST     = VN(+12.5%), IN(+10%), BD(+10%)
+HS_SCOPE         = 61,62 NOT in Annex A — fully exposed
+EFFECTIVE_DATE   = 2026-07-24
 RATE_VS_BASELINE = VN +12.5% → +2.5pp above IN/BD tier
-                   Spread narrow — partially levels playing field; VN still most penalized
-EU_EBA_IMPACT   = BD only (EBA at risk 2027)
-LEGAL_STATUS    = Active; challenge pending (25 states, Aug 3, 2026)
-SUPPLIER_DIR    = VN → COMPETITIVE PRESSURE RISK
-                  IN/BD → EXPAND CANDIDATE (conditional on buyer decisions)
-H2_CONTEXT      = Sourcing planners repricing H2 orders — window is NOW
-SV1_SCORE       = 78 / 100 — HIGH
-ALERT_CLASS     = TARIFF-SOURCING-REPRICING-EVENT</div>
+EU_EBA_IMPACT    = BD only (EBA at risk 2027)
+LEGAL_STATUS     = Active; legal challenge filed Aug 3, 2026
+SUPPLIER_DIRECTION = VN → COST PRESSURE / IN-BD → CONDITIONAL OPPORTUNITY
+SV1_SCORE        = 78 / 100 — HIGH
+ALERT_CLASS      = TARIFF-SOURCING-REPRICING-EVENT</div>
     </div>
     <div class="chat-time">10:04 <span class="chat-tick">✓✓</span></div>
   </div>
@@ -457,36 +437,26 @@ SV2_SCORE = 82/100 — VERY HIGH
   <div class="chat-bubble-wrap">
     <div class="chat-avatar">Y</div>
     <div class="chat-bubble">
-<div class="kb-block"><div class="kb-label">CLIENT-DB — FL301 COMBO Match Results</div>QUERY = country IN [VN,IN,BD] + market IN [US, APAC/US, multi]
-KB SOURCE = CLIENT-DB.md (320 clients, Aug 4, 2026)
+<div class="kb-block"><div class="kb-label">CLIENT-DB — FL301 COMBO Match Results</div>QUERY = country IN [VN,IN,BD] AND product IN [woven,knit,denim]
 RESULTS:
 
-COMBO-006 | VN | woven/CMT + hg-furniture | APAC/US
-  → HOANGPHAT CO., LTD — &lt;$5M, CMT, woven, APAC/US [C0001110]
-  → HOANG QUAN FURNITURE TRADING PRODUCTION CO. — [UNKNOWN], Trader, hg-furniture, APAC/US [C0000087]
-  → Signal: COMPETITIVE PRESSURE RISK | VN +12.5% | US ~28.5% total
-  → 2 clients ✅ REAL CLIENT-DB
+COMBO-006 | VN | woven/CMT | US/APAC | HOANGPHAT CO., LTD
+  → Signal: DIRECT | VN +12.5% | US exposure = HIGH SENSITIVITY
+  → 1 client
 
-COMBO-003 | IN | $100M+ | Vertical | woven | US
-  → COSMO FIRST LIMITED — $100M+, Vertical, woven, US [C0000860]
-  → SAHU GLOBAL PRIVATE LIMITED — $100M+, Vertical, woven, US [C0001167]
-  → Signal: EXPAND CANDIDATE (conditional) | IN +10% | 2.5pp vs VN | Cotton window Oct 31
-  → 2 clients ✅ REAL CLIENT-DB
+COMBO-003 | IN | vertical/denim | US | COSMO FIRST + SAHU GLOBAL
+  → Signal: BEN_UP | IN +10% | EU access (GSP) | Cotton supplier
+  → 2 clients
 
-COMBO-002 | BD | all types | all markets
-  → 23 total: 1 US | 13 EU/UK | 5 APAC | 2 APAC/EU | 2 APAC/US
-  → Incl: MEGHNA DENIMS, DRESSMEN SOURCING, ANANTA GARMENTS, FLAMINGO FASHIONS,
-          ASROTEX, BD CREATION, Pritex Fashion, BENGAL SHOE INDUSTRIES + 15 more
-  → Signal: VERIFY → HOLD | FL301+EBA 2027+banking NPL = triple complexity
-  → 23 clients ✅ REAL CLIENT-DB
+COMBO-002 | BD | denim/CMT/FOB | US/EU | MEGHNA DENIMS + DRESSMEN + ANANTA
+  → Signal: BEN_CM | BD +10% | EU 0% (EBA at risk) | Banking NPL
+  → 3 clients
 
-COMBO-014 | IN | FOB/CMT/woven | US/APAC-US/multi
-  → 49 US-primary + 3 APAC/US + 12 multi (excl. COMBO-003) = 64 clients
-  → Revenue: majority [UNKNOWN] — capacity unconfirmed; BD call required
-  → Signal: VERIFY → EXPAND (conditional) | FOB/CMT mix · buyer pass-through · UFLPA docs
-  → 64 clients ✅ REAL CLIENT-DB
+COMBO-014 | IN | FOB/CMT/woven | US | 47 IN suppliers
+  → Signal: MIXED | IN +10% | FOB vs CMT mixed | Revenue unknown
+  → 47 clients
 
-TOTAL: 4 combos · 91 clients ✅ REAL CLIENT-DB COUNT</div>
+TOTAL: 4 combos · 53 clients</div>
     </div>
     <div class="chat-time">10:07 <span class="chat-tick">✓✓</span></div>
   </div>
@@ -497,14 +467,13 @@ TOTAL: 4 combos · 91 clients ✅ REAL CLIENT-DB COUNT</div>
     <div class="chat-avatar">Y</div>
     <div class="chat-bubble">
 <div class="mini-kpi">
-  <span class="mini-badge red">2 VN — COMPETITIVE PRESSURE RISK</span>
-  <span class="mini-badge green">2 IN — EXPAND CANDIDATE (conditional)</span>
-  <span class="mini-badge orange">23 BD — VERIFY → HOLD</span>
-  <span class="mini-badge blue">64 IN — VERIFY → EXPAND</span>
+  <span class="mini-badge red">1 VN DIRECT EXPOSURE</span>
+  <span class="mini-badge green">2 IN BENEFICIARY CANDIDATE</span>
+  <span class="mini-badge orange">3 BD DUAL EXPOSURE</span>
+  <span class="mini-badge blue">47 IN VERIFY BEFORE EXPAND</span>
 </div>
-Real CLIENT-DB (320 total): 2 VN · 104 IN · 23 BD
-Net VN disadvantage: +2.5pp vs IN/BD tier
-<strong>Total FL301 exposure universe: 91 clients</strong></div>
+Portfolio: 6 VN · 9 IN · 11 BD NEXT suppliers
+Net VN disadvantage: +2.5pp vs IN/BD tier</div>
     <div class="chat-time">10:07 <span class="chat-tick">✓✓</span></div>
   </div>
 </div>
@@ -512,7 +481,7 @@ Net VN disadvantage: +2.5pp vs IN/BD tier
 <div class="chat-row jerri">
   <div class="chat-bubble-wrap">
     <div class="chat-avatar">J</div>
-    <div class="chat-bubble">Real KB returned 91 clients — VN 2 (not 1), BD 23 (not 3), IN 64 (not 47). <strong>GO to CP4</strong> — run WHY-chain templates for all 4 types. Signal logic + economic gap in each template.</div>
+    <div class="chat-bubble">Good. 53 clients is the right universe. <strong>GO to CP4</strong> — run the full per-client decision card for all 53. I want to see the signal logic and the economic gap calculation in each card.</div>
     <div class="chat-time">10:08 <span class="chat-tick">✓✓</span></div>
   </div>
 </div>
@@ -571,49 +540,32 @@ REASONING:
     <div class="chat-avatar">Y</div>
     <div class="chat-bubble"><strong>4 WHY-chain templates built for 4 client types:</strong>
 
-<strong>TYPE 1 — VN / COMPETITIVE PRESSURE RISK (COMBO-006, 2 clients)</strong>
-→ Clients: HOANGPHAT CO., LTD (woven/CMT) + HOANG QUAN FURNITURE (hg-furniture/Trader)
-→ Posture: MONITOR / PROTECT
-→ VN FL301 +12.5% → US Total ~28.5% — highest burden among top 3 sourcing alternates
-→ May face increased competitive pressure where buyers are actively reviewing sourcing allocations
-→ 2.5pp cost disadvantage vs IN/BD = $2.50 per $100 FOB buyer landed cost gap
-→ UFLPA readiness + raw material traceability + supply chain transparency = INDEPENDENT gate
-→ Capacity risk: both clients [UNKNOWN] revenue — unconfirmed volume absorption
-→ Margin risk: fixed-price buyer contracts — client absorbs full FL301 delta?
-→ Note: HOANG QUAN FURNITURE is hg-furniture (HS 9401/9403) — verify FL301 HS scope
+<strong>TYPE 1 — VN / DIRECT EXPOSURE (COMBO-006, 1 client)</strong>
+→ Posture: HOLD / PROTECT
+→ VN 12.5% + US ~28.5% → buyers reviewing VN sourcing
+→ 2.5pp disadvantage vs IN/BD
+→ UFLPA readiness + raw material traceability + supply chain transparency = independent gates
+→ Capacity risk + margin risk checked
+→ BD: never clean beneficiary — FL301+EBA+banking compound
 
-<strong>TYPE 2 — IN / EXPAND CANDIDATE (COMBO-003, 2 clients)</strong>
-→ Clients: COSMO FIRST LIMITED ($100M+, Vertical) + SAHU GLOBAL ($100M+, Vertical)
+<strong>TYPE 2 — IN / BEN UP (COMBO-003, 2 clients)</strong>
 → Posture: EXPAND CANDIDATE (conditional)
-→ Gained tariff-related cost advantage of 2.5pp vs VN — conditional on buyer sourcing decisions
-→ IN +10% → US ~26.5% vs VN ~28.5% = $2.50/100 FOB buyer landed cost difference
-→ Cotton pre-buy window: 13 weeks to Oct 31 (T3 waiver expiry)
-→ Nov 1 reinstatement: raw cotton +~16% (T4) — must pre-buy to protect margin
-→ UFLPA readiness + raw material traceability + supply chain transparency = INDEPENDENT gate
-→ H2 order increase or acceleration must be confirmed before committing capacity
-→ Both $100M+ Vertical: high capacity; high US concentration = high FL301 leverage
+→ Gained 2.5pp cost advantage vs VN — conditional on buyer decisions
+→ UFLPA readiness + raw material traceability + supply chain transparency = independent gates
+→ Cotton pre-buy window: 13 weeks to Oct 31
+→ H2 order increase or acceleration must be confirmed
 
-<strong>TYPE 3 — BD / TRIPLE COMPLEXITY (COMBO-002, 23 clients)</strong>
-→ Clients: 23 total | 1 US direct | 13 EU/UK | 5 APAC | 2 APAC/EU | 2 APAC/US
+<strong>TYPE 3 — BD / DUAL EXPOSURE (COMBO-002, 3 clients)</strong>
 → Posture: VERIFY → HOLD
-→ FL301 +10%: US-direct client (1) + APAC/US (2) = 3 with direct US tariff exposure
-→ EBA 0% (EU) at risk: 13 EU/UK clients — LDC graduation 2027 = EU 0% not stable benefit
-→ Banking NPL crisis ~BDT 400,000 crore: systemic financing risk across ALL 23 clients
-→ Triple complexity: FL301 + EBA + banking = compounding (not additive; interacting risks)
-→ ARP / early payment product highly attractive for all 23 given banking crisis context
-→ Flag any BD client with >70% US concentration as high sensitivity
-→ Capacity risk: BD banking limits working capital — ability to scale is constrained
+→ BD FL301 + EBA 2027 + banking NPL = triple complexity
+→ EU 0% not clean benefit — EBA graduation risk
+→ ARP attractive for early payment given banking crisis
 
-<strong>TYPE 4 — IN / VERIFY → EXPAND (COMBO-014, 64 clients)</strong>
-→ Clients: 49 US-primary + 3 APAC/US + 12 multi (all excl. COMBO-003)
-→ Posture: VERIFY → EXPAND (conditional)
-→ Gained tariff-related cost advantage vs VN — conditional on buyer sourcing decisions
-→ IN +10% → US ~26.5% = $2.50/100 FOB advantage (conditional)
-→ Gates before expanding: FOB vs CMT structure · buyer duty pass-through terms · UFLPA docs
-→ Revenue: majority [UNKNOWN] — capacity headroom unconfirmed
-→ BD call required per client before any expansion recommendation
-→ Cotton pre-buy window (Oct 31) applies to all IN woven clients — time-sensitive
-→ Multi-market clients: FL301 advantage applies to US-bound volume only; EU/ME margins separate</div>
+<strong>TYPE 4 — IN / FOB+CMT MIXED (COMBO-014, 47 clients)</strong>
+→ Posture: VERIFY → EXPAND
+→ IN +10% advantage conditional on: FOB vs CMT · buyer pass-through · UFLPA docs
+→ Revenue unknown = capacity unknown
+→ BD call required to qualify each</div>
     <div class="chat-time">10:09 <span class="chat-tick">✓✓</span></div>
   </div>
 </div>
@@ -635,10 +587,7 @@ Buyer landed cost delta: $2.50 per $100 FOB for IN/BD vs VN
 Net VN disadvantage in APAC/US mixed portfolio: +2.5pp
 
 Note: buyer pass-through terms (fixed-price vs cost-plus) not yet confirmed
-for any of the 91 clients — BD calls required to qualify.
-
-S232 rule: does NOT stack with FL301 on same product (TARIFF-DB confirmed)
-→ Check HS scope for HOANG QUAN FURNITURE (hg-furniture HS 9401/9403 vs apparel HS 61/62)</div>
+for any of the 53 clients — BD calls required.</div>
     </div>
     <div class="chat-time">10:09 <span class="chat-tick">✓✓</span></div>
   </div>
@@ -674,18 +623,18 @@ S232 rule: does NOT stack with FL301 on same product (TARIFF-DB confirmed)
 
 <strong>Must Change A</strong> ✅
 → "BENEFICIARY" → "gained tariff-related cost advantage · conditional on buyer decisions"
-→ All 91 cards: consistent conditional language
+→ All 53 cards: consistent conditional language
 
 <strong>Must Change B</strong> ✅
 → "HURT" → "may face increased competitive pressure where buyers are actively reviewing sourcing allocations"
-→ Both VN clients (HOANGPHAT + HOANG QUAN): MONITOR/PROTECT posture retained
+→ HOANGPHAT CO., LTD: HOLD / PROTECT posture retained
 
 <strong>Must Change C</strong> ✅
 → Generic "traceability" → "UFLPA readiness, raw material traceability, and supply chain transparency"
-→ All 91 cards: consistent across WHY chain
+→ All 53 cards: consistent across WHY chain
 
 <strong>Must Change D</strong> ✅
-→ ARP/OBF/PreShip logic: single Appendix at bottom (not per-card)
+→ ARP/OBF/PreShip logic removed from per-card repetition
 → Single Appendix at bottom: all financing product reference (shown once)
 → Facts vs Assumptions added to hero section
 
@@ -695,15 +644,8 @@ S232 rule: does NOT stack with FL301 on same product (TARIFF-DB confirmed)
 
 <strong>Should Add E</strong> ✅
 → Supplier Readiness Heatmap added to hero section
-→ 87 of 91 clients = UNKNOWN readiness (no BD call yet)
-→ Strategic Insight: "Resilience-Optimized vs Cost-Optimized Sourcing"
-
-<strong>Real KB Diff vs Simulation</strong> 📊
-→ VN: 2 clients (not 1) — HOANG QUAN FURNITURE confirmed in CLIENT-DB
-→ BD: 23 clients (not 3) — full portfolio scope
-→ IN: 64 clients COMBO-014 (not 47) — actual count from CLIENT-DB CSV
-→ Total: 91 (not 53) — real CLIENT-DB query result
-→ KB-GAP-0 flagged: "Section 122" predecessor not in TARIFF-DB</div>
+→ 47 of 53 clients = UNKNOWN readiness (no BD call yet)
+→ Strategic Insight: "Resilience-Optimized vs Cost-Optimized Sourcing"</div>
     <div class="chat-time">10:11 <span class="chat-tick">✓✓</span></div>
   </div>
 </div>
@@ -728,7 +670,7 @@ GAP-6 → IN cotton pre-buy status — has supplier pre-buy cotton before Oct 31
 <!-- Final approval banner -->
 <div class="approval-banner auto">
   <span class="approval-icon">🤖</span>
-  <span><strong>Auto-Approved</strong> — CP5 complete · 91 clients (real KB) · Expert A–E applied · KB-GAP-0 flagged</span>
+  <span><strong>Auto-Approved</strong> — CP5 complete · 53 cards generated · Expert A–E applied</span>
 </div>
 
 <div class="chat-row yeti">
@@ -736,9 +678,8 @@ GAP-6 → IN cotton pre-buy status — has supplier pre-buy cotton before Oct 31
     <div class="chat-avatar">Y</div>
     <div class="chat-bubble">✅ <strong>CP5 HTML generated and deploying...</strong>
 
-📄 <strong>CP5 Output:</strong> <code>s301-fl301-cp5-v2.html</code> (real KB run)
-📊 91 clients · 4 COMBOs · Facts/Assumptions hero · Supplier Readiness Heatmap · Strategic Insight · Appendix (one place)
-📌 Real KB count: VN 2 / IN 66 / BD 23 · KB-GAP-0 flagged for TARIFF-DB update
+📄 <strong>CP5 Output:</strong> <code>s301-fl301-cp5-v2.html</code>
+📊 53 client cards · 4 COMBOs · Facts/Assumptions hero · Supplier Readiness Heatmap · Strategic Insight · Appendix (one place, not per-card)
 
 Live URL will be sent once GitHub Pages deploy completes (~2 min).</div>
     <div class="chat-time">10:12 <span class="chat-tick">✓✓</span></div>
