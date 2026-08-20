@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Air8 · Event Validation</title>
+  <title>Air8 · FL301 Event Validation</title>
   <style>
     :root {
       --bg: #e5ddd5;
@@ -11,7 +11,6 @@
       --bubble-jz: #dcf8c6;
       --text: #111b21;
       --muted: #667781;
-      --dim: #aaa;
       --orange: #d97518;
       --green: #25d366;
       --blue: #0084ff;
@@ -19,12 +18,12 @@
       --code-bg: #f6f6f6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; }
     body { background: #f0f2f5; }
 
     .page { display: flex; height: 100vh; }
 
-    /* ── Sidebar ── */
+    /* Sidebar */
     .sidenav {
       width: 148px; min-width: 148px;
       background: #f0f2f5; border-right: 1px solid #d1d7db;
@@ -41,10 +40,10 @@
     .slabel { font-size: 11px; color: var(--muted); line-height: 1.3; }
     .snav.on .slabel { color: #2e7d32; font-weight: 600; }
 
-    /* ── Chat ── */
+    /* Chat window */
     .frame-wrap { flex: 1; display: flex; overflow: hidden; }
     .tg-window {
-      width: 100%; max-width: 480px; height: 100vh;
+      width: 100%; max-width: 520px; height: 100vh;
       display: flex; flex-direction: column;
       background: var(--bg);
       background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b0a090' fill-opacity='0.12'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-9.5zm-2 5.5h-1v-5h1v5zm-2 0h-1v-5h1v5zM0 5h1v5H0V5zm2 0h1v5H2V5zm2 0h1v5H4V5zM4 0h1v3H4V0zm2 0h1v3H6V0zm2 0h1v3H8V0z'/%3E%3C/g%3E%3C/svg%3E");
@@ -64,7 +63,7 @@
     .tg-head-status { font-size: 12px; color: var(--green); }
     .tg-head-icons { display: flex; gap: 14px; color: #8696a0; font-size: 20px; cursor: pointer; }
 
-    .tg-scroll { flex: 1; overflow-y: auto; padding: 6px 8px 16px; }
+    .tg-scroll { flex: 1; overflow-y: auto; padding: 6px 8px 20px; }
 
     .date-div { display: flex; justify-content: center; margin: 10px 0 5px; }
     .date-pill { background: rgba(255,255,255,0.8); color: var(--muted); font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
@@ -72,48 +71,55 @@
     .step-div { display: flex; justify-content: center; margin: 14px 0 4px; }
     .step-pill { background: rgba(255,255,255,0.85); border: 1px solid rgba(249,115,22,0.28); color: var(--orange); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.06em; }
 
-    /* message rows */
+    /* Message rows */
     .row { display: flex; margin-bottom: 1px; padding: 0 4px; }
     .row.agent { justify-content: flex-start; align-items: flex-end; gap: 5px; }
     .row.user  { justify-content: flex-end; }
-    .row.user  .av { display: none; }
+    .row.user  .av-mini { visibility: hidden; }
 
     .av-mini { width: 24px; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: #fff; flex-shrink: 0; margin-bottom: 2px; }
     .av-mini.yd { background: linear-gradient(135deg,#f97316,#e55a00); }
     .av-mini.jz { background: linear-gradient(135deg,#0088cc,#0066aa); }
 
-    .bbl { max-width: 85%; border-radius: 8px; padding: 5px 9px 3px; font-size: 13px; line-height: 1.5; box-shadow: 0 1px 1px rgba(0,0,0,0.08); word-break: break-word; }
+    .bbl { max-width: 88%; border-radius: 8px; padding: 5px 9px 4px; font-size: 13px; line-height: 1.5; box-shadow: 0 1px 1px rgba(0,0,0,0.08); word-break: break-word; }
     .bbl.agent { background: var(--bubble-yd); border-top-left-radius: 2px; }
     .bbl.user  { background: var(--bubble-jz); border-top-right-radius: 2px; }
+    .bbl.confirm { background: var(--bubble-jz); border-top-right-radius: 2px; }
+
     .sender-name { font-size: 11.5px; font-weight: 600; color: var(--orange); margin-bottom: 2px; }
+    .sender-name.jz { color: #0066aa; }
+
     .bbl-meta { display: flex; align-items: center; justify-content: flex-end; gap: 2px; margin-top: 2px; }
     .bbl-ts { font-size: 10.5px; color: var(--muted); }
     .bbl-tick { font-size: 12px; color: var(--tick); }
 
-    /* code block */
+    /* Code block */
     .cbl {
-      background: var(--code-bg); border: 1px solid #e8e8e8; border-radius: 6px;
-      padding: 8px 10px; font-family: 'SF Mono','Fira Code',monospace;
+      background: var(--code-bg); border: 1px solid #e4e4e4; border-radius: 6px;
+      padding: 9px 11px; font-family: 'SF Mono','Fira Code',monospace;
       font-size: 11px; line-height: 1.8; color: #1a1a2e;
-      margin: 4px 0 2px; white-space: pre-wrap;
+      margin: 5px 0 3px; white-space: pre-wrap; overflow-x: auto;
     }
-    .g { color: #1a7a40; }
-    .y { color: #a05c00; }
-    .r { color: #b91c1c; }
-    .o { color: #c2410c; font-weight: 600; }
-    .d { color: #aaa; }
-    .w { color: #111827; }
-    .h { color: #1e3a5f; font-weight: 600; }
-    .note { color: #888; font-size: 10px; margin-bottom: 2px; }
+    .g  { color: #1a7a40; }
+    .y  { color: #a05c00; }
+    .r  { color: #b91c1c; }
+    .o  { color: #c2410c; font-weight: 600; }
+    .d  { color: #aaa; }
+    .w  { color: #111827; }
+    .h  { color: #1e3a5f; font-weight: 600; }
+    .lbl { color: #888; font-size: 10px; }
 
-    /* btns */
-    .btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+    /* Btns */
+    .btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
     .btn { flex: 1; min-width: 0; background: #f0f8ff; border: 1px solid #b3d9f7; color: #0077b6; font-size: 11.5px; font-weight: 500; padding: 5px 7px; border-radius: 5px; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: background 0.1s; }
     .btn:hover { background: #dff0fd; }
     .btn.ok { background: #f0faf3; border-color: #a3d9b1; color: #1a7a40; }
     .btn.ok:hover { background: #e0f5e8; }
     .btn.warn { background: #fffbf0; border-color: #f8d7a0; color: #92400e; }
     .confirm-text { color: #2e7d32; font-size: 12.5px; }
+
+    /* Response bubble */
+    .resp { background: #dcf8c6; border-radius: 8px; border-top-right-radius: 2px; padding: 5px 9px 4px; font-size: 12.5px; color: #2e7d32; box-shadow: 0 1px 1px rgba(0,0,0,0.08); max-width: 88%; }
 
     @media (max-width: 600px) {
       .sidenav { width: 40px; min-width: 40px; }
@@ -130,12 +136,12 @@
 
   <nav class="sidenav">
     <div class="sidenav-title">Steps</div>
-    <a class="snav done" href="#sv0"><div class="sdot"></div><div class="slabel">SV0</div></a>
-    <a class="snav done" href="#sv1"><div class="sdot"></div><div class="slabel">SV1</div></a>
-    <a class="snav done" href="#sv2"><div class="sdot"></div><div class="slabel">SV2</div></a>
-    <a class="snav done" href="#sv3"><div class="sdot"></div><div class="slabel">SV3</div></a>
-    <a class="snav done" href="#sv4"><div class="sdot"></div><div class="slabel">SV4</div></a>
-    <a class="snav on"   href="#sv5"><div class="sdot"></div><div class="slabel">SV5</div></a>
+    <a class="snav done" href="#sv0"><div class="sdot"></div><div class="slabel">SV0 · Intake</div></a>
+    <a class="snav done" href="#sv1"><div class="sdot"></div><div class="slabel">SV1 · Parse</div></a>
+    <a class="snav done" href="#sv2"><div class="sdot"></div><div class="slabel">SV2 · Detect</div></a>
+    <a class="snav done" href="#sv3"><div class="sdot"></div><div class="slabel">SV3 · Resolve</div></a>
+    <a class="snav done" href="#sv4"><div class="sdot"></div><div class="slabel">SV4 · Evidence</div></a>
+    <a class="snav on" href="#sv5"><div class="sdot"></div><div class="slabel">SV5 · Output</div></a>
   </nav>
 
   <div class="frame-wrap">
@@ -155,12 +161,14 @@
 
       <div class="date-div"><div class="date-pill">Wed, 19 Aug 2026</div></div>
 
-      <!-- SV0 -->
+      <!-- ═══════════ SV0 ═══════════ -->
       <div id="sv0" class="step-div"><div class="step-pill">SV0 · INTAKE</div></div>
 
       <div class="row user">
+        <div class="av-mini jz">JZ</div>
         <div class="bbl user">
-          Hey, got a news event for you to run through validation. USTR announced 301 tariff update — VN tier 2, IN/BD tier 1. NEXT Retail portfolio.
+          <div class="sender-name jz">Jerri Zhou</div>
+          Hey, got a news event for you. USTR just published the Section 301 Forced Labour tariff list. VN is Tier 2 at 12.5%, IN/BD are Tier 1 at 10%. Affects NEXT Retail's apparel portfolio. Let's run it through validation.
           <div class="bbl-meta"><span class="bbl-ts">09:41</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
@@ -169,46 +177,75 @@
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Got it. Loading KB — TARIFF-DB, COUNTRY-DB, CLIENT-DB for NEXT.
-          <div class="cbl"><span class="g">✓</span> Event:     Section 301 Forced Labour Tariff Update
-<span class="g">✓</span> Date:      2026-08-19
-<span class="g">✓</span> Buyer:     NEXT Retail
-<span class="g">✓</span> In scope:   VN · IN · BD (47 suppliers)
-<span class="g">✓</span> Type:      Trade policy · tariff regime change</div>
+          📥 SV0 · Intake
+          <span class="lbl">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB · CLIENT-DB]</span>
+          <div class="cbl"><span class="g">✓</span> Event:    Section 301 Forced Labour tariff update
+<span class="g">✓</span> Source:   USTR announcement · June 2, 2026 findings
+<span class="g">✓</span> Effective: July 24, 2026
+<span class="g">✓</span> Buyer:    NEXT Retail
+<span class="g">✓</span> Scope:    VN · IN · BD — HS 61/62 apparel suppliers
+<span class="g">✓</span> Docs:    News article · TARIFF-DB · COUNTRY-DB
+
+<span class="lbl">KB sources to process:</span>
+  1. section-301-forced-labour-asean.md  [Compliance brief · Jun 30]
+  2. TARIFF-DB                        [KB · verified Aug 4]
+  3. COUNTRY-DB                      [KB · verified Aug 4]
+  4. CLIENT-DB · NEXT                [KB · supplier list]</div>
           <div class="btns">
-            <button class="btn ok">✅ go to SV1</button>
+            <button class="btn ok">✅ Confirmed — go to SV1</button>
+            <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:41</span></div>
         </div>
       </div>
 
-      <!-- SV1 -->
+      <!-- ═══════════ SV1 ═══════════ -->
       <div id="sv1" class="step-div"><div class="step-pill">SV1 · PARSE</div></div>
 
       <div class="row agent">
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Parsing through TARIFF-DB + COUNTRY-DB. Here's what I'm finding:
-          <div class="cbl"><span class="h">Tariff numbers — HS 61/62 apparel</span>
-  VN  <span class="r">+12.5%</span>  MFN ~12–32%  → US Total ~<span class="r">28.5%</span>
-  IN  <span class="g">+10.0%</span>  MFN ~12–32%  → US Total ~<span class="g">26.5%</span>
-  BD  <span class="g">+10.0%</span>  MFN ~12–32%  → US Total ~<span class="g">26.5%</span>
+          🔍 SV1 · Parse
+          <span class="lbl">[KB: TARIFF-DB · COUNTRY-DB · EVENT T2-VN / T2-IN / T2-BD]</span>
+          <div class="cbl"><span class="h">── Tariff Structure (TARIFF-DB · HS 61/62 apparel) ──</span>
+  VN  MFN 12–32% + FL301 <span class="r">+12.5%</span>  = US Total <span class="r">~28.5%</span>  [Tier 2]
+  IN  MFN 12–32% + FL301 <span class="g">+10.0%</span>  = US Total <span class="g">~26.5%</span>  [Tier 1]
+  BD  MFN 12–32% + FL301 <span class="g">+10.0%</span>  = US Total <span class="g">~26.5%</span>  [Tier 1]
 
-  VN is in <span class="y">Tier 2</span> · IN/BD in <span class="y">Tier 1</span>
-  Net disadvantage for VN: <span class="o">+2.5pp</span>
+  <span class="o">→ VN carries +2.5pp additional US tariff vs IN/BD</span>
+  Note: India and Bangladesh are <span class="d">non-ASEAN</span> — not in the original USTR
+         60-economy list; their +10% comes from separate FL301 designation.
+         The Tier 1/2 framing in the compliance brief = ASEAN countries only.
 
-  ⚠️ FL301 legal challenge pending — 25 states v. admin (Aug 3)
+<span class="h">── Country Risk Signals (COUNTRY-DB · Aug 4, 2026) ──</span>
+  VN  · FL301 highest burden (+12.5%) among Air8 sourcing countries
+       · USTR S301 investigation open — bilateral tension (Jun 2, 2026)
+       · Air8 signal: "Erodes VN diversification advantage over CN"
+       · VND stable · SBV managing range · export-favorable
 
-<span class="h">Country DB signals</span>
-  BD: EBA 0% at risk post-LDC 2027+ · banking sector stressed
-  IN: cotton duty waiver expires <span class="y">Oct 31</span> — 13 weeks left
-  VN: S301 investigation open · bilateral tension rising
+  BD  · FL301 +10% on US-bound exports — immediate hit
+       · <span class="r">EBA 0% at risk</span> — LDC graduation 2027+ · EU preference exposure
+       · Banking sector crisis · BDT 400,000 crore total bank exposure
+       · <span class="r">85%+ of BD exports are RMG</span> — extreme concentration
+       · Air8 signal: "Double pressure: FL301 US + EBA EU + banking risk"
 
-<span class="h">Portfolio — NEXT · 47 suppliers</span>
-  VN: 6 suppliers   BD: 11 suppliers   IN: 9 suppliers</div>
+  IN  · FL301 +10% — erodes diversification advantage vs CN
+       · Cotton duty waiver <span class="y">expires Oct 31, 2026</span> — 13 weeks from now
+       · Nov 1 onwards: +16% on raw cotton input (BCD 11% + AIDC 5%)
+       · Mills face +8–12% input cost spike if no pre-buy
+       · Air8 signal: "13-week pre-buy window before reinstatement"
+
+  IN  · UFLPA: variable compliance · not all suppliers audit-ready
+  BD  · UFLPA: <span class="r">elevated risk</span> · priority monitoring in COUNTRY-DB
+       · VN  · UFLPA: standard exposure
+
+<span class="h">── Portfolio (CLIENT-DB · NEXT Retail) ──</span>
+  VN:  6 suppliers  · BD: 11 suppliers  · IN:  9 suppliers
+  Total in scope: 47 suppliers · all HS 61/62 apparel</div>
           <div class="btns">
-            <button class="btn ok">✅ go to SV2</button>
+            <button class="btn ok">✅ Confirmed — go to SV2</button>
+            <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:44</span></div>
         </div>
@@ -216,9 +253,9 @@
 
       <div class="row user">
         <div class="av-mini jz">JZ</div>
-        <div class="bbl user" style="background:#dcf8c6;">
-          <div class="sender-name" style="color:#0066aa;">Jerri Zhou</div>
-          BD is not simply advantaged — they have double exposure with EU EBA risk
+        <div class="bbl user">
+          <div class="sender-name jz">Jerri Zhou</div>
+          BD is NOT simply advantaged. They have double exposure — FL301 on US plus EBA at risk on EU. That's a different risk dimension from VN.
           <div class="bbl-meta"><span class="bbl-ts">09:45</span><span class="bbl-tick">✓✓</span></div>
         </div>
       </div>
@@ -227,135 +264,323 @@
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Right — flagged. BD: FL301 on US + EBA at risk on EU + banking sector. Not a clean win.
+          Understood — correcting BD signal. BD is not a clean beneficiary. FL301 on US + EBA at risk on EU + banking sector stress = three-layer exposure. Not a simple tariff advantage story.
           <div class="btns">
-            <button class="btn ok">✅ go to SV2</button>
+            <button class="btn ok">✅ Confirmed — go to SV2</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:45</span></div>
         </div>
       </div>
 
-      <!-- SV2 -->
+      <!-- ═══════════ SV2 ═══════════ -->
       <div id="sv2" class="step-div"><div class="step-pill">SV2 · DETECT</div></div>
 
       <div class="row agent">
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Here's my signal detection:
-          <div class="cbl"><span class="y">E1</span> VN competitive disadvantage
-  +2.5pp vs IN/BD — 6 VN suppliers exposed
+          ⚠️ SV2 · Detect
+          <span class="lbl">[KB: NODE-risk-categories · L1-reasoning-principles]</span>
+          <div class="cbl"><span class="h">── Exception / Signal Detection ──</span>
 
-<span class="y">E2</span> BD double exposure (per your note)
-  FL301 + EBA risk — not simply a beneficiary
+<span class="y">E1</span> · Competitive Position Shift — R6 / Freight Cost
+  VN FL301 = 12.5% vs IN/BD = 10% → net VN disadvantage +2.5pp
+  6 NEXT VN suppliers face higher US tariff burden post Jul 24
+  S301 investigation open on VN adds bilateral uncertainty
+  Buyers reviewing sourcing allocations may act on this differential
 
-<span class="y">E3</span> IN cotton window closing
-  Oct 31 deadline · 13 weeks · margin impact Q4
+<span class="y">E2</span> · BD Double Exposure — R4 / Regulatory Compliance
+  BD: FL301 + EBA loss risk + banking sector = three distinct risk layers
+  Not simply "advantaged by VN's higher tariff" — different risk profile
+  ARP (early payment) product highly relevant given banking stress
 
-<span class="y">E4</span> FL301 legal uncertainty
-  25 states challenge · rates active pending court ruling
+<span class="y">E3</span> · IN Input Cost Window — R4 / Regulatory Compliance
+  Cotton duty waiver expires Oct 31 · 13 weeks remaining
+  Mills that don't pre-buy face +8–12% raw cotton cost spike from Nov 1
+  Q4 margin impact likely if procurement doesn't act before deadline
 
-<span class="r">E5</span> Assumption gap
-  No confirmed buyer intent · order migration is inference</div>
+<span class="y">E4</span> · UFLPA as Independent Compliance Gate
+  COUNTRY-DB: BD = elevated UFLPA risk · IN = variable compliance
+  UFLPA clearance is a separate buyer selection gate from tariff cost
+  A supplier can have tariff advantage and still fail UFLPA gate
+
+<span class="r">E5</span> · FL301 Legal Challenge — Regulatory Uncertainty
+  25 states filed challenge Aug 3, 2026 v. Trump admin
+  Rates currently active — injunction not yet granted
+  All tariff-based conclusions are contingent on rates surviving challenge
+  <span class="r">→ PROVISIONAL status on all E1–E3 conclusions</span>
+
+<span class="r">E6</span> · Assumption Gap — No Buyer Sourcing Confirmation
+  No confirmed NEXT buyer sourcing intent in CLIENT-DB
+  Order migration from VN to IN/BD = inference, not confirmed fact
+  Report draft currently treats migration as fact → needs correction
+
+<span class="h">── Hard Stop Pre-check (HS1–HS5) ──</span>
+  HS1: No sanctioned country → PASS ✅
+  HS2: No FATF alert → PASS ✅
+  HS3: No CBP detention active → PASS ✅
+  HS4: No hard stop docs → PASS ✅
+  HS5: No entity list hit → PASS ✅
+
+  <span class="g">→ No hard stops · Proceed to SV3</span></div>
           <div class="btns">
-            <button class="btn ok">✅ go to SV3</button>
+            <button class="btn ok">✅ Confirmed — go to SV3</button>
+            <button class="btn warn">⚠️ Adjust</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:48</span></div>
         </div>
       </div>
 
-      <!-- SV3 -->
+      <!-- ═══════════ SV3 ═══════════ -->
       <div id="sv3" class="step-div"><div class="step-pill">SV3 · RESOLVE</div></div>
 
       <div class="row agent">
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Resolving each signal:
-          <div class="cbl"><span class="y">E1</span> VN disadvantage → <span class="y">HOLD 🟡</span>
-  Language: "may face pressure" not "will lose orders"
-  Action: flag VN clients >60% US concentration
+          🔎 SV3 · Resolve
+          <span class="lbl">[KB: L1-reasoning-principles · reasoning hierarchy: hard stop → buyer rule → auto-pass → risk node]</span>
+          <div class="cbl"><span class="h">── Resolution per Signal ──</span>
 
-<span class="y">E2</span> BD double → <span class="y">HOLD 🟡</span>
-  BD is not simply advantaged — dual risk confirmed
-  Action: ARP product relevant · flag >70% US clients
+<span class="y">E1</span> · VN Competitive Position Shift
+  Decision:  <span class="y">HOLD 🟡</span>
+  Rule:      R6 — No auto-pass for cost disadvantage above 2pp
+  Rationale: 2.5pp differential is real and confirmed by TARIFF-DB.
+             However, no confirmed buyer decision to act on it yet.
+  Language:  <span class="d">"may face increased competitive pressure" NOT "will lose orders"</span>
+             <span class="d">"gained a cost advantage" NOT "are clean beneficiaries"</span>
+  Action:    Flag VN clients with >60% US-bound concentration for BD/IN
+             conversation. Add sourcing diversification note to report.
 
-<span class="y">E3</span> IN cotton → <span class="y">HOLD 🟡</span>
-  13 weeks — alert suppliers to pre-buy
+<span class="y">E2</span> · BD Double Exposure
+  Decision:  <span class="y">HOLD 🟡</span>
+  Rule:      R4 — No auto-pass when multiple regulatory risk layers present
+  Rationale: BD faces three distinct risk dimensions (FL301 + EBA + banking).
+             Treating as "advantaged" understates actual risk profile.
+  Action:    Add BD as three-layer risk in report. ARP product relevant.
+             Flag BD clients with >70% US concentration as high sensitivity.
 
-<span class="y">E4</span> Legal → <span class="y">HOLD 🟡</span>
-  All tariff conclusions provisional
+<span class="y">E3</span> · IN Cotton Duty Window
+  Decision:  <span class="y">HOLD 🟡</span>  · time-sensitive
+  Rule:      R4 — Cotton input cost spike is a margin risk event
+  Rationale: 13 weeks is actionable lead time. Pre-buy decision is real.
+  Action:    Alert IN apparel suppliers to raw cotton procurement schedule.
+             Add capacity note: mills without cotton stock may face Nov cost spike.
 
-<span class="r">E5</span> Assumption gap → <span class="r">ESCALATE 🔴</span>
-  Report treats migration as fact — must add F/A section</div>
+<span class="y">E4</span> · UFLPA as Independent Gate
+  Decision:  <span class="y">HOLD 🟡</span>
+  Rule:      R4 — UFLPA clearance is a buyer selection gate (separate from tariff)
+  Rationale: Buyers gate suppliers on UFLPA independently of cost. A supplier
+             may clear tariff differential and still fail buyer qualification.
+  Action:    Add UFLPA as standalone risk dimension in report.
+             Add supplier readiness heatmap: BD elevated · IN variable.
+
+<span class="r">E5</span> · FL301 Legal Challenge
+  Decision:  <span class="r">ESCALATE 🔴</span>
+  Rule:      R4 — Regulatory uncertainty + pending court = must flag to management
+  Rationale: If rates voided: VN returns to pre-FL301 baseline, IN/BD lose their
+             cost advantage. All current conclusions contingent.
+  Action:    All tariff-based conclusions labeled PROVISIONAL in report.
+             Legal outcome tracker needed.
+
+<span class="r">E6</span> · Assumption Gap
+  Decision:  <span class="r">ESCALATE 🔴</span>
+  Rule:      R4 — Assumption treated as fact in report = must correct before release
+  Rationale: Current draft report states VN → IN/BD order migration as fact.
+             No buyer sourcing intent confirmed in CLIENT-DB.
+  Action:    Add Facts vs Assumptions section before report release.
+             Add portfolio exposure summary numbers for management.</div>
           <div class="btns">
-            <button class="btn ok">✅ go to SV4</button>
+            <button class="btn ok">✅ Confirmed — go to SV4</button>
+            <button class="btn warn">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:50</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:51</span></div>
         </div>
       </div>
 
-      <!-- SV4 -->
-      <div id="sv4" class="step-div"><div class="step-pill">SV4 · EVIDENCE</div></div>
+      <div class="row user">
+        <div class="av-mini jz">JZ</div>
+        <div class="bbl user">
+          <div class="sender-name jz">Jerri Zhou</div>
+          E4 is right — UFLPA is always a separate gate. Doesn't matter what the tariff says. Any supplier can get blocked on UFLPA even with a cost advantage. Keep it as HOLD and make sure the report treats it as independent.
+          <div class="bbl-meta"><span class="bbl-ts">09:52</span><span class="bbl-tick">✓✓</span></div>
+        </div>
+      </div>
 
       <div class="row agent">
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Evidence check:
-          <div class="cbl"><span class="g">E1</span> VN tariff — TARIFF-DB verified Aug 4 ✅
-<span class="g">E2</span> BD double — COUNTRY-DB verified Aug 4 ✅
-<span class="g">E3</span> IN cotton — COUNTRY-DB · India Budget 2026 ✅
-<span class="y">E4</span> FL301 legal — active proceedings ⚠️ (provisional)
-<span class="r">E5</span> Buyer intent — no confirmed data ⚠️
-  Need: buyer comm · supplier capacity · order trend</div>
+          Confirmed — UFLPA is a standalone buyer gate, always separate from tariff. Report will list it as its own risk dimension under E4. Not a footnote.
           <div class="btns">
-            <button class="btn ok">✅ go to SV5</button>
+            <button class="btn ok">✅ Confirmed — go to SV4</button>
           </div>
           <div class="bbl-meta"><span class="bbl-ts">09:52</span></div>
         </div>
       </div>
 
-      <!-- SV5 -->
+      <!-- ═══════════ SV4 ═══════════ -->
+      <div id="sv4" class="step-div"><div class="step-pill">SV4 · EVIDENCE CHECK</div></div>
+
+      <div class="row agent">
+        <div class="av-mini yd">YD</div>
+        <div class="bbl agent">
+          <div class="sender-name">Yeti Dev</div>
+          📎 SV4 · Evidence Check
+          <span class="lbl">[KB: L1-evidence-discipline · evidence ranking by source type]</span>
+          <div class="cbl"><span class="h">── Evidence per Signal ──</span>
+
+<span class="g">E1</span> · VN tariff differential +2.5pp
+  Evidence:  [TARIFF-DB · Aug 4, 2026 · USTR / tariffstool.com]
+  TARIFF-DB shows VN FL301 = 12.5% · IN/BD = 10% confirmed
+  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+
+<span class="g">E2</span> · BD double exposure (FL301 + EBA + banking)
+  Evidence:  [COUNTRY-DB · Aug 4, 2026 · BGMEA / EC Trade / FashionatingWorld]
+  FL301 rate confirmed TARIFF-DB · EBA risk from EC Trade notice
+  Banking crisis: BDT 400,000 crore total bank exposure documented
+  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+
+<span class="g">E3</span> · IN cotton duty waiver expiry Oct 31
+  Evidence:  [COUNTRY-DB · Aug 4, 2026 · India Budget 2026 · TBSNews]
+  Cotton BCD+AIDC waiver: Jun 1–Oct 31, 2026 per India Budget 2026
+  Reinstatement Nov 1: +16% on raw cotton (BCD 11% + AIDC 5%)
+  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+
+<span class="g">E4</span> · UFLPA as independent gate
+  Evidence:  [COUNTRY-DB · Aug 4, 2026 · CBP / UFLPA entity list]
+  BD: elevated UFLPA risk · IN: variable compliance
+  UFLPA clearance requirements documented in UFLPA enforcement guidance
+  <span class="g">→ SUFFICIENT · VERIFIED ✅</span>
+
+<span class="y">E5</span> · FL301 legal challenge pending
+  Evidence:  [TARIFF-DB footnote · Aug 3, 2026 · 25 states filing]
+  Court proceedings active — outcome undetermined
+  <span class="y">→ PARTIAL · All E1–E3 conclusions provisional ⚠️</span>
+  Required: legal outcome tracker · re-run trigger conditions
+
+<span class="r">E6</span> · Buyer sourcing intent
+  Evidence:  [CLIENT-DB · no NEXT buyer communication on record]
+  No confirmed buyer sourcing decision · no order shift data
+  <span class="r">→ INSUFFICIENT · Order migration = inference ⚠️</span>
+  Needed:    NEXT buying team directional intent
+             IN/BD supplier capacity self-assessment
+             12-month order trend from CLIENT-DB
+             Buyer price negotiation risk model</div>
+          <div class="btns">
+            <button class="btn ok">✅ Confirmed — go to SV5</button>
+            <button class="btn warn">⚠️ Adjust</button>
+          </div>
+          <div class="bbl-meta"><span class="bbl-ts">09:54</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SV5 ═══════════ -->
       <div id="sv5" class="step-div"><div class="step-pill">SV5 · OUTPUT</div></div>
 
       <div class="row agent">
         <div class="av-mini yd">YD</div>
         <div class="bbl agent">
           <div class="sender-name">Yeti Dev</div>
-          Validation report — ready for your review:
-          <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          ✅ SV5 · Output — ready for review
+          <span class="lbl">[KB: SHI-KB/ · TARIFF-DB · COUNTRY-DB · CLIENT-DB]</span>
+          <div class="cbl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EVENT VALIDATION REPORT
-Event:     FL301 · Section 301 Forced Labour
+Event:     Section 301 Forced Labour · FL301
 Scope:     NEXT Retail · VN/IN/BD · 47 suppliers
+           HS 61/62 apparel · US import
 Date:      2026-08-19   KB: Aug 4, 2026
-OVERALL:   <span class="y">HOLD 🟡</span> · provisional
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OVERALL:   <span class="y">HOLD 🟡</span>
+           ⚠️ provisional — FL301 legal challenge pending
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<span class="h">FACTS</span>
-  ✓ VN US total ~28.5% · IN/BD ~26.5%
-  ✓ Net VN disadvantage +2.5pp
-  ✓ BD: FL301 + EBA at risk + banking stress
-  ✓ IN: cotton waiver expires Oct 31 (13 wks)
-  ✓ FL301 legal challenge active (25 states)
-  ✓ 6 VN · 9 IN · 11 BD suppliers in scope
+<span class="h">FACTS (TARIFF-DB + COUNTRY-DB · verified)</span>
+  ✓ VN FL301 = +12.5% → US Total ~28.5% [Tier 2]
+  ✓ IN/BD FL301 = +10% → US Total ~26.5% [Tier 1]
+  ✓ Net VN disadvantage: +2.5pp vs IN/BD on HS 61/62
+  ✓ BD: FL301 + EBA at risk (EU) + banking sector crisis
+  ✓ IN: cotton duty waiver expires Oct 31 · 13 weeks left
+  ✓ BD UFLPA: elevated risk · IN UFLPA: variable
+  ✓ VN USTR S301 investigation open (bilateral tension)
+  ✓ FL301 legal challenge: 25 states v. admin (Aug 3, 2026)
+  ✓ 6 VN · 9 IN · 11 BD NEXT suppliers in scope
 
-<span class="h">ASSUMPTIONS</span>
-  ? Buyer will shift VN → IN/BD orders
-  ? IN/BD capacity to absorb volume
-  ? FL301 rates will survive challenge
+<span class="h">ASSUMPTIONS (require buyer / supplier validation)</span>
+  ? NEXT buyer will shift VN orders to IN/BD
+  ? IN/BD suppliers have capacity to absorb additional volume
+  ? Cost advantage translates to higher supplier margin
+  ? FL301 rates will survive pending legal challenge
 
-<span class="h">SIGNALS</span>
-  E1 VN disadv   <span class="y">HOLD 🟡</span> — conditional lang
-  E2 BD double   <span class="y">HOLD 🟡</span> — ARP relevant
-  E3 IN cotton   <span class="y">HOLD 🟡</span> — 13 wk window
-  E4 legal       <span class="y">HOLD 🟡</span> — provisional
-  E5 assumptions <span class="r">ESCALATE 🔴</span> — F/A section needed
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+──────────────────────────────────────────
+
+<span class="y">E1</span> · VN Competitive Position Shift
+  Found:     VN +2.5pp vs IN/BD on US tariff
+  Decision:   <span class="y">HOLD 🟡</span>
+  Rule:       R6 — cost disadvantage above 2pp · no auto-pass
+  Action:     Flag VN clients >60% US concentration for BD/IN
+              conversation. Use conditional language in report.
+
+<span class="y">E2</span> · BD Double Exposure
+  Found:     FL301 + EBA at risk + banking sector stress
+  Decision:   <span class="y">HOLD 🟡</span>
+  Rule:       R4 — multiple regulatory risk layers · no auto-pass
+  Action:     BD is not a clean beneficiary. List as three-layer risk.
+              ARP early payment highly relevant for BD clients.
+              Flag BD clients >70% US concentration.
+
+<span class="y">E3</span> · IN Cotton Duty Window Closing
+  Found:     Waiver expires Oct 31 · +16% on raw cotton from Nov 1
+  Decision:   <span class="y">HOLD 🟡</span>  · time-sensitive
+  Rule:       R4 — input cost spike = margin risk event
+  Action:     Alert IN apparel suppliers to pre-buy cotton now.
+              Add note: mills without stock face Q4 cost spike.
+
+<span class="y">E4</span> · UFLPA as Independent Compliance Gate
+  Found:     BD elevated · IN variable · VN standard
+  Decision:   <span class="y">HOLD 🟡</span>
+  Rule:       R4 — UFLPA clearance = standalone buyer gate
+  Action:     UFLPA listed as its own risk dimension (not a tariff footnote).
+              Supplier readiness heatmap: BD elevated · IN variable.
+              Independent of E1–E3 tariff cost conclusions.
+
+<span class="r">E5</span> · FL301 Legal Challenge
+  Found:     25 states · Aug 3, 2026 · rates active pending injunction
+  Decision:   <span class="r">ESCALATE 🔴</span>
+  Rule:       R4 — regulatory uncertainty + court = management alert
+  Action:     All E1–E3 tariff-based conclusions labeled PROVISIONAL.
+              Add legal outcome tracker. Set re-run trigger.
+
+<span class="r">E6</span> · Assumption Gap
+  Found:     No confirmed buyer intent · migration stated as fact
+  Decision:   <span class="r">ESCALATE 🔴</span>
+  Rule:       R4 — assumption as fact = report integrity risk
+  Action:     Add Facts vs Assumptions section before release.
+              Add portfolio exposure summary for management.
+              Validate buyer intent before final publish.
+
+──────────────────────────────────────────
+ACTIONS before release:
+  1. Label E1–E3 tariff conclusions PROVISIONAL (E5 active)
+  2. Add Facts vs Assumptions section (E6)
+  3. Reframe migration language → always conditional
+  4. List UFLPA as standalone risk dimension (E4)
+  5. Add BD as three-layer risk under E2
+  6. Add supplier readiness heatmap (E4)
+  7. Flag VN >60% US · BD >70% US clients (E1/E2)
+  8. Alert IN suppliers on cotton pre-buy window (E3)
+  9. Validate buyer sourcing intent before final publish (E6)
+
+KB PROPOSALS (do not self-modify KB):
+  · Add FL301 differential >2pp as auto-flag event rule
+  · Add BD EBA graduation risk field to COUNTRY-DB
+  · Add IN cotton duty expiry tracker field
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
           <div class="btns">
-            <button class="btn ok" onclick="this.textContent='✅ saved'">✅ save report</button>
+            <button class="btn ok" onclick="this.textContent='✅ saved'">✅ Done — save report</button>
+            <button class="btn warn">⚠️ Adjust</button>
           </div>
-          <div class="bbl-meta"><span class="bbl-ts">09:55</span></div>
+          <div class="bbl-meta"><span class="bbl-ts">09:56</span></div>
         </div>
       </div>
 
