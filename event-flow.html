@@ -3,764 +3,622 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Air8 Event Validation — Section 301 · SV0→SV5</title>
+  <title>Air8 · Section 301 Event Validation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d0d0f;
-      --surface: #16161a;
-      --surface-2: #1e1e24;
-      --surface-3: #252530;
-      --border: #2e2e3a;
+      --bg: #0e1621;
+      --sidebar: #17212b;
+      --chat-bg: #0e1621;
+      --bubble-agent: #182533;
+      --bubble-user: #2b5278;
+      --bubble-confirm: #1c3a2a;
+      --border: #1e2c3a;
+      --text: #e2e5e9;
+      --text-muted: #788999;
+      --text-dim: #3d5163;
       --orange: #f97316;
-      --orange-dim: rgba(249,115,22,0.12);
-      --orange-border: rgba(249,115,22,0.35);
-      --blue: #38bdf8;
-      --blue-dim: rgba(56,189,248,0.10);
-      --blue-border: rgba(56,189,248,0.30);
+      --orange-dim: rgba(249,115,22,0.15);
       --green: #4ade80;
-      --green-dim: rgba(74,222,128,0.10);
+      --green-dim: rgba(74,222,128,0.12);
       --yellow: #fbbf24;
       --red: #f87171;
-      --purple: #c084fc;
-      --purple-dim: rgba(192,132,252,0.10);
-      --text: #e2e2e8;
-      --text-muted: #7a7a8c;
-      --text-dim: #4a4a5c;
+      --blue: #5aabff;
+      --code-bg: #151e27;
+      --code-border: #1e2e3e;
       --font: 'Inter', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
+      --mono: 'SF Mono', 'Fira Code', monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; line-height: 1.6; }
+    html, body { height: 100%; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); }
 
-    .header {
-      background: var(--surface);
+    /* ─── Layout ─────────────────────────────── */
+    .layout { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ─── Sidebar ────────────────────────────── */
+    .sidebar {
+      width: 200px; min-width: 200px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-header {
+      padding: 16px 16px 12px;
       border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
     }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .logo-dot { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; }
-    .header-title { font-size: 14px; font-weight: 600; }
-    .header-sub { font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
-    .badge {
-      background: var(--purple-dim); border: 1px solid rgba(192,132,252,0.3);
-      color: var(--purple); font-size: 10px; font-weight: 600;
-      padding: 3px 8px; border-radius: 20px; letter-spacing: 0.05em;
+    .sidebar-title {
+      font-size: 11px; font-weight: 600; color: var(--orange);
+      letter-spacing: 0.08em; text-transform: uppercase;
     }
-    .badge-demo {
-      background: var(--orange-dim); border: 1px solid var(--orange-border);
+    .sidebar-sub {
+      font-size: 10px; color: var(--text-muted); margin-top: 3px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; cursor: pointer;
+      transition: background 0.12s;
+      border-left: 2px solid transparent;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.04); }
+    .nav-item.active {
+      background: var(--orange-dim);
+      border-left-color: var(--orange);
+    }
+    .nav-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text-dim); flex-shrink: 0;
+    }
+    .nav-item.active .nav-dot { background: var(--orange); }
+    .nav-item.done .nav-dot { background: var(--green); }
+    .nav-label { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+    .nav-item.active .nav-label { color: var(--text); font-weight: 500; }
+
+    /* ─── Chat Area ───────────────────────────── */
+    .chat-wrap {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: var(--sidebar);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    }
+    .chat-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--orange); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .chat-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .chat-status { font-size: 11px; color: var(--green); }
+    .chat-badge {
+      margin-left: auto;
+      background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.3);
       color: var(--orange); font-size: 10px; font-weight: 600;
       padding: 3px 8px; border-radius: 20px; letter-spacing: 0.05em;
     }
-
-    .layout { display: flex; min-height: calc(100vh - 57px); }
-
-    /* ── Rail ── */
-    .rail {
-      width: 220px; min-width: 220px;
-      background: var(--surface); border-right: 1px solid var(--border);
-      padding: 24px 0; position: sticky; top: 57px;
-      height: calc(100vh - 57px); overflow-y: auto;
+    .chat-scroll {
+      flex: 1; overflow-y: auto;
+      padding: 20px 24px;
     }
-    .rail-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; padding: 0 20px 12px; }
-    .rail-step {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 9px 20px; cursor: pointer; transition: background 0.15s;
-      border-left: 2px solid transparent;
-    }
-    .rail-step:hover { background: rgba(255,255,255,0.03); }
-    .rail-step.active { background: var(--orange-dim); border-left-color: var(--orange); }
-    .rail-step.done { border-left-color: var(--green); }
-    .rail-step-n {
-      width: 20px; min-width: 20px; height: 20px; border-radius: 50%;
-      background: var(--surface-3); border: 1px solid var(--border);
+
+    /* ─── Step anchor label ───────────────────── */
+    .step-anchor {
       display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--mono);
-      margin-top: 2px;
+      gap: 8px; margin: 20px 0 12px;
     }
-    .rail-step.active .rail-step-n { background: var(--orange); border-color: var(--orange); color: #fff; }
-    .rail-step.done .rail-step-n { background: var(--green); border-color: var(--green); color: #000; font-size: 0; }
-    .rail-step.done .rail-step-n::after { content: '✓'; font-size: 9px; }
-    .rail-step-label { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-    .rail-step.active .rail-step-label { color: var(--text); font-weight: 500; }
-    .rail-step.done .rail-step-label { color: var(--text-dim); }
-    .rail-divider { height: 1px; background: var(--border); margin: 8px 20px; }
-    .rail-event-tag { font-size: 9px; background: var(--purple-dim); border: 1px solid rgba(192,132,252,0.3); color: var(--purple); padding: 1px 5px; border-radius: 3px; margin-left: 4px; font-weight: 600; letter-spacing: 0.05em; }
-
-    /* ── Main ── */
-    .main { flex: 1; padding: 32px 40px; max-width: 860px; }
-
-    /* ── Step Header ── */
-    .step-header { margin-bottom: 24px; }
-    .step-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--orange); text-transform: uppercase; margin-bottom: 6px; font-family: var(--mono); }
-    .step-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .step-kb { font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
-    .step-kb span { background: var(--blue-dim); border: 1px solid var(--blue-border); color: var(--blue); padding: 1px 6px; border-radius: 4px; font-size: 10px; }
-
-    /* ── Message ── */
-    .msg { margin-bottom: 20px; }
-    .msg-agent { display: flex; gap: 10px; align-items: flex-start; }
-    .msg-user  { display: flex; gap: 10px; align-items: flex-start; justify-content: flex-end; }
-    .avatar {
-      width: 32px; min-width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; margin-top: 2px;
+    .step-anchor-line { flex: 1; height: 1px; background: var(--border); }
+    .step-anchor-label {
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      background: var(--code-bg); border: 1px solid var(--border);
+      padding: 3px 10px; border-radius: 20px; letter-spacing: 0.06em;
+      white-space: nowrap;
     }
-    .avatar-agent { background: var(--orange); color: #fff; }
-    .avatar-user  { background: var(--surface-3); border: 1px solid var(--border); color: var(--text-muted); }
-    .msg-body { flex: 1; }
-    .msg-body-user { max-width: 80%; }
-    .msg-name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
-    .msg-text { font-size: 14px; line-height: 1.7; }
-    .msg-text p { margin-bottom: 8px; }
-    .msg-text p:last-child { margin-bottom: 0; }
+
+    /* ─── Messages ────────────────────────────── */
+    .msg { margin-bottom: 6px; display: flex; flex-direction: column; }
+    .msg.agent { align-items: flex-start; }
+    .msg.user  { align-items: flex-end; }
+
+    .msg-meta {
+      font-size: 11px; color: var(--text-muted);
+      margin-bottom: 3px; padding: 0 4px;
+    }
+    .msg.agent .msg-meta { padding-left: 0; }
+    .msg-meta .sender { font-weight: 600; color: var(--orange); }
+    .msg-meta .sender.user-name { color: var(--blue); }
+    .msg-meta .ts { color: var(--text-dim); margin-left: 6px; font-size: 10px; }
 
     .bubble {
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.7;
+      max-width: 76%;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px; line-height: 1.65;
+      position: relative;
+      word-break: break-word;
     }
-    .bubble-user {
-      background: var(--orange-dim); border: 1px solid var(--orange-border);
-      border-radius: 12px; padding: 12px 16px;
+    .bubble.agent { background: var(--bubble-agent); border-top-left-radius: 4px; }
+    .bubble.user  { background: var(--bubble-user);  border-top-right-radius: 4px; }
+    .bubble.confirm { background: var(--bubble-confirm); border-top-right-radius: 4px; }
+
+    /* tick */
+    .bubble-tick {
+      font-size: 10px; color: var(--text-dim);
+      text-align: right; margin-top: 4px;
+    }
+    .bubble-tick.read { color: var(--blue); }
+
+    /* ─── Code block inside bubble ────────────── */
+    .cblock {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-family: var(--mono);
+      font-size: 12px; line-height: 1.8;
+      color: #8cb8d8;
+      margin: 8px 0 2px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    .cblock .g { color: #6fcf97; }
+    .cblock .y { color: #f2c94c; }
+    .cblock .r { color: #eb5757; }
+    .cblock .o { color: var(--orange); font-weight: 600; }
+    .cblock .d { color: var(--text-muted); }
+    .cblock .b { color: #56ccf2; }
+    .cblock .w { color: var(--text); }
+    .cblock .section-title { color: #a8c7e8; font-weight: 600; }
+
+    /* inline tag in bubble text */
+    .itag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 4px; letter-spacing: 0.04em;
+      vertical-align: middle; margin: 0 2px;
+    }
+    .itag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
+    .itag-yellow { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.25); }
+    .itag-red { background: rgba(248,113,113,0.10); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+    .itag-blue { background: rgba(90,171,255,0.10); color: var(--blue); border: 1px solid rgba(90,171,255,0.25); }
+    .itag-orange { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+
+    /* ─── Inline confirm buttons ─────────────── */
+    .tg-buttons {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+    }
+    .tg-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(90,171,255,0.12);
+      border: 1px solid rgba(90,171,255,0.25);
+      color: var(--blue); font-size: 12px; font-weight: 500;
+      padding: 6px 12px; border-radius: 6px; cursor: pointer;
+      transition: background 0.12s; font-family: var(--font);
+    }
+    .tg-btn:hover { background: rgba(90,171,255,0.20); }
+    .tg-btn.primary {
+      background: rgba(74,222,128,0.12);
+      border-color: rgba(74,222,128,0.25);
+      color: var(--green);
+    }
+    .tg-btn.primary:hover { background: rgba(74,222,128,0.20); }
+    .tg-btn.warn {
+      background: rgba(251,191,36,0.08);
+      border-color: rgba(251,191,36,0.20);
+      color: var(--yellow);
     }
 
-    /* ── Code Block ── */
-    .code-block {
-      background: var(--blue-dim); border: 1px solid var(--blue-border);
-      border-radius: 8px; padding: 14px 16px;
-      font-family: var(--mono); font-size: 12.5px; line-height: 1.8;
-      color: #93c5fd; margin: 10px 0;
-      white-space: pre-wrap; overflow-x: auto;
+    /* ─── Mobile ─────────────────────────────── */
+    @media (max-width: 640px) {
+      .sidebar { width: 52px; min-width: 52px; }
+      .sidebar-header, .nav-label, .sidebar-sub { display: none; }
+      .nav-item { justify-content: center; padding: 10px 0; }
     }
-    .code-block.green { background: var(--green-dim); border-color: rgba(74,222,128,0.25); color: #86efac; }
-    .code-block.yellow { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.25); color: #fde68a; }
-    .code-block.red { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.25); color: #fca5a5; }
-    .code-block.purple { background: var(--purple-dim); border-color: rgba(192,132,252,0.25); color: #d8b4fe; }
 
-    /* ── Finding Card ── */
-    .finding {
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 14px 16px; margin: 10px 0;
-    }
-    .finding-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .finding-icon { font-size: 16px; }
-    .finding-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
-    .finding-body { font-size: 13px; color: var(--text); font-family: var(--mono); line-height: 1.8; }
-    .finding-body .highlight { color: var(--orange); font-weight: 600; }
-
-    /* ── Buttons ── */
-    .btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 9px 16px; border-radius: 8px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      border: 1px solid; transition: all 0.15s; font-family: var(--font);
-    }
-    .btn-primary { background: var(--orange); border-color: var(--orange); color: #fff; }
-    .btn-primary:hover { background: #ea6c0f; }
-    .btn-secondary { background: transparent; border-color: var(--border); color: var(--text-muted); }
-    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
-    .btn-confirm { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.35); color: var(--green); }
-    .btn-confirm:hover { background: rgba(74,222,128,0.18); }
-    .btn-ghost { background: transparent; border-color: var(--border); color: var(--text-dim); font-size: 12px; padding: 7px 12px; }
-
-    /* ── Divider ── */
-    .divider { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-dim); text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin: 28px 0 20px; }
-    .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-    /* ── Summary Card ── */
-    .summary-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin: 12px 0; }
-    .summary-card-title { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
-    .summary-item { background: var(--surface-3); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
-    .summary-item .num { font-size: 22px; font-weight: 700; color: var(--orange); font-family: var(--mono); }
-    .summary-item .desc { font-size: 11px; color: var(--text-muted); }
-    .summary-item.green .num { color: var(--green); }
-    .summary-item.red .num { color: var(--red); }
-
-    /* ── Exception Table ── */
-    .exc-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12.5px; font-family: var(--mono); }
-    .exc-table th { background: var(--surface-2); border: 1px solid var(--border); padding: 7px 10px; text-align: left; color: var(--text-muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
-    .exc-table td { border: 1px solid var(--border); padding: 7px 10px; color: var(--text); }
-    .exc-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
-    .status-pass { color: var(--green); font-weight: 600; }
-    .status-escalate { color: var(--red); font-weight: 600; }
-    .status-hold { color: var(--yellow); font-weight: 600; }
-    .tag { display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: 600; letter-spacing: 0.05em; }
-    .tag-green { background: var(--green-dim); border: 1px solid rgba(74,222,128,0.3); color: var(--green); }
-    .tag-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: var(--red); }
-    .tag-yellow { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--yellow); }
-    .tag-blue { background: var(--blue-dim); border: 1px solid var(--blue-border); color: var(--blue); }
-
-    /* ── Final Output Box ── */
-    .output-box {
-      border: 2px solid var(--orange); border-radius: 12px; overflow: hidden; margin: 16px 0;
-    }
-    .output-header {
-      background: var(--orange); padding: 12px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .output-header-title { font-size: 14px; font-weight: 700; color: #fff; }
-    .output-header-meta { font-size: 11px; color: rgba(255,255,255,0.7); font-family: var(--mono); }
-    .output-body { background: var(--surface-2); padding: 16px 20px; }
-    .output-row { display: flex; gap: 20px; margin-bottom: 10px; font-size: 13px; font-family: var(--mono); }
-    .output-row .label { color: var(--text-muted); min-width: 100px; }
-    .output-row .value { color: var(--text); }
-
-    /* ── Footer ── */
-    .footer-note { border-top: 1px solid var(--border); margin-top: 40px; padding-top: 20px; font-size: 11px; color: var(--text-dim); font-family: var(--mono); line-height: 1.8; }
-
-    /* ── Mobile ── */
-    @media (max-width: 700px) { .rail { display: none; } .main { padding: 20px 16px; } }
-
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   </style>
 </head>
 <body>
-
-<!-- Header -->
-<div class="header">
-  <div class="header-left">
-    <div class="logo-dot"></div>
-    <div>
-      <div class="header-title">Air8 Event Validation Agent</div>
-      <div class="header-sub">SV0 → SV5 · Section 301 Tariff Analysis</div>
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;">
-    <div class="badge">EVENT VALIDATION</div>
-    <div class="badge-demo">DEMO · CLEANED</div>
-  </div>
-</div>
-
 <div class="layout">
 
-  <!-- Rail -->
-  <nav class="rail">
-    <div class="rail-title">Validation Steps</div>
-
-    <div class="rail-step done" onclick="jumpTo('sv0')">
-      <div class="rail-step-n">✓</div>
-      <div class="rail-step-label">SV0 · Intake</div>
+  <!-- ─── Sidebar ─── -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Event Validation</div>
+      <div class="sidebar-sub">Section 301 · SV0→SV5</div>
     </div>
-    <div class="rail-step done" onclick="jumpTo('sv1')">
-      <div class="rail-step-n">✓</div>
-      <div class="rail-step-label">SV1 · Parse</div>
-    </div>
-    <div class="rail-step done" onclick="jumpTo('sv2')">
-      <div class="rail-step-n">✓</div>
-      <div class="rail-step-label">SV2 · Detect</div>
-    </div>
-    <div class="rail-step done" onclick="jumpTo('sv3')">
-      <div class="rail-step-n">✓</div>
-      <div class="rail-step-label">SV3 · Resolve</div>
-    </div>
-    <div class="rail-step done" onclick="jumpTo('sv4')">
-      <div class="rail-step-n">✓</div>
-      <div class="rail-step-label">SV4 · Evidence</div>
-    </div>
-    <div class="rail-step active" onclick="jumpTo('sv5')">
-      <div class="rail-step-n">5</div>
-      <div class="rail-step-label">SV5 · Output</div>
-    </div>
+    <a class="nav-item done" href="#sv0">
+      <div class="nav-dot"></div>
+      <div class="nav-label">SV0 · Intake</div>
+    </a>
+    <a class="nav-item done" href="#sv1">
+      <div class="nav-dot"></div>
+      <div class="nav-label">SV1 · Parse</div>
+    </a>
+    <a class="nav-item done" href="#sv2">
+      <div class="nav-dot"></div>
+      <div class="nav-label">SV2 · Detect</div>
+    </a>
+    <a class="nav-item done" href="#sv3">
+      <div class="nav-dot"></div>
+      <div class="nav-label">SV3 · Resolve</div>
+    </a>
+    <a class="nav-item done" href="#sv4">
+      <div class="nav-dot"></div>
+      <div class="nav-label">SV4 · Evidence</div>
+    </a>
+    <a class="nav-item active" href="#sv5">
+      <div class="nav-dot"></div>
+      <div class="nav-label">SV5 · Output</div>
+    </a>
   </nav>
 
-  <!-- Main -->
-  <main class="main">
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SV0 — INTAKE                           -->
-    <!-- ═══════════════════════════════════════ -->
-    <section id="sv0">
-      <div class="step-header">
-        <div class="step-eyebrow">Step 0</div>
-        <div class="step-title">SV0 · Intake</div>
-        <div class="step-kb">Event triggered by analyst. Documents received and catalogued.</div>
+  <!-- ─── Chat ─── -->
+  <div class="chat-wrap">
+    <div class="chat-header">
+      <div class="chat-avatar">AI</div>
+      <div>
+        <div class="chat-name">Air8 Validation Agent</div>
+        <div class="chat-status">● online</div>
       </div>
-
-      <!-- User message -->
-      <div class="msg">
-        <div class="msg-user">
-          <div class="msg-body msg-body-user">
-            <div class="bubble-user">
-              Please run an event validation on the Section 301 tariff news.<br>
-              <span style="font-size:12px;color:var(--text-muted);">Buyers in scope: NEXT Retail · Event type: Trade Policy</span>
-            </div>
-          </div>
-          <div class="avatar avatar-user">J</div>
-        </div>
-      </div>
-
-      <!-- Agent response -->
-      <div class="msg">
-        <div class="msg-agent">
-          <div class="avatar avatar-agent">AI</div>
-          <div class="msg-body">
-            <div class="msg-name">Event Validation Agent</div>
-            <div class="msg-text">
-              <p>Understood. Running <strong>SV0 → SV5 Event Validation</strong> on the Section 301 tariff news.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-block purple">
-Event:    Section 301 Tariff Update
-Date:     2026-08-19
-Trigger:  US tariff framework revision affecting Vietnam, India, Bangladesh
-Buyers:   NEXT Retail (UK)
-Analyst:  Jerri Zhou
-KB:       air8-databases/SHI-KB/</div>
-
-      <div class="code-block">
-Documents received:
-  1.  Section 301 news article         [Article · 2026-08-19]
-  2.  Air8 TARIFF-DB                  [KB · maintained]
-  3.  Air8 COUNTRY-DB                 [KB · maintained]
-  4.  Air8 COMMODITY-DB               [KB · maintained]
-  5.  Air8 CLIENT-DB (supplier list) [KB · 320 suppliers]</div>
-
-      <div class="btn-row">
-        <button class="btn btn-confirm" onclick="jumpTo('sv1')">✅ Confirmed — go to SV1 →</button>
-        <button class="btn btn-ghost" onclick="alert('Adjust noted...')">⚠️ Adjust</button>
-      </div>
-    </section>
-
-    <div class="divider">Parsing &amp; Exception Detection</div>
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SV1 — PARSE                            -->
-    <!-- ═══════════════════════════════════════ -->
-    <section id="sv1">
-      <div class="step-header">
-        <div class="step-eyebrow">Step 1</div>
-        <div class="step-title">SV1 · Parse</div>
-        <div class="step-kb"><span>KB: layer2/NODE-terminology.md</span></div>
-      </div>
-
-      <div class="msg">
-        <div class="msg-agent">
-          <div class="avatar avatar-agent">AI</div>
-          <div class="msg-body">
-            <div class="msg-name">Event Validation Agent</div>
-            <div class="msg-text">
-              <p>Extracting key fields from each document and normalising to canonical format.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-block">
-Parsing applied: NODE-terminology.md · Part A (field mapping) + Part B (value normalisation)
-
-KEY EXTRACTED FIELDS
-
-Source: Section 301 Article
-  tariff_event        Section 301 framework revision
-  announcement_date   2026-08-19
-  affected_countries  Vietnam, India, Bangladesh
-  tariff_change        Yes (specific rates TBC)
-  trade_lane          US-bound (primary)
-
-Source: TARIFF-DB
-  VN tariff (HS 61/62)   12.5%  (US MFN baseline)
-  IN tariff (HS 61/62)   10%    (GSP + bilateral advantage)
-  BD tariff (HS 61/62)   10%    (Tariff quota benefit)
-  differential          2.5pp  (VN vs IN/BD)
-
-Source: COUNTRY-DB
-  Vietnam     Risk: MEDIUM · Trade lane: mature · Compliance: improving
-  India       Risk: MEDIUM-HIGH · Trade lane: growing · Compliance: variable
-  Bangladesh  Risk: MEDIUM-HIGH · Trade lane: growing · Compliance: UFLPA elevated
-
-Source: CLIENT-DB
-  NEXT Retail suppliers in scope: 47
-    Vietnam     6 suppliers
-    India       9 suppliers
-    Bangladesh  11 suppliers
-  [NOT FOUND] buyer concentration per country — requires enrichment</div>
-
-      <div class="btn-row">
-        <button class="btn btn-confirm" onclick="jumpTo('sv2')">✅ Confirmed — go to SV2 →</button>
-        <button class="btn btn-ghost" onclick="alert('Adjust noted...')">⚠️ Adjust</button>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SV2 — DETECT                           -->
-    <!-- ═══════════════════════════════════════ -->
-    <section id="sv2">
-      <div class="step-header">
-        <div class="step-eyebrow">Step 2</div>
-        <div class="step-title">SV2 · Detect</div>
-        <div class="step-kb"><span>KB: layer2/NODE-risk-categories.md</span></div>
-      </div>
-
-      <div class="msg">
-        <div class="msg-agent">
-          <div class="avatar avatar-agent">AI</div>
-          <div class="msg-body">
-            <div class="msg-name">Event Validation Agent</div>
-            <div class="msg-text">
-              <p>Running exception detection across all extracted fields. Comparing cross-document values. Hard stop pre-check applied.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-block">
-Exception detection: NODE-risk-categories.md · R1–R9 triggers
-Cross-document comparison: TARIFF-DB vs Article vs COUNTRY-DB
-Hard stop pre-check: HS1–HS5 applied</div>
-
-      <!-- Finding 1 -->
-      <div class="finding">
-        <div class="finding-header">
-          <span class="finding-icon">⚠️</span>
-          <span class="finding-label">R3 · Competitive Position Shift</span>
-          <span class="tag tag-yellow">ESCALATE</span>
-        </div>
-        <div class="finding-body">
-          Vietnam suppliers face a <span class="highlight">+2.5pp tariff disadvantage</span> vs India and Bangladesh on HS 61/62 (apparel).<br>
-          This creates a cost-competitiveness differential that buyers may act upon.
-        </div>
-      </div>
-
-      <!-- Finding 2 -->
-      <div class="finding">
-        <div class="finding-header">
-          <span class="finding-icon">⚠️</span>
-          <span class="finding-label">R5 · Supplier Selection Criteria — Compliance</span>
-          <span class="tag tag-yellow">ESCALATE</span>
-        </div>
-        <div class="finding-body">
-          Bangladesh currently flagged <span class="highlight">UFLPA Elevated Risk</span> in COUNTRY-DB.<br>
-          Any order shift toward BD must consider forced labour compliance readiness — not just tariff rates.
-        </div>
-      </div>
-
-      <!-- Finding 3 -->
-      <div class="finding">
-        <div class="finding-header">
-          <span class="finding-icon">⚠️</span>
-          <span class="finding-label">R7 · Assumption Gap</span>
-          <span class="tag tag-yellow">ESCALATE</span>
-        </div>
-        <div class="finding-body">
-          No confirmed buyer sourcing decisions found in documents.<br>
-          Tariff differential exists — <span class="highlight">order migration is NOT confirmed</span>, only plausible.
-        </div>
-      </div>
-
-      <!-- Hard Stops -->
-      <div class="code-block yellow">
-Hard Stop Pre-Check:
-  HS1 (Sanctioned country)     — NOT TRIGGERED
-  HS2 (FATF high-risk country) — NOT TRIGGERED
-  HS3 (Known fraud flag)        — NOT TRIGGERED
-  HS4 (Legal prohibition)       — NOT TRIGGERED
-  HS5 (Document forgery)        — NOT TRIGGERED
-→ No hard stops. Proceed to SV3.</div>
-
-      <div class="btn-row">
-        <button class="btn btn-confirm" onclick="jumpTo('sv3')">✅ Confirmed — go to SV3 →</button>
-        <button class="btn btn-ghost" onclick="alert('Adjust noted...')">⚠️ Adjust</button>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SV3 — RESOLVE                          -->
-    <!-- ═══════════════════════════════════════ -->
-    <section id="sv3">
-      <div class="step-header">
-        <div class="step-eyebrow">Step 3</div>
-        <div class="step-title">SV3 · Resolve</div>
-        <div class="step-kb"><span>KB: layer1/L1-reasoning-principles.md</span></div>
-      </div>
-
-      <div class="msg">
-        <div class="msg-agent">
-          <div class="avatar avatar-agent">AI</div>
-          <div class="msg-body">
-            <div class="msg-name">Event Validation Agent</div>
-            <div class="msg-text">
-              <p>Applying resolution hierarchy from L1-reasoning-principles.md. Each exception resolved with rule cited.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <table class="exc-table">
-        <thead>
-          <tr>
-            <th>Exception</th>
-            <th>Found</th>
-            <th>Decision</th>
-            <th>Rule Applied</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>R3</strong> · Competitive Position Shift</td>
-            <td><span class="highlight">VN 12.5% vs IN/BD 10% · 2.5pp differential</span></td>
-            <td><span class="status-hold">HOLD 🟡</span></td>
-            <td>Tariff differential confirmed. Order migration not confirmed → requires buyer validation. Conclusion must use conditional language.</td>
-          </tr>
-          <tr>
-            <td><strong>R5</strong> · Compliance Selection Criteria</td>
-            <td><span class="highlight">BD UFLPA Elevated · IN compliance variable</span></td>
-            <td><span class="status-hold">HOLD 🟡</span></td>
-            <td>Compliance is a separate selection gate — must appear as independent risk dimension, not embedded under tariff analysis.</td>
-          </tr>
-          <tr>
-            <td><strong>R7</strong> · Assumption Gap</td>
-            <td><span class="highlight">No confirmed buyer sourcing decisions</span></td>
-            <td><span class="status-escalate">ESCALATE 🔴</span></td>
-            <td>Report framing must distinguish facts vs assumptions. Tariff differential is a fact. Order shift is an assumption requiring validation.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="code-block yellow">
-Resolution Summary:
-  AUTO-PASS ✅     0 exceptions
-  HOLD 🟡          2 exceptions  (R3 competitive shift, R5 compliance criteria)
-  ESCALATE 🔴      1 exception   (R7 assumption gap — framing integrity)
-  → 1 exception requires analyst decision before SV5 output.</div>
-
-      <div class="btn-row">
-        <button class="btn btn-confirm" onclick="jumpTo('sv4')">✅ Confirmed — go to SV4 →</button>
-        <button class="btn btn-ghost" onclick="alert('Adjust noted...')">⚠️ Adjust</button>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SV4 — EVIDENCE                         -->
-    <!-- ═══════════════════════════════════════ -->
-    <section id="sv4">
-      <div class="step-header">
-        <div class="step-eyebrow">Step 4</div>
-        <div class="step-title">SV4 · Evidence Check</div>
-        <div class="step-kb"><span>KB: layer1/L1-evidence-discipline.md</span></div>
-      </div>
-
-      <div class="msg">
-        <div class="msg-agent">
-          <div class="avatar avatar-agent">AI</div>
-          <div class="msg-body">
-            <div class="msg-name">Event Validation Agent</div>
-            <div class="msg-text">
-              <p>Validating evidence quality per decision. Flagging insufficient evidence and stating what is needed.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-block">
-Evidence citation format: [Source type · Date · Person/System]
-All SV3 decisions evaluated for evidence completeness.</div>
-
-      <!-- Evidence table -->
-      <table class="exc-table" style="margin-top:12px;">
-        <thead>
-          <tr><th>Exception</th><th>Evidence</th><th>Status</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>R3</strong> · Tariff Differential</td>
-            <td>[TARIFF-DB · 2026-08-19 · Air8 KB]</td>
-            <td><span class="status-pass">SUFFICIENT ✅</span></td>
-          </tr>
-          <tr>
-            <td><strong>R5</strong> · Compliance Flags</td>
-            <td>[COUNTRY-DB · 2026-08-01 · Air8 KB]</td>
-            <td><span class="status-pass">SUFFICIENT ✅</span></td>
-          </tr>
-          <tr>
-            <td><strong>R7</strong> · Order Migration</td>
-            <td>[Article · 2026-08-19 · News Analyst]</td>
-            <td><span class="status-hold">INSUFFICIENT ⚠️</span></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="code-block yellow">
-⚠️  Evidence gap flagged:
-  R7 — Order migration claim supported only by news article inference.
-  Insufficient to state as fact.
-
-  What is needed:
-  1. Buyer sourcing intent survey or direct communication (NEXT buying team)
-  2. Supplier capacity self-assessment (in-country BD team)
-  3. Historical order data showing directional trend (CLIENT-DB — 12-month window)
-
-  Recommendation: Add explicit "Facts vs Assumptions" section to SV5 output.</div>
-
-      <div class="btn-row">
-        <button class="btn btn-confirm" onclick="jumpTo('sv5')">✅ Confirmed — go to SV5 →</button>
-        <button class="btn btn-ghost" onclick="alert('Adjust noted...')">⚠️ Adjust</button>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SV5 — OUTPUT                           -->
-    <!-- ═══════════════════════════════════════ -->
-    <section id="sv5">
-      <div class="step-header">
-        <div class="step-eyebrow">Step 5 · Final</div>
-        <div class="step-title">SV5 · Output</div>
-        <div class="step-kb"><span>KB: air8-databases/SHI-KB/</span></div>
-      </div>
-
-      <div class="msg">
-        <div class="msg-agent">
-          <div class="avatar avatar-agent">AI</div>
-          <div class="msg-body">
-            <div class="msg-name">Event Validation Agent</div>
-            <div class="msg-text">
-              <p>Generating final validated report. Expert review comments from Jerri have been incorporated.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Final Output Box -->
-      <div class="output-box">
-        <div class="output-header">
-          <div>
-            <div class="output-header-title">📋 Event Validation Report — Section 301 Tariff Update</div>
-          </div>
-          <div class="output-header-meta">SV5 · 2026-08-19</div>
-        </div>
-        <div class="output-body">
-          <div class="output-row"><span class="label">Event</span><span class="value">Section 301 Tariff Revision</span></div>
-          <div class="output-row"><span class="label">Buyers</span><span class="value">NEXT Retail</span></div>
-          <div class="output-row"><span class="label">Suppliers</span><span class="value">47 in scope (VN: 6 · IN: 9 · BD: 11)</span></div>
-          <div class="output-row"><span class="label">Overall</span><span class="value" style="color:var(--yellow);">HOLD 🟡 — conditional findings</span></div>
-        </div>
-      </div>
-
-      <!-- Facts vs Assumptions -->
-      <div class="finding">
-        <div class="finding-header">
-          <span class="finding-icon">📌</span>
-          <span class="finding-label">Facts vs Assumptions</span>
-          <span class="tag tag-blue">NEW — per SV4 evidence gap</span>
-        </div>
-        <div class="finding-body" style="font-family:var(--font);font-size:13px;">
-          <div style="margin-bottom:8px;color:var(--green);font-weight:600;">✅ Confirmed Facts</div>
-          <div style="margin-bottom:6px;">• VN tariff (HS 61/62) = 12.5%  ·  IN = 10%  ·  BD = 10%</div>
-          <div style="margin-bottom:12px;">• 2.5pp cost advantage exists for India and Bangladesh vs Vietnam</div>
-          <div style="margin-bottom:8px;color:var(--yellow);font-weight:600;">⚠️ Assumptions Requiring Validation</div>
-          <div style="margin-bottom:6px;">• Buyers will shift orders → <em>not confirmed — requires buyer sourcing intent</em></div>
-          <div>• Suppliers will gain volume → <em>requires supplier capacity assessment</em></div>
-        </div>
-      </div>
-
-      <!-- Key Findings -->
-      <div class="summary-card">
-        <div class="summary-card-title">Key Findings — SV5 Validated</div>
-        <div class="code-block" style="margin:0;border:none;background:var(--surface-3);">
-<span style="color:var(--orange);">F1 · Cost Advantage Confirmed</span>
-  India and Bangladesh have gained a <span style="color:#fbbf24;">2.5pp tariff-related cost advantage</span>
-  over Vietnam under the new Section 301 framework.
-  → <span style="color:#86efac;">FACT · Sufficient evidence · TARIFF-DB</span>
-
-<span style="color:var(--orange);">F2 · Competitive Pressure on Vietnam</span>
-  Vietnam suppliers may face increased competitive pressure, particularly where buyers
-  are actively reviewing sourcing allocations or diversifying production footprints.
-  → <span style="color:#fbbf24;">CONDITIONAL · Requires buyer validation · ESCALATE</span>
-
-<span style="color:var(--orange);">F3 · Compliance as Independent Selection Gate</span>
-  UFLPA readiness and raw material traceability are becoming key supplier selection
-  criteria — separate from and independent of tariff cost advantage.
-  Bangladesh UFLPA elevated risk must be assessed independently.
-  → <span style="color:#fbbf24;">HOLD · Compliance dimension · COUNTRY-DB</span>
-
-<span style="color:var(--orange);">F4 · Supplier Capacity — Unknown</span>
-  Potential beneficiaries' ability to absorb additional orders has not been validated.
-  Winning more orders is operationally meaningless without execution capability.
-  → <span style="color:#f87171;">Evidence gap · Requires BD field assessment</span>
-
-<span style="color:var(--orange);">F5 · Structural Trend — Resilient Sourcing</span>
-  The larger structural trend is a shift toward diversified and resilient sourcing models,
-  where compliance, traceability, and supply continuity are as important as cost.
-  → <span style="color:#86efac;">Strategic observation · Management message</span></div>
-      </div>
-
-      <!-- Expert-validated reframes -->
-      <div class="finding">
-        <div class="finding-header">
-          <span class="finding-icon">✏️</span>
-          <span class="finding-label">Language Calibration — Expert Review Applied</span>
-          <span class="tag tag-green">UPDATED</span>
-        </div>
-        <div class="finding-body" style="font-family:var(--font);font-size:13px;">
-          <div style="margin-bottom:8px;"><span style="color:var(--text-muted);">Before:</span> "India and Bangladesh are beneficiaries."</div>
-          <div style="margin-bottom:12px;"><span style="color:var(--green);">After:</span> "India and Bangladesh have gained a tariff-related cost advantage versus Vietnam, but actual business gains depend on buyer sourcing decisions, supplier capacity, compliance readiness, and commercial negotiations."</div>
-          <div style="margin-bottom:8px;"><span style="color:var(--text-muted);">Before:</span> "Vietnam suppliers may lose orders."</div>
-          <div><span style="color:var(--green);">After:</span> "Vietnam suppliers may face increased competitive pressure, particularly where buyers are actively reviewing sourcing allocations or diversifying production footprints."</div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="code-block yellow">
-ACTIONS required before final report release:
-  1. [ ] Buyer sourcing intent — contact NEXT buying team for directional read
-  2. [ ] Supplier capacity assessment — BD field team to validate BD/IN capacity
-  3. [ ] UFLPA readiness check — map each BD supplier against UFLPA criteria
-  4. [ ] Margin risk note — add to report: volume ≠ profitability if buyers renegotiate
-  5. [ ] Supplier readiness heatmap — classify VN/IN/BD suppliers on compliance + capacity</div>
-
-      <div class="code-block green">
-KB PROPOSALS — do not self-modify:
-  1. Add "tariff differential threshold" rule to R3 trigger (propose: >2pp → auto-flag)
-  2. Add UFLPA readiness as standalone risk dimension in COUNTRY-DB schema
-  3. Add "supplier capacity signal" to CLIENT-DB (validation: BD team input required)</div>
-
-      <div class="btn-row">
-        <button class="btn btn-confirm" onclick="alert('Report saved! ✅ Final output locked.')">✅ Done — save report</button>
-        <button class="btn btn-ghost" onclick="alert('Adjust noted...')">⚠️ Adjust</button>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <div class="footer-note">
-      This is a simulated demo of the Event Validation flow (SV0→SV5) using the Section 301 tariff analysis.<br>
-      Expert review comments from Jerri have been incorporated into SV5 output.<br>
-      KB: air8-databases/SHI-KB/ · Agent: openclaw/shi-validation v1.4
+      <div class="chat-badge">301 EVENT</div>
     </div>
 
-  </main>
+    <div class="chat-scroll">
+
+      <!-- ══════════════ SV0 ══════════════ -->
+      <div id="sv0" class="step-anchor">
+        <div class="step-anchor-line"></div>
+        <div class="step-anchor-label">SV0 · Intake</div>
+        <div class="step-anchor-line"></div>
+      </div>
+
+      <!-- Jerri triggers -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:05</span></div>
+        <div class="bubble user">
+          Please run an event validation on the Section 301 tariff update. Buyers in scope: NEXT Retail. I'll share the news article + KB for reference.
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <!-- Agent SV0 -->
+      <div class="msg agent">
+        <div class="msg-meta"><span class="sender">Validation Agent</span><span class="ts">10:05</span></div>
+        <div class="bubble agent">
+          📥 <b>SV0 · Intake</b><br>
+          <span style="font-size:11px;color:var(--text-muted);">[KB: air8-databases/SHI-KB/]</span>
+          <div class="cblock"><span class="g">✓</span> <span class="w">Event:</span>   Section 301 Tariff Update
+<span class="g">✓</span> <span class="w">Date:</span>    2026-08-19
+<span class="g">✓</span> <span class="w">Trigger:</span> US tariff revision — Vietnam, India, Bangladesh
+<span class="g">✓</span> <span class="w">Buyer:</span>   NEXT Retail
+
+<span class="d">Documents received:</span>
+  1. Section 301 news article      [Article · 2026-08-19]
+  2. Air8 TARIFF-DB                [KB · maintained]
+  3. Air8 COUNTRY-DB               [KB · maintained]
+  4. Air8 CLIENT-DB (47 suppliers) [KB · in scope]</div>
+          <div class="tg-buttons">
+            <button class="tg-btn">✅ Confirmed — go to SV1</button>
+            <button class="tg-btn warn">⚠️ Adjust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jerri confirms -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:06</span></div>
+        <div class="bubble confirm">
+          ✅ Confirmed — go to SV1
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SV1 ══════════════ -->
+      <div id="sv1" class="step-anchor">
+        <div class="step-anchor-line"></div>
+        <div class="step-anchor-label">SV1 · Parse</div>
+        <div class="step-anchor-line"></div>
+      </div>
+
+      <!-- Agent SV1 -->
+      <div class="msg agent">
+        <div class="msg-meta"><span class="sender">Validation Agent</span><span class="ts">10:06</span></div>
+        <div class="bubble agent">
+          🔍 <b>SV1 · Parse</b><br>
+          <span style="font-size:11px;color:var(--text-muted);">[KB: NODE-terminology.md · Part A + B]</span>
+          <div class="cblock"><span class="section-title">Source: Section 301 Article</span>
+  tariff_event       Section 301 framework revision
+  affected_countries Vietnam · India · Bangladesh
+  trade_lane         US-bound (primary)
+
+<span class="section-title">Source: TARIFF-DB</span>
+  VN tariff (HS 61/62)  <span class="y">12.5%</span>
+  IN tariff (HS 61/62)  <span class="g">10.0%</span>
+  BD tariff (HS 61/62)  <span class="g">10.0%</span>
+  differential          <span class="o">2.5pp</span>  (VN vs IN/BD)
+
+<span class="section-title">Source: COUNTRY-DB</span>
+  Vietnam     Risk: MEDIUM     · UFLPA: standard
+  India       Risk: MEDIUM-HIGH · UFLPA: variable
+  Bangladesh  Risk: MEDIUM-HIGH · UFLPA: <span class="r">elevated</span>
+
+<span class="section-title">Source: CLIENT-DB</span>
+  NEXT suppliers in scope: 47
+  VN: 6 · IN: 9 · BD: 11</div>
+          <div class="tg-buttons">
+            <button class="tg-btn">✅ Confirmed — go to SV2</button>
+            <button class="tg-btn warn">⚠️ Adjust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jerri confirms -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:07</span></div>
+        <div class="bubble confirm">
+          ✅ Confirmed — go to SV2
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SV2 ══════════════ -->
+      <div id="sv2" class="step-anchor">
+        <div class="step-anchor-line"></div>
+        <div class="step-anchor-label">SV2 · Detect</div>
+        <div class="step-anchor-line"></div>
+      </div>
+
+      <!-- Agent SV2 -->
+      <div class="msg agent">
+        <div class="msg-meta"><span class="sender">Validation Agent</span><span class="ts">10:07</span></div>
+        <div class="bubble agent">
+          ⚠️ <b>SV2 · Detect</b><br>
+          <span style="font-size:11px;color:var(--text-muted);">[KB: NODE-risk-categories.md · R1–R9]</span>
+          <div class="cblock"><span class="section-title">Exceptions detected:</span>
+
+<span class="y">R3</span> · Competitive Position Shift
+  VN 12.5% vs IN/BD 10.0% → <span class="o">2.5pp disadvantage confirmed</span>
+
+<span class="y">R5</span> · Compliance Selection Criteria
+  BD flagged <span class="r">UFLPA elevated risk</span> in COUNTRY-DB
+  Cost advantage ≠ qualification advantage
+
+<span class="y">R7</span> · Assumption Gap
+  No confirmed buyer sourcing decisions found
+  <span class="r">Order migration is inference, not fact</span>
+
+<span class="section-title">Hard Stop Pre-Check (HS1–HS5):</span>
+  <span class="g">→ No hard stops triggered · Proceed to SV3</span></div>
+          <div class="tg-buttons">
+            <button class="tg-btn">✅ Confirmed — go to SV3</button>
+            <button class="tg-btn warn">⚠️ Adjust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jerri confirms -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:08</span></div>
+        <div class="bubble confirm">
+          ✅ Confirmed — go to SV3
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SV3 ══════════════ -->
+      <div id="sv3" class="step-anchor">
+        <div class="step-anchor-line"></div>
+        <div class="step-anchor-label">SV3 · Resolve</div>
+        <div class="step-anchor-line"></div>
+      </div>
+
+      <!-- Agent SV3 -->
+      <div class="msg agent">
+        <div class="msg-meta"><span class="sender">Validation Agent</span><span class="ts">10:08</span></div>
+        <div class="bubble agent">
+          🔎 <b>SV3 · Resolve</b><br>
+          <span style="font-size:11px;color:var(--text-muted);">[KB: L1-reasoning-principles.md]</span>
+          <div class="cblock"><span class="y">R3</span> · Competitive Position Shift
+  Decision: <span class="y">HOLD 🟡</span>
+  Tariff differential confirmed. Order migration not confirmed.
+  Rule: conditional framing required — buyer decision pending
+
+<span class="y">R5</span> · Compliance Criteria
+  Decision: <span class="y">HOLD 🟡</span>
+  UFLPA readiness is an independent selection gate.
+  Rule: compliance must appear as a separate risk dimension
+
+<span class="y">R7</span> · Assumption Gap
+  Decision: <span class="r">ESCALATE 🔴</span>
+  Report framing must separate Facts vs Assumptions.
+  Rule: unconfirmed migration claims must not be stated as fact</div>
+          <div class="tg-buttons">
+            <button class="tg-btn">✅ Confirmed — go to SV4</button>
+            <button class="tg-btn warn">⚠️ Adjust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jerri confirms -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:09</span></div>
+        <div class="bubble confirm">
+          ✅ Confirmed — go to SV4
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SV4 ══════════════ -->
+      <div id="sv4" class="step-anchor">
+        <div class="step-anchor-line"></div>
+        <div class="step-anchor-label">SV4 · Evidence</div>
+        <div class="step-anchor-line"></div>
+      </div>
+
+      <!-- Agent SV4 -->
+      <div class="msg agent">
+        <div class="msg-meta"><span class="sender">Validation Agent</span><span class="ts">10:09</span></div>
+        <div class="bubble agent">
+          📎 <b>SV4 · Evidence Check</b><br>
+          <span style="font-size:11px;color:var(--text-muted);">[KB: L1-evidence-discipline.md]</span>
+          <div class="cblock"><span class="g">R3</span> · Tariff Differential
+  Evidence: [TARIFF-DB · 2026-08-19 · Air8 KB]
+  <span class="g">→ SUFFICIENT ✅</span>
+
+<span class="g">R5</span> · Compliance Flags
+  Evidence: [COUNTRY-DB · 2026-08-01 · Air8 KB]
+  <span class="g">→ SUFFICIENT ✅</span>
+
+<span class="r">R7</span> · Order Migration Claim
+  Evidence: [Article · 2026-08-19 · news inference only]
+  <span class="r">→ INSUFFICIENT ⚠️</span>
+
+<span class="section-title">What is needed for R7:</span>
+  1. Buyer sourcing intent (NEXT buying team)
+  2. Supplier capacity self-assessment (BD field team)
+  3. 12-month order trend from CLIENT-DB
+
+  → Add explicit Facts vs Assumptions section to SV5</div>
+          <div class="tg-buttons">
+            <button class="tg-btn">✅ Confirmed — go to SV5</button>
+            <button class="tg-btn warn">⚠️ Adjust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jerri confirms -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:10</span></div>
+        <div class="bubble confirm">
+          ✅ Confirmed — go to SV5
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SV5 ══════════════ -->
+      <div id="sv5" class="step-anchor">
+        <div class="step-anchor-line"></div>
+        <div class="step-anchor-label">SV5 · Output</div>
+        <div class="step-anchor-line"></div>
+      </div>
+
+      <!-- Agent SV5 -->
+      <div class="msg agent">
+        <div class="msg-meta"><span class="sender">Validation Agent</span><span class="ts">10:10</span></div>
+        <div class="bubble agent">
+          ✅ <b>SV5 · Output</b><br>
+          <span style="font-size:11px;color:var(--text-muted);">[KB: air8-databases/SHI-KB/]</span>
+          <div class="cblock">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SHI — Section 301 Tariff Update → NEXT Retail
+Date: 2026-08-19  |  Docs: Article · TARIFF-DB · COUNTRY-DB · CLIENT-DB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OVERALL: <span class="y">HOLD 🟡</span>  (conditional findings — buyer validation required)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<span class="section-title">FACTS vs ASSUMPTIONS</span>
+
+Facts (confirmed):
+  ✓ VN 12.5% · IN 10% · BD 10% tariff rates — [TARIFF-DB]
+  ✓ 2.5pp cost advantage exists for India and Bangladesh vs Vietnam
+  ✓ BD carries elevated UFLPA risk — [COUNTRY-DB]
+
+Assumptions (require validation):
+  ? Buyers will shift orders → not confirmed
+  ? Suppliers can absorb additional volume → not assessed
+  ? Cost advantage translates to margin → not guaranteed
+
+─────────────────────────────────────
+
+<span class="y">R3</span> · Competitive Position Shift
+  Found:    VN 12.5% vs IN/BD 10.0% · 2.5pp differential
+  Decision: <span class="y">HOLD 🟡</span>
+  Rule:     Conditional language required — order migration unconfirmed
+  Evidence: [TARIFF-DB · 2026-08-19 · Air8 KB]
+
+<span class="y">R5</span> · Compliance as Selection Gate
+  Found:    BD UFLPA elevated · IN compliance variable
+  Decision: <span class="y">HOLD 🟡</span>
+  Rule:     UFLPA readiness is independent of tariff advantage
+  Evidence: [COUNTRY-DB · 2026-08-01 · Air8 KB]
+
+<span class="r">R7</span> · Assumption Gap — Report Framing
+  Found:    Order migration stated as fact in draft report
+  Decision: <span class="r">ESCALATE 🔴</span>
+  Rule:     Unconfirmed claims must be framed as assumptions
+  Evidence: Insufficient — see SV4 gap list
+
+─────────────────────────────────────
+
+ACTIONS:
+  1. Add Facts vs Assumptions section to report
+  2. Reframe migration language to conditional
+  3. Add UFLPA readiness as standalone dimension
+  4. Obtain buyer sourcing intent before final release
+
+KB PROPOSALS:
+  1. Add "tariff differential >2pp" as R3 auto-trigger rule
+  2. Add UFLPA readiness field to COUNTRY-DB schema
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+          <div class="tg-buttons">
+            <button class="tg-btn primary">✅ Done — save report</button>
+            <button class="tg-btn warn">⚠️ Adjust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jerri final -->
+      <div class="msg user">
+        <div class="msg-meta"><span class="sender user-name">Jerri Zhou</span><span class="ts">10:11</span></div>
+        <div class="bubble confirm">
+          ✅ Done — save report
+          <div class="bubble-tick read">✓✓</div>
+        </div>
+      </div>
+
+      <div style="height:40px;"></div>
+    </div><!-- end chat-scroll -->
+  </div><!-- end chat-wrap -->
+
 </div>
 
 <script>
-  function jumpTo(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Highlight active nav on scroll
+  var anchors = ['sv0','sv1','sv2','sv3','sv4','sv5'];
+  var navItems = document.querySelectorAll('.nav-item');
+  var chatScroll = document.querySelector('.chat-scroll');
 
-    document.querySelectorAll('.rail-step').forEach(function(s) { s.classList.remove('active'); });
-    document.querySelectorAll('.rail-step').forEach(function(s) {
-      if (s.getAttribute('onclick') && s.getAttribute('onclick').includes(id)) s.classList.add('active');
+  function updateNav() {
+    var scrollTop = chatScroll.scrollTop;
+    var active = 'sv0';
+    anchors.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop - chatScroll.offsetTop <= scrollTop + 60) active = id;
     });
-
-    var sections = ['sv0','sv1','sv2','sv3','sv4','sv5'];
-    var idx = sections.indexOf(id);
-    for (var i = 0; i < idx; i++) {
-      var sec = document.getElementById(sections[i]);
-      if (sec) {
-        var step = document.querySelector('.rail-step[onclick*="' + sections[i] + '"]');
-        if (step) step.classList.add('done');
-      }
-    }
+    navItems.forEach(function(n) {
+      var href = n.getAttribute('href');
+      n.classList.remove('active');
+      if (href === '#' + active) n.classList.add('active');
+    });
   }
-</script>
 
+  chatScroll.addEventListener('scroll', updateNav);
+
+  // Smooth scroll
+  document.querySelectorAll('.nav-item').forEach(function(n) {
+    n.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = n.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
 </body>
 </html>
