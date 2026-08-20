@@ -231,7 +231,25 @@ table tr.clickable-row.dimmed td { opacity:0.35; }
   </div>
 </div>
 
-<div class="filter-hint">💡 Click a row in the summary table above, or a KPI badge, to filter cards below. Click again to reset.</div>
+<div class="filter-hint">💡 Click a row in the summary table above, or a KPI badge — OR use the dropdowns below.</div>
+<div class="filter-bar">
+  <label>COMBO:</label>
+  <select id="comboFilter" onchange="fdrop()">
+    <option value="all">All</option>
+    <option value="COMBO-002">COMBO-002 (BD)</option>
+    <option value="COMBO-003">COMBO-003 (IN Vertical)</option>
+    <option value="COMBO-006">COMBO-006 (VN)</option>
+    <option value="COMBO-014">COMBO-014 (IN FOB/CMT)</option>
+  </select>
+  <label>Signal:</label>
+  <select id="signalFilter" onchange="fdrop()">
+    <option value="all">All</option>
+    <option value="DIRECT">COMPETITIVE PRESSURE RISK</option>
+    <option value="BENEFICIARY">EXPAND CANDIDATE</option>
+    <option value="CHECK_BENEFICIARY">CHECK / OPPORTUNITY</option>
+    <option value="CHECK">CHECK</option>
+  </select>
+</div>
 
 <div class="section-title">Per-Client Impact Cards — 53 Clients</div>
 
@@ -439,6 +457,17 @@ function fcombo(row,combo){
   });
 }
 var filterActive=null;
+function fdrop(){
+  var cf=document.getElementById('comboFilter').value;
+  var sf=document.getElementById('signalFilter').value;
+  // clear hero highlights
+  document.querySelectorAll('.kpi-badge').forEach(function(b){b.classList.remove('active','dimmed');});
+  document.querySelectorAll('.clickable-row').forEach(function(r){r.classList.remove('active','dimmed');});
+  document.querySelectorAll('.client-card').forEach(function(card){
+    var show=(cf==='all'||card.dataset.combo===cf)&&(sf==='all'||card.dataset.signal===sf);
+    card.style.display=show?'':'none';
+  });
+}
 function rc(){
   var c=document.getElementById('cards-container');
   var h='';
