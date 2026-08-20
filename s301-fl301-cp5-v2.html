@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL301 · CP5 v2 | Section 301 Tariff Validation | Air8</title>
+<style>
+:root {
+  --bg: #0a1628;
+  --card-bg: #111d30;
+  --border: #1e3048;
+  --text: #c8d6e5;
+  --heading: #e8f0fe;
+  --muted: #8899aa;
+  --green: #2ecc71;
+  --blue: #3498db;
+  --orange: #f39c12;
+  --red: #e74c3c;
+  --purple: #9b59b6;
+  --teal: #1abc9c;
+  --amber: #e67e22;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:14px; line-height:1.6; }
+
+/* ── HERO ── */
+.hero { background:linear-gradient(135deg,#1a2a4a,#0d1b2a); border-bottom:1px solid var(--border); padding:48px 40px 40px; }
+.hero-meta { font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+.hero-title { font-size:28px; font-weight:700; color:var(--heading); margin-bottom:8px; }
+.hero-subtitle { font-size:14px; color:var(--text); max-width:860px; margin-bottom:32px; line-height:1.75; }
+.hero-subtitle strong { color:var(--orange); }
+
+/* KPI */
+.kpi-row { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:32px; }
+.kpi { background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:8px; padding:14px 18px; min-width:130px; }
+.kpi-value { font-size:30px; font-weight:700; line-height:1; margin-bottom:4px; }
+.kpi-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+.kpi.threat .kpi-value { color:var(--red); }
+.kpi.expand .kpi-value { color:var(--green); }
+.kpi.dual .kpi-value { color:var(--orange); }
+.kpi.verify .kpi-value { color:var(--blue); }
+.kpi.total .kpi-value { color:var(--heading); }
+.kpi.gap .kpi-value { color:var(--muted); }
+
+/* Section headings inside hero */
+.hsec { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin:24px 0 10px; }
+
+/* Facts / Assumptions */
+.facts-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:8px; }
+.fbox { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+.fbox.facts { border-left:3px solid var(--green); }
+.fbox.assum { border-left:3px solid var(--orange); }
+.fbox-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+.fbox.facts .fbox-title { color:var(--green); }
+.fbox.assum .fbox-title { color:var(--orange); }
+.fbox ul { list-style:none; }
+.fbox ul li { font-size:12px; color:var(--text); padding:3px 0 3px 18px; position:relative; }
+.fbox.facts ul li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
+.fbox.assum ul li::before { content:'~'; position:absolute; left:2px; color:var(--orange); font-weight:700; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:4px; }
+th { background:rgba(255,255,255,.05); color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:1px; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
+td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,.04); color:var(--text); vertical-align:top; }
+tr:hover td { background:rgba(255,255,255,.02); }
+.hhi { color:var(--green); font-weight:600; }
+.hme { color:var(--orange); font-weight:600; }
+.hlo { color:var(--red); font-weight:600; }
+.hun { color:var(--muted); }
+
+/* ── BADGES ── */
+.badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:3px 9px; border-radius:4px; white-space:nowrap; display:inline-block; }
+.badge-threat     { background:rgba(231,76,60,.15);  color:var(--red);    border:1px solid rgba(231,76,60,.3); }
+.badge-expand     { background:rgba(46,204,113,.12); color:var(--green);  border:1px solid rgba(46,204,113,.3); }
+.badge-dual       { background:rgba(243,156,18,.12); color:var(--orange); border:1px solid rgba(243,156,18,.3); }
+.badge-verify-high{ background:rgba(52,152,219,.15); color:#5dade2;       border:1px solid rgba(52,152,219,.4); }
+.badge-verify     { background:rgba(52,152,219,.08); color:var(--blue);   border:1px solid rgba(52,152,219,.25); }
+
+/* ── CARDS SECTION ── */
+.cards-section { padding:40px; }
+.sec-hdr { margin-bottom:28px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+.sec-hdr h2 { font-size:20px; color:var(--heading); margin-bottom:3px; }
+.sec-hdr p { font-size:13px; color:var(--muted); }
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(560px,1fr)); gap:22px; }
+
+/* ── CLIENT CARD ── */
+.client-card { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.card-header { padding:18px 22px 14px; border-bottom:1px solid var(--border); }
+.card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.cidx { font-size:10px; color:var(--muted); background:rgba(255,255,255,.04); padding:2px 7px; border-radius:4px; white-space:nowrap; display:inline-block; margin-bottom:4px; }
+.cname { font-size:14px; font-weight:700; color:var(--heading); }
+.cmeta { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.mt { font-size:10px; color:var(--muted); background:rgba(255,255,255,.04); padding:2px 7px; border-radius:4px; border:1px solid rgba(255,255,255,.06); }
+.mt.VN { color:#ff6b6b; font-weight:600; }
+.mt.IN { color:#f0b040; font-weight:600; }
+.mt.BD { color:#a78bfa; font-weight:600; }
+.mt.warn { color:var(--orange); }
+
+/* WHY chain */
+.why-chain { padding:18px 22px; border-bottom:1px solid var(--border); }
+.why-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:14px; }
+.chain-nodes { display:flex; flex-direction:column; }
+.chain-node { display:flex; gap:0; }
+.nc { display:flex; flex-direction:column; align-items:center; width:30px; flex-shrink:0; }
+.nd { width:9px; height:9px; border-radius:50%; border:2px solid; background:var(--card-bg); flex-shrink:0; margin-top:3px; }
+.nl { width:2px; flex:1; min-height:10px; }
+.chain-node:last-child .nl { display:none; }
+.ncontent { padding-bottom:14px; flex:1; min-width:0; }
+.chain-node:last-child .ncontent { padding-bottom:0; }
+.nlabel { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px; }
+.ntext { font-size:12px; color:var(--text); line-height:1.55; }
+
+/* Node color themes */
+.nt-trigger   .nd { border-color:var(--blue); }  .nt-trigger   .nl { background:rgba(52,152,219,.3); }  .nt-trigger   .nlabel { color:var(--blue); }
+.nt-exposure  .nd { border-color:var(--muted); } .nt-exposure  .nl { background:rgba(136,153,170,.3); } .nt-exposure  .nlabel { color:var(--muted); }
+.nt-economics .nd { border-color:var(--orange); }.nt-economics .nl { background:rgba(243,156,18,.3); }  .nt-economics .nlabel { color:var(--orange); }
+.nt-capacity  .nd { border-color:var(--amber); } .nt-capacity  .nl { background:rgba(230,126,34,.3); }  .nt-capacity  .nlabel { color:var(--amber); }
+.nt-margin    .nd { border-color:var(--purple); }.nt-margin    .nl { background:rgba(155,89,182,.3); }  .nt-margin    .nlabel { color:var(--purple); }
+.nt-compliance.nd { border-color:var(--teal); }  .nt-compliance.nl { background:rgba(26,188,156,.3); } .nt-compliance.nlabel { color:var(--teal); }
+.nt-impact    .nd { border-color:var(--green); } .nt-impact    .nl { background:rgba(46,204,113,.3); }  .nt-impact    .nlabel { color:var(--green); }
+.card-threat .nt-impact .nd { border-color:var(--red); }    .card-threat .nt-impact .nlabel { color:var(--red); }
+.card-dual   .nt-impact .nd { border-color:var(--orange); } .card-dual   .nt-impact .nlabel { color:var(--orange); }
+.card-verify .nt-impact .nd { border-color:var(--blue); }   .card-verify .nt-impact .nlabel { color:var(--blue); }
+.card-verify-high .nt-impact .nd { border-color:#5dade2; }  .card-verify-high .nt-impact .nlabel { color:#5dade2; }
+
+/* WHAT section */
+.what-section { padding:18px 22px; }
+.what-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:12px; }
+.what-cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:12px; }
+.wcol-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--blue); margin-bottom:6px; }
+.wlist { list-style:none; }
+.wlist li { font-size:12px; color:var(--text); padding:2px 0 2px 14px; position:relative; }
+.wlist li::before { content:'→'; position:absolute; left:0; color:var(--blue); font-size:10px; }
+.decision { background:rgba(52,152,219,.06); border:1px solid rgba(52,152,219,.15); border-radius:6px; padding:10px 14px; font-size:12px; color:var(--text); }
+.decision strong { color:var(--blue); font-size:10px; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:3px; }
+
+/* ── STRATEGIC SECTION ── */
+.strategic-section { margin:0 40px 36px; background:linear-gradient(135deg,rgba(26,42,74,.8),rgba(13,27,42,.9)); border:1px solid var(--border); border-radius:12px; padding:30px 36px; }
+.strat-sup { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:6px; }
+.strat-title { font-size:20px; font-weight:700; color:var(--heading); margin-bottom:14px; }
+.strat-lead { font-size:13px; color:var(--text); max-width:800px; line-height:1.75; margin-bottom:22px; }
+.strat-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.sblk { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:8px; padding:18px; }
+.sblk-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--blue); margin-bottom:10px; }
+.sblk p { font-size:13px; color:var(--text); line-height:1.7; }
+
+/* ── APPENDIX ── */
+.appendix { margin:0 40px 40px; background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.app-hdr { background:rgba(255,255,255,.04); padding:18px 30px; border-bottom:1px solid var(--border); }
+.app-hdr h2 { font-size:16px; font-weight:700; color:var(--heading); }
+.app-hdr p { font-size:12px; color:var(--muted); margin-top:3px; }
+.app-body { padding:28px 30px; display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.ablk h3 { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--orange); margin-bottom:14px; padding-bottom:7px; border-bottom:1px solid var(--border); }
+.ablk p { font-size:12px; color:var(--text); line-height:1.65; margin-bottom:8px; }
+.ablk ul { list-style:none; padding:0; }
+.ablk ul li { font-size:12px; color:var(--text); padding:3px 0 3px 14px; position:relative; }
+.ablk ul li::before { content:'·'; position:absolute; left:5px; color:var(--muted); }
+.tariff-ex { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:6px; padding:11px 14px; margin-bottom:10px; }
+.te-ctry { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.te-row { display:flex; justify-content:space-between; font-size:12px; padding:1px 0; }
+.te-row.tot { border-top:1px solid var(--border); margin-top:4px; padding-top:4px; font-weight:600; color:var(--heading); }
+.fin-card { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:6px; padding:11px 14px; margin-bottom:10px; }
+.fin-name { font-size:12px; font-weight:700; color:var(--blue); margin-bottom:4px; }
+.fin-when { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+.fin-desc { font-size:12px; color:var(--text); }
+.vq { display:flex; gap:10px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.vq:last-child { border-bottom:none; }
+.qn { font-size:11px; font-weight:700; color:var(--blue); min-width:22px; }
+.qt { font-size:12px; color:var(--text); }
+
+.report-footer { text-align:center; padding:28px 40px; border-top:1px solid var(--border); color:var(--muted); font-size:11px; }
+
+@media(max-width:768px) {
+  .hero { padding:24px 18px; }
+  .cards-section { padding:18px; }
+  .cards-grid,.facts-grid,.strat-grid,.what-cols,.app-body { grid-template-columns:1fr; }
+  .strategic-section,.appendix { margin:0 18px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div class="hero">
+  <div class="hero-meta">Air8 Intelligence · FL301 Event · CP5 Validation Report v2 · Expert-Reviewed</div>
+  <div class="hero-title">Section 301 Tariff Event — FL301 Validation</div>
+  <div class="hero-subtitle">
+    India-origin suppliers gained a tariff-related cost advantage versus Vietnam-origin competitors under current Section 301 rate structures.
+    <strong>Actual business impact is conditional</strong> — dependent on buyer sourcing decisions, supplier capacity,
+    UFLPA readiness, raw material traceability, supply chain transparency, and commercial negotiations.
+    Vietnam-origin suppliers may face increased competitive pressure, particularly where buyers are actively
+    reviewing sourcing allocations or diversifying production footprints.
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi threat"><div class="kpi-value">1</div><div class="kpi-label">Competitive Pressure Risk</div></div>
+    <div class="kpi expand"><div class="kpi-value">2</div><div class="kpi-label">Expand Candidate</div></div>
+    <div class="kpi dual"><div class="kpi-value">3</div><div class="kpi-label">Dual Exposure</div></div>
+    <div class="kpi verify"><div class="kpi-value">47</div><div class="kpi-label">Verify First</div></div>
+    <div class="kpi total"><div class="kpi-value">53</div><div class="kpi-label">Total Assessed</div></div>
+    <div class="kpi gap"><div class="kpi-value">6</div><div class="kpi-label">KB Data Gaps</div></div>
+  </div>
+
+  <!-- Facts vs Assumptions -->
+  <div class="hsec">Epistemic Status — Facts vs. Assumptions</div>
+  <div class="facts-grid">
+    <div class="fbox facts">
+      <div class="fbox-title">✓ Confirmed Facts</div>
+      <ul>
+        <li>Section 301 tariffs: Vietnam 46% · India 26.5% · Bangladesh ~37% (confirmed)</li>
+        <li>All 53 clients identified from Air8 KB with confirmed country-of-origin</li>
+        <li>FL301 trigger threshold ≥15pp (VN vs IN): 19.5pp delta confirmed</li>
+        <li>UFLPA enforcement active; US CBP raw material traceability requirements in force</li>
+        <li>Tariff delta BD→IN: −10.5pp; VN→IN: −19.5pp (at $100 FOB reference)</li>
+        <li>Air8 financing products (ARP, RT2C, PreShip) available for eligible IN suppliers</li>
+      </ul>
+    </div>
+    <div class="fbox assum">
+      <div class="fbox-title">~ Assumptions / Unverified</div>
+      <ul>
+        <li>Buyer allocation decisions not confirmed — sourcing shifts remain hypothetical</li>
+        <li>Revenue marked [UNKNOWN] for 9 IN FOB clients — capacity unknown</li>
+        <li>UFLPA readiness unverified for all COMBO-014 clients (no audit data in KB)</li>
+        <li>$100 FOB price point used as tariff calc reference only — validate per client</li>
+        <li>Client #53 is a duplicate of #45 — KB data validation required</li>
+        <li>Commercial negotiation outcomes unknown — tariff advantage ≠ order gain</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Portfolio Impact Summary -->
+  <div class="hsec">Portfolio Impact Summary</div>
+  <table style="margin-bottom:22px;">
+    <thead>
+      <tr>
+        <th>Posture</th><th>Count</th><th>Country</th><th>Revenue Exposure (Known)</th>
+        <th>Key Risk / Opportunity</th><th>Action Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-threat">Competitive Pressure Risk</span></td>
+        <td>1</td><td>Vietnam</td><td>&lt;$5M</td>
+        <td>Buyer may reallocate VN woven volume to India-origin alternatives</td>
+        <td style="color:var(--red);font-weight:600;">Immediate</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-expand">Expand Candidate · Conditional</span></td>
+        <td>2</td><td>India</td><td>$200M+ (combined est.)</td>
+        <td>Tariff advantage confirmed; compliance + capacity gates must be cleared</td>
+        <td style="color:var(--green);font-weight:600;">Priority BD</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-dual">Dual Exposure · Watch</span></td>
+        <td>3</td><td>Bangladesh</td><td>$5–20M + 2×&lt;$5M</td>
+        <td>Mid-tariff squeeze; monitor buyer allocation decisions quarterly</td>
+        <td style="color:var(--orange);font-weight:600;">Watch &amp; Report</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-verify-high">Verify First · Med-High</span></td>
+        <td>1</td><td>India</td><td>$20–100M</td>
+        <td>FOB model + scale; advantage real but capacity/compliance unverified</td>
+        <td style="color:#5dade2;font-weight:600;">R1 Call — Urgent</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-verify">Verify First · Medium</span></td>
+        <td>46</td><td>India</td><td>Mostly &lt;$5M; 9 unknown</td>
+        <td>Tariff advantage on paper; capacity buffer &amp; UFLPA gaps likely gating</td>
+        <td style="color:var(--blue);font-weight:600;">R1 Call — Batch</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Supplier Readiness Heatmap -->
+  <div class="hsec">Supplier Readiness Heatmap (Estimated — Pending R1 Verification)</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Client Group</th><th>UFLPA Readiness</th><th>Raw Material Traceability</th>
+        <th>Capacity Buffer</th><th>US Compliance</th><th>Revenue Scale</th><th>Overall</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>COSMO FIRST / SAHU GLOBAL (IN Vertical $100M+)</td>
+        <td class="hme">MEDIUM</td><td class="hme">MEDIUM</td>
+        <td class="hhi">HIGH</td><td class="hme">MEDIUM</td>
+        <td class="hhi">HIGH</td><td class="hme">⬛ CONDITIONAL</td>
+      </tr>
+      <tr>
+        <td>RASIK PRODUCTS (IN FOB $20–100M)</td>
+        <td class="hun">UNKNOWN</td><td class="hun">UNKNOWN</td>
+        <td class="hme">MEDIUM</td><td class="hun">UNKNOWN</td>
+        <td class="hme">MEDIUM</td><td class="hlo">🔴 VERIFY URGENT</td>
+      </tr>
+      <tr>
+        <td>IN FOB [Unknown Revenue] — 9 clients</td>
+        <td class="hun">UNKNOWN</td><td class="hun">UNKNOWN</td>
+        <td class="hun">UNKNOWN</td><td class="hun">UNKNOWN</td>
+        <td class="hun">UNKNOWN</td><td class="hun">⬜ DATA GAP</td>
+      </tr>
+      <tr>
+        <td>IN CMT &lt;$5M — 35 clients</td>
+        <td class="hlo">LOW</td><td class="hlo">LOW</td>
+        <td class="hlo">LOW</td><td class="hlo">LOW–MED</td>
+        <td class="hlo">LOW</td><td class="hlo">🔴 HIGH RISK</td>
+      </tr>
+      <tr>
+        <td>BD Clients (DRESSMEN ×2, MEGHNA)</td>
+        <td class="hme">MEDIUM</td><td class="hme">MEDIUM</td>
+        <td class="hme">MEDIUM</td><td class="hme">MEDIUM</td>
+        <td class="hme">LOW–MED</td><td class="hme">🟡 WATCH</td>
+      </tr>
+      <tr>
+        <td>HOANGPHAT (VN CMT)</td>
+        <td class="hme">MEDIUM</td><td class="hme">MEDIUM</td>
+        <td class="hlo">LOW</td><td class="hme">MEDIUM</td>
+        <td class="hlo">LOW</td><td class="hlo">🔴 AT RISK</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════ CARDS ═══════════════════ -->
+<div class="cards-section">
+  <div class="sec-hdr">
+    <h2>Client Assessment Cards</h2>
+    <p>53 clients · FL301 event match · Individual WHY chain with Capacity Risk + Margin Risk sections · Expert-reviewed v2</p>
+  </div>
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<!-- ═══════════════════ STRATEGIC INSIGHT ═══════════════════ -->
+<div class="strategic-section">
+  <div class="strat-sup">Strategic Context · Air8 BD Advisory</div>
+  <div class="strat-title">The Bigger Picture: Resilience-Optimized Sourcing</div>
+  <div class="strat-lead">
+    The Section 301 tariff differential is a real signal — but it is not the story. The deeper trend is a structural shift in how global
+    buyers think about their supply chains: from <strong style="color:var(--orange);">cost-optimized</strong> to
+    <strong style="color:var(--green);">resilience-optimized</strong>. The 19.5pp tariff differential is a trigger, not a destination.
+    This is not just about the rate gap — it is about which suppliers can prove they are built to last.
+  </div>
+  <div class="strat-grid">
+    <div class="sblk">
+      <div class="sblk-title">🔄 What Buyers Are Actually Doing</div>
+      <p>Major US and EU retailers are implementing multi-country sourcing strategies that prioritize geographic diversification
+      over pure unit cost optimization. Vietnam remains a critical sourcing hub — its tariff exposure does not invalidate its
+      operational advantages (scale, infrastructure, workforce). What changes is buyer tolerance for concentration risk in any
+      single geography. Diversification is structural, not opportunistic.</p>
+    </div>
+    <div class="sblk">
+      <div class="sblk-title">📋 UFLPA as the New Market Entry Gate</div>
+      <p>UFLPA readiness, raw material traceability, and supply chain transparency are no longer optional compliance exercises —
+      they are market entry requirements for US-bound shipments. India-origin suppliers who cannot document their supply chain
+      from cotton ginning through cut-and-sew will not benefit from the tariff differential, regardless of their cost position.
+      Compliance is a prerequisite, not a differentiator.</p>
+    </div>
+    <div class="sblk">
+      <div class="sblk-title">🏆 Who Wins Long-Term</div>
+      <p>Long-term winners in this tariff environment combine: (1) cost competitiveness, (2) full traceability and compliance
+      documentation, (3) demonstrated multi-buyer capability at scale, and (4) reliable execution under volume surges. A tariff
+      advantage without execution credibility is a paper opportunity — buyers test with small orders before committing. Vertical
+      integration with UFLPA compliance is the winning formula.</p>
+    </div>
+    <div class="sblk">
+      <div class="sblk-title">🎯 Air8 BD Positioning</div>
+      <p>Air8's opportunity is to identify India-origin suppliers who are already compliant or near-compliant, have genuine capacity
+      to absorb buyer diversification volumes, and need working capital support (ARP/PreShip) to execute the ramp-up. The 47
+      VERIFY FIRST clients represent a qualification pipeline, not an immediate revenue opportunity. BD R1 calls should focus on
+      capacity, compliance, and buyer relationships — not tariff math.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ APPENDIX ═══════════════════ -->
+<div class="appendix">
+  <div class="app-hdr">
+    <h2>Appendix — Reference Materials</h2>
+    <p>Tariff calculations · Financing products · BD validation questions · Event definitions · Moved here from individual cards per expert review.</p>
+  </div>
+  <div class="app-body">
+
+    <!-- A: Tariff Examples -->
+    <div class="ablk">
+      <h3>A. Tariff Calculation Examples ($100 FOB Reference)</h3>
+      <div class="tariff-ex">
+        <div class="te-ctry" style="color:#ff6b6b;">🇻🇳 Vietnam — 46% Section 301</div>
+        <div class="te-row"><span>FOB Value</span><span>$100.00</span></div>
+        <div class="te-row"><span>Section 301 Duty (46%)</span><span>$46.00</span></div>
+        <div class="te-row"><span>Freight + Insurance (est.)</span><span>~$8.00</span></div>
+        <div class="te-row tot"><span>Landed Cost (US)</span><span>~$154.00</span></div>
+      </div>
+      <div class="tariff-ex">
+        <div class="te-ctry" style="color:#f0b040;">🇮🇳 India — 26.5% Section 301</div>
+        <div class="te-row"><span>FOB Value</span><span>$100.00</span></div>
+        <div class="te-row"><span>Section 301 Duty (26.5%)</span><span>$26.50</span></div>
+        <div class="te-row"><span>Freight + Insurance (est.)</span><span>~$8.00</span></div>
+        <div class="te-row tot"><span>Landed Cost (US)</span><span>~$134.50</span></div>
+      </div>
+      <div class="tariff-ex">
+        <div class="te-ctry" style="color:#a78bfa;">🇧🇩 Bangladesh — ~37% Section 301</div>
+        <div class="te-row"><span>FOB Value</span><span>$100.00</span></div>
+        <div class="te-row"><span>Section 301 Duty (~37%)</span><span>$37.00</span></div>
+        <div class="te-row"><span>Freight + Insurance (est.)</span><span>~$9.00</span></div>
+        <div class="te-row tot"><span>Landed Cost (US)</span><span>~$146.00</span></div>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;">⚠ Reference only. Actual landed costs depend on HTS classification, freight contracts, insurance, port fees, and buyer-specific duty programs. Validate with trade compliance before quoting.</p>
+    </div>
+
+    <!-- B: Financing Products -->
+    <div class="ablk">
+      <h3>B. Air8 Financing Products — When Each Applies</h3>
+      <div class="fin-card">
+        <div class="fin-name">ARP — Accounts Receivable Purchase</div>
+        <div class="fin-when">WHEN: Confirmed PO + post-shipment invoice exists</div>
+        <div class="fin-desc">Purchase of eligible receivables from approved buyers. Best fit for IN/BD FOB suppliers with established buyer relationships who need cash flow acceleration between shipment and buyer payment terms (60–120 days typical). Buyer must be Air8-eligible.</div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-name">RT2C — Ready-to-Cut / Ready-to-Confirm</div>
+        <div class="fin-when">WHEN: Buyer PO confirmed; fabric/trim purchase needed pre-production</div>
+        <div class="fin-desc">Pre-production financing against buyer confirmation. Ideal for IN Vertical suppliers ramping new buyer volumes who need raw material procurement financing before production begins. Requires UFLPA traceability documentation for US-bound orders.</div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-name">PreShip — Pre-Shipment Financing</div>
+        <div class="fin-when">WHEN: Goods in production; buyer confirmed; shipment &lt;60 days out</div>
+        <div class="fin-desc">Bridge financing for goods transitioning from work-in-progress to shipped. Applicable to CMT suppliers with active orders needing WC support. UFLPA readiness, raw material traceability, and supply chain transparency documentation required for US buyer orders — unverified supply chains may be ineligible.</div>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;">All products subject to Air8 credit assessment, buyer eligibility, and compliance requirements. UFLPA-flagged supply chains are ineligible pending traceability audit completion.</p>
+    </div>
+
+    <!-- C: Validation Questions -->
+    <div class="ablk">
+      <h3>C. BD Team R1 Call — Supplier Validation Questions</h3>
+      <div class="vq"><div class="qn">Q1</div><div class="qt">What is your current annual production capacity (units / value)? What % is already committed to existing buyers?</div></div>
+      <div class="vq"><div class="qn">Q2</div><div class="qt">Have you completed a UFLPA compliance audit? Do you have raw material traceability documentation from fiber origin through finished goods?</div></div>
+      <div class="vq"><div class="qn">Q3</div><div class="qt">Which US buyers are you currently supplying or in active negotiation with? What volume levels?</div></div>
+      <div class="vq"><div class="qn">Q4</div><div class="qt">Can you provide supply chain transparency documentation — raw material sourcing, mill certificates, and factory certifications?</div></div>
+      <div class="vq"><div class="qn">Q5</div><div class="qt">What is your current working capital cycle? Do you have existing trade finance facilities in place?</div></div>
+      <div class="vq"><div class="qn">Q6</div><div class="qt">If a buyer approaches with 20–30% volume increase, what is your ramp-up timeline and capital investment requirement?</div></div>
+      <div class="vq"><div class="qn">Q7</div><div class="qt">Are you certified under GOTS, BCI, or other raw material standards? Do you hold WRAP, SA8000, or BSCI factory social compliance certifications?</div></div>
+      <div class="vq"><div class="qn">Q8</div><div class="qt">Have any US buyers specifically referenced the tariff environment as a reason to increase India-origin orders with you?</div></div>
+    </div>
+
+    <!-- D: Event Definitions -->
+    <div class="ablk">
+      <h3>D. Event Family Definitions — FL301 / COMBO Series</h3>
+      <p><strong style="color:var(--blue);">FL301</strong> — Section 301 Tariff Differential Flag. Triggered when a country-of-origin tariff differential ≥15pp creates a competitive cost shift between portfolio clients. Captures both competitive pressure and conditional expansion scenarios simultaneously.</p>
+      <p><strong style="color:var(--blue);">COMBO-006</strong> — Vietnam CMT/FOB suppliers, US market, woven products, where a lower-tariff competitor (IN/BD) is confirmed in same product category. Posture: COMPETITIVE PRESSURE RISK.</p>
+      <p><strong style="color:var(--blue);">COMBO-003</strong> — India Vertical integrated suppliers, $100M+ revenue, US primary market, woven product. Large-scale capacity with integration advantage. Posture: EXPAND CANDIDATE (conditional).</p>
+      <p><strong style="color:var(--blue);">COMBO-002</strong> — Bangladesh suppliers with dual tariff exposure — worse than India, better than Vietnam. Subject to buyer allocation pressure from both directions. Posture: DUAL EXPOSURE.</p>
+      <p><strong style="color:var(--blue);">COMBO-014</strong> — India FOB/CMT suppliers, woven product, primarily US market. Posture ranges from VERIFY FIRST MEDIUM-HIGH (FOB $20-100M) to VERIFY FIRST MEDIUM (CMT &lt;$5M). Qualification pipeline requiring R1 assessment.</p>
+      <p><strong style="color:var(--orange);">CP5</strong> — Confidence-Posture Level 5. Full client card with 7-node WHY chain analysis, posture assignment, and BD action output. Requires expert validation before BD team deployment.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="report-footer">
+  FL301 · CP5 Validation Report <strong>v2</strong> &nbsp;·&nbsp; Air8 Intelligence &nbsp;·&nbsp;
+  Expert-Reviewed Edition &nbsp;·&nbsp; 53 Clients &nbsp;·&nbsp; 7-Node WHY Chain &nbsp;·&nbsp;
+  Appendix-Consolidated &nbsp;·&nbsp; Confidential
+</div>
+
+<!-- ═══════════════════ DATA + RENDER ═══════════════════ -->
+<script>
+// ── CORE CLIENT DATA ──
+const baseClients = [
+  // COMBO-006: Vietnam — Competitive Pressure Risk
+  {
+    id:1, name:"HOANGPHAT CO., LTD",
+    country:"VN", countryFull:"Vietnam", flag:"🇻🇳",
+    mode:"CMT", product:"woven", markets:"APAC/US", revenue:"<$5M", clientId:"C0001110",
+    combo:"COMBO-006", posture:"threat",
+    badge:"badge-threat", badgeText:"COMPETITIVE PRESSURE RISK · HIGH",
+    tariffRate:"46%", comparator:"India 26.5%", deltaLabel:"−19.5pp vs India",
+    bdActions:[
+      "Notify account manager — flag for sourcing risk review",
+      "Check active PO pipeline for VN-origin woven orders",
+      "Assess buyer's current India-origin alternatives in Air8 portfolio",
+      "Schedule risk review call with BD lead within 14 days"
+    ],
+    clientActions:[
+      "Review buyer sourcing feedback and any RFQ reductions",
+      "Assess capacity to offer competitive pricing or value-add differentiation",
+      "Explore whether buyer is open to extended payment terms as a retention lever"
+    ],
+    decision:"Hold current engagement; activate monitoring protocol. Escalate to BD lead if buyer confirms sourcing review or reduces order volume."
+  },
+
+  // COMBO-003: India Vertical — Expand Candidate
+  {
+    id:2, name:"COSMO FIRST LIMITED",
+    country:"IN", countryFull:"India", flag:"🇮🇳",
+    mode:"Vertical", product:"woven", markets:"US", revenue:"$100M+", clientId:"C0000860",
+    combo:"COMBO-003", posture:"expand",
+    badge:"badge-expand", badgeText:"EXPAND CANDIDATE · CONDITIONAL",
+    tariffRate:"26.5%", comparator:"Vietnam 46%", deltaLabel:"+19.5pp vs Vietnam",
+    bdActions:[
+      "Schedule strategic expansion meeting with senior BD lead",
+      "Validate UFLPA readiness, raw material traceability, and supply chain transparency status",
+      "Identify which US buyers are in active tariff-review sourcing discussions",
+      "Explore RT2C or ARP facility fit for volume ramp-up support"
+    ],
+    clientActions:[
+      "Prepare capacity utilization report (current vs flex headroom across production stages)",
+      "Initiate or accelerate UFLPA traceability audit if not already complete",
+      "Engage US buyer procurement teams proactively on tariff differential advantages"
+    ],
+    decision:"EXPAND CANDIDATE (conditional) — validated only after capacity audit, UFLPA readiness confirmed, and buyer allocation signal received. Do not over-commit resources without buyer confirmation."
+  },
+  {
+    id:3, name:"SAHU GLOBAL PRIVATE LIMITED",
+    country:"IN", countryFull:"India", flag:"🇮🇳",
+    mode:"Vertical", product:"woven", markets:"US", revenue:"$100M+", clientId:"—",
+    combo:"COMBO-003", posture:"expand",
+    badge:"badge-expand", badgeText:"EXPAND CANDIDATE · CONDITIONAL",
+    tariffRate:"26.5%", comparator:"Vietnam 46%", deltaLabel:"+19.5pp vs Vietnam",
+    note:"⚠ No client ID in KB — register before BD engagement",
+    bdActions:[
+      "Schedule strategic expansion meeting with senior BD lead",
+      "Validate UFLPA readiness, raw material traceability, and supply chain transparency status",
+      "Register client ID in Air8 KB — currently missing",
+      "Identify which US buyers are in active tariff-review sourcing discussions"
+    ],
+    clientActions:[
+      "Prepare capacity utilization report (current vs flex headroom across production stages)",
+      "Initiate or accelerate UFLPA traceability audit if not already complete",
+      "Engage US buyer procurement teams proactively on tariff differential advantages"
+    ],
+    decision:"EXPAND CANDIDATE (conditional) — client ID missing; register in KB before BD engagement. Validate capacity and UFLPA gates before any buyer-facing commitment."
+  },
+
+  // COMBO-002: Bangladesh — Dual Exposure
+  {
+    id:4, name:"DRESSMEN SOURCING LIMITED",
+    country:"BD", countryFull:"Bangladesh", flag:"🇧🇩",
+    mode:"Trader", product:"woven", markets:"US", revenue:"<$5M", clientId:"C0000927",
+    combo:"COMBO-002", posture:"dual",
+    badge:"badge-dual", badgeText:"DUAL EXPOSURE · WATCH",
+    tariffRate:"~37%", comparator:"India 26.5% / Vietnam 46%", deltaLabel:"−10.5pp vs India · +9pp vs VN",
+    bdActions:[
+      "Flag dual exposure — monitor buyer sourcing decisions quarterly",
+      "Check if US buyers are comparing BD vs India-origin alternatives",
+      "Assess trader's supplier base for India-origin substitution risk",
+      "Maintain quarterly check-in cadence; escalate on order reduction signals"
+    ],
+    clientActions:[
+      "Clarify current buyer allocation mix and any sourcing review signals received",
+      "Assess ability to source from India factories for cost pass-through option",
+      "Review current margin structure against India-origin competitor quotes"
+    ],
+    decision:"DUAL EXPOSURE — mid-tariff positioning creates squeeze risk from both directions. Watch buyer allocation closely; escalate if buyer confirms India sourcing preference or reduces BD orders."
+  },
+  {
+    id:5, name:"MEGHNA DENIMS LIMITED",
+    country:"BD", countryFull:"Bangladesh", flag:"🇧🇩",
+    mode:"FOB", product:"denim", markets:"APAC/US", revenue:"$5-20M", clientId:"C0001281",
+    combo:"COMBO-002", posture:"dual",
+    badge:"badge-dual", badgeText:"DUAL EXPOSURE · WATCH",
+    tariffRate:"~37%", comparator:"India 26.5% / Vietnam 46%", deltaLabel:"−10.5pp vs India · +9pp vs VN",
+    bdActions:[
+      "Flag dual exposure — monitor US buyer sourcing decisions quarterly",
+      "Denim is a specialized category — assess India denim alternatives in buyer portfolio",
+      "Check APAC market exposure for potential hedge against US tariff pressure",
+      "Review ARP facility status for existing BD operations"
+    ],
+    clientActions:[
+      "Assess denim buyer feedback on sourcing reviews and any RFQ changes",
+      "Validate UFLPA readiness, raw material traceability, and supply chain transparency for denim supply chain",
+      "Evaluate APAC buyer exposure as a hedge versus US tariff risk"
+    ],
+    decision:"DUAL EXPOSURE — denim specialty may offer some protection from generic woven alternatives. Monitor US buyer tariff pressure trajectory and BD denim-specific compliance posture."
+  },
+  {
+    id:6, name:"DRESSMEN GARMENTS LIMITED",
+    country:"BD", countryFull:"Bangladesh", flag:"🇧🇩",
+    mode:"CMT", product:"woven", markets:"APAC/US", revenue:"<$5M", clientId:"C0000926",
+    combo:"COMBO-002", posture:"dual",
+    badge:"badge-dual", badgeText:"DUAL EXPOSURE · WATCH",
+    tariffRate:"~37%", comparator:"India 26.5% / Vietnam 46%", deltaLabel:"−10.5pp vs India · +9pp vs VN",
+    note:"Related party: Dressmen Sourcing (C0000927) — monitor consolidated exposure",
+    bdActions:[
+      "Flag dual exposure — monitor buyer sourcing decisions",
+      "CMT model limits flexibility — assess buyer alternative options",
+      "Check sister company Dressmen Sourcing (C0000927) for consolidated exposure",
+      "Maintain watch status; escalate if APAC/US orders reduce >15%"
+    ],
+    clientActions:[
+      "Clarify buyer allocation and any sourcing review feedback received",
+      "Assess capacity to add compliance value-adds beyond CMT (traceability services)",
+      "Review APAC market exposure as hedge against US tariff risk"
+    ],
+    decision:"DUAL EXPOSURE — small CMT operation with limited flexibility. Related-party risk with Dressmen Sourcing (C0000927). Monitor consolidated BD exposure across both entities."
+  }
+];
+
+// ── COMBO-014: India Verify First (47 clients) ──
+const combo014Raw = [
+  { id:7,  name:"TEXPORT INDUSTRIES PVT. LTD.",           mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:8,  name:"TEXPORT SYNDICATE (INDIA) LTD",           mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:9,  name:"SUPER OVERSEAS PVT LTD",                  mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:10, name:"SPL INDUSTRIES LTD",                      mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:11, name:"SARA SUOLE PRIVATE LIMITED",              mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:12, name:"PARADIGUM",                               mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:13, name:"FASCINO EXPORTS PRIVATE LIMITED",         mode:"FOB", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:14, name:"VIVSUN EXPORTS",                          mode:"FOB", product:"woven", markets:"EU/US",   revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:15, name:"LEAP INCORPORATION",                      mode:"CMT", product:"woven", markets:"EU/US",   revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:16, name:"TEXTILE MERCHANDISING",                   mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:17, name:"AVANTI OVERSEAS PRIVATE LIMITED",         mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:18, name:"ELITE HOMES",                             mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:19, name:"RASIK PRODUCTS PRIVATE LIMITED",          mode:"FOB", product:"woven", markets:"US",      revenue:"$20-100M",  badge:"badge-verify-high",  badgeText:"VERIFY FIRST · MEDIUM-HIGH" },
+  { id:20, name:"TRISA EXPORTS PRIVATE LIMITED",           mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:21, name:"GUPTA CREATIONS",                         mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:22, name:"KATEX EXIM LIMITED",                      mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:23, name:"RK IMPEX INC",                            mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:24, name:"INDIAN ART EFFECTS",                      mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:25, name:"LYV BRANDS PRIVATE LIMITED",              mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:26, name:"TRIPLE999 RETAIL PRIVATE LIMITED",        mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:27, name:"PURUSHOTTAM EXPORTS PRIVATE LIMITED",     mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:28, name:"GAINUP INDUSTRIES INDIA PRIVATE LIMITED", mode:"CMT", product:"woven", markets:"multi",   revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:29, name:"B R OVERSEAS",                            mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:30, name:"ORIENT EXPORTS",                          mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:31, name:"JADWIN INTERNATIONAL",                    mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:32, name:"A N S",                                   mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:33, name:"RD INFRASTRUCTURE",                       mode:"CMT", product:"woven", markets:"APAC/US", revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:34, name:"RAJKAMAL INTERNATIONAL",                  mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:35, name:"ABDS OVERSEAS LLP",                       mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:36, name:"SVMINC FASHIONS PRIVATE LIMITED",         mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:37, name:"KAY EXPORTS",                             mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:38, name:"PEARL GLOBAL INDUSTRIES LTD",             mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:39, name:"SAINI EXPORTS",                           mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:40, name:"SVM INC",                                 mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:41, name:"INSIGNIAN HOME PRIVATE LIMITED",          mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:42, name:"MACSON PRODUCTS",                         mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:43, name:"BONAFIDE EXPORTS",                        mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:44, name:"MARGHOOB & BROTHERS",                     mode:"FOB", product:"woven", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:45, name:"MAHAJAN OVERSEAS PRIVATE LIMITED",        mode:"CMT", product:"woven", markets:"APAC/US", revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:46, name:"CHRISTY APPARELS PRIVATE LIMITED",        mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:47, name:"ANURAJ EXPORTS",                          mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:48, name:"CAS TECH PRODUCTS PRIVATE LIMITED",       mode:"CMT", product:"woven", markets:"APAC/US", revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:49, name:"RANVIK EXPORTS PRIVATE LIMITED",          mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:50, name:"SHRI BALA JI EXPORT",                     mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:51, name:"EV HOME",                                 mode:"CMT", product:"woven", markets:"US",      revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:52, name:"BHASKAR INDUSTRIES PRIVATE LIMITED",      mode:"FOB", product:"denim", markets:"US",      revenue:"[UNKNOWN]", badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM" },
+  { id:53, name:"MAHAJAN OVERSEAS PRIVATE LIMITED",        mode:"CMT", product:"woven", markets:"APAC/US", revenue:"<$5M",      badge:"badge-verify",       badgeText:"VERIFY FIRST · MEDIUM",
+    note:"⚠ Duplicate of #45 — KB data validation required before BD engagement" }
+];
+
+// Build COMBO-014 full client objects
+const combo014Clients = combo014Raw.map(c => {
+  const isVerifyHigh = c.badge === "badge-verify-high";
+  const posture = isVerifyHigh ? "verify-high" : "verify";
+  return {
+    ...c,
+    country:"IN", countryFull:"India", flag:"🇮🇳",
+    clientId:"—",
+    combo:"COMBO-014",
+    posture,
+    tariffRate:"26.5%", comparator:"Vietnam 46%", deltaLabel:"+19.5pp vs Vietnam",
+    bdActions: isVerifyHigh ? [
+      "PRIORITY R1 CALL — FOB model + $20-100M revenue warrants fast-track qualification",
+      "Confirm UFLPA readiness, raw material traceability, and supply chain transparency status",
+      "Validate US buyer relationships and active order pipeline",
+      "Assess capacity headroom for incremental buyer volumes"
+    ] : [
+      "Schedule R1 qualification call — capacity, compliance, buyer relationships",
+      "Verify UFLPA readiness, raw material traceability, and supply chain transparency status",
+      "Confirm US buyer relationships and active order pipeline",
+      "Batch with other COMBO-014 IN clients for efficiency"
+    ],
+    clientActions:[
+      "Prepare capacity documentation and current utilization data",
+      "Initiate UFLPA readiness assessment if not already complete",
+      "Document raw material sourcing chain and mill/factory certificates",
+      "Prepare list of current US buyer relationships and volume levels"
+    ],
+    decision: isVerifyHigh
+      ? "VERIFY FIRST (Medium-High): FOB engagement model and revenue scale ($20-100M) warrant priority R1 qualification call. Capacity headroom and UFLPA readiness, raw material traceability, and supply chain transparency are gating factors before BD proceeds."
+      : "VERIFY FIRST (Medium): Tariff advantage confirmed at country level but capacity and compliance gaps are likely gating factors. UFLPA readiness, raw material traceability, and supply chain transparency must be confirmed before BD engages buyers on this client's behalf."
+  };
+});
+
+const allClients = [...baseClients, ...combo014Clients];
+
+// ── WHY CHAIN TEMPLATES ──
+function getWhyChain(c) {
+  const chains = {
+    threat: [
+      { type:"trigger",    label:"TRIGGER — What Changed",
+        text:`Section 301 tariffs at ${c.tariffRate} effective on ${c.countryFull}-origin ${c.product} apparel. US buyers face a materially higher landed cost for ${c.countryFull}-sourced goods versus India-origin alternatives — creating a structural incentive to reallocate sourcing volumes.` },
+      { type:"exposure",   label:"CLIENT EXPOSURE — Why This Row",
+        text:`${c.countryFull}-origin ${c.mode} ${c.product} supplier. Markets: ${c.markets}. Revenue: ${c.revenue}. Client ID: ${c.clientId}. Tariff exposure is directly tied to country of production — no bypass available without fundamental supply chain restructuring.` },
+      { type:"economics",  label:"ECONOMICS GAP — Competitive Delta",
+        text:`${c.countryFull} ${c.tariffRate} vs India 26.5% → ${c.deltaLabel} buyer cost disadvantage. At $100 FOB reference: ${c.countryFull}-origin lands at ~$154 vs India-origin at ~$134.50 — a $19.50/unit differential that incentivizes buyer sourcing reallocation. (See Appendix A for full calc.)` },
+      { type:"capacity",   label:"CAPACITY RISK — Can They Absorb Volume?",
+        text:`${c.mode} engagement model constrains rapid volume adjustment. Existing buyer commitments likely occupy significant capacity share. If buyer reallocates volumes to India-origin suppliers, ${c.name} may face utilization reduction with limited ability to backfill on short notice.` },
+      { type:"margin",     label:"MARGIN RISK — Higher Pressure ≠ Higher Profitability",
+        text:`Margin compression is the primary near-term financial risk. As buyers leverage the India tariff differential in commercial negotiations, ${c.name} may face pressure to reduce FOB price, absorb additional buyer costs, or offer extended payment terms — all of which compress already-thin ${c.mode} margins without volume recovery.` },
+      { type:"compliance", label:"COMPLIANCE GATE — UFLPA Readiness + Traceability",
+        text:`UFLPA readiness, raw material traceability, and supply chain transparency status unverified for this client. US buyers conducting compliance diligence require documented chain-of-custody from fiber origin to finished goods. Unverified suppliers face CBP hold risk on US-bound shipments, compounding the competitive pressure.` },
+      { type:"impact",     label:"IMPACT CONCLUSION — Posture Decision",
+        text:`COMPETITIVE PRESSURE RISK: ${c.name} may face increased competitive pressure, particularly where buyers are actively reviewing sourcing allocations or diversifying production footprints. BD: immediate engagement and monitoring protocol activation required.` }
+    ],
+
+    expand: [
+      { type:"trigger",    label:"TRIGGER — What Changed",
+        text:`Section 301 tariffs create a ${c.deltaLabel} favorable delta for India-origin ${c.product} goods versus Vietnam. US buyers face 46% on VN-origin vs 26.5% on IN-origin — a structural cost incentive to evaluate or increase India-origin sourcing allocations.` },
+      { type:"exposure",   label:"CLIENT EXPOSURE — Why This Row",
+        text:`India-origin ${c.mode} integrated ${c.product} supplier. Revenue: ${c.revenue}. US primary market. Client ID: ${c.clientId}. Vertical integration across spinning, weaving, and finishing provides supply chain control — an advantage when US buyers require UFLPA traceability documentation.` },
+      { type:"economics",  label:"ECONOMICS GAP — Competitive Delta",
+        text:`India 26.5% vs Vietnam 46% → ${c.deltaLabel} buyer cost advantage. At $100 FOB, India-origin goods land ~$19.50 cheaper per unit in US duties alone. At ${c.revenue} annual revenue scale, the aggregate dollar differential is material. However: tariff advantage does not automatically convert to order gains — buyer decisions, compliance validation, and capacity confirmation are all required. (See Appendix A.)` },
+      { type:"capacity",   label:"CAPACITY RISK — Can They Absorb Volume?",
+        text:`${c.mode} integration suggests end-to-end supply chain control, but surge volumes from buyer diversification require validation across all production stages: spinning capacity, weaving throughput, dyeing and finishing constraints, and cut-and-sew headroom. Key unknowns: current utilization, lead time to add flex capacity, sub-contracting risk, and investment required for volume ramp-up.` },
+      { type:"margin",     label:"MARGIN RISK — Higher Volume ≠ Higher Profitability",
+        text:`Revenue base of ${c.revenue} provides buffer, but rapid volume scaling can dilute margins if capacity is stretched beyond optimal utilization thresholds. Commercial terms for new buyer volumes must reflect ramp-up risk, quality control investment, compliance documentation costs, and working capital requirements — not just the tariff differential advantage.` },
+      { type:"compliance", label:"COMPLIANCE GATE — UFLPA Readiness + Traceability",
+        text:`UFLPA readiness, raw material traceability, and supply chain transparency are prerequisites for US buyer onboarding under current UFLPA enforcement. Vertical integration is an advantage — mill-level certificates, cotton origin documentation, and factory social compliance certifications should be validated and packaged for buyer due diligence before any BD-led buyer introduction.` },
+      { type:"impact",     label:"IMPACT CONCLUSION — Posture Decision",
+        text:`EXPAND CANDIDATE (conditional): ${c.name} gained tariff-related cost advantage vs Vietnam, but actual business gains will depend on buyer sourcing decisions, supplier capacity, compliance readiness, and commercial negotiations. Treat as conditional pipeline — validate gates sequentially before BD commitment.` }
+    ],
+
+    dual: [
+      { type:"trigger",    label:"TRIGGER — What Changed",
+        text:`Bangladesh tariff at ~37% sits between Vietnam (46%) and India (26.5%) under Section 301. ${c.name} faces dual-direction competitive pressure — less exposed than Vietnam-origin suppliers but more expensive than India-origin alternatives on US landed cost basis.` },
+      { type:"exposure",   label:"CLIENT EXPOSURE — Why This Row",
+        text:`Bangladesh-origin ${c.mode} ${c.product} supplier. Markets: ${c.markets}. Revenue: ${c.revenue}. Client ID: ${c.clientId}. Exposure is dual: buyers may reduce BD allocation in favor of India (US cost optimization) while VN-displaced volume may seek BD as a 'cheaper alternative to Vietnam' — creating unpredictable allocation swings.` },
+      { type:"economics",  label:"ECONOMICS GAP — Competitive Delta",
+        text:`BD ~37% vs India 26.5% → −10.5pp disadvantage vs India. BD ~37% vs Vietnam 46% → +9pp advantage vs VN. At $100 FOB: BD lands at ~$146, India at ~$134.50, VN at ~$154. Mid-tier position creates margin squeeze risk as buyers use India-origin pricing as a negotiating anchor. (See Appendix A.)` },
+      { type:"capacity",   label:"CAPACITY RISK — Can They Absorb Volume?",
+        text:`Dual exposure creates demand uncertainty — buyers may reduce BD allocation (India preference) while VN-displaced buyers may seek BD capacity (VN avoidance). This creates unpredictable volume swings in both directions. Capacity planning becomes difficult in volatile buyer-allocation environments with no clear directional signal.` },
+      { type:"margin",     label:"MARGIN RISK — Mid-Tariff Squeeze",
+        text:`Margin pressure from multiple directions: US buyers comparing BD to India-origin alternatives will push for price reductions. If BD absorbs volume diverted from VN, it may come at lower margins as buyers leverage their VN/BD cost awareness. Net effect: margin compression risk regardless of which way volume flows.` },
+      { type:"compliance", label:"COMPLIANCE GATE — UFLPA Readiness + Traceability",
+        text:`UFLPA readiness, raw material traceability, and supply chain transparency must be maintained for all US-bound shipments. Bangladesh has documented cotton sourcing risks flagged by US CBP. Buyers conducting US import compliance diligence require full chain-of-custody documentation. Unverified BD supply chains face elevated CBP hold risk.` },
+      { type:"impact",     label:"IMPACT CONCLUSION — Posture Decision",
+        text:`DUAL EXPOSURE: ${c.name} faces mid-tariff positioning that creates competitive pressure from India-origin alternatives. Monitor buyer allocation decisions closely; escalate if buyer confirms India sourcing preference, reduces BD order volumes, or raises compliance questions.` }
+    ],
+
+    "verify-high": [
+      { type:"trigger",    label:"TRIGGER — What Changed",
+        text:`Section 301 tariffs create a ${c.deltaLabel} favorable delta for India-origin ${c.product} goods versus Vietnam. US buyers are evaluating India-origin sourcing alternatives across woven product categories under active tariff-review procurement cycles.` },
+      { type:"exposure",   label:"CLIENT EXPOSURE — Why This Row",
+        text:`India-origin ${c.mode} ${c.product} supplier. Revenue: ${c.revenue}. US primary market. FOB engagement model indicates established buyer relationships and factory-level export capability. Revenue scale suggests meaningful production capacity relative to COMBO-014 median.` },
+      { type:"economics",  label:"ECONOMICS GAP — Competitive Delta",
+        text:`India 26.5% vs Vietnam 46% → ${c.deltaLabel} buyer cost advantage. At $100 FOB, India-origin goods land ~$19.50 cheaper per unit in US duties. At $20-100M scale, aggregate tariff benefit to buyers is material and commercially actionable. However, advantage is conditional on capacity validation and UFLPA compliance. (See Appendix A.)` },
+      { type:"capacity",   label:"CAPACITY RISK — Can They Absorb Volume?",
+        text:`${c.mode} model at $20-100M revenue suggests real production capacity. However, key unknowns: current utilization rate, flex headroom for incremental buyer volumes, sub-contracting risk and quality control at scale, and lead time for ramp-up. All must be confirmed in R1 assessment before BD proceeds. Unverified capacity creates over-commitment risk.` },
+      { type:"margin",     label:"MARGIN RISK — Higher Volume ≠ Higher Profitability",
+        text:`Mid-tier revenue ($20-100M) with FOB exposure suggests established but not large-scale margin structure. Volume scaling from buyer tariff-driven diversification may require compliance investment (UFLPA audit, traceability documentation) and capacity investment — both of which precede any revenue benefit and compress near-term margins.` },
+      { type:"compliance", label:"COMPLIANCE GATE — UFLPA Readiness + Traceability",
+        text:`UFLPA readiness, raw material traceability, and supply chain transparency are unverified. For FOB suppliers at $20-100M scale actively pursuing US buyers, UFLPA compliance status is a critical gating factor. US buyers in compliance-led procurement cycles will require documented raw material sourcing from fiber origin through manufacturing before awarding incremental volume.` },
+      { type:"impact",     label:"IMPACT CONCLUSION — Posture Decision",
+        text:`VERIFY FIRST (Medium-High): Tariff advantage is real and revenue scale is meaningful. Priority R1 qualification call required to confirm capacity headroom and UFLPA readiness, raw material traceability, and supply chain transparency before BD proceeds. Advantage does not convert to revenue without validation.` }
+    ],
+
+    verify: [
+      { type:"trigger",    label:"TRIGGER — What Changed",
+        text:`Section 301 tariffs create a ${c.deltaLabel} favorable delta for India-origin ${c.product} goods versus Vietnam. US buyer procurement teams are evaluating India-origin sourcing as a cost optimization lever under active tariff-review cycles.` },
+      { type:"exposure",   label:"CLIENT EXPOSURE — Why This Row",
+        text:`India-origin ${c.mode} ${c.product} supplier. Revenue: ${c.revenue}. Markets: ${c.markets}. ${c.mode} engagement model. Matched FL301 event criteria: IN-origin, woven/denim, US market exposure, confirmed in Air8 KB.` },
+      { type:"economics",  label:"ECONOMICS GAP — Competitive Delta",
+        text:`India 26.5% vs Vietnam 46% → ${c.deltaLabel} buyer cost advantage on paper. At ${c.revenue} annual revenue, the absolute tariff benefit accruing to buyers is limited in scale — but the percentage differential is real and draws buyer attention for sourcing reviews. Economics are favorable in direction, not transformative in magnitude at this scale. (See Appendix A.)` },
+      { type:"capacity",   label:"CAPACITY RISK — Can They Absorb Volume?",
+        text:`${c.mode} model at ${c.revenue} revenue indicates constrained production capacity. CMT/small-scale FOB suppliers face significant volume surge absorption risk — sub-contracting quality control, lead time reliability, and production consistency are common failure points when buyers ramp India allocations quickly on untested suppliers.` },
+      { type:"margin",     label:"MARGIN RISK — Higher Volume ≠ Higher Profitability",
+        text:`Small revenue base (${c.revenue}) leaves minimal margin buffer for compliance investment or capacity ramp-up. Rapid volume increases may require sub-contracting (quality and traceability risk), capital expenditure (cash flow constraint), and UFLPA compliance documentation — all costs that precede any revenue benefit and can turn apparent opportunity into operational loss.` },
+      { type:"compliance", label:"COMPLIANCE GATE — UFLPA Readiness + Traceability",
+        text:`UFLPA readiness, raw material traceability, and supply chain transparency status is unknown for this client — this is the primary gating factor. Without documented traceability from raw material origin to finished goods, US buyers conducting import compliance diligence will not onboard this supplier, regardless of tariff advantage. Unverified supply chains are ineligible for most Air8 US-linked financing.` },
+      { type:"impact",     label:"IMPACT CONCLUSION — Posture Decision",
+        text:`VERIFY FIRST (Medium): Cost advantage confirmed at country level but capacity and compliance gaps are likely gating factors for actual buyer order allocation. R1 qualification call must confirm UFLPA readiness, raw material traceability, supply chain transparency, and genuine capacity headroom before any BD engagement with buyers on this client's behalf.` }
+    ]
+  };
+  return chains[c.posture] || chains.verify;
+}
+
+// ── RENDER ──
+function renderNode(n) {
+  return `<div class="chain-node nt-${n.type}">
+    <div class="nc"><div class="nd"></div><div class="nl"></div></div>
+    <div class="ncontent">
+      <div class="nlabel">${n.label}</div>
+      <div class="ntext">${n.text}</div>
+    </div>
+  </div>`;
+}
+
+function renderCard(c) {
+  const chain = getWhyChain(c);
+  const noteHtml = c.note ? `<span class="mt warn">${c.note}</span>` : '';
+  const cidHtml = c.clientId !== '—' ? ` · ${c.clientId}` : '';
+  return `<div class="client-card card-${c.posture}">
+    <div class="card-header">
+      <div class="card-top">
+        <div>
+          <div class="cidx">#${c.id} · ${c.combo}${cidHtml}</div>
+          <div class="cname">${c.flag} ${c.name}</div>
+        </div>
+        <span class="badge ${c.badge}">${c.badgeText}</span>
+      </div>
+      <div class="cmeta">
+        <span class="mt ${c.country}">${c.country} — ${c.countryFull}</span>
+        <span class="mt">${c.mode}</span>
+        <span class="mt">${c.product}</span>
+        <span class="mt">📦 ${c.markets}</span>
+        <span class="mt">💰 ${c.revenue}</span>
+        ${noteHtml}
+      </div>
+    </div>
+    <div class="why-chain">
+      <div class="why-title">⬡ WHY CHAIN — 7-Node Causal Analysis</div>
+      <div class="chain-nodes">${chain.map(renderNode).join('')}</div>
+    </div>
+    <div class="what-section">
+      <div class="what-title">◈ WHAT — BD Actions &amp; Client Actions</div>
+      <div class="what-cols">
+        <div>
+          <div class="wcol-title">🏦 Air8 BD Actions</div>
+          <ul class="wlist">${c.bdActions.map(a=>`<li>${a}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="wcol-title">🏭 Client Actions</div>
+          <ul class="wlist">${c.clientActions.map(a=>`<li>${a}</li>`).join('')}</ul>
+        </div>
+      </div>
+      <div class="decision"><strong>⚑ Decision Point</strong>${c.decision}</div>
+    </div>
+  </div>`;
+}
+
+document.getElementById('cards-grid').innerHTML = allClients.map(renderCard).join('');
+</script>
+</body>
+</html>
