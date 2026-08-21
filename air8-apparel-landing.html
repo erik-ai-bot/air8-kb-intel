@@ -100,7 +100,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--red) 0%,#ffbe7a 
  margin:clamp(18px,3.1vh,40px) 0 11px;flex-wrap:wrap}
 .railhead h2{margin:0;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
  font-size:clamp(17px,1.9vw,22px);letter-spacing:-.024em}
-.rail{display:flex;gap:12px;height:clamp(316px,41vh,440px)}
+.rail{display:flex;gap:12px;height:auto;align-items:stretch}
 .pane{position:relative;flex:1 1 0;min-width:0;container-type:inline-size;
  border:1px solid var(--line);border-radius:8px;overflow:hidden;
  background:linear-gradient(166deg,color-mix(in srgb,var(--pane2) 78%,transparent),color-mix(in srgb,var(--pane) 88%,transparent));
@@ -132,15 +132,13 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--red) 0%,#ffbe7a 
  color:color-mix(in srgb,var(--ink) 7%,transparent);transition:color .45s,transform .66s cubic-bezier(.16,.86,.3,1)}
 .pane:hover .ghost,.pane:focus-within .ghost{color:color-mix(in srgb,var(--red) 28%,transparent);transform:translateY(-5px)}
 
-.inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:clamp(20px,2vw,28px);min-width:0}
-.when{display:block;margin-bottom:auto}
+.inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:clamp(20px,2vw,28px) clamp(20px,2vw,28px) clamp(24px,2.4vw,32px);min-width:0}
+.when{display:block;margin-bottom:12px}
 .topic{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;letter-spacing:-.034em;
  font-size:clamp(27px,2.7vw,37px);line-height:1;margin:0;overflow-wrap:normal;transition:color .3s}
 @container (max-width:340px){.topic{font-size:26px}}
 @container (max-width:250px){.topic{font-size:22px}}
-.reveal{max-height:0;opacity:0;transform:translateY(16px);overflow:hidden;
- transition:max-height .62s cubic-bezier(.16,.86,.3,1),opacity .42s .14s,transform .55s .12s cubic-bezier(.16,.86,.3,1)}
-.pane:hover .reveal,.pane:focus-within .reveal{max-height:440px;opacity:1;transform:none}
+.reveal{max-height:none;opacity:1;transform:none;overflow:visible}
 .head2{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:clamp(16px,1.4vw,18.5px);
  letter-spacing:-.02em;line-height:1.22;margin:16px 0 0;color:var(--red2)}
 .vp{margin:10px 0 0;font-size:14.5px;line-height:1.56;color:var(--ink2);max-width:47ch}
@@ -201,7 +199,7 @@ a.lk:focus-visible{outline:2px solid var(--red);outline-offset:3px}
 
 <div class="railhead rise" style="animation-delay:.4s">
  <h2 class="disp">Three risks a memo cannot see</h2>
- <span class="lab">Hover a track</span>
+ <span class="lab">Hover a track to highlight</span>
 </div>
 
 <div class="rail rise" style="animation-delay:.48s">
