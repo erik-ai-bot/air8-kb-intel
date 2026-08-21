@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kontoor Brands — Buyer, Market &amp; Supply-Chain Read</title>
+<style>
+:root{color-scheme:light}
+.viz-root{--surface-1:#fcfcfb;--plane:#f9f9f7;--text-primary:#0b0b0b;--text-secondary:#52514e;--muted:#898781;
+--grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,0.10);
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--good:#0ca30c;--warn:#fab219;--critical:#d03b3b;--key:#f2f6fd}
+@media(prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .viz-root{color-scheme:dark;
+--surface-1:#1a1a19;--plane:#0d0d0d;--text-primary:#fff;--text-secondary:#c3c2b7;--muted:#898781;
+--grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,0.10);
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--critical:#d03b3b;--key:#12202f}}
+:root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#1a1a19;--plane:#0d0d0d;--text-primary:#fff;
+--text-secondary:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,0.10);
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--critical:#d03b3b;--key:#12202f}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.viz-root{background:var(--plane);color:var(--text-primary);min-height:100vh;padding:30px 20px 70px}
+.wrap{max-width:1000px;margin:0 auto}
+header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-size:27px;font-weight:660;margin:0 0 6px;letter-spacing:-.015em}
+.sub{color:var(--text-secondary);font-size:14px;margin:0;line-height:1.55;max-width:760px}
+.toggle{border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);border-radius:8px;padding:7px 12px;font-size:12.5px;cursor:pointer;font-family:inherit}
+.thesis{background:var(--key);border:1px solid var(--border);border-left:3px solid var(--s1);border-radius:10px;padding:15px 18px;margin-top:18px;font-size:14.5px;line-height:1.7}
+.thesis b{font-weight:660}
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:14px}
+.num{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);margin-bottom:3px}
+.card h2{font-size:17px;font-weight:640;margin:0 0 9px;letter-spacing:-.005em;line-height:1.3}
+.read{font-size:12.5px;color:var(--text-secondary);margin:0 0 15px;line-height:1.6;padding-left:11px;border-left:2px solid var(--grid)}
+.read b{color:var(--text-primary)}
+.so{margin:15px 0 0;font-size:14px;line-height:1.65;font-weight:520}
+.so b{font-weight:680}
+.so::before{content:"→ ";color:var(--s1);font-weight:700}
+.es{border-left:3px solid var(--s1)}
+.esh{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.es table td:first-child{color:var(--text-secondary)}
+.subh{margin:30px 0 4px;padding-top:20px;border-top:1px solid var(--grid);font-size:15px;font-weight:620;letter-spacing:-.005em}
+.subh-k{display:inline-block;font-size:9.5px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;
+ padding:2px 7px;border-radius:4px;background:color-mix(in srgb,var(--muted) 18%,transparent);
+ color:var(--text-secondary);margin-right:10px;vertical-align:2px}
+.bl{margin:13px 0 0;padding:0;list-style:none}
+.bl li{position:relative;padding-left:15px;margin-bottom:8px;font-size:13.5px;line-height:1.6}
+.bl li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--s1)}
+.bl li:last-child{margin-bottom:0}
+.tag{display:inline-block;font-size:9.5px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
+ padding:2px 7px;border-radius:4px;background:color-mix(in srgb,var(--s1) 13%,transparent);color:var(--s1);
+ margin-right:8px;vertical-align:1.5px;white-space:nowrap}
+.tag.w{background:color-mix(in srgb,var(--s2) 15%,transparent);color:var(--s2)}
+.tag.n{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--text-secondary)}
+td .bl li{font-size:12.5px;margin-bottom:5px;padding-left:13px}
+td .bl li::before{top:7px;width:4px;height:4px}
+td .bl{margin:0}
+.src{font-size:10.5px;color:var(--muted);margin-top:7px;line-height:1.5}
+.src a{color:var(--muted)}
+svg{display:block;width:100%;overflow:visible}
+.grid line{stroke:var(--grid);stroke-width:1}
+.tick{font-size:10.5px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.dlab{font-size:11.5px;fill:var(--text-secondary);font-variant-numeric:tabular-nums}
+.dlab.b{font-weight:640;fill:var(--text-primary)}
+.catlab{font-size:12px;fill:var(--text-primary)}
+.legend{display:flex;flex-wrap:wrap;gap:7px 18px;margin:0 0 12px;font-size:12.5px;color:var(--text-secondary)}
+.legend .k{display:inline-flex;align-items:center;gap:6px}
+.swl{width:15px;height:2.5px;border-radius:2px;display:inline-block;flex:none}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-weight:600;color:var(--text-secondary);padding:6px 8px;border-bottom:1px solid var(--axis);font-size:11.5px;white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid var(--grid)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.pos{color:var(--good);font-weight:640}.neg{color:var(--critical);font-weight:640}
+.tt{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-size:12px;box-shadow:0 6px 22px rgba(0,0,0,.14);opacity:0;transition:opacity .1s;z-index:99;color:var(--text-primary);max-width:290px}
+.tt .r{display:flex;justify-content:space-between;gap:14px;line-height:1.6}
+.tt .r span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.tt .h{font-weight:660;margin-bottom:4px}
+details{margin-top:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 22px}
+summary{cursor:pointer;font-size:13px;color:var(--text-secondary);font-weight:560}
+.scroll{overflow-x:auto}
+.caveat{background:var(--surface-1);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:10px;padding:15px 18px;margin-top:14px;font-size:12.8px;color:var(--text-secondary);line-height:1.7}
+.caveat b{color:var(--text-primary)}
+.drill{background:var(--key);border:1px solid var(--border);border-radius:9px;padding:12px 15px;margin-top:14px;font-size:12.5px;line-height:1.65;color:var(--text-secondary)}
+.drill b{color:var(--text-primary)}
+.vv{font-size:11.5px;color:var(--text-secondary);line-height:1.6;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+</style></head><body><div class="viz-root"><div class="wrap">
+
+<header class="top"><div><h1>Kontoor Brands — Buyer, Market &amp; Supply-Chain Read</h1>
+<p class="sub">Where Kontoor actually earns its money · what it buys and who makes it · how its category is moving in the US and the EU · how it compares with Levi's and the rest · and what our own customs data gets right and wrong</p></div>
+<button class="toggle" id="tg">Light / dark</button></header>
+
+<div class="thesis"><b>The main point.</b> Kontoor is not a three-brand apparel group; it is <b>Wrangler with attachments</b>. In FY2025 Wrangler was <b>61% of revenue but 81% of segment profit</b>, at a <b>23.0%</b> segment margin against Lee's <b>9.2%</b> — and Lee has now been sold. What remains is a business that is <b>85% wholesale</b>, <b>72% United States</b>, and <b>30% Walmart</b>, selling one product: a single customs heading is <b>87% of everything it imports</b>. That product's market is genuinely growing — US apparel retail is running <b>+5.9%</b> and Kontoor has taken share for <b>17 straight quarters</b> — but Europe is not: EU clothing turnover was <b>−4.2%</b> in Q1 2026. <b>And on sourcing, our own customs sample is wrong.</b> It says Pakistan 44% and Bangladesh 27%. Kontoor discloses Bangladesh 57% and Pakistan 4%, and the US and EU market data agree with Kontoor. Finding that out — and knowing why — is the most valuable thing in this document.</div>
+
+<div class="card es"><div class="num">EXECUTIVE SUMMARY</div>
+<h2>Where the Kontoor relationship stands</h2>
+<div class="two" style="gap:22px;margin-top:14px">
+<div>
+<div class="esh">What we hold today</div>
+<div class="scroll"><table><tbody>
+<tr><td>Air8 suppliers financed</td><td class="n"><b>None</b></td></tr>
+<tr><td>External rating</td><td class="n">S&amp;P <b>BB</b> · outlook <b>Stable</b></td></tr>
+<tr><td>Outlook change</td><td class="n">Negative → Stable, <b>1 Apr 2026</b></td></tr>
+<tr><td>Issue-level / recovery</td><td class="n">BB− · recovery '5' (est. 15%)</td></tr>
+<tr><td>Payment delay reported</td><td class="n"><b>15 days</b></td></tr>
+<tr><td>Dilution</td><td class="n"><b>1.4%</b> — vendor-borne airfreight</td></tr>
+<tr><td>Named in that dilution</td><td class="n">Meghna</td></tr>
+<tr><td>Leverage, memo basis</td><td class="n"><b>3.2×</b> (S&amp;P adjusted, end-2025)</td></tr>
+<tr><td>Source of the above</td><td class="n">Credit memo · S&amp;P, Jan–Apr 2026</td></tr>
+</tbody></table></div>
+</div>
+<div>
+<div class="esh">The obligor, at 19 August 2026</div>
+<div class="scroll"><table><tbody>
+<tr><td>FY2025 revenue</td><td class="n"><b>$3.15bn</b>, +21%</td></tr>
+<tr><td>Segment profit, Wrangler share</td><td class="n"><b>81%</b> of the group total</td></tr>
+<tr><td>Lee</td><td class="n"><b>Sold</b> — up to $1.0bn, closing Q4 2026</td></tr>
+<tr><td>FY2026 guide, continuing ops</td><td class="n">$2.66–2.71bn, <b>+12–13%</b></td></tr>
+<tr><td>FY2026 adj. gross margin guide</td><td class="n"><b>49.8–50.0%</b>, raised twice</td></tr>
+<tr><td>Q2 2026</td><td class="n">Revenue <b>+19%</b> · adj. EPS <b>$1.06</b></td></tr>
+<tr><td>Leverage, company basis</td><td class="n">2.0× → <b>below 1.5×</b> by year-end</td></tr>
+<tr><td>Largest customer</td><td class="n">Walmart <b>30%</b> · top ten <b>53%</b></td></tr>
+<tr><td>Receivables sold per year</td><td class="n"><b>$1.4bn</b> · fee $12.0m</td></tr>
+</tbody></table></div>
+</div></div>
+<ul class="bl">
+<li><span class="tag">The memo was right, and is now out of date</span>Every figure the memo used checked out — brand mix, margin, guidance — and Kontoor <b>beat</b> the ones that were estimates (46.6% actual gross margin against ~46.1%; $468m operating income against $443m). But S&amp;P published on <b>1 April 2026</b> and Kontoor agreed to sell Lee on <b>21 May 2026</b>. <b>Six weeks after the rating, a quarter of the revenue left the company.</b></li>
+<li><span class="tag">Credit direction is clearly improving</span>Leverage falls to below 1.5× on the company's own basis, a <b>$400m accelerated share repurchase</b> follows the Lee close, and gross margin guidance has been raised twice this year. The counterparty risk on this buyer is getting smaller, not larger.</li>
+<li><span class="tag w">But the concentration is getting worse</span>Post-Lee, Kontoor is Wrangler plus Helly Hansen. Wrangler is <b>10.9% international</b> and <b>10.0% direct-to-consumer</b> — it is a US mass-channel brand. Walmart was <b>30%</b> of a revenue base that still included Lee; against continuing operations it is materially higher, and Kontoor does not disclose the post-Lee figure. <b>A supplier's real exposure here is not to Kontoor. It is to Walmart's orders for Wrangler.</b></li>
+<li><span class="tag">There is a live commercial signal in the filings</span>Kontoor sells <b>$1.4bn of trade receivables a year</b> — roughly 45% of revenue — at a $12.0m funding fee, yet its <b>supplier-side</b> supply-chain-finance programme carries only <b>$24.4m</b> outstanding, about 1.4% of cost of goods sold. It has industrialised receivables finance on its own balance sheet and barely touched payables finance for its vendors. That gap, next to a reported 15-day payment delay and 1.4% dilution, is the conversation.</li>
+</ul>
+<div class="src">Facility, payment record and dilution: Air8 credit memorandum. Rating: S&amp;P Global Ratings research update, 1 April 2026. Obligor figures: Kontoor Brands FY2025 10-K (filed 4 Mar 2026), Q2 2026 10-Q (filed 12 Aug 2026), and press releases of 3 Mar, 7 May, 21 May and 12 Aug 2026. Customs figures throughout are Air8's bill-of-lading dataset, 443 shipment records and 1,528 product lines, Aug 2024 – Jul 2026 — read section 08 before using them.</div>
+</div>
+
+<div class="card"><div class="num">01 · WHERE THE MONEY IS</div>
+<h2>Wrangler is 61% of the revenue and 81% of the profit</h2>
+<p class="read"><b>How to read.</b> Both bars are shares of the FY2025 total, so each colour sums to 100%. Blue is each brand's share of revenue; orange is its share of the company's total segment profit. When the orange bar is longer than the blue one, that brand is carrying the others.</p>
+<div class="legend" id="l1"></div><div id="c1"></div>
+<p class="so"><b>Wrangler earns 20 points more of the profit than it does of the revenue. Lee earns 11 points less.</b> That single gap is the entire logic of the Lee divestiture, whatever the press release says about growth profile.</p>
+<div class="subh"><span class="subh-k">The trend</span>The gap did not appear suddenly — it widened for three years</div>
+<div class="legend" id="l1b"></div><div id="c1b"></div>
+<ul class="bl">
+<li><b>Wrangler's segment margin went 17.5% → 20.3% → 23.0%</b> across FY2023–25, and reached <b>28.8% in the first half of 2026</b>. <b>Lee's went 11.6% → 11.3% → 9.2%</b>, and in Q4 2025 alone it was <b>3.7%</b>. The spread widened from 5.9 points to 13.8 points in two years.</li>
+<li>Lee's revenue fell every year — $842m, $791m, $750m — but its <b>profit fell faster</b>, down 30% over two years while Wrangler's rose 43%. A shrinking brand losing margin at the same time is a brand with no operating leverage left.</li>
+<li><b>Helly Hansen is not yet a profit engine.</b> It contributed 15% of FY2025 revenue and 6% of segment profit, at a 6.9% margin on a seven-month stub. It improved to <b>7.9% in H1 2026</b> and management calls it "the next billion-dollar-plus brand", but it is being bought forward, not harvested.</li>
+<li><span class="tag w">One caveat</span>Segment profit is a GAAP number and it <b>includes the IEEPA tariff refunds</b> — Kontoor booked a $54m net receivable in Q1 2026 which cut cost of goods sold by $49m. Kontoor does not publish an adjusted segment profit, so <b>the clean Wrangler margin is not disclosed.</b> The direction is unambiguous; the exact level for 2026 is not.</li>
+</ul>
+<div class="src">Kontoor Brands FY2025 10-K, Business Segment Information (filed 4 Mar 2026); Q2 2026 10-Q, segment note (filed 12 Aug 2026); Q4 FY2025 press release, 3 Mar 2026. Segment margin is segment profit divided by segment revenue, computed by us.</div></div>
+
+<div class="card"><div class="num">02 · HOW IT SELLS</div>
+<h2>85% wholesale, 72% United States, 30% Walmart</h2>
+<p class="read"><b>How to read.</b> Left: share of revenue by channel, FY2023 to FY2025. Right: what share of each brand's revenue is sold direct to the consumer rather than through a retailer. The two together describe how much of the final price Kontoor keeps.</p>
+<div class="two">
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Channel</span>Where the revenue comes from</div>
+<div class="legend" id="l2"></div><div id="c2"></div></div>
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">By brand</span>Direct-to-consumer share, FY2025</div>
+<div id="c2b"></div>
+<div class="subh" style="margin-top:22px"><span class="subh-k">By brand</span>International share, FY2025</div>
+<div id="c2c"></div></div>
+</div>
+<ul class="bl">
+<li><b>Direct-to-consumer rose from 11.9% to 15.2% of revenue</b> over three years, almost all of it from the Helly Hansen acquisition. Strip Helly Hansen out and <b>Wrangler is 10.0% direct</b> — it sells through other people's stores.</li>
+<li><b>International went from 20.0% to 27.4%</b> of revenue in FY2025, again driven by Helly Hansen, which is <b>75.6% international</b>. <b>Wrangler is 10.9% international.</b> Kontoor's international story is a Helly Hansen story.</li>
+<li><span class="tag w">Customer concentration is the real exposure</span><b>Walmart was 30% of FY2025 revenue and the top ten customers were 53%.</b> A year earlier those figures were <b>36% and 62%</b> — the fall is dilution from the Helly Hansen acquisition, not a reduction in Walmart volume. <b>Post-Lee, on a Wrangler-heavy base, Walmart's share of continuing revenue is materially higher than 30%, and Kontoor does not disclose it.</b></li>
+<li>An unnamed second customer is <b>12%</b> of revenue. Kontoor names Target, Amazon, Boot Barn, Tractor Supply, Cavender's and — new for the second half of 2026 — <b>Lowe's</b> as accounts, but does not attach percentages to any of them.</li>
+<li><b>What this means for a supplier.</b> A factory shipping to Kontoor is, at one remove, shipping to Walmart. Walmart's order cadence, markdown policy and inventory posture set Kontoor's, and Kontoor's set the factory's. <b>That is a chain worth pricing, and it is not visible in any rating.</b></li>
+</ul>
+<div class="src">Kontoor Brands FY2025 10-K — revenue disaggregation by channel and geography, and customer concentration in Item 1A and the segment note. FY2024 10-K for the prior-year comparatives.</div></div>
+
+<div class="card"><div class="num">03 · WHAT IT BUYS</div>
+<h2>One customs heading is 87% of everything it imports</h2>
+<p class="read"><b>How to read.</b> Share of total declared units across 1,528 product lines. One four-digit heading dominates so completely that the rest are barely visible — that is the finding, not a scaling problem.</p>
+<div id="c3"></div>
+<p class="so"><b>HS 6203 — men's and boys' woven trousers, shorts and suits — is 87.2% of all units.</b> Womenswear is 3.1%. Fabric, shirts, knitwear and hangers are each under 2%. <b>Kontoor's supply risk is not apparel risk; it is denim-trouser risk, and after the Lee sale it is Wrangler denim-trouser risk.</b></p>
+<div class="two" style="margin-top:18px">
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Fibre</span>What it is made of</div>
+<div id="c3b"></div>
+<p class="src">Share of units whose description names the fibre. Descriptions often name several, so these do not sum to 100%.</p></div>
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Buying entity</span>Who places the order</div>
+<div id="c3c"></div>
+<p class="src">Nine buyer name variants in the file resolve to four Kontoor legal blocks.</p></div>
+</div>
+<ul class="bl">
+<li><b>Cotton is named in 87% of units, denim in 79%, and elastane or spandex in 78%.</b> Stretch denim is the standard product, not rigid denim. That is why the mills Kontoor uses are vertically integrated spinners rather than cut-and-sew shops — elastane is a separate imported input with its own lead time and its own working-capital need.</li>
+<li>Kontoor states it manufactures or sources roughly <b>157 million units a year from about 330 contract factories across 28 countries</b>, and that its <b>top three North American suppliers provide about 46% of raw materials</b>. The raw-material concentration is higher than the factory concentration.</li>
+<li>Ordering splits across four legal blocks: <b>Kontoor US and Brands Inc. 60%</b>, <b>Kontoor International (Switzerland) 19%</b>, <b>Kontoor Asia Trading (Hong Kong) 17%</b>, <b>Kontoor Canada 4%</b>. A supplier invoicing the Swiss entity faces a different counterparty, jurisdiction and payment pattern from one invoicing the US entity. <b>Any financing has to be written against the right one, and the raw file will not tell you which without resolving the names.</b></li>
+</ul>
+<div class="src">Air8 customs dataset, HS-code table, 1,528 lines; 314 lines (3.3% of units) carry no HS code and are excluded from the category chart. Unit, factory and raw-material figures: Kontoor Brands FY2025 10-K, Item 1.</div></div>
+
+<div class="card"><div class="num">04 · THE MARKET — UNITED STATES</div>
+<h2>The category is growing. Most of the growth is price</h2>
+<p class="read"><b>How to read.</b> Both lines are rebased to 2021 = 100 so they can share an axis. Blue is the dollar value of US clothing-store retail sales. Orange is the consumer price index for apparel. The distance between them is real volume.</p>
+<div class="legend" id="l4"></div><div id="c4"></div>
+<p class="so"><b>US clothing retail sales are running +5.9% in 2026 and 2025 was the best year since 2022 — but apparel prices turned from flat to +3.9% year-on-year over the same period.</b> Roughly two thirds of the growth is price. Real volume growth is around 2%.</p>
+<ul class="bl">
+<li><b>Apparel price inflation was zero to slightly negative through 2023–2025 and flipped sharply in 2026</b> — the index rose 2.8% in the first seven months of the year alone, peaking at +4.8% year-on-year in May. That is <b>tariff and margin pass-through, not input cost</b>: over the same period the landed unit value of US HS 6203 imports <b>fell 6.5%</b>, from $8.92 to $8.34 per garment.</li>
+<li><span class="tag">The denim category specifically</span>Every operator says it is accelerating. Levi's chief executive Michelle Gass, July 2026: <i>"the category is projected to grow mid-single digits annually through 2030, outpacing the category's historical growth"</i>, and in April: <i>"The denim category remains healthy. It's actually accelerating here in the U.S. It's outperforming overall apparel."</i></li>
+<li><span class="tag w">Kontoor's own numbers</span>Wrangler bottoms point-of-sale is up <b>"low to mid-single digit"</b> and <b>+3% year to date through July</b> — <i>while gaining more than 100 basis points of share</i> and recording its <b>17th consecutive quarter of share gains</b>. A brand taking share that fast, growing only 3%, implies the underlying US bottoms category is <b>roughly flat to low-single-digit in units</b>. The "mid-single digits to 2030" figure is a projection, not an observation.</li>
+<li>And the shipments are weaker than the sell-through. <b>Q2 2026 Wrangler global revenue grew 2% and US wholesale was flat</b> despite the share gains, because retailers are not restocking. Chief financial officer Joe Alkire: <i>"Retailers just remain very cautious… Inventory levels at retail were down high single, if not low double digits"</i> and he would <i>"continue to characterize inventory at retail as suboptimal."</i></li>
+<li><span class="tag">For a supplier</span>Flat wholesale shipments against growing sell-through is a coiled spring, but it is also a working-capital squeeze that lands on the factory, not on Kontoor. <b>The retailer holds less stock, Kontoor holds less stock, and the buffer moves upstream.</b></li>
+</ul>
+<div class="src">FRED series RSCCAS (Advance Retail Sales: Clothing and Clothing Accessory Stores, seasonally adjusted) and CPIAPPSL (CPI-U Apparel), both updated 14 Aug 2026. Import unit value computed from UN Comtrade / WITS, US imports of HS 6203, value divided by items. Levi Strauss Q1 and Q2 FY2026 earnings calls. Kontoor Q2 2026 earnings call, 12 August 2026 (third-party transcript).</div></div>
+
+<div class="card"><div class="num">05 · THE MARKET — EUROPE</div>
+<h2>Europe is not doing the same thing, and Kontoor says so itself</h2>
+<p class="read"><b>How to read.</b> Left: the EU-27 retail volume index for specialised non-food stores, 2021 = 100, seasonally and calendar adjusted. Right: the European textile and clothing industry's own reported year-on-year change for the first quarter of 2026.</p>
+<div class="two">
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Demand</span>EU-27 retail volume index, 2021 = 100</div>
+<div id="c5"></div>
+<p class="src">Eurostat sts_trtu_m, NACE G477, volume of sales, seasonally and calendar adjusted, index 2021=100. <b>Note:</b> Eurostat does not publish the clothing-specific series (G47_NF_CLTH) for the EU-27 — it returns empty for every adjustment and unit combination. G477 is the closest published proxy and includes pharmacy, cosmetics and jewellery alongside clothing. Treat it as directional.</p></div>
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Supply side</span>EURATEX, Q1 2026 vs Q1 2025</div>
+<div id="c5b"></div>
+<p class="src">EURATEX Economic Update, Q1 2026 — the European apparel and textile industry association, so a trade body rather than a statistical office.</p></div>
+</div>
+<ul class="bl">
+<li><b>EU retail volume is 15% above 2021 but has stalled</b> — the 2026 first half sits just <b>1.2%</b> above the 2025 annual average and about <b>2%</b> above the same half of 2025, and June came in below the March peak. This is not the US picture.</li>
+<li><b>EU clothing turnover fell 4.2% and production 5.1% in Q1 2026</b>, the third consecutive year of contraction for the European textile and clothing industry. EURATEX's own words: <i>"Weak EU domestic demand, intensified competition from low-cost imports, and a subdued global trade environment remained the dominant headwinds"</i> and <i>"no signs of stabilisation."</i></li>
+<li><span class="tag w">Kontoor agrees</span>Joe Alkire, Q2 2026: <i>"Europe was flattish to down right now, and we expect that to turn relative to the year coming in."</i> That is notably cooler than chief executive Scott Baxter one quarter earlier: <i>"There's a real denim movement going on in Europe, and Wrangler is a huge part of that."</i> <b>Two quarters, two different European stories from the same company.</b></li>
+<li><b>The import data says something different again.</b> Extra-EU imports of men's cotton trousers <b>grew 4.8% in value from 2023 to 2025</b>, to €5.48bn — larger than the US market for the same product ($4.42bn). European demand for the category is not collapsing; European <i>production</i> is. Imports are taking the share.</li>
+<li><span class="tag">Sourcing</span><b>China is gaining share in the EU while losing it in the US.</b> In men's cotton trousers, China went from 7.15% to 8.09% of extra-EU imports while falling from 6.44% to 3.41% of US imports. That is tariff-driven trade diversion, visible in the data, and it is the clearest single piece of evidence that the two markets have decoupled.</li>
+</ul>
+<div class="src">Eurostat sts_trtu_m (retail volume) and Comext DS-045409 (extra-EU-27 imports of HS 620342, VALUE_IN_EUROS, annual, retrieved 19 Aug 2026; Eurostat last updated the dataset 14 Aug 2026). EURATEX Economic Update Q1 2026. Kontoor Q1 and Q2 2026 earnings calls.</div></div>
+
+<div class="card"><div class="num">06 · KONTOOR vs PEERS</div>
+<h2>Levi's keeps 15 more points of gross margin and turns less of it into profit</h2>
+<p class="read"><b>How to read.</b> Blue is gross margin, orange is operating margin, both on each company's own adjusted basis for its most recent full financial year. The distance between the two bars is what the company spends to sell the product. Where the bars are close together, the business is efficient; where they are far apart, it is paying for stores and marketing.</p>
+<div class="legend" id="l6"></div><div id="c6"></div>
+<p class="so"><b>Levi's earns 61.7% gross margin and keeps 11.4% at the operating line. Kontoor earns 46.6% and keeps 14.9%.</b> Fifteen points of gross margin disappear into the cost of running a direct-to-consumer estate. <b>The ranking inverts completely between the two lines, and the operating line is the one that pays interest.</b></p>
+<ul class="bl">
+<li><b>The gap is a channel structure, not a sourcing advantage.</b> Levi's is <b>50.8% direct-to-consumer</b> and captures the retail markup. Kontoor is <b>85% wholesale</b> and hands that markup to Walmart. Levi's is one third price-driven growth and talks openly about <i>"premiumization"</i>; Wrangler sits at opening-to-mid price points in mass channels.</li>
+<li><b>Kontoor's sourcing is arguably the better one.</b> Kontoor discloses 2% China; Levi's has roughly 15% of its factories there and assumes a 30% China tariff in guidance. Kontoor's lower gross margin is a distribution outcome, not a manufacturing one.</li>
+<li><span class="tag">Tariff drag</span>Levi's: <b>about 150 basis points</b> of gross margin, <i>"fully offsetting this with higher pricing… we're not seeing any initial demand reaction"</i>, with $80m of refunds received and excluded from guidance. American Eagle: <b>150–200 basis points</b>, $190m claimed and $140m net expected. <b>Kontoor gives no dollar figure at all</b> — the FY2025 10-K says only that tariffs <i>"impacted gross margins during 2025 and are expected to continue."</i> VF quantifies nothing either.</li>
+<li><b>Gildan is the control case.</b> It owns its factories, earns only 34.5% gross margin, and converts that into <b>22.3% operating margin</b> — the highest here. Levi's spends about 50 points of gross margin to sell; Gildan spends about 12. <b>Same industry, inverted cost structures. Vertical integration buys operating leverage, not gross margin.</b></li>
+<li><span class="tag w">Two peers gone</span><b>Guess? was taken private by Authentic Brands Group in January 2026</b> and files nothing after Q3 FY2026. <b>Hanesbrands was acquired by Gildan in December 2025.</b> And Authentic Brands now owns both Guess and Lee — a single licensor sitting behind two of the names on this page. For anyone tracking counterparties, that is a concentration that did not exist a year ago.</li>
+</ul>
+<div class="src">Latest full financial year for each: Levi Strauss FY2025 (ended 30 Nov 2025); Kontoor FY2025 (ended 3 Jan 2026); VF FY2026 (ended 28 Mar 2026); Guess FY2025 (ended 1 Feb 2025); American Eagle FY2025 (ended 31 Jan 2026); Gildan Q2 2026. Company press releases and 10-K filings.</div></div>
+
+<div class="card"><div class="num">07 · THE OFF-PRICE ANGLE</div>
+<h2>Off-price says merchandise is "off the charts". The denim brands say their inventory is tight</h2>
+<p class="read"><b>How to read.</b> Same-store or comparable sales growth in the most recent reported quarter, for the three US off-price retailers and for the two branded denim wholesalers. All are calendar Q1–Q2 2026.</p>
+<div id="c7"></div>
+<p class="so"><b>Ross grew comparable sales 17%, TJX and Burlington 6% each — while Wrangler's US wholesale was flat and Levi's global wholesale grew 3%.</b> The off-price channel is absorbing enormous volumes of apparel. It is not coming from these two.</p>
+<ul class="bl">
+<li><span class="tag">Off-price</span>TJX chief executive Ernie Herrman, May 2026: <i>"Availability of merchandise is off the charts"</i> and <i>"the bigger we have become, the more availability we see."</i> Ross chief executive James Conroy: <i>"The availability of closeouts in the marketplace is still outstanding… we are getting a lot of first calls now."</i> Burlington's Michael O'Sullivan: <i>"The supply of off-price merchandise is excellent right now."</i></li>
+<li><span class="tag">The brands</span>Levi's ended its latest quarter with <b>inventory down 7%</b> and <i>"continued progress in reducing excess and obsolete"</i>. Kontoor reports retail inventories <b>down high-single to low-double digits</b>. <b>Neither is feeding the off-price channel; both are running tight.</b></li>
+<li><b>These are not contradictory statements.</b> They say the glut is elsewhere in apparel — and that a branded denim maker with tight inventory is <i>not</i> the marginal supplier to off-price. Ross's packaway inventory fell from <b>41% to 36%</b> of the total while comparable sales rose 17%: goods are going straight to the shop floor rather than into storage. Supply is being absorbed, not stockpiled.</li>
+<li><span class="tag w">Kontoor's own clearance estate</span>The words "off-price", TJX, Ross and Burlington <b>do not appear in the FY2025 10-K</b>. What it does disclose is its own clearance estate: <b>72 company-operated outlet and clearance centres, up from 57 a year earlier</b> — a 26% increase in owned clearance capacity in one year. <b>Kontoor is building its own outlet for excess rather than selling it into third-party off-price</b>, which protects brand and margin but keeps the markdown risk on its own books.</li>
+<li><span class="tag">For a supplier</span>A brand that clears through its own outlets rather than dumping to off-price is a brand that manages order books tightly and does not place speculative volume. That is good for credit quality and <b>bad for factory utilisation</b>. It is also exactly why Kontoor's wholesale shipments can be flat while the category grows.</li>
+</ul>
+<div class="src">TJX Q1 FY2027 earnings call, 20 May 2026. Ross Stores Q1 FY2026 results and call, 21 May 2026. Burlington Q1 FY2026 call, 29 May 2026. Levi Strauss Q2 FY2026 call, 8 July 2026. Kontoor Q2 2026 call, 12 August 2026, and FY2025 / FY2024 10-K for the clearance-store counts.</div></div>
+
+<div class="card"><div class="num">08 · WHERE IT IS MADE</div>
+<h2>Our customs sample says Pakistan. Kontoor and the market both say Bangladesh</h2>
+<p class="read"><b>How to read.</b> Four independent readings of the same question — which countries make this product. Blue is our own customs sample. Orange is Kontoor's published sourcing mix. Green and yellow are the whole US and EU import markets for men's cotton trousers in 2025. If our bar disagrees with the other three, our bar is the one that is wrong.</p>
+<div class="legend" id="l8"></div><div id="c8"></div>
+<p class="so"><b>Our sample puts Pakistan at 44% and Bangladesh at 27%. Kontoor publishes Bangladesh 57% and Pakistan 4%. The US market is Bangladesh 36% and Pakistan 9%; the EU market is Bangladesh 37% and Pakistan 18%. Three sources agree with each other and disagree with us.</b> Sri Lanka, 8% of our sample, sits inside Kontoor's undisclosed 9% "Other" and is left off the chart.</p>
+<div class="caveat"><b>We tested this before publishing it, and our own data lost.</b> The customs sample is not a measurement of Kontoor's sourcing mix. It is a measurement of which countries publish export manifests. Below is the evidence, because a number this wrong is worth more than a number that is quietly right.</div>
+<ul class="bl">
+<li><span class="tag w">The Americas hole</span>Kontoor discloses <b>27% Americas</b> and Mexico is the <b>second-largest supplier of men's cotton trousers to the US at 16.05%</b> of the market. Our sample shows <b>0.5%</b>. There is no sourcing story that reconciles that. There is a very well-documented data story: US law restricts public bill-of-lading records to <b>vessel shipments only</b>, and trade with Mexico moves by truck and rail. <b>Mexico is structurally invisible to this kind of data.</b></li>
+<li><span class="tag w">Who publishes manifests</span>Pakistan, India and Sri Lanka are <b>69% of our sample</b> — and are three of the four apparel-exporting countries in the standard bill-of-lading universe. <b>Bangladesh, Vietnam, Cambodia, Indonesia, Egypt and Jordan do not publish export manifests.</b> Bangladesh appears in our data only through the import side; Pakistan, India and Sri Lanka appear through both sides. That asymmetry roughly doubles them relative to Bangladesh, which is close to exactly what we observe.</li>
+<li><span class="tag">Renormalising</span>Take Kontoor's disclosure, remove the Americas entirely and rescale the rest: Bangladesh becomes <b>78%</b> and Pakistan <b>5.5%</b>. Even under the most generous adjustment we cannot recover Pakistan at 44%. <b>Something is adding Pakistan volume, not merely removing Americas volume.</b></li>
+<li><span class="tag">A cotton-only node</span>Pakistan is <b>9.4% of US imports of cotton trousers and outside the top fifteen for synthetic-fibre trousers</b>. A query filtered to a denim buyer lands disproportionately on precisely the flows where Pakistan is most visible. Pakistan is also <b>twice as important to the EU (17.9%) as to the US (9.4%)</b> — and an exporter-side manifest catches its EU-bound shipments too, inflating it a second time.</li>
+<li><span class="tag">The buyer corroborates</span>Kontoor states it uses <b>US-grown cotton in more than 80% of products sourced from Bangladesh</b> and is pursuing a duty exemption on that basis. <b>A company builds a cotton-traceability programme around its largest sourcing country, not its third.</b> That independently supports the 57% figure.</li>
+</ul>
+<div class="subh"><span class="subh-k">What actually changed</span>Kontoor closed its Mexican plants and moved the work to Bangladesh</div>
+<ul class="bl">
+<li>The FY2024 10-K describes <b>seven owned manufacturing facilities in Mexico</b> supplying about <b>30% of units</b>. The FY2025 10-K puts owned Mexico at <b>23% of units</b>. In <b>September 2025 Kontoor announced the closure of four Mexican plants</b> affecting more than 2,000 workers, with production relocating to Bangladesh. Today the company's supply-chain page lists <b>three owned facilities</b>.</li>
+<li>Over the same period the contract base went from <b>about 210 factories in 19 countries to about 330 in 28</b> — partly Helly Hansen, partly tariff-driven diversification.</li>
+<li><b>This is the single most consequential supply-chain event at this buyer in two years, and our customs sample cannot see any of it</b>, because the plants that closed were in the country the data does not cover.</li>
+</ul>
+<div class="subh"><span class="subh-k">Market shift</span>Who is winning and losing this category, 2023 to 2025</div>
+<div class="legend" id="l8b"></div><div id="c8b"></div>
+<ul class="bl">
+<li><b>Bangladesh is the structural winner in both markets</b> — the only large supplier gaining materially, up 3.7 points in the US and 1.4 in the EU. <b>China lost 3.0 points in the US and gained 0.9 in the EU.</b> Türkiye is the big EU loser, down 2.9 points: nearshoring is losing to Bangladesh and Pakistan on cost.</li>
+<li>Unit values explain the direction. In 2025 a men's cotton trouser landed in the US at <b>$6.03 from Bangladesh, $7.62 from Pakistan and $10.86 from Mexico</b>. Category-wide landed value fell 6.5% from 2023 to 2025. <b>The category is deflating at the border and inflating at the till.</b></li>
+<li><span class="tag">Where the tariff arbitrage sits</span>Bangladesh secured a <b>19% reciprocal tariff</b> in February 2026 with a carve-out mechanism taking apparel made with US-produced cotton to <b>zero</b>. Kontoor has put <b>57% of its sourcing</b> in that country and claims <b>over 80% US-cotton content</b> there. Whether by design or luck, it is the best-positioned sourcing book in this peer set.</li>
+</ul>
+<div class="src">Our sample: Air8 customs dataset, contract manufacturers only, share of shipment volume. Kontoor disclosure: kontoorbrands.com supply-chain page and FY2025 / FY2024 10-K. Market shares: UN Comtrade via WITS (US imports, HS 620342, 2023 and 2025) and Eurostat Comext DS-045409 (extra-EU-27 imports, HS 620342). Bill-of-lading coverage: Flaaen, Pierce et al., <i>Bill of Lading Data in International Trade Research</i>, Federal Reserve Board FEDS 2021-066. Mexico closures: trade press, 4 September 2025. Bangladesh tariff framework: White House joint statement, February 2026.</div></div>
+
+<div class="card"><div class="num">09 · SUPPLIER RELIANCE</div>
+<h2>What the customs data <i>is</i> good for: naming the counterparties</h2>
+<p class="read"><b>How to read.</b> Section 08 showed our sample cannot measure Kontoor's global sourcing mix. It can still do the thing bill-of-lading data is actually built for — identify individual factories, their products, their destinations and their relative size <i>within the visible set</i>. Everything below is scoped to that, and to the 58 contract manufacturers we can see.</p>
+<div class="legend" id="l9"></div><div id="c9"></div>
+<p class="so">Within the visible set, <b>the largest supplier is 15.8% of volume, the top three 33.9%, the top ten 71.3%, HHI 674 across 58 factories.</b> Because Bangladesh and the Americas are under-represented, <b>true concentration across Kontoor's ~330 factories is lower than this, not higher.</b> Read these as an upper bound.</p>
+<div class="scroll" style="margin-top:16px"><table id="t-top"><thead><tr>
+<th>Contract manufacturer</th><th>Origin</th><th class="n">Share of visible volume</th><th class="n">Shipments</th><th class="n">Name variants</th><th>Declared value</th></tr></thead><tbody></tbody></table></div>
+<ul class="bl">
+<li><b>These names are the deliverable.</b> AGI Denim, Artistic Milliners, U.S. Apparel, Soorty and Nishat Mills in Pakistan; LAJ Exports, Sakthi Infra Tex, Aquarelle and Shahi Exports in India; Refat, Kenpark, Envoy, Ilmeeyat, DMC, Simftex and Meghna in Bangladesh — <b>58 in all</b>. Each is a real, addressable company with a verified shipping relationship to a named Kontoor legal entity. <b>No rating, filing or credit memo contains this list.</b></li>
+<li><b>Meghna appears twice</b> — Meghna Knit Composite at 0.53% and Meghna Denims at 0.03% of visible volume, ranked 25th and 55th. That is the name the credit memo cites as bearing airfreight cost against a 1.4% dilution. <b>A line in a memo becomes two identifiable counterparties with shipment histories.</b> That join is the whole point of the exercise.</li>
+<li><b>Seven of the top fifteen carry no declared value at all</b>, all Bangladeshi. A value-ranked league table would not contain them — see section 10.</li>
+<li>Kontoor's own two Mexican plants carry <b>6.9%</b> of the volume in our file. That is captive capacity, not a financeable supplier, and one of them is <b>Manufacturera Lee de Mexico</b> — a Lee-branded plant in a business being sold. Whether it transfers to Authentic Brands Group is not disclosed anywhere, and is a good question to put to a Mexican supplier who competes with it.</li>
+</ul>
+<div class="src">Air8 customs dataset, Aug 2024 – Jul 2026. Concentration computed on resolved entities, contract manufacturers only, by declared shipment volume. Scope limitation per section 08.</div></div>
+
+<div class="card"><div class="num">10 · THREE LENSES</div>
+<h2>The same file gives three different answers. Two of them are wrong</h2>
+<p class="read"><b>How to read.</b> Identical data, identical suppliers, three ways of measuring "how much". If a country's three bars disagree, the metric is doing the talking, not the supply chain.</p>
+<div class="legend" id="l10"></div><div id="c10"></div>
+<p class="so"><b>Pakistan is 87% of the visible programme by declared value, 44% by volume and 17% by number of shipments. Bangladesh is 27% by volume and 0% by value.</b> Bangladesh does not vanish because Kontoor stopped buying there. It vanishes because the source carries no declared value for it.</p>
+<div class="two" style="margin-top:18px">
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Cause</span>Declared value coverage by origin</div>
+<div class="scroll"><table id="t-cov"><thead><tr><th>Origin</th><th class="n">Records</th><th class="n">With a value</th><th class="n">Share of all volume</th></tr></thead><tbody></tbody></table></div></div>
+<div><div class="subh" style="margin-top:0;padding-top:0;border:0"><span class="subh-k">Consequence</span>Concentration under each metric</div>
+<div class="scroll"><table><thead><tr><th>Metric</th><th class="n">Top 1</th><th class="n">Top 5</th><th class="n">Top 10</th><th class="n">HHI</th><th class="n">Suppliers visible</th></tr></thead><tbody id="tb-conc"></tbody></table></div>
+<p class="src">Same 58 factories in every row. Only the measure changes.</p>
+<div class="subh" style="margin-top:22px"><span class="subh-k">Currency</span>Implied value per package, 2025</div>
+<div id="c10b"></div>
+<p class="src">Same physical product, thirty-fold spread. These are local-currency declarations sitting in one column.</p></div>
+</div>
+<ul class="bl">
+<li><b>Ten of the fifteen origin countries carry no declared value whatsoever</b>, and Sri Lanka carries it on 3% of records. Value exists for Pakistan, India and Mexico and effectively nowhere else.</li>
+<li>The consequence is not cosmetic. On value this looks like a <b>dangerously concentrated buyer: HHI 2,009, top five 87%, only 19 suppliers visible.</b> On volume it is <b>HHI 674, top five 47%, 58 suppliers.</b> One of those two fails a concentration screen; the other passes comfortably.</li>
+<li>Counting shipments is the opposite error — <b>HHI 304</b> — because a Bangladeshi supplier sending many small consignments outranks a Pakistani mill sending few large ones.</li>
+</ul>
+<div class="caveat"><b>What we do about it.</b> Volume — declared containers and packages — is the only field populated consistently across all fifteen origins, so every reliance figure here is volume-based. Declared value is used only to say whether a value exists at all. <b>A dashboard that silently sums the value column will report Pakistan at 87% and never flag that Bangladesh is missing.</b></div></div>
+
+<div class="card"><div class="num">11 · ENTITY RESOLUTION</div>
+<h2>143 names, 81 entities, 58 factories</h2>
+<p class="read"><b>How to read.</b> Each step applies one more matching rule to the raw supplier text and shows how many distinct entities survive. The gap between the first bar and the last is the error you inherit by trusting raw names.</p>
+<div id="c11"></div>
+<p class="so">Rule-based normalisation takes <b>143 raw strings down to 82</b>. A curated review catches the last case — a transposed-letter typo, <i>Squrae</i> for <i>Square</i> — giving <b>81 entities</b>. <b>43% of the supplier list was duplicate text.</b></p>
+<div class="scroll" style="margin-top:16px"><table><thead><tr><th style="width:26%">Resolved entity</th><th>Raw strings in the file</th></tr></thead><tbody>
+<tr><td><b>Shahi Exports</b></td><td class="vv">SHAHI EXPORTS · SHAHI EXPORTS PRIVATE LIMITED · SHAHI EXPORTS PVT LTD · SHAHI EXPORTS PVT LTD IN · SHAHI EXPORTS PVT LTD.</td></tr>
+<tr><td><b>Square Fashions</b></td><td class="vv">SQUARE FASHION LTD. · SQUARE FASHIONS LIMITED · SQUARE FASHIONS LIMITED. · SQUARE FASHIONS LTD · SQURAE FASHIONS LIMITED</td></tr>
+<tr><td><b>Simftex Apparel &amp; Washing</b></td><td class="vv">SIMFTEX APPAREL &amp; · SIMFTEX APPAREL &amp; WASHING LIMITED · SIMFTEX APPAREL &amp; WASHING LTD · SIMFTEX APPAREL AND · SIMFTEX APPAREL WASHING LTD</td></tr>
+<tr><td><b>U.S. Apparel &amp; Textiles</b></td><td class="vv">U.S APPAREL &amp; TEXTILES (PRIVATE) LIMITED · U.S. APPAREL &amp; TEXTILES (PRIVATE) LIMITED · US APPAREL AND TEXTILE · US APPAREL AND TEXTILE(PVT) LTD</td></tr>
+<tr><td><b>AKM Knit Wear</b></td><td class="vv">A K M KNITWEAR LTD · A.K.M. KNIT WEAR LIMITED · A.K.M. KNIT WEAR LIMITED., · AKM KNIT WEAR LTD</td></tr>
+<tr><td><b>Artistic Garment Industries</b></td><td class="vv">ARTISTIC GARMENT INDUSTRIES · ARTISTIC GARMENT INDUSTRIES (AGI DENIM) (PRIVATE) LIMITED · ARTISTIC GARMENT INDUSTRIES AGI DE</td></tr>
+</tbody></table></div>
+<div class="subh"><span class="subh-k">Second correction</span>Not everything on a supplier list is a supplier</div>
+<div id="c11b"></div>
+<ul class="bl">
+<li><b>Only 83.4% of the volume comes from contract manufacturers.</b> The rest is <b>freight forwarders and port terminals 8.5%</b> — Maersk, DHL Global Forwarding, APM Global Logistics, Damco, APM Terminals India — <b>Kontoor's own Mexican plants 6.9%</b>, a <b>trim and label vendor 0.8%</b> (Avery Dennison) and <b>trading houses and mills 0.4%</b>.</li>
+<li>Leaving them in does not just add noise, it <b>changes the ranking</b>. Forwarders would place inside the top ten and you would treat Maersk as a factory relationship. Kontoor's own plants would read as third-party dependence when they are its opposite.</li>
+<li><span class="tag">Rules vs knowledge</span>Two cases remain that no string rule should decide. <i>Artistic Milliners</i> and <i>Artistic Garment Industries (AGI Denim)</i> share a name and a city but are separate legal entities — merging them would put top-one exposure at 25.9%; keeping them apart may understate group risk. <i>Radisson Garments</i> and <i>Radisson Casual Wear</i> pose the same question. <b>These belong in a curated ownership graph, not a regular expression.</b> That layer is what turns a supplier list into a risk model, and it is the part a competitor cannot buy.</li>
+</ul>
+<div class="src">Air8 customs dataset. Normalisation stages: case and punctuation, legal-form suffixes, ampersand and "M/s" handling, trailing country codes, truncated names, spacing variants, then curated review.</div></div>
+
+<div class="card"><div class="num">12 · HS CODES vs DESCRIPTIONS</div>
+<h2>The HS code does not tell you what the product is</h2>
+<p class="read"><b>How to read.</b> Within HS heading 6203, blue is each six-digit line's share of volume and orange is the share of that line's own descriptions that describe womenswear. If a code labelled "men's" is full of women's descriptions, the code is not the product.</p>
+<div class="legend" id="l12"></div><div id="c12"></div>
+<p class="so"><b>Two thirds of Kontoor's denim-trouser volume — 58% of everything it imports — sits under HS 620322, which formally means "men's or boys' cotton ensembles", and 42% of the descriptions under it say women's, ladies' or girls'.</b> The code that actually means men's cotton trousers, 620342, holds under a third of the volume and its descriptions are 96% men's.</p>
+<ul class="bl">
+<li>This is not an error, it is how origin customs regimes classify. The 620322 lines carry Pakistani export-scheme references and mix men's and women's denim pants under one heading. <b>Anyone deriving product mix from HS codes alone will report Kontoor as buying ensembles and undercount womenswear by roughly a factor of ten.</b></li>
+<li><b>314 of 1,528 lines carry no HS code at all</b> — 3.3% of units — yet still contain a usable description: fibre content, gender, wash, purchase-order and style numbers.</li>
+<li>Parsing the text recovers fibre, gender, garment type and — in <b>203 lines</b> — brand names: Wrangler in 179, Lee in 21, Riders in 5. That is only <b>1.7% of units</b>, not enough to size brands. <b>It is enough to prove brand-level attribution is extractable, which is exactly the question a Lee divestiture makes urgent for a supplier.</b></li>
+<li>The same text carries carton counts, gross weight, cubic metres, notify parties and purchase-order numbers — the fields that let us tell a real capacity shift from a paperwork change.</li>
+</ul>
+<div class="src">Air8 customs dataset, HS-code table. Gender shares are the proportion of lines under each code whose description matches men's/boys' or women's/ladies'/girls'; some lines match both or neither.</div></div>
+
+<div class="card"><div class="num">13 · CREDIT</div>
+<h2>What the memo said, and what has happened since</h2>
+<p class="read"><b>How to read.</b> Left is the memo and the S&amp;P report behind it. Right is the position at 19 August 2026. The gap is not an error in the memo — it is the shelf life of a point-in-time credit view.</p>
+<div class="scroll"><table><thead><tr><th style="width:20%"></th><th style="width:39%">Credit memo / S&amp;P, Jan–Apr 2026</th><th>Position at 19 Aug 2026</th></tr></thead><tbody>
+<tr><td><b>Portfolio</b></td><td>Three brands. Wrangler 59%, Lee 26%, Helly Hansen 15%. Lee in a revenue decline of more than ten years.</td><td><b>Lee sold</b> to Authentic Brands Group — <b>$750m cash plus a $250m five-year earnout</b>, agreed 21 May 2026, closing Q4 2026, outside date 1 Feb 2027. Continuing operations are Wrangler, Helly Hansen and Musto. A <b>transition services agreement</b> is confirmed; no continued-sourcing agreement is disclosed.</td></tr>
+<tr><td><b>Rating</b></td><td><b>'BB'</b> affirmed, outlook to <b>Stable from Negative</b>, 1 April 2026. Issue-level 'BB−', recovery '5' (10–30%, est. 15%).</td><td>Unchanged as far as we can see. <b>The report predates the Lee agreement by six weeks</b>, so its forecasts describe a three-brand company that no longer exists.</td></tr>
+<tr><td><b>Revenue</b></td><td>FY2025 actual <b>$3.152bn, +21%</b>. S&amp;P 2026 forecast <b>$3.45bn</b>; company's February guide $3.40–3.45bn.</td><td>Guide now <b>$2.66–2.71bn, +12–13%</b> — a $740m reduction that is entirely Lee moving to discontinued operations. <b>The same company, guiding lower, doing better.</b></td></tr>
+<tr><td><b>Margin</b></td><td>Memo estimate ~<b>46.1%</b> adjusted gross margin, <b>$443m</b> adjusted operating income. Actual FY2025: <b>46.6%</b> and <b>$468m</b> — the memo used guidance and Kontoor beat it.</td><td>FY2026 adjusted gross margin guided to <b>49.8–50.0%</b>, raised from 47.2–47.4%. Q2 adjusted gross margin <b>53.8%, +710bps</b>; revenue <b>$584m, +19%</b>; adjusted EPS <b>$1.06, +13%</b>. Project Jeanius plus mix is expected to add over <b>200bps</b> this year.</td></tr>
+<tr><td><b>Leverage</b></td><td><b>3.2×</b> at end-2025 on S&amp;P's adjusted basis, forecast to 2.3× in 2026. That includes roughly <b>$450m of sold trade receivables</b> added back to debt.</td><td>Company reports <b>2.0×</b> pro-forma at end-2025 and expects <b>below 1.5×</b> by year-end. <b>Same company, same date, 3.2× or 2.0× depending on whose definition.</b> $400m accelerated share repurchase on the Lee close; over $900m of total 2026 capital returns; $225m of voluntary term-loan payments.</td></tr>
+<tr><td><b>Receivables</b></td><td>~$450m of sold receivables noted inside S&amp;P's adjusted debt.</td><td>The flow is far larger than the balance. Kontoor sold <b>$1.4bn of receivables in FY2025</b>, $1.5bn in FY2024 and $1.4bn in FY2023, at funding fees of <b>$12.0m / $10.0m / $11.7m</b>. Reported receivables of $220.8m on ~$2.7bn annualised revenue are flattered by this. <b>Any cash-conversion read on Kontoor has to adjust for it.</b></td></tr>
+<tr><td><b>Supplier finance</b></td><td>Not addressed.</td><td>Kontoor runs a supplier payables programme with only <b>$24.4m outstanding</b> at end-2025 — about <b>1.4% of cost of goods sold</b> — against $249.9m of invoices made available during the year. <b>Receivables finance is industrialised; payables finance for vendors is not.</b></td></tr>
+<tr><td><b>Tariffs</b></td><td>Not quantified.</td><td><b>$23m of IEEPA refunds collected in Q3 2026</b> after the Supreme Court opinion of 20 Feb 2026, with full recovery expected by year-end; a $54m net receivable was booked in Q1. Section 301 now <b>10–12.5%</b>, with China and Vietnam at the top of that range. Mexico imports remain <b>USMCA-exempt</b>. Kontoor uses <b>US-grown cotton in more than 80% of Bangladesh sourcing</b>, potentially duty-exempt.</td></tr>
+<tr><td><b>Payment behaviour</b></td><td><b>15-day average payment delay</b>; <b>1.4% dilution</b> from airfreight borne by the vendor, naming <b>Meghna</b>.</td><td>Not restated publicly, and it would not be. <b>This line exists only because a supplier told us.</b> Meghna appears in our customs data as two entities — Meghna Denims and Meghna Knit Composite — which is where the two datasets meet.</td></tr>
+</tbody></table></div>
+<p class="so">A rating and a memo are <b>snapshots of a question we can already answer</b> — will this buyer pay. Six weeks after S&amp;P published, the company sold a quarter of its revenue. <b>The value we add is not a better credit opinion. It is the layer underneath: who ships to this buyer, from where, in what, and how the buyer behaves toward them.</b></p>
+<p class="src">Kontoor Brands FY2025 10-K (4 Mar 2026) and Q2 2026 10-Q (12 Aug 2026); press releases of 3 Mar, 7 May, 21 May and 12 Aug 2026; 8-K on the Lee purchase agreement. S&amp;P Global Ratings research update, 1 April 2026. Air8 credit memorandum and supplier-reported payment data.</div>
+
+<div class="card"><div class="num">14 · THE DIMENSIONS</div>
+<h2>What each layer adds, and what it cannot answer</h2>
+<p class="read"><b>How to read.</b> Every row is a data source we can reach today. The point is not that we have a lot of data — it is that each source answers something the others cannot, and every entry in the last column is a real finding from this document, including the one where our own data was wrong.</p>
+<div class="scroll"><table><thead><tr><th style="width:18%">Dimension</th><th style="width:23%">The question only it answers</th><th style="width:22%">What it cannot tell you</th><th>What it produced here</th></tr></thead><tbody>
+<tr><td><b>Rating agency</b><br><span class="src">S&amp;P, Coface, D&amp;B</span></td><td>Is this buyer's credit direction improving or deteriorating, judged consistently against peers?</td><td>Anything below the consolidated entity. No suppliers, no products, no countries. Stale by construction.</td><td>'BB' affirmed, outlook to Stable on 1 Apr 2026 — <b>six weeks before the Lee sale it does not contain</b>.</td></tr>
+<tr><td><b>Filings &amp; disclosure</b><br><span class="src">10-K, 10-Q, calls</span></td><td>Where does the buyer actually make money, from which customers, through which channel?</td><td>Anything it chooses not to say. Vendor names never appear; nor does off-price, nor the post-Lee Walmart share.</td><td><b>Wrangler 61% of revenue, 81% of profit. Walmart 30%. 85% wholesale. Bangladesh 57% of sourcing.</b></td></tr>
+<tr><td><b>Market &amp; trade statistics</b><br><span class="src">Comtrade, Eurostat, FRED</span></td><td>Is the buyer's category growing, in which region, and who is winning the sourcing shift?</td><td>Anything about this company specifically. Category totals only, and 6–12 months late.</td><td><b>US +5.9% but two thirds price; EU clothing −4.2%. China −3.0pts in the US, +0.9pts in the EU.</b> And it caught our own error.</td></tr>
+<tr><td><b>Peer benchmarking</b><br><span class="src">Levi's, VF, AEO, Gildan</span></td><td>Is this margin, this channel mix, this tariff exposure normal for the industry?</td><td>Why any individual company differs. Definitions are rarely like-for-like.</td><td><b>Levi's 61.7% gross margin → 11.4% operating; Kontoor 46.6% → 14.9%. The ranking inverts.</b></td></tr>
+<tr><td><b>Credit memo automation</b><br><span class="src">our tool</span></td><td>Can the credit view be produced consistently, quickly, in a form a committee will sign?</td><td>Nothing the inputs do not contain. Automating a value-based supplier table would industrialise the error in section 10.</td><td>Memo brand mix and margin estimates checked against FY2025 actuals — and were <b>beaten</b>.</td></tr>
+<tr><td><b>Customs / bills of lading</b><br><span class="src">shipment level</span></td><td>Who physically ships to this buyer, from where, in what product, at what cadence?</td><td><b>Shares.</b> Land-borne trade and non-publishing origins are invisible. Prices and terms are absent.</td><td><b>58 named factories.</b> And a sourcing mix that was wrong by a factor of ten on Pakistan.</td></tr>
+<tr><td><b>Entity resolution</b><br><span class="src">+ ownership graph</span></td><td>How many <i>companies</i> — not strings — are behind the shipments, and which belong to one group?</td><td>Ownership it has never been told. The Artistic and Radisson group questions need a curated graph.</td><td><b>143 names → 81 entities → 58 factories.</b> Without it: 113 factories and Maersk in the top ten.</td></tr>
+<tr><td><b>Description parsing</b><br><span class="src">line-level text</span></td><td>What is the product actually made of, for who, under which brand, in what volume?</td><td>The full supplier list. Brands appear in only 1.7% of lines; the rest requires inference from HS codes, which is wrong by a factor of ten (section 12).</td><td><b>HS 620322 is misread as menswear when 42% of its lines are womenswear descriptions.</b> That one correction alone recovers the actual product mix from a heading that looked like a menswear programme.</td></tr>
+</tbody></table></div>
+<p class="so">The 14 dimensions are not a dashboard. They are a <b>way of arguing</b> — of showing the reader which numbers are reliable, which are wrong and why, and where the real exposure lives. <b>That argument is the product.</b></p>
+<p class="src">Air8 internal framework, August 2026.</p></div>
+
+</div>
+<script>
+document.getElementById('tg').addEventListener('click',function(){
+ var c=document.documentElement.getAttribute('data-theme');
+ var dark=c?c==='dark':!window.matchMedia('(prefers-color-scheme: light)').matches;
+ document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+});
+</script>
+</body></html>
