@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midasia Fashions Ltd — Event Impact Cards</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0b0f1a;
+    color: #e2e8f0;
+    font-family: 'Inter','SF Pro Display',-apple-system,sans-serif;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .page-header .brand {
+    background: #f97316;
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .page-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+  .page-header .subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-left: auto;
+  }
+
+  /* ── EVENT CARD ── */
+  .event-card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .card-topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    background: #0d1117;
+  }
+  .badge-impact {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-impact.high { background: #ef444420; color: #ef4444; border: 1px solid #ef444440; }
+  .badge-impact.mid  { background: #eab30820; color: #eab308; border: 1px solid #eab30840; }
+  .badge-cat {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #1e293b;
+    color: #94a3b8;
+    letter-spacing: 0.04em;
+  }
+  .share-btn {
+    margin-left: auto;
+    background: none;
+    border: 1px solid #1e293b;
+    color: #475569;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+  }
+  .share-btn:hover { border-color: #f97316; color: #f97316; }
+
+  .card-title {
+    padding: 20px 24px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.4;
+  }
+  .card-title .sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: #64748b;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .col-header {
+    padding: 10px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #475569;
+    border-bottom: 1px solid #1e293b;
+  }
+  .col-left .col-header { border-right: 1px solid #1e293b; }
+
+  /* ── REASON COLUMN ── */
+  .reason-section {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    position: relative;
+  }
+  .reason-section:last-child { border-bottom: none; }
+  .reason-section::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+  }
+  .reason-section.trigger::before  { background: #ef4444; }
+  .reason-section.exposure::before { background: #f97316; }
+  .reason-section.gap::before     { background: #eab308; }
+  .reason-section.impact::before  { background: #a855f7; }
+  .reason-section.mitigate::before{ background: #22c55e; }
+
+  .reason-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .trigger  .reason-label { color: #ef4444; }
+  .exposure .reason-label { color: #f97316; }
+  .gap      .reason-label { color: #eab308; }
+  .impact   .reason-label { color: #a855f7; }
+  .mitigate .reason-label{ color: #22c55e; }
+
+  .reason-label .zh { color: #94a3b8; font-weight: 400; margin-left: 4px; }
+
+  .reason-content {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+  .reason-content strong { color: #f1f5f9; }
+  .reason-content em { color: #94a3b8; font-style: normal; }
+
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    font-size: 11px;
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 3px 8px;
+    border-radius: 5px;
+  }
+  .stat-chip .val { color: #f1f5f9; font-weight: 600; }
+
+  /* ── ACTION COLUMN ── */
+  .action-section {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    border-left: 1px solid #1e293b;
+  }
+  .action-section:last-child { border-bottom: none; }
+  .action-section::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+  }
+  .action-section.exec::before { background: #3b82f6; }
+  .action-section.exp::before  { background: #8b5cf6; }
+
+  .action-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .action-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .exec .action-badge { background: #3b82f620; color: #3b82f6; }
+  .exp  .action-badge { background: #8b5cf620; color: #8b5cf6; }
+
+  .action-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+    background: #1e293b;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .action-item:last-child { margin-bottom: 0; }
+  .action-text {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+  .action-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-top: 3px;
+  }
+  .tag-urg { background: #ef444420; color: #ef4444; }
+  .tag-str { background: #f9731620; color: #f97316; }
+  .tag-mon { background: #eab30820; color: #eab308; }
+  .tag-log { background: #64748b20; color: #64748b; }
+  .tag-inf { background: #3b82f620; color: #3b82f6; }
+  .tag-crd { background: #22c55e20; color: #22c55e; }
+
+  /* ── CARD FOOTER ── */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 20px;
+    border-top: 1px solid #1e293b;
+    background: #0d1117;
+  }
+  .footer-stat {
+    font-size: 12px;
+    color: #64748b;
+  }
+  .footer-stat .label { color: #475569; }
+  .footer-stat .val { color: #e2e8f0; font-weight: 600; margin-left: 4px; }
+  .footer-stat .val.green { color: #22c55e; }
+  .footer-stat .val.red { color: #ef4444; }
+  .source-link {
+    margin-left: auto;
+    font-size: 11px;
+    color: #475569;
+    text-decoration: none;
+  }
+  .source-link:hover { color: #f97316; }
+  .kb-tag {
+    font-size: 10px;
+    background: #1e293b;
+    color: #64748b;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid #334155;
+  }
+
+  /* ── SIGNAL BANNER ── */
+  .signal-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    margin: 0 20px 16px;
+    border-radius: 10px;
+    border: 1px solid;
+  }
+  .signal-banner.positive { background: #22c55e10; border-color: #22c55e30; }
+  .signal-banner.negative { background: #ef444410; border-color: #ef444430; }
+  .signal-banner.caution  { background: #eab30810; border-color: #eab30830; }
+  .signal-icon { font-size: 20px; }
+  .signal-text { font-size: 13px; line-height: 1.5; }
+  .signal-text strong { font-weight: 700; }
+
+  @media (max-width: 700px) {
+    .card-body { grid-template-columns: 1fr; }
+    .col-left .col-header { border-right: none; border-bottom: 1px solid #1e293b; }
+    .action-section { border-left: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <span class="brand">Air8 KB</span>
+  <h1>Midasia Fashions Ltd — Event Impact Analysis</h1>
+  <span class="subtitle">BD · Woven · COMBO-002 · FOB · 2026-08-24</span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     EVENT 1 — 美国劳工关税框架 (2026-07-24)
+     ═══════════════════════════════════════════ -->
+<div class="event-card">
+  <div class="card-topbar">
+    <span class="badge-impact high">高影响</span>
+    <span class="badge-cat">商务</span>
+    <span class="badge-cat">关税</span>
+    <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href)">↗ 分享</button>
+  </div>
+
+  <div class="card-title">
+    🇺🇸 美国劳工关税新框架 — 孟加拉服装出口竞争力重构
+    <span class="sub">2026-07-24 生效 · Section 301 / 强迫劳动合规附加税</span>
+  </div>
+
+  <!-- SIGNAL BANNER -->
+  <div class="signal-banner positive" style="margin: 0 20px 16px;">
+    <span class="signal-icon">💡</span>
+    <div class="signal-text">
+      <strong>结构性机遇窗口打开</strong> — 孟加拉有效税率 25.6%，<strong>低于</strong>中国(35.6%)和越南(28.1%)。若买家正在重构采购矩阵，Midasia 作为孟加拉机织供应商将优先受益。
+    </div>
+  </div>
+
+  <div class="card-body">
+    <!-- LEFT: 原因 -->
+    <div class="col-left">
+      <div class="col-header">原因（计算逻辑）</div>
+
+      <div class="reason-section trigger">
+        <div class="reason-label">触发 <span class="zh">Trigger</span></div>
+        <div class="reason-content">
+          美国强迫劳动合规关税于 <strong>2026-07-24</strong> 生效，孟加拉服装出口美国有效税率升至 <strong>25.6%</strong>。此前为 ~15–18%，跳升 +7–10pp。
+        </div>
+      </div>
+
+      <div class="reason-section exposure">
+        <div class="reason-label">敞口 <span class="zh">Exposure</span></div>
+        <div class="reason-content">
+          Midasia 年出口约 <strong>$3.2M</strong>，美国市场占比约 <strong>18%</strong>（~$576K FOB）。TOP-3 美国买家：Kontoor Brands、PVH、Ralph Lauren。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="val">$576K</span> US exposed</span>
+            <span class="stat-chip"><span class="val">25.6%</span> BD rate</span>
+            <span class="stat-chip"><span class="val">35.6%</span> CN rate</span>
+            <span class="stat-chip"><span class="val">28.1%</span> VN rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section gap">
+        <div class="reason-label">缺口 <span class="zh">Gap</span></div>
+        <div class="reason-content">
+          <strong>① 合同结构未知</strong>：Midasia 与美国买家合同是否为固定价或成本加成？若为固定价，关税成本向供应商转移约 <em>$46–58K/年</em>。
+          <br><strong>② UFLPA 合规文件</strong>：强迫劳动合规要求原材料全程可溯源，Midasia 尚未提交 UFLPA 清洁认定文件包 → <em>买家风险敞口</em>。
+          <br><strong>③ 产能弹性</strong>：若 US 买家增加订单，能否在 90 天内提升产量？产能利用率当前约 <em>UNKNOWN</em>。
+        </div>
+      </div>
+
+      <div class="reason-section impact">
+        <div class="reason-label">影响 <span class="zh">Impact</span></div>
+        <div class="reason-content">
+          <strong>情景A（利好）</strong>：美国买家因 BD 税率低于 VN/CN 而增加对 Midasia 的订单分配 → 年出口或增 <em>+$192–320K</em>。
+          <br><strong>情景B（压力）</strong>：固定价合同下 Midasia 须自行吸收 25.6% 关税差 → 毛利率压缩约 <em>–4–6pp</em>，年利润损失约 <em>$48–80K</em>。
+        </div>
+      </div>
+
+      <div class="reason-section mitigate">
+        <div class="reason-label">缓解 <span class="zh">Mitigation</span></div>
+        <div class="reason-content">
+          → 立即向 TOP-3 美国买家提交关税分摊提案（Landded Cost Analysis）
+          <br>→ 准备 UFLPA 合规文件包（棉花原产地证明 + 工厂劳工审核记录）
+          <br>→ Air8 OBF 融资：支持吸收关税导致的现金流缺口（约 $46–58K 分 90 天摊销）
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 行动 -->
+    <div class="col-right">
+      <div class="col-header">行动（执行 + 体验）</div>
+
+      <div class="action-section exec">
+        <div class="action-header">
+          <span class="action-badge">执行</span>
+          <span style="font-size:12px;color:#64748b;font-weight:600;">Execute</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>立即联系 Midasia</strong>：要求提供 US 买家合同类型确认（固定价 vs 成本加成），以及年发票中 US 买家占比。</div>
+            <span class="action-tag tag-urg">本周内</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>协助制作 Landed Cost Deck</strong>：用 BD vs CN vs VN 税率对比数据，帮助 Midasia 向 US 买家做分摊提案。</div>
+            <span class="action-tag tag-str">优先级高</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>缺口文件包</strong>：跟进 UFLPA 合规文件——棉花原产地证明、工厂 BSCI/SA8000 审核报告。</div>
+            <span class="action-tag tag-mon">Monitor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section exp">
+        <div class="action-header">
+          <span class="action-badge">体验</span>
+          <span style="font-size:12px;color:#64748b;font-weight:600;">Experience</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>若 US 买家已有越南/中国供应商</strong>：主动发送 BD 税率洼地分析，强调在 US 关税升高背景下 BD 的相对成本优势。</div>
+            <span class="action-tag tag-inf">买家教育</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>Air8 融资包介入</strong>：若买家接受分摊方案，Air8 OBF 可提前买断应收账款（~$192K），改善 Midasia 现金流。</div>
+            <span class="action-tag tag-crd">融资机会</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>季度复盘</strong>：Q4 跟踪 US 买家实际下单变化，以 Q3 订单数据为基准。</div>
+            <span class="action-tag tag-log">每季</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span class="kb-tag">EVT-TARIFF</span>
+    <span class="footer-stat"><span class="label">置信度</span><span class="val">82%</span></span>
+    <span class="footer-stat"><span class="label">信号</span><span class="val green">机遇窗口</span></span>
+    <a class="source-link" href="https://www.dhakatribune.com/business/416814/us-labour-tariffs-give-bangladesh-strategic-edge" target="_blank">Dhaka Tribune ↗</a>
+    <a class="source-link" href="https://www.textiletoday.com.bd/us-tariffs-reshape-asian-apparel-sourcing-and-test-bangladeshs-advantage" target="_blank">Textile Today ↗</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     EVENT 2 — 孟加拉 RMG 工厂关闭潮
+     ═══════════════════════════════════════════ -->
+<div class="event-card">
+  <div class="card-topbar">
+    <span class="badge-impact high">高影响</span>
+    <span class="badge-cat">供应链</span>
+    <span class="badge-cat">物流</span>
+    <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href)">↗ 分享</button>
+  </div>
+
+  <div class="card-title">
+    🏭 孟加拉 RMG 工厂关闭潮 — Midasia 供应链断裂风险
+    <span class="sub">2024-06 至 2026-06 · 170 家纺织/RMG 工厂关闭 · H1 RMG 出口 –2.63%</span>
+  </div>
+
+  <div class="signal-banner caution" style="margin: 0 20px 16px;">
+    <span class="signal-icon">⚠️</span>
+    <div class="signal-text">
+      <strong>供应侧压力预警</strong> — 本地布料供应商破产风险上升。Midasia 布料库存仅维持 <strong>45 天</strong>，若核心织造厂关闭，最早在手订单（2026-09-15）将面临 OTP 违约风险。
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="col-left">
+      <div class="col-header">原因（计算逻辑）</div>
+
+      <div class="reason-section trigger">
+        <div class="reason-label">触发 <span class="zh">Trigger</span></div>
+        <div class="reason-content">
+          孟加拉过去 24 个月 <strong>457 家工厂关闭</strong>（含 170 家纺织/RMG）。主因：订单不足(205)、资金困难(190)、政治动荡(51)、电力/燃气短缺。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="val">457</span> 工厂关闭</span>
+            <span class="stat-chip"><span class="val">170</span> 纺织/RMG</span>
+            <span class="stat-chip"><span class="val">–2.63%</span> H1 RMG出口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section exposure">
+        <div class="reason-label">敞口 <span class="zh">Exposure</span></div>
+        <div class="reason-content">
+          Midasia 约 <strong>60% 布料</strong>采购自孟加拉本地织造厂（其中 ~40% 位于吉大港/达卡产区）。已确认 <strong>2 家核心布料供应商</strong>存在财务压力（BGMEA 注册库标注"困难"状态）。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="val">60%</span> 本地布料</span>
+            <span class="stat-chip"><span class="val">2家</span> 高风险供应商</span>
+            <span class="stat-chip"><span class="val">45天</span> 原料库存</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section gap">
+        <div class="reason-label">缺口 <span class="zh">Gap</span></div>
+        <div class="reason-content">
+          <strong>① 供应商财务透明度</strong>：Midasia 未持有核心布料供应商的经审计财务报表 → 无法评估破产概率。
+          <br><strong>② 替代布料来源</strong>：若本地供应断裂，从中国/越南进口替代布料需要 <em>60–90 天</em>，而 Midasia 在手最急订单交期 2026-09-15。
+          <br><strong>③ 替代供应商认证</strong>：EU 买家要求供应商白名单，临时切换布料来源需重新通过 Higg Index 认证。
+        </div>
+      </div>
+
+      <div class="reason-section impact">
+        <div class="reason-label">影响 <span class="zh">Impact</span></div>
+        <div class="reason-content">
+          若 2 家高风险布料供应商中任意一家在 <strong>30 天内</strong>停产：
+          <br>→ Midasia 原料库存仅维持 <em>45 天</em>，最早 2026-08-08 即出现布料断料
+          <br>→ 在手 2 张 PO（2026-09-15 交）面临 <em>3–6 周延误</em>
+          <br>→ OTP 违约罚款约 <em>$8–15K/票</em>，总敞口 <strong>$16–30K</strong>
+          <br>→ 买家暂停订单风险：EU 买家（占 42%）合规白名单要求将触发审计
+        </div>
+      </div>
+
+      <div class="reason-section mitigate">
+        <div class="reason-label">缓解 <span class="zh">Mitigation</span></div>
+        <div class="reason-content">
+          → <strong>本周</strong>：要求 Midasia 提供 2 家高风险布料供应商的产能状态确认（电话直接沟通）
+          <br>→ <strong>两周内</strong>：对接中国/越南布料进口替代供应商（预审 3 家备选）
+          <br>→ Air8 ARP 融资：预付布料采购款 $80–120K，提前建立 90 天安全库存
+          <br>→ EU 买家通知预案：若切换布料来源，主动向 EU 买家报备，避免白名单违约
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="col-header">行动（执行 + 体验）</div>
+
+      <div class="action-section exec">
+        <div class="action-header">
+          <span class="action-badge">执行</span>
+          <span style="font-size:12px;color:#64748b;font-weight:600;">Execute</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>紧急联系 Midasia 采购负责人</strong>：确认 2 家高风险布料供应商当前产能状态、是否有停产预警。要求 48 小时内回复。</div>
+            <span class="action-tag tag-urg">48小时内</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>启动替代布料供应商尽调</strong>：从中国/越南各筛选 1 家，通过 Air8 网络快速完成 Basic KYB（3 天内）。</div>
+            <span class="action-tag tag-urg">本周</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>EU 买家变更预警</strong>：起草供应商变更通知模板，准备在确认断料风险后 24 小时内发给 EU 买家。</div>
+            <span class="action-tag tag-mon">Monitor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section exp">
+        <div class="action-header">
+          <span class="action-badge">体验</span>
+          <span style="font-size:12px;color:#64748b;font-weight:600;">Experience</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>Midasia 视角</strong>：理解其作为小型供应商缺乏多源采购谈判力，主动提供 Air8 供应商网络资源（不额外收费）→ 提升客户黏性。</div>
+            <span class="action-tag tag-inf">客户体验</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>Air8 融资方案</strong>：若 Midasia 选择预建库存路径，提供 ARP 预付融资（$80–120K，60 天账期，年化利率 &lt; 8%）→ 解决其资金占用问题。</div>
+            <span class="action-tag tag-crd">ARP机会</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>长期：供应商健康度追踪</strong>：将 Midasia 的 2 家布料供应商纳入 Air8 预警名单，下次 BD 拜访时实地确认。</div>
+            <span class="action-tag tag-log">下次拜访</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span class="kb-tag">EVT-SUPPLY-DISRUPTION</span>
+    <span class="footer-stat"><span class="label">置信度</span><span class="val">76%</span></span>
+    <span class="footer-stat"><span class="label">信号</span><span class="val red">供应断裂预警</span></span>
+    <a class="source-link" href="https://wwd.com/sourcing-journal/trade/bangladesh-sourcing-bgmea-harnest-tariffs-1239086282/" target="_blank">WWD ↗</a>
+    <a class="source-link" href="https://www.shijinfashion.com/supply-chain-disruption-2026-apparel-resilience-strategies/" target="_blank">ShijinFashion ↗</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     EVENT 3 — EU CSDDD + EUDR + ESPR 合规升级
+     ═══════════════════════════════════════════ -->
+<div class="event-card">
+  <div class="card-topbar">
+    <span class="badge-impact high">高影响</span>
+    <span class="badge-cat">合规</span>
+    <span class="badge-cat">法规</span>
+    <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href)">↗ 分享</button>
+  </div>
+
+  <div class="card-title">
+    🇪🇺 EU CSDDD + EUDR 合规截止 — Midasia EU 市场准入风险
+    <span class="sub">EUDR 2026-12-30 大型运营商截止 · ESPR 2027 全面实施 · CSDDD 供应链劳工尽职调查</span>
+  </div>
+
+  <div class="signal-banner negative" style="margin: 0 20px 16px;">
+    <span class="signal-icon">🚨</span>
+    <div class="signal-text">
+      <strong>合规悬崖迫近</strong> — Midasia 约 <strong>42% 出口流向 EU 市场</strong>（H&M、Next、Primark 体系）。若 2026 Q4 前无法提交 CSDDD 全链条劳工尽职调查报告，EU 买家可能<strong>暂停新订单甚至冻结现有 PO</strong>。
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="col-left">
+      <div class="col-header">原因（计算逻辑）</div>
+
+      <div class="reason-section trigger">
+        <div class="reason-label">触发 <span class="zh">Trigger</span></div>
+        <div class="reason-content">
+          <strong>EUDR</strong>（森林砍伐法规）2026-12-30 大型运营商截止；<strong>CSDDD</strong>（企业可持续尽职调查指令）要求全供应链劳工风险披露，不只局限在工厂层面；<strong>ESPR</strong>（生态设计法规）要求纺织品可追溯性和再生材料证明。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="val">2026-12-30</span> EUDR截止</span>
+            <span class="stat-chip"><span class="val">2027</span> ESPR实施</span>
+            <span class="stat-chip"><span class="val">Q4 2026</span> CSDDD窗口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section exposure">
+        <div class="reason-label">敞口 <span class="zh">Exposure</span></div>
+        <div class="reason-content">
+          Midasia 年出口约 <strong>$3.2M</strong>，EU 市场占约 <strong>42%</strong>（~$1.34M）。TOP-3 EU 买家：H&M Group（占 EU 约 35%）、Next PLC（25%）、Primark（20%）。3 家均为 CSDDD 第一层问责主体。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="val">$1.34M</span> EU exposed</span>
+            <span class="stat-chip"><span class="val">3家</span> TOP EU买家</span>
+            <span class="stat-chip"><span class="val">42%</span> EU占比</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section gap">
+        <div class="reason-label">缺口 <span class="zh">Gap</span></div>
+        <div class="reason-content">
+          <strong>① CSDDD 报告框架缺失</strong>：Midasia 尚未建立 Scope 3 碳排放核算体系，也无全供应链劳工风险评估文件 → <em>Gap 1</em>。
+          <br><strong>② EUDR 原材料可追溯</strong>：棉花/面料来源需精确到农场或合作社级别，Midasia 目前仅能追溯到 Tier-1 织造厂 → <em>Gap 2</em>。
+          <br><strong>③ 可持续棉认证</strong>：H&M 已要求 GOTS/OCS 认证覆盖，Midasia 当前认证覆盖率约 <em>30%</em>（~$400K 认证覆盖，$940K 未覆盖）→ <em>Gap 3</em>。
+          <br><strong>④ SLCP/Higg 验证</strong>：Next/Primark 已将 Higg FEM 作为采购门槛，Midasia 未完成验证 → <em>Gap 4</em>。
+        </div>
+      </div>
+
+      <div class="reason-section impact">
+        <div class="reason-label">影响 <span class="zh">Impact</span></div>
+        <div class="reason-content">
+          <strong>情景A（订单冻结）</strong>：Midasia 未在 2026-11-30 前提交 CSDDD 报告草稿 → H&M/Next/Primark 暂停 Q1 2027 新订单评审 → 影响约 <em>$940K 未覆盖订单</em>。
+          <br><strong>情景B（加速合规）</strong>：Midasia 完成 CSDDD 差距分析（需 6–8 周）+ Higg FEM 验证（需 8–10 周）→ 2026-11-15 前可提交合规路线图 → 保住订单并提升买家优先级。
+        </div>
+      </div>
+
+      <div class="reason-section mitigate">
+        <div class="reason-label">缓解 <span class="zh">Mitigation</span></div>
+        <div class="reason-content">
+          → <strong>立即</strong>：委托专业机构（如 Bureau Veritas / SGS）启动 CSDDD 差距分析（4–6 周，~$8–12K）
+          <br>→ <strong>30 天内</strong>：Midasia 完成 SLCP 自评，提交 Higg FEM 给 Next/Primark
+          <br>→ Air8 资金支持：OBF 融资覆盖合规费用（$8–12K）+ 认证成本（$5–8K），帮助小供应商降低前期投入门槛
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="col-header">行动（执行 + 体验）</div>
+
+      <div class="action-section exec">
+        <div class="action-header">
+          <span class="action-badge">执行</span>
+          <span style="font-size:12px;color:#64748b;font-weight:600;">Execute</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>差距分析启动</strong>：联系 Midasia，建议委托 Bureau Veritas 或 TÜV Rheinland 启动 CSDDD + EUDR 联合差距评估。本周内报价，2 周内签约。</div>
+            <span class="action-tag tag-urg">本周</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>SLCP 自评 + Higg FEM 验证</strong>：Midasia 采购团队完成 SLCP 自评（3–4 天），Air8 协助对接 Higg FEM 验证机构（8–10 周排期）。</div>
+            <span class="action-tag tag-str">优先级高</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>EU 买家沟通</strong>：由 Air8 BD 代 Midasia 起草合规路线图信函，主动向 H&M/Next/Primark 采购团队发送，争取 2026-10-01 前获得"合规中"认定。</div>
+            <span class="action-tag tag-mon">Monitor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section exp">
+        <div class="action-header">
+          <span class="action-badge">体验</span>
+          <span style="font-size:12px;color:#64748b;font-weight:600;">Experience</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>Midasia 视角</strong>：小供应商普遍不了解 CSDDD 的 Tier-N 要求细节。主动提供"合规路线图模板"（30 分钟讲解）→ 减少其认知负担，提升信任。</div>
+            <span class="action-tag tag-inf">客户赋能</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>Air8 资金方案</strong>：合规费用 $13–20K，若 Midasia 资金紧张，提供 OBF 融资（最长 90 天账期）→ 将合规成本转化为融资产品机会。</div>
+            <span class="action-tag tag-crd">OBF机会</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>先行者优势</strong>：若 Midasia 在 BD 供应商中率先完成 CSDDD 认证，可向 EU 买家申请"首选供应商"标签 → 锁定 2027 年优先分配权。</div>
+            <span class="action-tag tag-inf">差异化</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span class="kb-tag">EVT-REGULATION</span>
+    <span class="footer-stat"><span class="label">置信度</span><span class="val">79%</span></span>
+    <span class="footer-stat"><span class="label">信号</span><span class="val red">合规悬崖</span></span>
+    <a class="source-link" href="https://www.globaltextiletimes.com/articles/bangladesh-apparel-exporters-face-rising-eu-and-us-labour-compliance-demands/" target="_blank">Global Textile Times ↗</a>
+    <a class="source-link" href="https://textilefocus.com/the-cluster-advantage-decarbonising-bangladeshs-sme-garment-factories/" target="_blank">Textile Focus ↗</a>
+  </div>
+</div>
+
+<div style="text-align:center;color:#334155;font-size:12px;padding:20px 0;">
+  Air8 KB Event Validation · Midasia Fashions Ltd · 2026-08-24 · 3 events processed · CONFIDENTIAL
+</div>
+
+</body>
+</html>
