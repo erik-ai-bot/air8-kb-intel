@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actionable Insights — Bangladesh Sourcing Risk</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    color: #e2e8f0;
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    padding: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1e293b;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+  .page-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #475569;
+    flex-wrap: wrap;
+  }
+  .badge-count {
+    background: #f59e0b20;
+    color: #f59e0b;
+    border: 1px solid #f59e0b40;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+  }
+  .badge-air8 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #f97316;
+    background: #f9731615;
+    border: 1px solid #f9731630;
+    padding: 2px 9px;
+    border-radius: 20px;
+  }
+
+  /* ── BUYER CONTEXT BAR ── */
+  .context-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0d1117;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .context-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #475569;
+  }
+  .context-tag {
+    font-size: 11px;
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 3px 9px;
+    border-radius: 5px;
+    border: 1px solid #334155;
+  }
+  .context-tag strong { color: #e2e8f0; }
+  .context-divider { color: #334155; }
+
+  /* ── INSIGHT ROW ── */
+  .insight-row {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-left: 3px solid;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .insight-row.high   { border-left-color: #f59e0b; }
+  .insight-row.threat { border-left-color: #ef4444; }
+
+  /* ── ROW HEADER ── */
+  .row-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-bottom: 1px solid #1e293b;
+    background: #0d1117;
+    flex-wrap: wrap;
+  }
+  .badge-level {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-level.high   { background: #f59e0b25; color: #f59e0b; border: 1px solid #f59e0b40; }
+  .badge-level.threat { background: #ef444425; color: #ef4444; border: 1px solid #ef444440; }
+
+  .badge-cat {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cat-sourcing   { background: #22c55e20; color: #4ade80; }
+  .cat-commerce   { background: #f59e0b15; color: #fbbf24; }
+  .cat-compliance { background: #ec489920; color: #f472b6; }
+  .cat-delivery   { background: #3b82f620; color: #60a5fa; }
+  .cat-tariff     { background: #f9731620; color: #fb923c; }
+
+  .row-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #f1f5f9;
+    flex: 1;
+    min-width: 180px;
+  }
+  .row-actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .share-btn {
+    background: none;
+    border: none;
+    color: #475569;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    transition: color 0.15s;
+  }
+  .share-btn:hover { color: #f59e0b; }
+  .view-btn {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: none;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+  }
+  .view-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+
+  /* ── 3-COLUMN GRID ── */
+  .row-body {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1fr;
+  }
+  .col {
+    padding: 13px 16px;
+    border-right: 1px solid #1e293b;
+  }
+  .col:last-child { border-right: none; }
+  .col-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #475569;
+    margin-bottom: 8px;
+  }
+  .col-content {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.7;
+  }
+  .col-content strong { color: #e2e8f0; font-weight: 600; }
+
+  /* impact chain */
+  .chain { }
+  .chain-line { margin-bottom: 5px; line-height: 1.6; }
+  .chain-line:last-child { margin-bottom: 0; }
+  .arrow { color: #334155; margin: 0 2px; }
+  .node  { color: #e2e8f0; font-weight: 600; }
+  .val-red {
+    display: inline-block;
+    background: #ef444418;
+    color: #ef4444;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 1px;
+  }
+  .val-green {
+    display: inline-block;
+    background: #22c55e18;
+    color: #22c55e;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 1px;
+  }
+  .val-amber {
+    display: inline-block;
+    background: #f59e0b18;
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 1px;
+  }
+  .chain-note {
+    margin-top: 5px;
+    font-size: 11px;
+    color: #475569;
+    font-style: italic;
+  }
+
+  /* action bullets */
+  .actions-list { display: flex; flex-direction: column; gap: 8px; }
+  .action-bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.55;
+  }
+  .action-bullet strong { color: #e2e8f0; }
+  .action-label {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .lbl-sourcing   { background: #22c55e15; color: #4ade80; }
+  .lbl-commerce   { background: #f59e0b15; color: #fbbf24; }
+  .lbl-compliance { background: #ec489915; color: #f472b6; }
+  .lbl-delivery   { background: #3b82f615; color: #60a5fa; }
+  .lbl-air8       { background: #f9731615; color: #fb923c; }
+
+  @media (max-width: 800px) {
+    .row-body { grid-template-columns: 1fr; }
+    .col { border-right: none; border-bottom: 1px solid #1e293b; }
+    .col:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-title">
+    <span>💡</span>
+    Actionable Insights
+  </div>
+  <div class="page-right">
+    <span class="badge-count">3 HIGH</span>
+    <span>Calculation layer · KB + Market Intelligence · Aug 24, 2026</span>
+    <span class="badge-air8">Air8 Intelligence</span>
+  </div>
+</div>
+
+<!-- ── BUYER CONTEXT BAR ── -->
+<div class="context-bar">
+  <span class="context-label">采购结构</span>
+  <span class="context-tag"><strong>来源国：</strong>孟加拉（Bangladesh）</span>
+  <span class="context-divider">·</span>
+  <span class="context-tag"><strong>品类：</strong>机织服装（Woven Apparel）</span>
+  <span class="context-divider">·</span>
+  <span class="context-tag"><strong>贸易条款：</strong>FOB</span>
+  <span class="context-divider">·</span>
+  <span class="context-tag"><strong>供应商规模：</strong>&lt;$5M / 中小型工厂</span>
+  <span class="context-divider">·</span>
+  <span class="context-tag"><strong>分析窗口：</strong>2026 H2</span>
+</div>
+
+
+<!-- ════════════════════════════════
+     ROW 1 — 美国关税
+     ════════════════════════════════ -->
+<div class="insight-row high">
+  <div class="row-header">
+    <span class="badge-level high">高</span>
+    <span class="badge-cat cat-tariff">关税</span>
+    <span class="badge-cat cat-sourcing">采购策略</span>
+    <span class="row-title">🇺🇸 美国关税重构 — 孟加拉供应商的相对成本优势扩大，是重新分配采购的窗口</span>
+    <div class="row-actions-bar">
+      <button class="share-btn">↗</button>
+      <button class="view-btn">View Details</button>
+    </div>
+  </div>
+  <div class="row-body">
+    <div class="col">
+      <div class="col-label">新闻</div>
+      <div class="col-content">
+        美国 <strong>FL301 强迫劳动合规关税</strong>于 2026-07-24 正式生效。<br><br>
+        孟加拉服装对美有效税率升至 <strong>25.6%</strong>——但这一数字低于越南（<strong>28.1%</strong>）和中国（<strong>35.6%</strong>），孟加拉首次在美国市场形成结构性税率洼地。美国买家的采购成本矩阵正在重新定价。
+      </div>
+    </div>
+    <div class="col">
+      <div class="col-label">原因（影响）</div>
+      <div class="col-content chain">
+        <div class="chain-line">
+          每 $100 FOB：孟加拉较越南省 <span class="val-green">$2.5</span>，较中国省 <span class="val-green">$10</span>
+        </div>
+        <div class="chain-line">
+          若将 10% 采购额从越南转移孟加拉
+          <span class="arrow">→</span> 年采购成本节省约 <span class="val-green">$250–$1,000K</span>（视采购量）
+        </div>
+        <div class="chain-line">
+          ⚠️ 警示：若供应商合同为<strong>固定价</strong>，关税由其自行消化
+          <span class="arrow">→</span> 供应商毛利压缩约 <span class="val-amber">–4–6pp</span>
+          <span class="arrow">→</span> 可能触发提价谈判或交期延误
+        </div>
+        <div class="chain-note">前提：供应商 UFLPA 合规文件就绪；合同结构需在 BD call 中确认。</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="col-label">行动</div>
+      <div class="actions-list">
+        <div class="action-bullet">
+          <span class="action-label lbl-sourcing">采购策略</span>
+          <span>与你们的孟加拉供应商确认<strong>合同类型</strong>（固定价 vs 成本加成），评估是否需要调整关税分摊条款，避免供应商因利润压缩出现交货风险。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-sourcing">采购策略</span>
+          <span>评估将部分越南/中国订单<strong>转移至孟加拉</strong>的可行性，趁窗口期锁定更低的落地成本。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-compliance">合规</span>
+          <span>要求孟加拉供应商提供 <strong>UFLPA 合规文件包</strong>（原材料溯源 + 劳工审核），这是美国清关的必要条件，也是保障你们订单准时到港的前提。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════
+     ROW 2 — 工厂关闭潮
+     ════════════════════════════════ -->
+<div class="insight-row threat">
+  <div class="row-header">
+    <span class="badge-level threat">威胁 · 高</span>
+    <span class="badge-cat cat-delivery">交期</span>
+    <span class="badge-cat cat-sourcing">供应稳定性</span>
+    <span class="row-title">🏭 孟加拉 RMG 供应链萎缩 — 你们的供应商布料来源正在承压，交期风险上升</span>
+    <div class="row-actions-bar">
+      <button class="share-btn">↗</button>
+      <button class="view-btn">View Details</button>
+    </div>
+  </div>
+  <div class="row-body">
+    <div class="col">
+      <div class="col-label">新闻</div>
+      <div class="col-content">
+        孟加拉 2024–2026 年共有 <strong>457 家工厂倒闭</strong>，其中 <strong>170 家</strong>为纺织/RMG。原因包括：订单不足（205 家）、资金困难（190 家）、政治动荡（51 家）。<br><br>
+        H1 FY25-26 RMG 出口同比下滑 <strong>2.63%</strong>。孟加拉本地织造厂规模持续收缩，中小型服装工厂的布料供应稳定性正在下降。
+      </div>
+    </div>
+    <div class="col">
+      <div class="col-label">原因（影响）</div>
+      <div class="col-content chain">
+        <div class="chain-line">
+          孟加拉中小型服装供应商 ~60% 布料依赖本地织造厂
+          <span class="arrow">→</span> 本地织造厂陆续关闭
+          <span class="arrow">→</span> 布料采购周期拉长、成本上升
+        </div>
+        <div class="chain-line">
+          布料断供风险窗口
+          <span class="arrow">→</span> 在手 PO 生产可能延误 <span class="val-amber">3–6 周</span>
+          <span class="arrow">→</span> OTP 触发违约罚款 <span class="val-red">$8–15K/票</span>
+        </div>
+        <div class="chain-line">
+          若供应商切换布料来源（进口替代）
+          <span class="arrow">→</span> 需提前通知买家并可能触发 EU 白名单重审
+          <span class="arrow">→</span> 影响合规状态
+        </div>
+        <div class="chain-note">风险集中在 2026 Q3：季风季 + 布料供应萎缩叠加，交期压力最大。</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="col-label">行动</div>
+      <div class="actions-list">
+        <div class="action-bullet">
+          <span class="action-label lbl-delivery">交期</span>
+          <span>要求你们的孟加拉供应商<strong>提供布料采购计划</strong>（来源、库存量、备货周期），以此评估 Q3 在手订单的实际交期风险。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-delivery">交期</span>
+          <span>对 <strong>Q3 交期敏感 PO</strong>（2026年9月前）主动与供应商做一次生产进度确认，确认布料到位情况。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-sourcing">供应稳定性</span>
+          <span>若供应商需要<strong>切换布料来源</strong>（本地→进口），提前明确你们的 EU 合规白名单变更流程，避免被动。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-air8">Air8</span>
+          <span>Air8 可协助供应商提前备货融资（ARP），降低布料断供概率，保障你们的 OTP。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════
+     ROW 3 — EU 合规
+     ════════════════════════════════ -->
+<div class="insight-row high">
+  <div class="row-header">
+    <span class="badge-level high">高</span>
+    <span class="badge-cat cat-compliance">合规</span>
+    <span class="badge-cat cat-commerce">品牌风险</span>
+    <span class="row-title">🇪🇺 EU CSDDD + EUDR 合规窗口 — 你们的供应商是否已就绪？这是你们的品牌风险</span>
+    <div class="row-actions-bar">
+      <button class="share-btn">↗</button>
+      <button class="view-btn">View Details</button>
+    </div>
+  </div>
+  <div class="row-body">
+    <div class="col">
+      <div class="col-label">新闻</div>
+      <div class="col-content">
+        <strong>EUDR</strong>（森林砍伐法规）大型运营商截止日 <strong>2026-12-30</strong>；<strong>CSDDD</strong>（企业可持续尽职调查指令）要求品牌对 Tier-N 供应链进行全链条劳工风险披露；<strong>ESPR</strong> 生态设计法规 2027 年全面落地，纺织品需提供可追溯性证明。<br><br>
+        对品牌方而言：合规责任已从工厂延伸至整个供应链，<strong>你们的供应商合规状态直接影响你们对监管机构的申报</strong>。
+      </div>
+    </div>
+    <div class="col">
+      <div class="col-label">原因（影响）</div>
+      <div class="col-content chain">
+        <div class="chain-line">
+          你们的孟加拉供应商：无 CSDDD 报告框架 · 无 Higg FEM · GOTS 认证覆盖率约 <span class="val-amber">30%</span>
+        </div>
+        <div class="chain-line">
+          <span class="arrow">→</span> 你们（品牌方）向 EU 监管机构提交 CSDDD 申报时
+          <span class="arrow">→</span> 供应商数据缺口成为你们的<strong>品牌合规漏洞</strong>
+        </div>
+        <div class="chain-line">
+          若 2026 Q4 供应商仍无合规文件
+          <span class="arrow">→</span> 你们需要在申报中标注"不合规供应商"
+          <span class="arrow">→</span> 或暂停使用该供应商
+          <span class="arrow">→</span> 影响采购计划 <span class="val-red">$940K+</span>
+        </div>
+        <div class="chain-note">先行合规的供应商将获得你们的"首选"资格 → 建议提前筛选和推动。</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="col-label">行动</div>
+      <div class="actions-list">
+        <div class="action-bullet">
+          <span class="action-label lbl-compliance">合规</span>
+          <span>向你们的孟加拉供应商<strong>发送 CSDDD + EUDR 合规自查问卷</strong>，要求在 30 天内回复，以评估哪些供应商存在申报风险。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-compliance">合规</span>
+          <span>在 <strong>新 PO 条款</strong>中明确加入 CSDDD 合规要求（劳工尽职调查报告 + 棉花溯源文件），2026 Q4 起正式执行。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-sourcing">采购策略</span>
+          <span>优先分配订单给<strong>已完成 Higg FEM + GOTS 认证</strong>的供应商，推动合规成为采购评分项。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-air8">Air8</span>
+          <span>Air8 可协助你们的供应商完成 BV/SGS 合规认证，降低合规门槛，加快你们的供应商合规率。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding: 16px 0; color: #1e2a3a; font-size: 11px; text-align: center;">
+  Air8 Intelligence · Bangladesh Sourcing Risk · Aug 24, 2026 · 3 HIGH signals · CONFIDENTIAL
+</div>
+
+</body>
+</html>
