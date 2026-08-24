@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KB Module Architecture v3</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080c12;color:#e2e8f0;font-family:system-ui,sans-serif;padding:24px 28px;min-height:100vh}
+h1{font-size:15px;font-weight:700;color:#f1f5f9;letter-spacing:.03em}
+.sub{font-size:11px;color:#334155;margin:3px 0 18px}
+.controls{display:flex;gap:10px;margin-bottom:14px;align-items:center}
+.btn{padding:8px 22px;border-radius:7px;border:1.5px solid #1e293b;font-size:12px;font-weight:600;cursor:pointer;background:#0f172a;color:#475569;letter-spacing:.04em;transition:all .15s}
+.btn:hover{border-color:#334155;color:#64748b}
+.btn.ls{background:rgba(59,130,246,.14);border-color:#3b82f6;color:#93c5fd}
+.btn.ps{background:rgba(249,115,22,.14);border-color:#f97316;color:#fdba74}
+.hint{font-size:11px;color:#1e293b;margin-left:4px}
+.leg{display:flex;gap:18px;margin-bottom:14px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#475569}
+.sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.wrap{overflow-x:auto;overflow-y:auto}
+#tt{
+  position:fixed;display:none;
+  background:#0f1724;border:1px solid #1e3a5f;
+  padding:9px 13px;border-radius:7px;
+  font-size:11.5px;color:#94a3b8;
+  max-width:240px;pointer-events:none;z-index:200;
+  line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+#tt .tname{font-size:10px;font-weight:700;color:#475569;letter-spacing:.1em;margin-bottom:4px}
+#tt .tdesc{color:#7ea8c9}
+</style>
+</head>
+<body>
+<h1>KB Module Architecture · Scenario → KB Process → L1 → L2</h1>
+<p class="sub">Full pipeline: Scenario Skills → KB Process → L1 logic modules → L2 data nodes · hover nodes for info · click to highlight</p>
+<div class="controls">
+  <button class="btn" id="bls" onclick="toggle('ls')">Lead Scoring</button>
+  <button class="btn" id="bps" onclick="toggle('ps')">Perf Scoring</button>
+  <span class="hint">Select one or both to see overlap</span>
+</div>
+<div class="leg">
+  <div class="li"><div class="sw" style="background:#3b82f6"></div>Lead Scoring only</div>
+  <div class="li"><div class="sw" style="background:#f97316"></div>Perf Scoring only</div>
+  <div class="li"><div class="sw" style="background:#22c55e"></div>Shared by both</div>
+</div>
+<div class="wrap">
+<svg id="svg" xmlns="http://www.w3.org/2000/svg" width="960" height="1040" viewBox="0 0 960 1040"></svg>
+</div>
+<div id="tt"><div class="tname" id="tt-name"></div><div class="tdesc" id="tt-desc"></div></div>
+
+<script>
+const tt=document.getElementById('tt');
+const ttName=document.getElementById('tt-name');
+const ttDesc=document.getElementById('tt-desc');
+
+document.addEventListener('mousemove',e=>{
+  if(tt.style.display==='block'){
+    let lx=e.clientX+16, ly=e.clientY-12;
+    if(lx+250>window.innerWidth) lx=e.clientX-260;
+    if(ly+80>window.innerHeight) ly=e.clientY-80;
+    tt.style.left=lx+'px'; tt.style.top=ly+'px';
+  }
+});
+
+function showTip(name,desc){tt.style.display='block';ttName.textContent=name;ttDesc.textContent=desc;}
+function hideTip(){tt.style.display='none';}
+
+const st={ls:false,ps:false};
+const C={
+  l1_bg:'#0e1623',l1_str:'#1e2d3d',
+  l2_bg:'#090e17',l2_str:'#131f2e',
+  ls_bg:'rgba(59,130,246,.13)',ls_str:'#3b82f6',ls_txt:'#93c5fd',ls_e:'#3b82f6',
+  ps_bg:'rgba(249,115,22,.13)',ps_str:'#f97316',ps_txt:'#fdba74',ps_e:'#f97316',
+  bt_bg:'rgba(34,197,94,.13)',bt_str:'#22c55e',bt_txt:'#86efac',bt_e:'#22c55e',
+  off:'#1e3a5f',
+};
+
+const YS=214;
+const L1X=220, L1W=190, L1H=36;
+const L2X=720, L2W=196, L2H=32;
+
+// L1 logic modules — all exist
+const l1=[
+  {id:'dbmap', lbl:'db-field-mapper',     y:82+YS,  ls:true,ps:true,
+   tip:'Maps raw supplier input fields to KB schema columns before any scoring logic runs.'},
+  {id:'vrt',   lbl:'vertical-router',     y:160+YS, ls:true,ps:true,
+   tip:'Routes the query to the correct product vertical — Apparel, Hardgoods, Food, etc.'},
+  {id:'scr',   lbl:'banded-scorer',       y:242+YS, ls:true,ps:true,
+   tip:'Applies weighted scoring bands and thresholds to compute a normalised score per CP.'},
+  {id:'trnd',  lbl:'market-trend-reader', y:330+YS, ls:true,ps:true,
+   tip:'Reads live market trend signals from KB data nodes and injects them into scoring context.'},
+  {id:'pair',  lbl:'buyer-pair-screener', y:430+YS, ls:true,ps:true,
+   tip:'Screens supplier profiles against active buyer requirements; surfaces best-fit matches.'},
+  {id:'gate',  lbl:'gate-and-sort',       y:540+YS, ls:true,ps:true,
+   tip:'Final pass/fail gate check; ranks and sorts qualifying candidates by composite score.'},
+  {id:'evid',  lbl:'evidence-standard',   y:640+YS, ls:true,ps:true,
+   tip:'Validates that evidence citations meet minimum quality bar before a CP level is passed.'},
+];
+
+// L2 data nodes — only nodes that actually exist (no placeholders)
+const l2=[
+  {id:'sigs',  lbl:'score-signals',       y:82+YS,  ls:true, ps:true,
+   tip:'Defines the raw scoring signals and their weights used by the banded-scorer module.'},
+  {id:'patfw', lbl:'pattern-framework',   y:165+YS, ls:true, ps:false,
+   tip:'Lead scoring rubric: structured criteria patterns that define each CP level threshold.'},
+  {id:'pcat',  lbl:'product-categories/', y:248+YS, ls:true, ps:true,
+   tip:'Taxonomy of product categories across all verticals — used for routing and scoring context.'},
+  {id:'cntry', lbl:'countries/',          y:331+YS, ls:true, ps:true,
+   tip:'Country-level risk ratings, compliance rules, and supplier eligibility flags by market.'},
+  {id:'combob',lbl:'COMBO-B-* (buyers)',  y:430+YS, ls:true, ps:true,
+   tip:'Buyer combination profiles: preferred product categories, price points, and volume thresholds.'},
+  {id:'adv',   lbl:'adverse-levels',      y:540+YS, ls:true, ps:true,
+   tip:'Severity level definitions for adverse flags across compliance, quality, and ESG dimensions.'},
+  {id:'csrc',  lbl:'country-sources',     y:590+YS, ls:true, ps:true,
+   tip:'Approved data sources per country used for evidence gathering and validation.'},
+  {id:'fnbd',  lbl:'financing-bands',     y:640+YS, ls:true, ps:true,
+   tip:'Financing eligibility bands categorised by supplier type and transaction size.'},
+  {id:'pitch', lbl:'pitch-guide',         y:695+YS, ls:true, ps:true,
+   tip:'Pitch framing guidance tailored to buyer scenario, product vertical, and supplier tier.'},
+];
+
+const edges=[
+  ['dbmap','sigs',    true, true ],
+  ['vrt',  'patfw',   true, false],
+  ['scr',  'patfw',   true, false],
+  ['trnd', 'pcat',    true, true ],
+  ['trnd', 'cntry',   true, true ],
+  ['pair', 'combob',  true, true ],
+  ['gate', 'patfw',   true, false],
+  ['gate', 'adv',     true, true ],
+  ['evid', 'adv',     true, true ],
+  ['evid', 'csrc',    true, true ],
+  ['evid', 'fnbd',    true, true ],
+  ['evid', 'pitch',   true, true ],
+];
+
+// CP bands
+const bands=[
+  [56+YS,  130+YS, 'CP0',   '#060a10'],
+  [132+YS, 210+YS, 'CP1-A', '#080d14'],
+  [212+YS, 300+YS, 'CP1-B', '#060a10'],
+  [302+YS, 400+YS, 'CP1-C', '#080d14'],
+  [402+YS, 510+YS, 'CP2',   '#060a10'],
+  [512+YS, 615+YS, 'CP3',   '#080d14'],
+  [617+YS, 720+YS, 'CP4',   '#060a10'],
+];
+
+const LS_BOX={cx:200, cy:82, w:195, h:54};
+const PS_BOX={cx:760, cy:82, w:195, h:54};
+const KB_BOX={cx:480, cy:160, w:230, h:50};
+
+function build(){
+  const svg=document.getElementById('svg');
+  const ns='http://www.w3.org/2000/svg';
+  const mk=(tag,a={},txt)=>{
+    const e=document.createElementNS(ns,tag);
+    Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));
+    if(txt!=null)e.textContent=txt;
+    return e;
+  };
+  const arrowDn=(x,y,col)=>mk('polygon',{points:`${x-5},${y} ${x+5},${y} ${x},${y+7}`,fill:col,opacity:'.7'});
+
+  // ── TOP SECTION BG ──
+  svg.appendChild(mk('rect',{x:0,y:0,width:960,height:YS,fill:'#040810'}));
+  svg.appendChild(mk('text',{x:480,y:17,'text-anchor':'middle','font-size':8.5,
+    'font-family':'system-ui','font-weight':'800',fill:'#0c1e34','letter-spacing':'.18em'},
+    'ENTRY LAYER · SCENARIO SKILLS'));
+
+  // ── HELPER: add tooltip behaviour to a group ──
+  function addTip(g, name, desc){
+    g.addEventListener('mouseenter',()=>showTip(name,desc));
+    g.addEventListener('mouseleave',hideTip);
+    g.style.cursor='default';
+  }
+
+  // ── LEAD SCORING BOX ──
+  const gls=mk('g'); gls.id='top-ls';
+  gls.appendChild(mk('rect',{id:'top-ls-r',
+    x:LS_BOX.cx-LS_BOX.w/2,y:LS_BOX.cy-LS_BOX.h/2,width:LS_BOX.w,height:LS_BOX.h,rx:8,
+    fill:'rgba(59,130,246,.10)',stroke:'#1e40af','stroke-width':'1.5'}));
+  gls.appendChild(mk('text',{x:LS_BOX.cx,y:LS_BOX.cy-12,'text-anchor':'middle',
+    'font-size':8,'font-family':'system-ui','font-weight':'800',fill:'#1e40af','letter-spacing':'.12em'},'SCENARIO SKILL'));
+  gls.appendChild(mk('text',{id:'top-ls-t',x:LS_BOX.cx,y:LS_BOX.cy+8,'text-anchor':'middle',
+    'font-size':12,'font-family':'"Fira Code",monospace','font-weight':'700',fill:'#3b82f6'},'lead-scoring'));
+  gls.appendChild(mk('text',{x:LS_BOX.cx,y:LS_BOX.cy+24,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui',fill:'#1e3a6e'},'CP0 → CP5'));
+  svg.appendChild(gls);
+  addTip(gls,'SCENARIO · lead-scoring','Scores new supplier leads through the full CP0→CP5 pipeline. Outputs a qualifying score and buyer match recommendations.');
+
+  // ── PERF SCORING BOX ──
+  const gps=mk('g'); gps.id='top-ps';
+  gps.appendChild(mk('rect',{id:'top-ps-r',
+    x:PS_BOX.cx-PS_BOX.w/2,y:PS_BOX.cy-PS_BOX.h/2,width:PS_BOX.w,height:PS_BOX.h,rx:8,
+    fill:'rgba(249,115,22,.10)',stroke:'#92400e','stroke-width':'1.5'}));
+  gps.appendChild(mk('text',{x:PS_BOX.cx,y:PS_BOX.cy-12,'text-anchor':'middle',
+    'font-size':8,'font-family':'system-ui','font-weight':'800',fill:'#92400e','letter-spacing':'.12em'},'SCENARIO SKILL'));
+  gps.appendChild(mk('text',{id:'top-ps-t',x:PS_BOX.cx,y:PS_BOX.cy+8,'text-anchor':'middle',
+    'font-size':12,'font-family':'"Fira Code",monospace','font-weight':'700',fill:'#f97316'},'perf-scoring'));
+  gps.appendChild(mk('text',{x:PS_BOX.cx,y:PS_BOX.cy+24,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui',fill:'#7c2d12'},'CP0 → CP5'));
+  svg.appendChild(gps);
+  addTip(gps,'SCENARIO · perf-scoring','Evaluates existing supplier performance against benchmarks. Outputs a tier rating and risk flags for relationship decisions.');
+
+  // ── KB PROCESS BOX ──
+  const gkb=mk('g'); gkb.id='top-kb';
+  gkb.appendChild(mk('rect',{id:'top-kb-r',
+    x:KB_BOX.cx-KB_BOX.w/2,y:KB_BOX.cy-KB_BOX.h/2,width:KB_BOX.w,height:KB_BOX.h,rx:8,
+    fill:'rgba(139,92,246,.10)',stroke:'#4c1d95','stroke-width':'1.5'}));
+  gkb.appendChild(mk('text',{x:KB_BOX.cx,y:KB_BOX.cy-11,'text-anchor':'middle',
+    'font-size':8,'font-family':'system-ui','font-weight':'800',fill:'#4c1d95','letter-spacing':'.12em'},'KB PROCESS SKILL'));
+  gkb.appendChild(mk('text',{id:'top-kb-t',x:KB_BOX.cx,y:KB_BOX.cy+6,'text-anchor':'middle',
+    'font-size':12,'font-family':'"Fira Code",monospace','font-weight':'700',fill:'#8b5cf6'},'kb-module-router'));
+  gkb.appendChild(mk('text',{x:KB_BOX.cx,y:KB_BOX.cy+21,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui',fill:'#3b0764'},'resolves L1 modules · fetches L2 data nodes'));
+  svg.appendChild(gkb);
+  addTip(gkb,'KB PROCESS SKILL · kb-module-router','Routes each scenario to the correct L1 logic modules and resolves which L2 KB data nodes need to be fetched.');
+
+  // ── CONNECTORS ──
+  // LS → KB
+  const lsBotX=LS_BOX.cx, lsBotY=LS_BOX.cy+LS_BOX.h/2;
+  const kbTopY=KB_BOX.cy-KB_BOX.h/2;
+  svg.appendChild(mk('path',{id:'line-ls-kb',
+    d:`M${lsBotX},${lsBotY} C${lsBotX},${lsBotY+22} ${KB_BOX.cx-70},${kbTopY-18} ${KB_BOX.cx-70},${kbTopY}`,
+    fill:'none',stroke:'#1e3a6e','stroke-width':'1.5',opacity:'.6'}));
+  svg.appendChild(arrowDn(KB_BOX.cx-70,kbTopY,'#1e40af'));
+
+  // PS → KB
+  const psBotX=PS_BOX.cx, psBotY=PS_BOX.cy+PS_BOX.h/2;
+  svg.appendChild(mk('path',{id:'line-ps-kb',
+    d:`M${psBotX},${psBotY} C${psBotX},${psBotY+22} ${KB_BOX.cx+70},${kbTopY-18} ${KB_BOX.cx+70},${kbTopY}`,
+    fill:'none',stroke:'#7c2d12','stroke-width':'1.5',opacity:'.6'}));
+  svg.appendChild(arrowDn(KB_BOX.cx+70,kbTopY,'#92400e'));
+
+  // KB → L1
+  const kbBotY=KB_BOX.cy+KB_BOX.h/2;
+  const l1EntryY=YS+38;
+  svg.appendChild(mk('path',{
+    d:`M${KB_BOX.cx},${kbBotY} C${KB_BOX.cx},${kbBotY+24} ${L1X},${l1EntryY-24} ${L1X},${l1EntryY}`,
+    fill:'none',stroke:'#4c1d95','stroke-width':'1.5',opacity:'.45','stroke-dasharray':'5 3'}));
+  svg.appendChild(arrowDn(L1X,l1EntryY,'#6d28d9'));
+
+  // KB → L2
+  svg.appendChild(mk('path',{
+    d:`M${KB_BOX.cx+50},${kbBotY} C${KB_BOX.cx+120},${kbBotY+40} ${L2X},${l1EntryY-24} ${L2X},${l1EntryY}`,
+    fill:'none',stroke:'#4c1d95','stroke-width':'1',opacity:'.25','stroke-dasharray':'3 4'}));
+  svg.appendChild(arrowDn(L2X,l1EntryY,'#4c1d95'));
+
+  // ── DIVIDER ──
+  svg.appendChild(mk('line',{x1:0,y1:YS,x2:960,y2:YS,stroke:'#0a1828','stroke-width':'2'}));
+
+  // ── CP BAND BACKGROUNDS ──
+  bands.forEach(([y0,y1,lbl,col])=>{
+    svg.appendChild(mk('rect',{x:0,y:y0,width:960,height:y1-y0,fill:col}));
+    svg.appendChild(mk('text',{x:6,y:y0+(y1-y0)/2+4,
+      'font-size':8.5,'font-family':'system-ui','font-weight':'800',fill:'#0f1d2e','letter-spacing':'.1em'},lbl));
+  });
+
+  // ── COLUMN HEADERS ──
+  svg.appendChild(mk('text',{x:L1X,'text-anchor':'middle',y:32+YS,
+    'font-size':9,'font-family':'system-ui','font-weight':'700',fill:'#1e3a5f','letter-spacing':'.1em'},'L1 · LOGIC MODULES'));
+  svg.appendChild(mk('text',{x:L2X,'text-anchor':'middle',y:32+YS,
+    'font-size':9,'font-family':'system-ui','font-weight':'700',fill:'#1e3a5f','letter-spacing':'.1em'},'L2 · DATA NODES'));
+
+  // ── VERTICAL DIVIDER ──
+  svg.appendChild(mk('line',{x1:470,y1:40+YS,x2:470,y2:740+YS,stroke:'#0c1420','stroke-width':2}));
+
+  // ── EDGE LAYER ──
+  const ge=mk('g'); ge.id='ge'; svg.appendChild(ge);
+  // ── NODE LAYER ──
+  const gn=mk('g'); gn.id='gn'; svg.appendChild(gn);
+
+  // Render edges
+  edges.forEach(([l,r,ls,ps])=>{
+    const n1=l1.find(n=>n.id===l), n2=l2.find(n=>n.id===r);
+    if(!n1||!n2)return;
+    const x1=L1X+L1W/2, y1=n1.y, x2=L2X-L2W/2, y2=n2.y;
+    const mx=(x1+x2)/2;
+    const path=mk('path',{
+      d:`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`,
+      fill:'none',stroke:'#111e2e','stroke-width':'1.5',opacity:'.4'});
+    path.id=`e-${l}-${r}`;
+    ge.appendChild(path);
+  });
+
+  // Render L1 nodes
+  l1.forEach(n=>{
+    const g=mk('g'); g.id='n1-'+n.id;
+    g.appendChild(mk('rect',{x:L1X-L1W/2,y:n.y-L1H/2,width:L1W,height:L1H,rx:6,
+      fill:C.l1_bg,stroke:C.l1_str,'stroke-width':'1.5'}));
+    g.appendChild(mk('text',{x:L1X,y:n.y+5,'text-anchor':'middle',
+      'font-size':'10.5','font-family':'"Fira Code",monospace',fill:C.off},n.lbl));
+    gn.appendChild(g);
+    addTip(g,'L1 · '+n.lbl, n.tip);
+  });
+
+  // Render L2 nodes
+  l2.forEach(n=>{
+    const g=mk('g'); g.id='n2-'+n.id;
+    g.appendChild(mk('rect',{x:L2X-L2W/2,y:n.y-L2H/2,width:L2W,height:L2H,rx:5,
+      fill:C.l2_bg,stroke:C.l2_str,'stroke-width':'1.5'}));
+    g.appendChild(mk('text',{x:L2X,y:n.y+5,'text-anchor':'middle',
+      'font-size':'10','font-family':'"Fira Code",monospace',fill:C.off},n.lbl));
+    gn.appendChild(g);
+    addTip(g,'L2 · '+n.lbl, n.tip);
+  });
+
+  update();
+}
+
+function styleNode(id,isL1,inLs,inPs){
+  const el=document.getElementById((isL1?'n1-':'n2-')+id);
+  if(!el)return;
+  const r=el.querySelector('rect'), t=el.querySelector('text');
+  if(!inLs&&!inPs){
+    r.setAttribute('fill',isL1?C.l1_bg:C.l2_bg);
+    r.setAttribute('stroke',isL1?C.l1_str:C.l2_str);
+    t.setAttribute('fill',C.off);
+  } else if(inLs&&inPs){
+    r.setAttribute('fill',C.bt_bg); r.setAttribute('stroke',C.bt_str);
+    t.setAttribute('fill',C.bt_txt);
+  } else if(inLs){
+    r.setAttribute('fill',C.ls_bg); r.setAttribute('stroke',C.ls_str);
+    t.setAttribute('fill',C.ls_txt);
+  } else {
+    r.setAttribute('fill',C.ps_bg); r.setAttribute('stroke',C.ps_str);
+    t.setAttribute('fill',C.ps_txt);
+  }
+}
+
+function updateTop(ls,ps){
+  const lsR=document.getElementById('top-ls-r');
+  const lsT=document.getElementById('top-ls-t');
+  const psR=document.getElementById('top-ps-r');
+  const psT=document.getElementById('top-ps-t');
+  const kbR=document.getElementById('top-kb-r');
+  const kbT=document.getElementById('top-kb-t');
+  const llk=document.getElementById('line-ls-kb');
+  const lpk=document.getElementById('line-ps-kb');
+
+  if(ls){
+    lsR.setAttribute('fill','rgba(59,130,246,.20)'); lsR.setAttribute('stroke','#3b82f6');
+    lsT.setAttribute('fill','#93c5fd');
+    llk.setAttribute('stroke','#3b82f6'); llk.setAttribute('opacity','.85');
+  } else {
+    lsR.setAttribute('fill','rgba(59,130,246,.10)'); lsR.setAttribute('stroke','#1e40af');
+    lsT.setAttribute('fill','#3b82f6');
+    llk.setAttribute('stroke','#1e3a6e'); llk.setAttribute('opacity','.6');
+  }
+
+  if(ps){
+    psR.setAttribute('fill','rgba(249,115,22,.20)'); psR.setAttribute('stroke','#f97316');
+    psT.setAttribute('fill','#fdba74');
+    lpk.setAttribute('stroke','#f97316'); lpk.setAttribute('opacity','.85');
+  } else {
+    psR.setAttribute('fill','rgba(249,115,22,.10)'); psR.setAttribute('stroke','#92400e');
+    psT.setAttribute('fill','#f97316');
+    lpk.setAttribute('stroke','#7c2d12'); lpk.setAttribute('opacity','.6');
+  }
+
+  if(ls&&ps){
+    kbR.setAttribute('fill','rgba(34,197,94,.15)'); kbR.setAttribute('stroke','#22c55e');
+    kbT.setAttribute('fill','#86efac');
+  } else if(ls){
+    kbR.setAttribute('fill','rgba(59,130,246,.13)'); kbR.setAttribute('stroke','#3b82f6');
+    kbT.setAttribute('fill','#93c5fd');
+  } else if(ps){
+    kbR.setAttribute('fill','rgba(249,115,22,.13)'); kbR.setAttribute('stroke','#f97316');
+    kbT.setAttribute('fill','#fdba74');
+  } else {
+    kbR.setAttribute('fill','rgba(139,92,246,.10)'); kbR.setAttribute('stroke','#4c1d95');
+    kbT.setAttribute('fill','#8b5cf6');
+  }
+}
+
+function update(){
+  const ls=st.ls, ps=st.ps;
+  document.getElementById('bls').className='btn'+(ls?' ls':'');
+  document.getElementById('bps').className='btn'+(ps?' ps':'');
+  updateTop(ls,ps);
+  l1.forEach(n=>styleNode(n.id,true,n.ls&&ls,n.ps&&ps));
+  l2.forEach(n=>styleNode(n.id,false,n.ls&&ls,n.ps&&ps));
+  edges.forEach(([lid,rid,inLs,inPs])=>{
+    const e=document.getElementById(`e-${lid}-${rid}`);
+    if(!e)return;
+    const sL=inLs&&ls, sP=inPs&&ps;
+    if(!sL&&!sP){e.setAttribute('stroke','#111e2e');e.setAttribute('opacity','.35');e.setAttribute('stroke-width','1.5');}
+    else if(sL&&sP){e.setAttribute('stroke',C.bt_e);e.setAttribute('opacity','.85');e.setAttribute('stroke-width','2');}
+    else if(sL){e.setAttribute('stroke',C.ls_e);e.setAttribute('opacity','.75');e.setAttribute('stroke-width','1.5');}
+    else{e.setAttribute('stroke',C.ps_e);e.setAttribute('opacity','.75');e.setAttribute('stroke-width','1.5');}
+  });
+}
+
+function toggle(s){st[s]=!st[s];update();}
+
+build();
+</script>
+</body>
+</html>
