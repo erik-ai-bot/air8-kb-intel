@@ -118,6 +118,7 @@
   }
   .badge-level.high   { background: #f59e0b25; color: #f59e0b; border: 1px solid #f59e0b40; }
   .badge-level.threat { background: #ef444425; color: #ef4444; border: 1px solid #ef444440; }
+  .badge-level.check  { background: #64748b25; color: #94a3b8; border: 1px solid #64748b40; }
 
   .badge-cat {
     font-size: 10px;
@@ -281,7 +282,7 @@
     Actionable Insights
   </div>
   <div class="page-right">
-    <span class="badge-count">3 HIGH</span>
+    <span class="badge-count">2 HIGH · 1 CHECK</span>
     <span>Calculation layer · KB + Market Intelligence · Aug 24, 2026</span>
   </div>
 </div>
@@ -304,12 +305,12 @@
 <!-- ════════════════════════════════
      ROW 1 — 美国关税
      ════════════════════════════════ -->
-<div class="insight-row high">
+<div class="insight-row" style="border-left-color:#64748b;">
   <div class="row-header">
-    <span class="badge-level high">高</span>
+    <span class="badge-level check">⚠️ CHECK</span>
     <span class="badge-cat cat-tariff">关税</span>
     <span class="badge-cat cat-commerce">商务</span>
-    <span class="row-title">🇺🇸 美国劳工关税新框架 — 你们的相对竞争力在上升，是扩大美国订单的窗口</span>
+    <span class="row-title">🇺🇸 美国关税新框架 — 绝对成本 +10.5pp，Kontoor 订单面临越南竞争压力</span>
     <div class="row-actions-bar">
       <button class="share-btn">↗</button>
       <button class="view-btn">View Details</button>
@@ -319,24 +320,24 @@
     <div class="col">
       <div class="col-label">新闻</div>
       <div class="col-content">
-        美国 <strong>FL301 强迫劳动合规关税</strong>于 2026-07-24 生效，孟加拉服装对美有效税率升至 <strong>25.6%</strong>。中国 <strong>35.6%</strong>，越南 <strong>28.1%</strong>——你们作为孟加拉机织供应商，首次形成对竞争对手的结构性税率优势，美国买家的采购成本矩阵正在重新定价。
+        美国 <strong>FL301</strong> 于 2026-07-24 生效。你们对美有效税率从 <strong>~15.1% 升至 25.6%</strong>（+10.5pp）——越南 28.1%，中国 35.6%。绝对成本上升已是定局；相对竞争影响因主要买家的 sourcing 结构而异，需分买家判断。
       </div>
     </div>
     <div class="col">
       <div class="col-label">原因（影响）</div>
       <div class="col-content">
+        <div class="chain-line" style="font-size:10px;font-weight:700;color:#ef4444;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">绝对成本压力（确定）</div>
         <div class="chain-line">
-          每 $100 FOB：你们较越南省 <span class="val-green">$2.5</span>，较中国省 <span class="val-green">$10</span>
+          每 $100 FOB 落地成本贵了 <span class="val-red">+$10.5</span>
+          <span class="arrow">→</span> 谁承担取决于合同类型 <span style="color:#475569;font-size:11px;">（UNKNOWN — BD 必问）</span>
+        </div>
+        <div class="chain-line" style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.06em;text-transform:uppercase;margin-top:9px;margin-bottom:6px;">相对竞争（买家路径分叉）</div>
+        <div class="chain-line">
+          <strong>Kontoor</strong>（BD+VN 双轨）：BD vs VN 优势 <span class="val-red">~10pp → ~2.5pp</span>，天平趋于水平 → 转单越南风险升
         </div>
         <div class="chain-line">
-          买家将 10% 采购从越南/中国转给你们
-          <span class="arrow">→</span> 年增量约 <span class="val-green">+$192–320K</span>
+          <strong>Gap</strong>（CN 迁出逻辑）：BD vs CN 仍 <span class="val-green">~10pp</span> 差距 → Gap 换回 CN 成本高，信号中性
         </div>
-        <div class="chain-line">
-          ⚠️ 若为固定价合同：关税差由你们吸收
-          <span class="arrow">→</span> 年利润压缩约 <span class="val-red">$48–80K</span>
-        </div>
-        <div class="chain-note">缺口：合同类型未确认 · UFLPA 溯源文件需准备</div>
       </div>
     </div>
     <div class="col">
@@ -344,15 +345,19 @@
       <div class="actions-list">
         <div class="action-bullet">
           <span class="action-label lbl-commerce">商务</span>
-          <span>制作 <strong>Landed Cost Deck</strong>（BD vs VN vs CN 税率对比），主动发给你们的美国买家，争取订单转移。</span>
+          <span>主动联系 <strong>Kontoor</strong>，确认他们 VN 产能分配是否已增加。强调非价格竞争力（交期、质量、合规记录）守住账户。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-commerce">商务</span>
+          <span>向 <strong>Gap</strong> 推进更多 CN 转移订单——你们比中国供应商便宜约 $10/100 FOB，这是扩大 Gap 份额的窗口。</span>
         </div>
         <div class="action-bullet">
           <span class="action-label lbl-compliance">合规</span>
-          <span>准备 <strong>UFLPA 文件包</strong>：棉花原产地证明 + BSCI 劳工审核报告，本月内完成。</span>
+          <span>准备 <strong>UFLPA 文件包</strong>（棉花原产地 + BSCI 报告），美国清关必要条件，也是 Kontoor 的强制要求。</span>
         </div>
         <div class="action-bullet">
           <span class="action-label lbl-air8">Air8</span>
-          <span>如需承担关税成本，OBF 融资覆盖现金流缺口（约 $46–58K，90 天账期）。</span>
+          <span>合同结构确认后，OBF 可覆盖关税吸收带来的现金流缺口（约 $46–58K，90 天账期）。</span>
         </div>
       </div>
     </div>
