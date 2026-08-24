@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KB Module Architecture v2</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080c12;color:#e2e8f0;font-family:system-ui,sans-serif;padding:24px 28px;min-height:100vh}
+h1{font-size:15px;font-weight:700;color:#f1f5f9;letter-spacing:.03em}
+.sub{font-size:11px;color:#334155;margin:3px 0 18px}
+.controls{display:flex;gap:10px;margin-bottom:14px;align-items:center}
+.btn{padding:8px 22px;border-radius:7px;border:1.5px solid #1e293b;font-size:12px;font-weight:600;cursor:pointer;background:#0f172a;color:#475569;letter-spacing:.04em;transition:all .15s}
+.btn:hover{border-color:#334155;color:#64748b}
+.btn.ls{background:rgba(59,130,246,.14);border-color:#3b82f6;color:#93c5fd}
+.btn.ps{background:rgba(249,115,22,.14);border-color:#f97316;color:#fdba74}
+.hint{font-size:11px;color:#1e293b;margin-left:4px}
+.leg{display:flex;gap:18px;margin-bottom:14px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#475569}
+.sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.wrap{overflow-x:auto;overflow-y:auto}
+</style>
+</head>
+<body>
+<h1>KB Module Architecture · Scenario → KB Process → L1 → L2</h1>
+<p class="sub">Full pipeline: Scenario Skills → KB Process Skill → L1 logic modules (left) → L2 data nodes (right) · click to highlight</p>
+<div class="controls">
+  <button class="btn" id="bls" onclick="toggle('ls')">Lead Scoring</button>
+  <button class="btn" id="bps" onclick="toggle('ps')">Perf Scoring</button>
+  <span class="hint">Select one or both to see overlap</span>
+</div>
+<div class="leg">
+  <div class="li"><div class="sw" style="background:#3b82f6"></div>Lead Scoring only</div>
+  <div class="li"><div class="sw" style="background:#f97316"></div>Perf Scoring only</div>
+  <div class="li"><div class="sw" style="background:#22c55e"></div>Shared by both</div>
+  <div class="li"><div class="sw" style="background:#0f172a;border:1.5px dashed #475569"></div>⚡ New node needed</div>
+</div>
+<div class="wrap">
+<svg id="svg" xmlns="http://www.w3.org/2000/svg" width="960" height="1060" viewBox="0 0 960 1060"></svg>
+</div>
+
+<script>
+const st={ls:false,ps:false};
+const C={
+  l1_bg:'#0e1623',l1_str:'#1e2d3d',
+  l2_bg:'#090e17',l2_str:'#131f2e',
+  ls_bg:'rgba(59,130,246,.13)',ls_str:'#3b82f6',ls_txt:'#93c5fd',ls_e:'#3b82f6',
+  ps_bg:'rgba(249,115,22,.13)',ps_str:'#f97316',ps_txt:'#fdba74',ps_e:'#f97316',
+  bt_bg:'rgba(34,197,94,.13)',bt_str:'#22c55e',bt_txt:'#86efac',bt_e:'#22c55e',
+  off:'#1e3a5f',
+};
+
+const YS=214; // Y offset: top section height
+const L1X=220, L1W=190, L1H=36;
+const L2X=720, L2W=196, L2H=32;
+
+const l1=[
+  {id:'dbmap', lbl:'db-field-mapper',     y:82+YS,  ls:true,ps:true},
+  {id:'vrt',   lbl:'vertical-router',     y:146+YS, ls:true,ps:true},
+  {id:'scr',   lbl:'banded-scorer',       y:222+YS, ls:true,ps:true},
+  {id:'trnd',  lbl:'market-trend-reader', y:310+YS, ls:true,ps:true},
+  {id:'pair',  lbl:'buyer-pair-screener', y:448+YS, ls:true,ps:true},
+  {id:'gate',  lbl:'gate-and-sort',       y:586+YS, ls:true,ps:true},
+  {id:'evid',  lbl:'evidence-standard',   y:694+YS, ls:true,ps:true},
+];
+
+const l2=[
+  {id:'sigs',   lbl:'score-signals',        y:82+YS,  ls:true, ps:true,  nw:false},
+  {id:'patfw',  lbl:'pattern-framework',    y:146+YS, ls:true, ps:false, nw:false},
+  {id:'perfw',  lbl:'perf-framework',       y:198+YS, ls:false,ps:true,  nw:true },
+  {id:'mksnap', lbl:'market-snapshot',      y:284+YS, ls:true, ps:true,  nw:true },
+  {id:'pcat',   lbl:'product-categories/',  y:328+YS, ls:true, ps:true,  nw:false},
+  {id:'cntry',  lbl:'countries/',           y:370+YS, ls:true, ps:true,  nw:false},
+  {id:'fitcr',  lbl:'buyer-fit-criteria',   y:412+YS, ls:true, ps:false, nw:true },
+  {id:'pairhst',lbl:'pair-history',         y:456+YS, ls:false,ps:true,  nw:true },
+  {id:'combob', lbl:'COMBO-B-* (buyers)',   y:500+YS, ls:true, ps:true,  nw:false},
+  {id:'lbp',    lbl:'live-buyer-progs',     y:544+YS, ls:true, ps:true,  nw:true },
+  {id:'adv',    lbl:'adverse-levels',       y:618+YS, ls:true, ps:true,  nw:false},
+  {id:'csrc',   lbl:'country-sources',      y:660+YS, ls:true, ps:true,  nw:false},
+  {id:'fnbd',   lbl:'financing-bands',      y:702+YS, ls:true, ps:true,  nw:false},
+  {id:'pitch',  lbl:'pitch-guide',          y:744+YS, ls:true, ps:true,  nw:false},
+];
+
+const edges=[
+  ['dbmap','sigs',    true, true ],
+  ['vrt',  'patfw',   true, false],
+  ['vrt',  'perfw',   false,true ],
+  ['scr',  'patfw',   true, false],
+  ['scr',  'perfw',   false,true ],
+  ['trnd', 'mksnap',  true, true ],
+  ['trnd', 'pcat',    true, true ],
+  ['trnd', 'cntry',   true, true ],
+  ['pair', 'fitcr',   true, false],
+  ['pair', 'pairhst', false,true ],
+  ['pair', 'combob',  true, true ],
+  ['pair', 'lbp',     true, true ],
+  ['gate', 'patfw',   true, false],
+  ['gate', 'perfw',   false,true ],
+  ['gate', 'adv',     true, true ],
+  ['evid', 'adv',     true, true ],
+  ['evid', 'csrc',    true, true ],
+  ['evid', 'fnbd',    true, true ],
+  ['evid', 'pitch',   true, true ],
+  ['evid', 'lbp',     true, true ],
+];
+
+const bands=[
+  [56+YS, 116+YS, 'CP0',   '#060a10'],
+  [118+YS,170+YS, 'CP0',   '#080d14'],
+  [172+YS,258+YS, 'CP1-A', '#060a10'],
+  [260+YS,394+YS, 'CP1-B', '#080d14'],
+  [396+YS,564+YS, 'CP1-C', '#060a10'],
+  [566+YS,608+YS, 'CP2',   '#080d14'],
+  [610+YS,776+YS, 'CP3',   '#060a10'],
+  [778+YS,820+YS, 'CP4',   '#080d14'],
+];
+
+// ── Scenario / KB nodes for top section (for highlight) ──
+const LS_BOX = {cx:200, cy:82, w:195, h:54};
+const PS_BOX = {cx:760, cy:82, w:195, h:54};
+const KB_BOX = {cx:480, cy:160, w:230, h:50};
+
+function build(){
+  const svg=document.getElementById('svg');
+  const ns='http://www.w3.org/2000/svg';
+  const mk=(tag,a={},txt)=>{
+    const e=document.createElementNS(ns,tag);
+    Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));
+    if(txt!=null)e.textContent=txt;
+    return e;
+  };
+  const arrow=(x,y,dir='down',col='#475569')=>{
+    // dir: down | right
+    const pts=dir==='down'
+      ?`${x-5},${y} ${x+5},${y} ${x},${y+7}`
+      :`${x},${y-5} ${x},${y+5} ${x+7},${y}`;
+    return mk('polygon',{points:pts,fill:col,opacity:'.75'});
+  };
+
+  // ── BACKGROUND: top section ──
+  svg.appendChild(mk('rect',{x:0,y:0,width:960,height:YS,fill:'#040810'}));
+
+  // ── SECTION LABEL ──
+  svg.appendChild(mk('text',{
+    x:480,y:17,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui','font-weight':'800',
+    fill:'#0c1e34','letter-spacing':'.18em'
+  },'ENTRY LAYER · SCENARIO SKILLS'));
+
+  // ── LEAD SCORING BOX ──
+  const lsR=mk('rect',{
+    id:'top-ls-r',
+    x:LS_BOX.cx-LS_BOX.w/2, y:LS_BOX.cy-LS_BOX.h/2,
+    width:LS_BOX.w, height:LS_BOX.h, rx:8,
+    fill:'rgba(59,130,246,.10)', stroke:'#1e40af','stroke-width':'1.5'
+  });
+  svg.appendChild(lsR);
+  svg.appendChild(mk('text',{
+    x:LS_BOX.cx, y:LS_BOX.cy-12,'text-anchor':'middle',
+    'font-size':8,'font-family':'system-ui','font-weight':'800',
+    fill:'#1e40af','letter-spacing':'.12em'
+  },'SCENARIO SKILL'));
+  const lsT=mk('text',{
+    id:'top-ls-t',
+    x:LS_BOX.cx, y:LS_BOX.cy+8,'text-anchor':'middle',
+    'font-size':12,'font-family':'"Fira Code",monospace','font-weight':'700',
+    fill:'#3b82f6'
+  },'lead-scoring');
+  svg.appendChild(lsT);
+  svg.appendChild(mk('text',{
+    x:LS_BOX.cx, y:LS_BOX.cy+24,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui',fill:'#1e3a6e'
+  },'CP0 → CP5'));
+
+  // ── PERF SCORING BOX ──
+  const psR=mk('rect',{
+    id:'top-ps-r',
+    x:PS_BOX.cx-PS_BOX.w/2, y:PS_BOX.cy-PS_BOX.h/2,
+    width:PS_BOX.w, height:PS_BOX.h, rx:8,
+    fill:'rgba(249,115,22,.10)', stroke:'#92400e','stroke-width':'1.5'
+  });
+  svg.appendChild(psR);
+  svg.appendChild(mk('text',{
+    x:PS_BOX.cx, y:PS_BOX.cy-12,'text-anchor':'middle',
+    'font-size':8,'font-family':'system-ui','font-weight':'800',
+    fill:'#92400e','letter-spacing':'.12em'
+  },'SCENARIO SKILL'));
+  const psT=mk('text',{
+    id:'top-ps-t',
+    x:PS_BOX.cx, y:PS_BOX.cy+8,'text-anchor':'middle',
+    'font-size':12,'font-family':'"Fira Code",monospace','font-weight':'700',
+    fill:'#f97316'
+  },'perf-scoring');
+  svg.appendChild(psT);
+  svg.appendChild(mk('text',{
+    x:PS_BOX.cx, y:PS_BOX.cy+24,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui',fill:'#7c2d12'
+  },'CP0 → CP5'));
+
+  // ── KB PROCESS BOX ──
+  const kbR=mk('rect',{
+    id:'top-kb-r',
+    x:KB_BOX.cx-KB_BOX.w/2, y:KB_BOX.cy-KB_BOX.h/2,
+    width:KB_BOX.w, height:KB_BOX.h, rx:8,
+    fill:'rgba(139,92,246,.10)', stroke:'#4c1d95','stroke-width':'1.5'
+  });
+  svg.appendChild(kbR);
+  svg.appendChild(mk('text',{
+    x:KB_BOX.cx, y:KB_BOX.cy-11,'text-anchor':'middle',
+    'font-size':8,'font-family':'system-ui','font-weight':'800',
+    fill:'#4c1d95','letter-spacing':'.12em'
+  },'KB PROCESS SKILL'));
+  const kbT=mk('text',{
+    id:'top-kb-t',
+    x:KB_BOX.cx, y:KB_BOX.cy+6,'text-anchor':'middle',
+    'font-size':12,'font-family':'"Fira Code",monospace','font-weight':'700',
+    fill:'#8b5cf6'
+  },'kb-module-router');
+  svg.appendChild(kbT);
+  svg.appendChild(mk('text',{
+    x:KB_BOX.cx, y:KB_BOX.cy+21,'text-anchor':'middle',
+    'font-size':8.5,'font-family':'system-ui',fill:'#3b0764'
+  },'routes → L1 modules · resolves KB data nodes'));
+
+  // ── CONNECTOR: LS → KB ──
+  const lsBotX=LS_BOX.cx, lsBotY=LS_BOX.cy+LS_BOX.h/2;
+  const kbTopLX=KB_BOX.cx-70, kbTopY=KB_BOX.cy-KB_BOX.h/2;
+  svg.appendChild(mk('path',{
+    id:'line-ls-kb',
+    d:`M${lsBotX},${lsBotY} C${lsBotX},${lsBotY+22} ${kbTopLX},${kbTopY-18} ${kbTopLX},${kbTopY}`,
+    fill:'none',stroke:'#1e3a6e','stroke-width':'1.5',opacity:'.6'
+  }));
+  svg.appendChild(arrow(kbTopLX, kbTopY, 'down','#1e40af'));
+
+  // ── CONNECTOR: PS → KB ──
+  const psBotX=PS_BOX.cx, psBotY=PS_BOX.cy+PS_BOX.h/2;
+  const kbTopRX=KB_BOX.cx+70;
+  svg.appendChild(mk('path',{
+    id:'line-ps-kb',
+    d:`M${psBotX},${psBotY} C${psBotX},${psBotY+22} ${kbTopRX},${kbTopY-18} ${kbTopRX},${kbTopY}`,
+    fill:'none',stroke:'#7c2d12','stroke-width':'1.5',opacity:'.6'
+  }));
+  svg.appendChild(arrow(kbTopRX, kbTopY, 'down','#92400e'));
+
+  // ── CONNECTOR: KB → L1 ──
+  const kbBotX=KB_BOX.cx, kbBotY=KB_BOX.cy+KB_BOX.h/2;
+  const l1EntryY=YS+42;
+  svg.appendChild(mk('path',{
+    d:`M${kbBotX},${kbBotY} C${kbBotX},${kbBotY+24} ${L1X},${l1EntryY-24} ${L1X},${l1EntryY}`,
+    fill:'none',stroke:'#4c1d95','stroke-width':'1.5',opacity:'.5','stroke-dasharray':'5 3'
+  }));
+  svg.appendChild(arrow(L1X, l1EntryY, 'down','#6d28d9'));
+
+  // ── CONNECTOR: KB → L2 (dashed, KB routes data nodes too) ──
+  svg.appendChild(mk('path',{
+    d:`M${kbBotX+60},${kbBotY} C${kbBotX+100},${kbBotY+40} ${L2X},${l1EntryY-24} ${L2X},${l1EntryY}`,
+    fill:'none',stroke:'#4c1d95','stroke-width':'1',opacity:'.3','stroke-dasharray':'3 4'
+  }));
+  svg.appendChild(arrow(L2X, l1EntryY, 'down','#4c1d95'));
+
+  // ── SECTION DIVIDER ──
+  svg.appendChild(mk('line',{x1:0,y1:YS,x2:960,y2:YS,stroke:'#0a1828','stroke-width':'2'}));
+
+  // ── BAND BACKGROUNDS ──
+  bands.forEach(([y0,y1,lbl,col])=>{
+    svg.appendChild(mk('rect',{x:0,y:y0,width:960,height:y1-y0,fill:col}));
+    svg.appendChild(mk('text',{
+      x:6,y:y0+(y1-y0)/2+4,'font-size':8.5,
+      'font-family':'system-ui','font-weight':'800',
+      fill:'#0f1d2e','letter-spacing':'.1em'
+    },lbl));
+  });
+
+  // ── COLUMN HEADERS ──
+  svg.appendChild(mk('text',{
+    x:L1X,'text-anchor':'middle',y:36+YS,
+    'font-size':9,'font-family':'system-ui','font-weight':'700',
+    fill:'#1e3a5f','letter-spacing':'.1em'
+  },'L1 · LOGIC MODULES'));
+  svg.appendChild(mk('text',{
+    x:L2X,'text-anchor':'middle',y:36+YS,
+    'font-size':9,'font-family':'system-ui','font-weight':'700',
+    fill:'#1e3a5f','letter-spacing':'.1em'
+  },'L2 · DATA NODES'));
+
+  // ── VERTICAL DIVIDER ──
+  svg.appendChild(mk('line',{x1:470,y1:42+YS,x2:470,y2:820+YS,stroke:'#0c1420','stroke-width':2}));
+
+  // ── EDGE LAYER ──
+  const ge=mk('g'); ge.id='ge'; svg.appendChild(ge);
+
+  // ── NODE LAYER ──
+  const gn=mk('g'); gn.id='gn'; svg.appendChild(gn);
+
+  // Render edges
+  edges.forEach(([l,r,ls,ps])=>{
+    const n1=l1.find(n=>n.id===l), n2=l2.find(n=>n.id===r);
+    if(!n1||!n2)return;
+    const x1=L1X+L1W/2, y1=n1.y, x2=L2X-L2W/2, y2=n2.y;
+    const mx=(x1+x2)/2;
+    const path=mk('path',{
+      d:`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`,
+      fill:'none',stroke:'#111e2e','stroke-width':'1.5',opacity:'.4'
+    });
+    path.id=`e-${l}-${r}`;
+    ge.appendChild(path);
+  });
+
+  // Render L1 nodes
+  l1.forEach(n=>{
+    const g=mk('g'); g.id='n1-'+n.id;
+    const r=mk('rect',{x:L1X-L1W/2,y:n.y-L1H/2,width:L1W,height:L1H,rx:6,fill:C.l1_bg,stroke:C.l1_str,'stroke-width':'1.5'});
+    const t=mk('text',{x:L1X,y:n.y+5,'text-anchor':'middle','font-size':'10.5','font-family':'"Fira Code",monospace',fill:C.off},n.lbl);
+    g.appendChild(r); g.appendChild(t);
+    gn.appendChild(g);
+  });
+
+  // Render L2 nodes
+  l2.forEach(n=>{
+    const g=mk('g'); g.id='n2-'+n.id;
+    const dash=n.nw?'4 3':'0';
+    const r=mk('rect',{x:L2X-L2W/2,y:n.y-L2H/2,width:L2W,height:L2H,rx:5,fill:C.l2_bg,stroke:C.l2_str,'stroke-width':'1.5','stroke-dasharray':dash});
+    const txOffset=n.nw?-8:0;
+    const t=mk('text',{x:L2X+txOffset,y:n.y+5,'text-anchor':'middle','font-size':'10','font-family':'"Fira Code",monospace',fill:C.off},n.lbl);
+    g.appendChild(r); g.appendChild(t);
+    if(n.nw){
+      const bolt=mk('text',{x:L2X+L2W/2-14,y:n.y+5,'font-size':'11',fill:'#f59e0b'},'⚡');
+      g.appendChild(bolt);
+    }
+    gn.appendChild(g);
+  });
+
+  update();
+}
+
+function styleNode(id,isL1,inLs,inPs){
+  const el=document.getElementById((isL1?'n1-':'n2-')+id);
+  if(!el)return;
+  const r=el.querySelector('rect'), t=el.querySelector('text');
+  if(!inLs&&!inPs){
+    r.setAttribute('fill',isL1?C.l1_bg:C.l2_bg);
+    r.setAttribute('stroke',isL1?C.l1_str:C.l2_str);
+    t.setAttribute('fill',C.off);
+  } else if(inLs&&inPs){
+    r.setAttribute('fill',C.bt_bg); r.setAttribute('stroke',C.bt_str);
+    t.setAttribute('fill',C.bt_txt);
+  } else if(inLs){
+    r.setAttribute('fill',C.ls_bg); r.setAttribute('stroke',C.ls_str);
+    t.setAttribute('fill',C.ls_txt);
+  } else {
+    r.setAttribute('fill',C.ps_bg); r.setAttribute('stroke',C.ps_str);
+    t.setAttribute('fill',C.ps_txt);
+  }
+}
+
+function updateTopSection(ls, ps){
+  const lsR=document.getElementById('top-ls-r');
+  const lsT=document.getElementById('top-ls-t');
+  const psR=document.getElementById('top-ps-r');
+  const psT=document.getElementById('top-ps-t');
+  const kbR=document.getElementById('top-kb-r');
+  const kbT=document.getElementById('top-kb-t');
+  const llsKb=document.getElementById('line-ls-kb');
+  const lpsKb=document.getElementById('line-ps-kb');
+
+  // LS box
+  if(ls){
+    lsR.setAttribute('fill','rgba(59,130,246,.18)'); lsR.setAttribute('stroke','#3b82f6');
+    lsT.setAttribute('fill','#93c5fd');
+    llsKb.setAttribute('stroke','#3b82f6'); llsKb.setAttribute('opacity','.8');
+  } else {
+    lsR.setAttribute('fill','rgba(59,130,246,.10)'); lsR.setAttribute('stroke','#1e40af');
+    lsT.setAttribute('fill','#3b82f6');
+    llsKb.setAttribute('stroke','#1e3a6e'); llsKb.setAttribute('opacity','.6');
+  }
+
+  // PS box
+  if(ps){
+    psR.setAttribute('fill','rgba(249,115,22,.18)'); psR.setAttribute('stroke','#f97316');
+    psT.setAttribute('fill','#fdba74');
+    lpsKb.setAttribute('stroke','#f97316'); lpsKb.setAttribute('opacity','.8');
+  } else {
+    psR.setAttribute('fill','rgba(249,115,22,.10)'); psR.setAttribute('stroke','#92400e');
+    psT.setAttribute('fill','#f97316');
+    lpsKb.setAttribute('stroke','#7c2d12'); lpsKb.setAttribute('opacity','.6');
+  }
+
+  // KB box — lit when either is active
+  if(ls && ps){
+    kbR.setAttribute('fill','rgba(34,197,94,.15)'); kbR.setAttribute('stroke','#22c55e');
+    kbT.setAttribute('fill','#86efac');
+  } else if(ls){
+    kbR.setAttribute('fill','rgba(59,130,246,.13)'); kbR.setAttribute('stroke','#3b82f6');
+    kbT.setAttribute('fill','#93c5fd');
+  } else if(ps){
+    kbR.setAttribute('fill','rgba(249,115,22,.13)'); kbR.setAttribute('stroke','#f97316');
+    kbT.setAttribute('fill','#fdba74');
+  } else {
+    kbR.setAttribute('fill','rgba(139,92,246,.10)'); kbR.setAttribute('stroke','#4c1d95');
+    kbT.setAttribute('fill','#8b5cf6');
+  }
+}
+
+function update(){
+  const ls=st.ls, ps=st.ps;
+  document.getElementById('bls').className='btn'+(ls?' ls':'');
+  document.getElementById('bps').className='btn'+(ps?' ps':'');
+
+  updateTopSection(ls, ps);
+  l1.forEach(n=>styleNode(n.id,true,n.ls&&ls,n.ps&&ps));
+  l2.forEach(n=>styleNode(n.id,false,n.ls&&ls,n.ps&&ps));
+
+  edges.forEach(([lid,rid,inLs,inPs])=>{
+    const e=document.getElementById(`e-${lid}-${rid}`);
+    if(!e)return;
+    const sL=inLs&&ls, sP=inPs&&ps;
+    if(!sL&&!sP){ e.setAttribute('stroke','#111e2e'); e.setAttribute('opacity','.35'); e.setAttribute('stroke-width','1.5'); }
+    else if(sL&&sP){ e.setAttribute('stroke',C.bt_e); e.setAttribute('opacity','.8'); e.setAttribute('stroke-width','2'); }
+    else if(sL){ e.setAttribute('stroke',C.ls_e); e.setAttribute('opacity','.7'); e.setAttribute('stroke-width','1.5'); }
+    else { e.setAttribute('stroke',C.ps_e); e.setAttribute('opacity','.7'); e.setAttribute('stroke-width','1.5'); }
+  });
+}
+
+function toggle(s){ st[s]=!st[s]; update(); }
+
+build();
+</script>
+</body>
+</html>
