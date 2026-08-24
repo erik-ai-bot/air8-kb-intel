@@ -3,45 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Actionable Insights — Air8 Intelligence</title>
+<title>可执行洞察 — Air8 Intelligence</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: #0d1117;
     color: #e2e8f0;
     font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
-    font-size: 13px;
-    padding: 20px;
-    max-width: 1300px;
+    font-size: 12px;
+    padding: 16px 20px;
+    max-width: 1320px;
     margin: 0 auto;
   }
 
-  /* ── PAGE HEADER ── */
+  /* ── HEADER ── */
   .page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #1e293b;
+    margin-bottom: 14px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
   .page-title {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 15px;
+    gap: 7px;
+    font-size: 14px;
     font-weight: 700;
     color: #f1f5f9;
   }
   .page-right {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 12px;
+    gap: 10px;
+    font-size: 11px;
     color: #475569;
-    flex-wrap: wrap;
   }
   .badge-count {
     background: #f59e0b20;
@@ -49,224 +46,147 @@
     border: 1px solid #f59e0b40;
     font-size: 11px;
     font-weight: 800;
-    padding: 3px 10px;
+    padding: 2px 9px;
     border-radius: 20px;
     letter-spacing: 0.06em;
   }
 
-  /* ── PROFILE BAR ── */
-  .profile-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #0d1117;
-    border: 1px solid #1e293b;
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .profile-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #475569;
-  }
-  .profile-tag {
-    font-size: 11px;
-    background: #1e293b;
-    color: #94a3b8;
-    padding: 3px 9px;
-    border-radius: 5px;
-    border: 1px solid #334155;
-  }
-  .profile-tag strong { color: #e2e8f0; }
-  .dot { color: #334155; }
-
-  /* ── INSIGHT ROW ── */
-  .insight-row {
-    background: #111827;
-    border: 1px solid #1e293b;
+  /* ── CARD ROW ── */
+  .row {
     border-left: 3px solid;
-    border-radius: 10px;
-    margin-bottom: 12px;
+    border-radius: 8px;
+    background: #111827;
+    border-top: 1px solid #1e293b;
+    border-right: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
+    margin-bottom: 10px;
     overflow: hidden;
   }
-  .insight-row.high   { border-left-color: #f59e0b; }
-  .insight-row.threat { border-left-color: #ef4444; }
+  .row.amber  { border-left-color: #f59e0b; }
+  .row.red    { border-left-color: #ef4444; }
+  .row.slate  { border-left-color: #64748b; }
 
   /* ── ROW HEADER ── */
-  .row-header {
+  .row-head {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 9px 14px;
-    border-bottom: 1px solid #1e293b;
+    gap: 7px;
+    padding: 7px 12px;
     background: #0d1117;
+    border-bottom: 1px solid #1e293b;
     flex-wrap: wrap;
   }
-  .badge-level {
+  .lvl {
     font-size: 10px;
     font-weight: 800;
-    padding: 2px 8px;
+    padding: 1px 7px;
     border-radius: 4px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     white-space: nowrap;
     flex-shrink: 0;
   }
-  .badge-level.high   { background: #f59e0b25; color: #f59e0b; border: 1px solid #f59e0b40; }
-  .badge-level.threat { background: #ef444425; color: #ef4444; border: 1px solid #ef444440; }
-  .badge-level.check  { background: #64748b25; color: #94a3b8; border: 1px solid #64748b40; }
-
-  .badge-cat {
+  .lvl.amber  { background: #f59e0b20; color: #f59e0b; border: 1px solid #f59e0b35; }
+  .lvl.red    { background: #ef444420; color: #ef4444; border: 1px solid #ef444435; }
+  .lvl.slate  { background: #64748b20; color: #94a3b8; border: 1px solid #64748b35; }
+  .cat {
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 1px 7px;
     border-radius: 4px;
     white-space: nowrap;
     flex-shrink: 0;
   }
-  .cat-logistics  { background: #3b82f620; color: #60a5fa; }
-  .cat-commerce   { background: #f59e0b15; color: #fbbf24; }
-  .cat-sourcing   { background: #22c55e20; color: #4ade80; }
-  .cat-compliance { background: #ec489920; color: #f472b6; }
-  .cat-tariff     { background: #f9731620; color: #fb923c; }
-
+  .c-log  { background: #3b82f618; color: #60a5fa; }
+  .c-biz  { background: #f59e0b18; color: #fbbf24; }
+  .c-src  { background: #22c55e18; color: #4ade80; }
+  .c-cmp  { background: #ec489918; color: #f472b6; }
+  .c-tar  { background: #f9731618; color: #fb923c; }
   .row-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #f1f5f9;
     flex: 1;
-    min-width: 180px;
+    min-width: 160px;
   }
-  .row-actions-bar {
+  .row-btns {
+    margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-left: auto;
+    gap: 6px;
     flex-shrink: 0;
   }
-  .share-btn {
-    background: none;
-    border: none;
-    color: #475569;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 2px 4px;
-    transition: color 0.15s;
+  .btn-share {
+    background: none; border: none;
+    color: #475569; cursor: pointer;
+    font-size: 13px; padding: 1px 3px;
   }
-  .share-btn:hover { color: #f59e0b; }
-  .view-btn {
-    font-size: 10px;
-    font-weight: 600;
-    color: #94a3b8;
-    border: 1px solid #334155;
-    padding: 3px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    background: none;
+  .btn-share:hover { color: #f59e0b; }
+  .btn-detail {
+    font-size: 10px; font-weight: 600;
+    color: #64748b; border: 1px solid #334155;
+    padding: 2px 9px; border-radius: 4px;
+    cursor: pointer; background: none;
     white-space: nowrap;
-    letter-spacing: 0.04em;
-    transition: all 0.15s;
   }
-  .view-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+  .btn-detail:hover { border-color: #f59e0b; color: #f59e0b; }
 
-  /* ── 3-COLUMN GRID ── */
+  /* ── 3 COLUMNS ── */
   .row-body {
     display: grid;
-    grid-template-columns: 1fr 1.3fr 1fr;
+    grid-template-columns: 1fr 1.4fr 0.9fr;
   }
   .col {
-    padding: 13px 16px;
+    padding: 9px 12px;
     border-right: 1px solid #1e293b;
+    vertical-align: top;
   }
   .col:last-child { border-right: none; }
-  .col-label {
+  .col-lbl {
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
     color: #475569;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
   }
-  .col-content {
-    font-size: 12px;
+  .col-txt {
+    font-size: 11.5px;
     color: #94a3b8;
-    line-height: 1.7;
+    line-height: 1.6;
   }
-  .col-content strong { color: #e2e8f0; font-weight: 600; }
+  .col-txt strong { color: #e2e8f0; }
+  .col-txt b { color: #f1f5f9; font-weight: 700; }
+  .col-txt .hi-r { color: #ef4444; font-weight: 700; }
+  .col-txt .hi-g { color: #22c55e; font-weight: 700; }
+  .col-txt .hi-a { color: #f59e0b; font-weight: 700; }
+  .col-txt .arr  { color: #334155; margin: 0 2px; }
 
-  /* chain */
-  .chain-line { margin-bottom: 5px; line-height: 1.6; }
-  .chain-line:last-child { margin-bottom: 0; }
-  .arrow { color: #334155; margin: 0 2px; }
-  .node  { color: #e2e8f0; font-weight: 600; }
-  .val-red {
-    display: inline-block;
-    background: #ef444418;
-    color: #ef4444;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
-    margin: 0 1px;
-  }
-  .val-green {
-    display: inline-block;
-    background: #22c55e18;
-    color: #22c55e;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
-    margin: 0 1px;
-  }
-  .val-amber {
-    display: inline-block;
-    background: #f59e0b18;
-    color: #f59e0b;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
-    margin: 0 1px;
-  }
-  .chain-note {
-    margin-top: 5px;
-    font-size: 11px;
-    color: #475569;
-    font-style: italic;
-  }
-
-  /* actions */
-  .actions-list { display: flex; flex-direction: column; gap: 8px; }
-  .action-bullet {
+  /* ── ACTIONS ── */
+  .act-list { display: flex; flex-direction: column; gap: 5px; }
+  .act {
     display: flex;
     align-items: flex-start;
-    gap: 7px;
-    font-size: 12px;
+    gap: 5px;
+    font-size: 11.5px;
     color: #94a3b8;
-    line-height: 1.55;
+    line-height: 1.5;
   }
-  .action-bullet strong { color: #e2e8f0; }
-  .action-label {
-    font-size: 10px;
+  .act-icon { font-size: 13px; flex-shrink: 0; margin-top: 0px; }
+  .act-cat {
+    font-size: 9px;
     font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
     white-space: nowrap;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
   }
-  .lbl-logistics  { background: #3b82f615; color: #60a5fa; }
-  .lbl-commerce   { background: #f59e0b15; color: #fbbf24; }
-  .lbl-sourcing   { background: #22c55e15; color: #4ade80; }
-  .lbl-compliance { background: #ec489915; color: #f472b6; }
-  .lbl-air8       { background: #f9731615; color: #fb923c; }
+  .ac-log { color: #60a5fa; }
+  .ac-biz { color: #fbbf24; }
+  .ac-src { color: #4ade80; }
+  .ac-cmp { color: #f472b6; }
+  .ac-a8  { color: #fb923c; }
 
-  @media (max-width: 800px) {
+  @media (max-width: 780px) {
     .row-body { grid-template-columns: 1fr; }
     .col { border-right: none; border-bottom: 1px solid #1e293b; }
     .col:last-child { border-bottom: none; }
@@ -275,89 +195,54 @@
 </head>
 <body>
 
-<!-- ── HEADER ── -->
 <div class="page-header">
-  <div class="page-title">
-    <span>💡</span>
-    Actionable Insights
-  </div>
+  <div class="page-title">💡 可执行洞察</div>
   <div class="page-right">
     <span class="badge-count">2 HIGH · 1 CHECK</span>
     <span>Calculation layer · KB + Market Intelligence · Aug 24, 2026</span>
   </div>
 </div>
 
-<!-- ── PROFILE BAR ── -->
-<div class="profile-bar">
-  <span class="profile-label">你的业务档案</span>
-  <span class="profile-tag"><strong>来源国：</strong>孟加拉（BD）</span>
-  <span class="dot">·</span>
-  <span class="profile-tag"><strong>品类：</strong>机织服装 · Woven</span>
-  <span class="dot">·</span>
-  <span class="profile-tag"><strong>条款：</strong>FOB</span>
-  <span class="dot">·</span>
-  <span class="profile-tag"><strong>主要市场：</strong>APAC · EU</span>
-  <span class="dot">·</span>
-  <span class="profile-tag"><strong>分析窗口：</strong>2026 H2</span>
-</div>
 
-
-<!-- ════════════════════════════════
-     ROW 1 — 美国关税
-     ════════════════════════════════ -->
-<div class="insight-row" style="border-left-color:#64748b;">
-  <div class="row-header">
-    <span class="badge-level check">⚠️ CHECK</span>
-    <span class="badge-cat cat-tariff">关税</span>
-    <span class="badge-cat cat-commerce">商务</span>
-    <span class="row-title">🇺🇸 美国关税新框架 — 绝对成本 +10.5pp，Kontoor 订单面临越南竞争压力</span>
-    <div class="row-actions-bar">
-      <button class="share-btn">↗</button>
-      <button class="view-btn">View Details</button>
+<!-- ── EVENT 1: FL301 ── -->
+<div class="row slate">
+  <div class="row-head">
+    <span class="lvl slate">⚠️ CHECK</span>
+    <span class="cat c-tar">关税</span>
+    <span class="cat c-biz">商务</span>
+    <span class="row-title">🇺🇸 美国关税新框架 — 绝对成本 +10.5pp，Kontoor 配额面临重评压力</span>
+    <div class="row-btns">
+      <button class="btn-share">↗</button>
+      <button class="btn-detail">查看详情</button>
     </div>
   </div>
   <div class="row-body">
     <div class="col">
-      <div class="col-label">新闻</div>
-      <div class="col-content">
-        美国 <strong>FL301</strong> 于 2026-07-24 生效。你们对美有效税率从 <strong>~15.1% 升至 25.6%</strong>（+10.5pp）——越南 28.1%，中国 35.6%。绝对成本上升已是定局；相对竞争影响因主要买家的 sourcing 结构而异，需分买家判断。
+      <div class="col-lbl">新闻</div>
+      <div class="col-txt">
+        FL301 于 2026-07-24 生效，对美有效税率 <strong>15.1% → 25.6%</strong>（+10.5pp）。越南 28.1%，中国 35.6%。三国涨幅相近，FL301 本身不产生新转单动力。
       </div>
     </div>
     <div class="col">
-      <div class="col-label">原因（影响）</div>
-      <div class="col-content">
-        <div class="chain-line">
-          每 $100 FOB 贵了 <span class="val-red">+$10.5</span>，谁承担取决于合同类型 <span style="color:#475569;font-size:11px;">（UNKNOWN）</span>
-        </div>
-        <div class="chain-line">
-          三国涨幅相近 → FL301 本身<strong>不产生新转单动力</strong>，相对差距维持
-        </div>
-        <div class="chain-line">
-          <strong>Kontoor</strong>：BD vs VN 仅剩 <span class="val-red">~2.5pp</span>，配额重评压力上升 <span style="color:#475569;">⚠️ 守住</span>
-        </div>
-        <div class="chain-line">
-          <strong>Gap</strong>：BD vs CN 仍 <span class="val-green">~10pp</span>，逻辑不变，维持现状
-        </div>
+      <div class="col-lbl">原因（影响）</div>
+      <div class="col-txt">
+        每 $100 FOB 落地成本贵了 <span class="hi-r">+$10.5</span>，谁承担取决于合同类型（UNKNOWN）。<br>
+        <b>Kontoor</b>（BD+VN 双轨）：BD vs VN 仅剩 <span class="hi-r">~2.5pp</span> <span class="arr">→</span> 配额重评压力升。<br>
+        <b>Gap</b>（CN 迁出）：BD vs CN 仍 <span class="hi-g">~10pp</span> <span class="arr">→</span> 逻辑不变，维持现状。
       </div>
     </div>
     <div class="col">
-      <div class="col-label">行动</div>
-      <div class="actions-list">
-        <div class="action-bullet">
-          <span class="action-label lbl-commerce">商务</span>
-          <span>主动联系 <strong>Kontoor</strong>，确认其 VN 配额是否在增加。用非价格竞争力（交期稳定、质量、合规记录）<strong>守住现有账户</strong>，防止配额被削减。</span>
+      <div class="col-lbl">行动</div>
+      <div class="act-list">
+        <div class="act">
+          <span class="act-icon">💛</span>
+          <span class="act-cat ac-biz">商务</span>
+          <span>主动联系 Kontoor，非价格竞争力（交期、合规）守住现有配额。</span>
         </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-commerce">商务</span>
-          <span>与 <strong>Gap</strong> 确认现有订单计划不变——BD vs CN 差距维持，Gap 无切换动力，重点是<strong>维稳关系</strong>，而非推进新增量。</span>
-        </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-compliance">合规</span>
-          <span>准备 <strong>UFLPA 文件包</strong>（棉花原产地 + BSCI 报告），美国清关必要条件，也是 Kontoor 的强制要求。</span>
-        </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-air8">Air8</span>
-          <span>合同结构确认后，OBF 可覆盖关税吸收带来的现金流缺口（约 $46–58K，90 天账期）。</span>
+        <div class="act">
+          <span class="act-icon">⚖️</span>
+          <span class="act-cat ac-cmp">合规</span>
+          <span>本月完成 UFLPA 文件包（棉花原产地 + BSCI 报告）。</span>
         </div>
       </div>
     </div>
@@ -365,62 +250,48 @@
 </div>
 
 
-<!-- ════════════════════════════════
-     ROW 2 — 供应商关闭潮
-     ════════════════════════════════ -->
-<div class="insight-row threat">
-  <div class="row-header">
-    <span class="badge-level threat">威胁 · 高</span>
-    <span class="badge-cat cat-sourcing">采购</span>
-    <span class="badge-cat cat-logistics">物流</span>
-    <span class="row-title">🏭 孟加拉工厂关闭潮 — 你们的布料来源正在承压，交期风险最早 8 月初出现</span>
-    <div class="row-actions-bar">
-      <button class="share-btn">↗</button>
-      <button class="view-btn">View Details</button>
+<!-- ── EVENT 2: 工厂关闭潮 ── -->
+<div class="row red">
+  <div class="row-head">
+    <span class="lvl red">威胁 · 高</span>
+    <span class="cat c-src">采购</span>
+    <span class="cat c-log">物流</span>
+    <span class="row-title">🏭 孟加拉工厂关闭潮 — 布料断供最早 8 月初，在手 PO 交期面临 OTP 违约风险</span>
+    <div class="row-btns">
+      <button class="btn-share">↗</button>
+      <button class="btn-detail">查看详情</button>
     </div>
   </div>
   <div class="row-body">
     <div class="col">
-      <div class="col-label">新闻</div>
-      <div class="col-content">
-        孟加拉 2024–2026 年 <strong>457 家工厂关闭</strong>，含 <strong>170 家</strong>纺织/RMG。原因：订单不足（205 家）、资金困难（190 家）、政治动荡（51 家）。H1 FY25-26 RMG 出口同比 <strong>–2.63%</strong>。本地织造厂生态持续萎缩，中小型服装工厂的布料采购稳定性正在下降。
+      <div class="col-lbl">新闻</div>
+      <div class="col-txt">
+        孟加拉 2024–2026 年 <strong>457 家工厂关闭</strong>（含 170 家纺织/RMG）。主因：订单不足、资金困难、政治动荡。H1 RMG 出口同比 <strong>–2.63%</strong>，本地织造厂生态持续萎缩。
       </div>
     </div>
     <div class="col">
-      <div class="col-label">原因（影响）</div>
-      <div class="col-content">
-        <div class="chain-line">
-          你们 60% 布料来自本地织造厂
-          <span class="arrow">→</span> <span class="node">2 家核心布料供应商财务困难</span>
-          <span class="arrow">→</span> 库存 <span class="val-amber">45 天</span>
-        </div>
-        <div class="chain-line">
-          若任意一家停产
-          <span class="arrow">→</span> 断料最早 <span class="node">8 月初</span>
-          <span class="arrow">→</span> 在手 PO（交期 09-15）延误 3–6 周
-          <span class="arrow">→</span> OTP 违约罚款 <span class="val-red">$16–30K</span>
-        </div>
-        <div class="chain-note">进口替代需 60–90 天 · EU 买家白名单变更需提前通知</div>
+      <div class="col-lbl">原因（影响）</div>
+      <div class="col-txt">
+        2 家核心布料供应商财务困难 <span class="arr">→</span> 库存仅 <span class="hi-a">45 天</span> <span class="arr">→</span> 若停产最早 <strong>8 月初</strong>断料 <span class="arr">→</span> 在手 PO（交期 09-15）延误 3–6 周 <span class="arr">→</span> OTP 违约罚款 <span class="hi-r">$16–30K</span>。进口替代需 60–90 天，EU 白名单变更需提前通知。
       </div>
     </div>
     <div class="col">
-      <div class="col-label">行动</div>
-      <div class="actions-list">
-        <div class="action-bullet">
-          <span class="action-label lbl-sourcing">采购</span>
-          <span><strong>48h 内</strong>直接联系 2 家高风险布料供应商，要求书面确认当前产能状态（正常 / 减产 / 停产计划）。</span>
+      <div class="col-lbl">行动</div>
+      <div class="act-list">
+        <div class="act">
+          <span class="act-icon">📦</span>
+          <span class="act-cat ac-src">采购</span>
+          <span>48h 内联系 2 家供应商，书面确认当前产能状态。</span>
         </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-logistics">物流</span>
-          <span>启动中国/越南替代布料供应商<strong>快速尽调</strong>，3 天内 Basic KYB，预锁 1 家备选。</span>
+        <div class="act">
+          <span class="act-icon">🚢</span>
+          <span class="act-cat ac-log">物流</span>
+          <span>启动中/越替代布料供应商快速尽调，3 天内锁定 1 家备选。</span>
         </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-commerce">商务</span>
-          <span>准备 EU 买家<strong>变更预警通知</strong>草稿，确认风险后 24h 内发送。</span>
-        </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-air8">Air8</span>
-          <span>ARP 预付融资建立 90 天安全库存（约 $80–120K），解决进口备货资金占用。</span>
+        <div class="act">
+          <span class="act-icon">💛</span>
+          <span class="act-cat ac-biz">商务</span>
+          <span>准备 EU 买家变更预警通知草稿，确认风险后 24h 内发送。</span>
         </div>
       </div>
     </div>
@@ -428,70 +299,56 @@
 </div>
 
 
-<!-- ════════════════════════════════
-     ROW 3 — EU 合规
-     ════════════════════════════════ -->
-<div class="insight-row high">
-  <div class="row-header">
-    <span class="badge-level high">高</span>
-    <span class="badge-cat cat-compliance">合规</span>
-    <span class="badge-cat cat-commerce">商务</span>
-    <span class="row-title">🇪🇺 EU CSDDD + EUDR 合规截止 — 你们 42% 的 EU 订单面临冻结风险，Q4 是关键窗口</span>
-    <div class="row-actions-bar">
-      <button class="share-btn">↗</button>
-      <button class="view-btn">View Details</button>
+<!-- ── EVENT 3: EU 合规 ── -->
+<div class="row amber">
+  <div class="row-head">
+    <span class="lvl amber">高</span>
+    <span class="cat c-cmp">合规</span>
+    <span class="cat c-biz">商务</span>
+    <span class="row-title">🇪🇺 EU CSDDD + EUDR 合规截止 — Q4 窗口，$940K EU 订单面临冻结风险</span>
+    <div class="row-btns">
+      <button class="btn-share">↗</button>
+      <button class="btn-detail">查看详情</button>
     </div>
   </div>
   <div class="row-body">
     <div class="col">
-      <div class="col-label">新闻</div>
-      <div class="col-content">
-        <strong>EUDR</strong> 大型运营商截止日 <strong>2026-12-30</strong>；<strong>CSDDD</strong> 要求品牌对 Tier-N 供应链进行全链条劳工风险披露；<strong>ESPR</strong> 2027 年全面实施，纺织品需提供可追溯性证明。你们的 EU 买家（H&M、Next、Primark）已升级对 Tier-3/4 供应商的合规文件要求。
+      <div class="col-lbl">新闻</div>
+      <div class="col-txt">
+        <strong>EUDR</strong> 大型运营商截止 <strong>2026-12-30</strong>；<strong>CSDDD</strong> 要求品牌对 Tier-N 供应链全链条劳工尽职调查披露；<strong>ESPR</strong> 2027 年全面实施。H&M、Next、Primark 已升级 Tier-3/4 合规文件要求。
       </div>
     </div>
     <div class="col">
-      <div class="col-label">原因（影响）</div>
-      <div class="col-content">
-        <div class="chain-line">
-          你们 EU 出口 <span class="val-amber">$1.34M（42%）</span>
-          <span class="arrow">→</span> 无 CSDDD 报告 · 无 Higg FEM · GOTS 覆盖率 <span class="node">30%</span>
-        </div>
-        <div class="chain-line">
-          Q4 前未提交合规路线图
-          <span class="arrow">→</span> H&M / Next / Primark 暂停新订单审核
-          <span class="arrow">→</span> 受影响金额 <span class="val-red">$940K</span>
-        </div>
-        <div class="chain-line">
-          先行完成 → 获"首选供应商"资格 → 锁定 2027 年优先分配权 <span class="val-green">先发优势</span>
-        </div>
+      <div class="col-lbl">原因（影响）</div>
+      <div class="col-txt">
+        EU 出口 <span class="hi-a">$1.34M（42%）</span> <span class="arr">→</span> 无 CSDDD 报告 · 无 Higg FEM · GOTS 覆盖率仅 30% <span class="arr">→</span> Q4 前未提交合规路线图 <span class="arr">→</span> H&M / Next / Primark 暂停新订单审核 <span class="arr">→</span> 受影响金额 <span class="hi-r">$940K</span>。先行完成 → 首选供应商资格 → 锁定 2027 年优先分配权。
       </div>
     </div>
     <div class="col">
-      <div class="col-label">行动</div>
-      <div class="actions-list">
-        <div class="action-bullet">
-          <span class="action-label lbl-compliance">合规</span>
-          <span>本周委托 <strong>BV / SGS</strong> 启动 CSDDD + EUDR 联合差距评估（4–6 周，约 $8–12K）。</span>
+      <div class="col-lbl">行动</div>
+      <div class="act-list">
+        <div class="act">
+          <span class="act-icon">⚖️</span>
+          <span class="act-cat ac-cmp">合规</span>
+          <span>本周委托 BV / SGS 启动 CSDDD + EUDR 联合差距评估（4–6 周，~$8–12K）。</span>
         </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-sourcing">采购</span>
-          <span>启动 <strong>SLCP 自评</strong>（3–4 天）+ 预约 Higg FEM 验证机构（排期 8–10 周，需提前）。</span>
+        <div class="act">
+          <span class="act-icon">📦</span>
+          <span class="act-cat ac-src">采购</span>
+          <span>启动 SLCP 自评 + 预约 Higg FEM 验证机构（排期 8–10 周）。</span>
         </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-commerce">商务</span>
-          <span>主动向 H&M / Next / Primark 发<strong>合规路线图信函</strong>，争取 10-01 前获"合规中"认定。</span>
-        </div>
-        <div class="action-bullet">
-          <span class="action-label lbl-air8">Air8</span>
-          <span>OBF 融资覆盖认证费用（约 $13–20K，90 天账期），降低前期资金压力。</span>
+        <div class="act">
+          <span class="act-icon">💛</span>
+          <span class="act-cat ac-biz">商务</span>
+          <span>主动向 H&M / Next / Primark 发合规路线图信函，争取 10-01 前获"合规中"认定。</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div style="padding: 16px 0; color: #1e2a3a; font-size: 11px; text-align: center;">
-  Air8 Intelligence · 2026-08-24 · 3 HIGH signals · CONFIDENTIAL
+<div style="padding:14px 0;color:#1e2a3a;font-size:11px;text-align:center;">
+  Air8 Intelligence · 2026-08-24 · CONFIDENTIAL
 </div>
 
 </body>
