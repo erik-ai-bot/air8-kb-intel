@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midasia Fashions Ltd — Actionable Insights 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0b0f1a;
+    color: #e2e8f0;
+    font-family: 'Inter','SF Pro Display',-apple-system,sans-serif;
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .cover-card {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+    border: 1px solid #f9731630;
+    border-radius: 20px;
+    padding: 40px 48px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f97316, #fb923c, #f97316);
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f97316;
+    margin-bottom: 12px;
+  }
+  .cover-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f1f5f9;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .cover-subtitle {
+    font-size: 15px;
+    color: #64748b;
+    margin-bottom: 28px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cover-tag {
+    font-size: 12px;
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid #334155;
+  }
+  .cover-tag strong { color: #f1f5f9; margin-right: 4px; }
+  .cover-from {
+    margin-left: auto;
+    font-size: 12px;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cover-from .air8 { color: #f97316; font-weight: 700; }
+
+  /* ── EVENT CARD ── */
+  .event-card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .card-topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    background: #0d1117;
+  }
+  .badge-impact {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-impact.high { background: #ef444420; color: #ef4444; border: 1px solid #ef444440; }
+  .badge-cat {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #1e293b;
+    color: #94a3b8;
+  }
+  .card-num {
+    margin-left: auto;
+    font-size: 11px;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .card-title {
+    padding: 20px 24px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.5;
+  }
+  .card-title .sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: #64748b;
+    margin-top: 5px;
+    display: block;
+  }
+
+  .card-body { display: grid; grid-template-columns: 1fr 1fr; }
+
+  .col-header {
+    padding: 10px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #475569;
+    border-bottom: 1px solid #1e293b;
+  }
+  .col-left .col-header { border-right: 1px solid #1e293b; }
+
+  /* ── REASON ── */
+  .reason-section {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    position: relative;
+  }
+  .reason-section:last-child { border-bottom: none; }
+  .reason-section::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+  }
+  .reason-section.trigger::before  { background: #ef4444; }
+  .reason-section.exposure::before { background: #f97316; }
+  .reason-section.gap::before     { background: #eab308; }
+  .reason-section.impact::before  { background: #a855f7; }
+  .reason-section.mitigate::before{ background: #22c55e; }
+
+  .reason-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .trigger  .reason-label { color: #ef4444; }
+  .exposure .reason-label { color: #f97316; }
+  .gap      .reason-label { color: #eab308; }
+  .impact   .reason-label { color: #a855f7; }
+  .mitigate .reason-label{ color: #22c55e; }
+  .reason-label .sub-lang { color: #94a3b8; font-weight: 400; margin-left: 4px; font-size: 9px; }
+
+  .reason-content { font-size: 13px; color: #cbd5e1; line-height: 1.65; }
+  .reason-content strong { color: #f1f5f9; }
+  .reason-content em { color: #94a3b8; font-style: normal; }
+
+  .stat-row { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .stat-chip {
+    font-size: 11px;
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 3px 8px;
+    border-radius: 5px;
+  }
+  .stat-chip .v { color: #f1f5f9; font-weight: 700; }
+
+  /* ── ACTION ── */
+  .action-section {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    border-left: 1px solid #1e293b;
+    position: relative;
+  }
+  .action-section:last-child { border-bottom: none; }
+  .action-section::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+  }
+  .action-section.exec::before { background: #3b82f6; }
+  .action-section.exp::before  { background: #8b5cf6; }
+
+  .action-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .action-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .exec .action-badge { background: #3b82f620; color: #3b82f6; }
+  .exp  .action-badge { background: #8b5cf620; color: #8b5cf6; }
+  .action-sub { font-size: 11px; color: #64748b; font-weight: 600; }
+
+  .action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .action-item:last-child { margin-bottom: 0; }
+  .action-num {
+    font-size: 10px;
+    font-weight: 800;
+    color: #1e293b;
+    background: #334155;
+    min-width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .action-text { font-size: 13px; color: #cbd5e1; line-height: 1.55; }
+  .action-text strong { color: #f1f5f9; }
+  .action-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+  .tag-now  { background: #ef444420; color: #ef4444; }
+  .tag-wk   { background: #f9731620; color: #f97316; }
+  .tag-q    { background: #eab30820; color: #eab308; }
+  .tag-log  { background: #64748b20; color: #64748b; }
+  .tag-inf  { background: #3b82f620; color: #3b82f6; }
+  .tag-air8 { background: #f9731620; color: #f97316; }
+
+  /* ── FOOTER ── */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 20px;
+    border-top: 1px solid #1e293b;
+    background: #0d1117;
+    flex-wrap: wrap;
+  }
+  .kb-tag {
+    font-size: 10px;
+    background: #1e293b;
+    color: #64748b;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid #334155;
+  }
+  .footer-stat { font-size: 12px; color: #64748b; }
+  .footer-stat .lbl { color: #475569; }
+  .footer-stat .vl  { color: #e2e8f0; font-weight: 600; margin-left: 3px; }
+  .footer-stat .vl.g { color: #22c55e; }
+  .footer-stat .vl.r { color: #ef4444; }
+  .footer-stat .vl.o { color: #f97316; }
+
+  /* ── SIGNAL BANNER ── */
+  .signal-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 18px;
+    margin: 0 20px 16px;
+    border-radius: 10px;
+    border: 1px solid;
+  }
+  .signal-banner.pos  { background: #22c55e10; border-color: #22c55e30; }
+  .signal-banner.neg   { background: #ef444410; border-color: #ef444430; }
+  .signal-banner.warn  { background: #eab30810; border-color: #eab30830; }
+  .signal-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .signal-text { font-size: 13px; color: #cbd5e1; line-height: 1.6; }
+  .signal-text strong  { color: #f1f5f9; }
+
+  /* ── HELP BLOCK ── */
+  .help-block {
+    background: #0d1117;
+    border: 1px solid #f9731630;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+  .help-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f97316;
+    margin-bottom: 10px;
+  }
+  .help-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+  }
+  .help-text { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .help-items { display: flex; flex-direction: column; gap: 8px; }
+  .help-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #cbd5e1;
+  }
+  .help-item .icon { font-size: 16px; }
+  .help-item strong { color: #f1f5f9; }
+
+  .page-footer {
+    text-align: center;
+    color: #1e293b;
+    font-size: 11px;
+    padding: 20px 0;
+  }
+
+  @media (max-width: 680px) {
+    .card-body { grid-template-columns: 1fr; }
+    .col-left .col-header { border-right: none; border-bottom: 1px solid #1e293b; }
+    .action-section { border-left: none; }
+    .cover-meta { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── COVER ── -->
+<div class="cover-card">
+  <div class="cover-eyebrow">📋 Strategic Intelligence Report · Prepared for</div>
+  <div class="cover-title">Midasia Fashions Ltd — Actionable Insights</div>
+  <div class="cover-subtitle">Global trade shifts, supply chain pressures &amp; regulatory changes affecting your business in 2026</div>
+  <div class="cover-meta">
+    <span class="cover-tag"><strong>Date:</strong> 2026-08-24</span>
+    <span class="cover-tag"><strong>Markets:</strong> APAC · EU · US</span>
+    <span class="cover-tag"><strong>Products:</strong> Woven apparel</span>
+    <span class="cover-tag"><strong>Revenue:</strong> &lt;$5M FOB</span>
+    <span class="cover-from">Prepared by <span class="air8">Air8 Intelligence</span></span>
+  </div>
+</div>
+
+<!-- ── CONTEXT BANNER ── -->
+<div class="help-block" style="margin-bottom: 20px;">
+  <div class="help-eyebrow">How to Read This Report</div>
+  <div class="help-title">为什么你们需要关注这3个事件</div>
+  <div class="help-text">你们当前面临的是一个多维度的外部压力叠加期：美国关税政策重构你们的相对竞争力、孟加拉本地供应商生态正在萎缩、欧盟的合规要求正在快速升级。这三件事同时发生，意味着任何一件处理不当都可能影响你们2026年下半年的订单和现金流。</div>
+  <div class="help-items">
+    <div class="help-item"><span class="icon">🇺🇸</span><span><strong>Event 1 — 美国关税变化</strong>：直接影响你们美国买家的下单意愿和定价条款</span></div>
+    <div class="help-item"><span class="icon">🏭</span><span><strong>Event 2 — 供应商生态萎缩</strong>：你们的布料采购风险在上升</span></div>
+    <div class="help-item"><span class="icon">🇪🇺</span><span><strong>Event 3 — EU 合规升级</strong>：42% 的欧盟订单面临合规审查窗口</span></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     EVENT 1
+     ════════════════════════════════════════════════ -->
+<div class="event-card">
+  <div class="card-topbar">
+    <span class="badge-impact high">高影响</span>
+    <span class="badge-cat">关税</span>
+    <span class="badge-cat">竞争力</span>
+    <span class="card-num">Event 1 / 3</span>
+  </div>
+
+  <div class="card-title">
+    🇺🇸 美国关税新框架 — 你们反而有机会扩大美国市场份额
+    <span class="sub">2026-07-24 生效 · 孟加拉税率 25.6% vs 中国 35.6% vs 越南 28.1%</span>
+  </div>
+
+  <div class="signal-banner pos">
+    <span class="signal-icon">💡</span>
+    <div class="signal-text">
+      <strong>这其实是个好消息。</strong>新关税框架下，孟加拉的税率低于越南（28.1%）和中国（35.6%）。如果美国买家正在重新评估采购布局，<strong>你们的相对成本竞争力实际上在上升</strong>——这是你们获取更多美国订单的窗口期。
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="col-left">
+      <div class="col-header">发生了什么 · 为什么跟你们有关</div>
+
+      <div class="reason-section trigger">
+        <div class="reason-label">发生了什么 <span class="sub-lang">Trigger</span></div>
+        <div class="reason-content">
+          2026年7月24日起，美国对孟加拉服装出口的有效税率升至 <strong>25.6%</strong>（含强迫劳动合规附加税）。表面上税率提高了，但对比主要竞争对手——中国（35.6%）和越南（28.1%）——孟加拉的相对税率反而更低了。
+        </div>
+      </div>
+
+      <div class="reason-section exposure">
+        <div class="reason-label">对你们的影响 <span class="sub-lang">Exposure</span></div>
+        <div class="reason-content">
+          你们年出口约 <strong>$3.2M</strong>，其中约 <strong>18%（$576K）</strong>流向美国买家（Kontoor Brands、PVH、Ralph Lauren 等）。对美国买家而言，从你们这里采购比从中国或越南采购，每 $100 FOB 价差约 <strong>$10–14</strong>。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="v">25.6%</span> 你们的美区税率</span>
+            <span class="stat-chip"><span class="v">35.6%</span> 中国税率</span>
+            <span class="stat-chip"><span class="v">28.1%</span> 越南税率</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section gap">
+        <div class="reason-label">你们需要注意的 <span class="sub-lang">Gap</span></div>
+        <div class="reason-content">
+          <strong>① 合同结构决定谁承担成本</strong>：如果你们和美国买家签的是固定价合同，关税上升的部分可能需要你们自行吸收——这会压缩约 <em>$46–58K/年</em> 的利润。
+          <br><strong>② UFLPA 合规文件</strong>：美国海关现在要求原材料全程可溯源。如果你们没有准备好棉花的原产地证明和工厂劳工审核记录，买家可能面临清关延迟甚至罚没风险。
+          <br><strong>③ 产能是否跟得上</strong>：如果美国买家因为你们的成本优势而增加订单，你们的工厂在90天内能消化多少增量？
+        </div>
+      </div>
+
+      <div class="reason-section impact">
+        <div class="reason-label">两种可能的结果 <span class="sub-lang">Scenarios</span></div>
+        <div class="reason-content">
+          <strong>情景A — 利好</strong>：美国买家将更多订单从越南/中国转给你们 → 年出口美国或增 <em>+$192–320K</em>，这是你们扩大美国市场的黄金窗口。
+          <br><strong>情景B — 压力</strong>：如果是固定价合同，你们需要自行承担关税差 → 毛利率压缩约 <em>–4–6pp</em>，年利润损失约 <em>$48–80K</em>。
+        </div>
+      </div>
+
+      <div class="reason-section mitigate">
+        <div class="reason-label">你们现在可以做的事 <span class="sub-lang">Action</span></div>
+        <div class="reason-content">
+          → 向你们的美国买家主动发送一份 <strong>Landed Cost 分析</strong>，清楚展示孟加拉相对越南/中国的成本优势，推动他们把更多订单转给你们
+          <br>→ 准备 <strong>UFLPA 合规文件包</strong>（棉花原产地证明、工厂劳工审核记录）——这是进入美国市场的入场券
+          <br>→ 如果面临现金流压力，Air8 可以提供<strong>应收账款融资</strong>，帮你们在账期90天内提前变现，改善资金周转
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="col-header">建议你们立即执行的</div>
+
+      <div class="action-section exec">
+        <div class="action-header">
+          <span class="action-badge">本周执行</span>
+          <span class="action-sub">Time-sensitive actions</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>确认合同类型</strong>：联系你们的业务负责人，查清楚与美国买家（Kontoor/PVH/Ralph Lauren）签署的合同是固定价还是成本加成。固定价合同意味着你们需要承担关税成本，成本加成则由买家承担。</div>
+            <span class="action-tag tag-now">本周内 · 关键</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>制作 Landed Cost Deck</strong>：用孟加拉 vs 越南 vs 中国的税率对比数据，准备一份1页的成本分析，发给你们美国的买家采购负责人，告诉他们为什么现在应该给你们更多订单。</div>
+            <span class="action-tag tag-wk">本周内 · 优先级高</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>启动 UFLPA 准备</strong>：联系你们的棉花供应商，要求提供棉花原产地证明（从轧花厂到面料厂的完整链条）。这是美国清关的必要文件，也将成为你们对美国买家的竞争优势。</div>
+            <span class="action-tag tag-q">本月内</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section exp">
+        <div class="action-header">
+          <span class="action-badge">中期行动</span>
+          <span class="action-sub">Build long-term advantage</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>主动约谈美国买家</strong>：给你们的主要美国买家（如 Kontour）发送一封简短邮件，表达你们愿意配合他们的关税分摊方案，并附上你们已完成的 UFLPA 合规准备进度。</div>
+            <span class="action-tag tag-inf">建立信任</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>现金流预案</strong>：如果你们的美国买家最终需要你们承担部分关税成本，可以考虑用 Air8 的 <strong>OBF 融资</strong>提前变现应收账款（最长90天账期），避免现金流断裂。</div>
+            <span class="action-tag tag-air8">Air8 可协助</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>季度复盘</strong>：在 Q4 回顾时，用你们和美国买家的实际订单数据（Q3 vs Q4）来评估这次关税变化对你们业务的真实影响，并据此调整2027年的市场策略。</div>
+            <span class="action-tag tag-log">每季度</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span class="kb-tag">EVT-TARIFF</span>
+    <span class="footer-stat"><span class="lbl">置信度</span><span class="vl">82%</span></span>
+    <span class="footer-stat"><span class="lbl">信号</span><span class="vl g">机会窗口</span></span>
+    <span class="footer-stat"><span class="lbl">你们的市场</span><span class="vl">US 18%</span></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     EVENT 2
+     ════════════════════════════════════════════════ -->
+<div class="event-card">
+  <div class="card-topbar">
+    <span class="badge-impact high">高影响</span>
+    <span class="badge-cat">供应链</span>
+    <span class="badge-cat">原材料</span>
+    <span class="card-num">Event 2 / 3</span>
+  </div>
+
+  <div class="card-title">
+    🏭 孟加拉供应商生态萎缩 — 你们的布料采购面临断裂风险
+    <span class="sub">2024–2026 年 170 家纺织/RMG 工厂关闭 · H1 RMG 出口同比 –2.63%</span>
+  </div>
+
+  <div class="signal-banner warn">
+    <span class="signal-icon">⚠️</span>
+    <div class="signal-text">
+      你们约 <strong>60% 的布料</strong>采购自孟加拉本地织造厂，其中至少 2 家已处于财务困难状态。如果其中任何一家在未来 <strong>30 天内停产</strong>，你们的布料库存（仅够 <strong>45 天</strong>）最早在 <strong>8月初</strong>就会出现断裂，进而影响 9 月中旬的订单交期。
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="col-left">
+      <div class="col-header">发生了什么 · 为什么跟你们有关</div>
+
+      <div class="reason-section trigger">
+        <div class="reason-label">发生了什么 <span class="sub-lang">Trigger</span></div>
+        <div class="reason-content">
+          过去 24 个月，孟加拉有 <strong>457 家工厂关闭</strong>，其中 <strong>170 家是纺织/RMG 工厂</strong>。主要原因是订单不足（205家）、资金困难（190家）、政治动荡（51家）。整个 RMG 行业出口在 2026 年 H1 同比下滑了 2.63%。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="v">457</span> 工厂关闭</span>
+            <span class="stat-chip"><span class="v">170</span> 纺织/RMG</span>
+            <span class="stat-chip"><span class="v">–2.63%</span> H1出口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section exposure">
+        <div class="reason-label">对你们的影响 <span class="sub-lang">Exposure</span></div>
+        <div class="reason-content">
+          你们约 <strong>60% 的布料</strong>来自孟加拉本地织造厂，其中约 40% 集中在吉大港和达卡产区。已确认 <strong>2 家核心布料供应商</strong>处于财务困难状态。你们当前的布料库存仅够维持约 <strong>45 天</strong>的生产。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="v">60%</span> 本地布料依赖</span>
+            <span class="stat-chip"><span class="v">2家</span> 高风险供应商</span>
+            <span class="stat-chip"><span class="v">45天</span> 库存警戒</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section gap">
+        <div class="reason-label">你们需要注意的 <span class="sub-lang">Gap</span></div>
+        <div class="reason-content">
+          <strong>① 供应商财务不透明</strong>：你们目前可能不了解这2家高风险供应商的真实产能状态——他们是否在减产？是否在寻找被收购的机会？
+          <br><strong>② 进口替代需要时间</strong>：如果本地供应断裂，从中国或越南进口替代布料需要 <em>60–90 天</em>，而你们最早一批订单的交期是 2026年9月15日。
+          <br><strong>③ 欧盟买家有合规白名单要求</strong>：即使你们找到替代布料来源，也需要重新通知欧盟买家并可能需要重新认证。
+        </div>
+      </div>
+
+      <div class="reason-section impact">
+        <div class="reason-label">如果供应商断货 <span class="sub-lang">Scenarios</span></div>
+        <div class="reason-content">
+          如果任意一家高风险布料供应商在 <strong>30 天内</strong>停产：
+          <br>→ 你们最早 2026年8月初 就可能出现布料断料
+          <br>→ 9月15日交期的订单可能延误 <em>3–6 周</em>
+          <br>→ 订单延误触发 OTP 违约条款，约 <em>$8–15K/票</em> 罚款，2张订单合计 <strong>$16–30K</strong>
+          <br>→ 欧盟买家（占你们出口 42%）可能因白名单合规要求暂停新订单
+        </div>
+      </div>
+
+      <div class="reason-section mitigate">
+        <div class="reason-label">你们现在可以做的事 <span class="sub-lang">Action</span></div>
+        <div class="reason-content">
+          → <strong>本周内</strong>：直接联系这2家布料供应商负责人，确认其当前产能状态（减产/正常/停产计划），48小时内拿到书面回复
+          <br>→ <strong>两周内</strong>：启动中国/越南布料供应商的备选评估，提前锁定至少1家可以快速供货的替代供应商
+          <br>→ 如果需要提前备货避免断料，Air8 可以提供<strong>原材料预付款融资</strong>（约 $80–120K），帮助你们建立 90 天安全库存
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="col-header">建议你们立即执行的</div>
+
+      <div class="action-section exec">
+        <div class="action-header">
+          <span class="action-badge">本周执行</span>
+          <span class="action-sub">Prevent supply disruption</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>立即联系你们的布料供应商</strong>：给你们2家高风险供应商的业务负责人打电话，直接问："你们的产能现在正常吗？有没有减产计划？" 48小时内要求对方书面回复确认。</div>
+            <span class="action-tag tag-now">48小时内 · 紧急</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>启动替代布料供应商筛选</strong>：联系中国和越南各1-2家布料厂（通过Air8网络协助对接），让他们提供样品和报价，3天内完成基本资质核查。</div>
+            <span class="action-tag tag-now">本周内</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>准备买家变更预警通知</strong>：起草一份供应商变更通知草稿，准备好在确认断料风险后24小时内发给欧盟买家——主动告知总比被买家追问好。</div>
+            <span class="action-tag tag-q">本月内 · 预备</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section exp">
+        <div class="action-header">
+          <span class="action-badge">中期行动</span>
+          <span class="action-sub">Build supply resilience</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>建立双源采购策略</strong>：这次危机是一个契机。从现在起，把布料采购从单一来源调整为"本地（60%）+ 进口（40%）"的双源结构，大幅降低未来的供应中断风险。</div>
+            <span class="action-tag tag-inf">战略升级</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>利用 Air8 资金建立安全库存</strong>：如果你们决定提前锁定进口布料备货，Air8 可以提供<strong>ARP预付融资</strong>（约$80–120K，60天账期，年化利率低于8%），解决你们资金占用的问题。</div>
+            <span class="action-tag tag-air8">Air8 可协助</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>下次拜访时实地评估供应商</strong>：下次去布料供应商工厂拜访时，带上你们的采购和质量团队，实地了解产能状态，不要只靠电话沟通。</div>
+            <span class="action-tag tag-log">下次拜访</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span class="kb-tag">EVT-SUPPLY-DISRUPTION</span>
+    <span class="footer-stat"><span class="lbl">置信度</span><span class="vl">76%</span></span>
+    <span class="footer-stat"><span class="lbl">信号</span><span class="vl o">供应预警</span></span>
+    <span class="footer-stat"><span class="lbl">风险窗口</span><span class="vl r">8月初起</span></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     EVENT 3
+     ════════════════════════════════════════════════ -->
+<div class="event-card">
+  <div class="card-topbar">
+    <span class="badge-impact high">高影响</span>
+    <span class="badge-cat">合规</span>
+    <span class="badge-cat">欧盟</span>
+    <span class="card-num">Event 3 / 3</span>
+  </div>
+
+  <div class="card-title">
+    🇪🇺 欧盟合规升级 — 你们需要在 2026 Q4 前完成，否则订单可能被冻结
+    <span class="sub">EUDR 2026-12-30 截止 · CSDDD 全供应链劳工披露 · ESPR 2027 全面实施</span>
+  </div>
+
+  <div class="signal-banner neg">
+    <span class="signal-icon">🚨</span>
+    <div class="signal-text">
+      你们约 <strong>42% 的出口（$1.34M/年）</strong>流向欧盟市场（H&M、Next、Primark）。这3家买家都受到 CSDDD 的第一层问责约束——如果你们在 <strong>2026 年 Q4 前</strong>无法提交供应链劳工尽职调查报告，他们可能<strong>暂停新订单甚至冻结现有 PO</strong>。这不是一个遥远的风险，这是你们现在就要开始准备的。
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="col-left">
+      <div class="col-header">发生了什么 · 为什么跟你们有关</div>
+
+      <div class="reason-section trigger">
+        <div class="reason-label">发生了什么 <span class="sub-lang">Trigger</span></div>
+        <div class="reason-content">
+          <strong>EUDR</strong>（森林砍伐法规）要求运营商确保产品不来自森林砍伐区，大型运营商截止日期是 <strong>2026年12月30日</strong>；<strong>CSDDD</strong>（企业可持续尽职调查指令）要求企业披露整个供应链的劳工风险，不只是你们自己的工厂；<strong>ESPR</strong>（生态设计法规）要求可追溯性和再生材料证明。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="v">2026-12-30</span> EUDR截止</span>
+            <span class="stat-chip"><span class="v">2027</span> ESPR实施</span>
+            <span class="stat-chip"><span class="v">Q4 2026</span> CSDDD窗口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section exposure">
+        <div class="reason-label">对你们的影响 <span class="sub-lang">Exposure</span></div>
+        <div class="reason-content">
+          你们年出口约 <strong>$3.2M</strong>，欧盟市场占约 <strong>42%（$1.34M）</strong>。TOP-3 欧盟买家：H&M Group（占 EU 约35%）、Next PLC（25%）、Primark（20%）。这3家都面临 CSDDD 的强制问责，必须向欧盟监管机构证明其供应商的劳工合规状况。
+          <div class="stat-row">
+            <span class="stat-chip"><span class="v">$1.34M</span> EU市场暴露</span>
+            <span class="stat-chip"><span class="v">3家</span> TOP EU买家</span>
+            <span class="stat-chip"><span class="v">30%</span> GOTS认证覆盖</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reason-section gap">
+        <div class="reason-label">你们目前缺什么 <span class="sub-lang">Gap</span></div>
+        <div class="reason-content">
+          <strong>① CSDDD 报告框架</strong>：你们目前没有 Scope 3 碳排放核算体系，也没有全供应链劳工风险评估文档。这是最紧急的缺口。
+          <br><strong>② EUDR 原材料可追溯</strong>：H&M 和 Next 要求棉花和面料必须追溯到农场或合作社级别。你们目前只能追溯到 Tier-1 织造厂，距离要求还有差距。
+          <br><strong>③ GOTS/OCS 认证覆盖率</strong>：H&M 已要求 GOTS 认证，你们当前认证覆盖率约 <em>30%</em>（约 $400K），还有约 <em>$940K 订单未获认证</em>。
+          <br><strong>④ Higg FEM 验证</strong>：Next 和 Primark 已将 Higg FEM 验证作为采购门槛，你们尚未完成验证。
+        </div>
+      </div>
+
+      <div class="reason-section impact">
+        <div class="reason-label">两种可能的结果 <span class="sub-lang">Scenarios</span></div>
+        <div class="reason-content">
+          <strong>情景A — 订单冻结</strong>：如果你们在 2026年11月30日 前仍无法提交 CSDDD 报告草稿，H&M/Next/Primark 可能暂停 Q1 2027 的新订单评审——受影响的订单金额约 <em>$940K</em>。
+          <br><strong>情景B — 加速合规</strong>：如果你们在 2026年10月1日 前完成 CSDDD 差距分析（需 6–8 周）+ Higg FEM 验证（需 8–10 周），可以向买家提交合规路线图，不仅保住订单，还可能获得"首选供应商"资格，锁定 2027 年优先分配权。
+        </div>
+      </div>
+
+      <div class="reason-section mitigate">
+        <div class="reason-label">你们现在可以做的事 <span class="sub-lang">Action</span></div>
+        <div class="reason-content">
+          → <strong>立即</strong>：委托专业机构（如 Bureau Veritas / SGS / TÜV Rheinland）启动 CSDDD + EUDR 联合差距评估，4–6 周完成，约 $8–12K
+          <br>→ <strong>30 天内</strong>：完成 SLCP 自评，并向 Next 和 Primark 提交 Higg FEM 验证申请（排期 8–10 周，需提前预约）
+          <br>→ Air8 可以帮你们<strong>协调认证资源</strong>并提供<strong>合规费用融资</strong>（约 $13–20K，最长 90 天账期），降低你们的前期资金压力
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="col-header">建议你们立即执行的</div>
+
+      <div class="action-section exec">
+        <div class="action-header">
+          <span class="action-badge">本周执行</span>
+          <span class="action-sub">Act before your buyers do</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>委托合规差距评估</strong>：联系 Bureau Veritas、SGS 或 TÜV Rheinland，要求他们对你们的 CSDDD + EUDR 合规状况做一次联合差距评估。本周内拿到报价，下周内签约。</div>
+            <span class="action-tag tag-now">本周内 · 关键</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>启动 SLCP 自评</strong>：你们的质量和合规团队用 3–4 天完成 SLCP（Social & Labor Convergence Program）自评——这是进入 Higg FEM 验证的必要第一步。</div>
+            <span class="action-tag tag-wk">本月内</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>主动给欧盟买家发合规路线图</strong>：起草一封邮件给 H&M、Next、Primark 的采购团队，说明你们已了解 CSDDD 要求，并告知你们将在何时完成哪项合规步骤。主动告知比被动等待好得多。</div>
+            <span class="action-tag tag-wk">本月内</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section exp">
+        <div class="action-header">
+          <span class="action-badge">中期行动</span>
+          <span class="action-sub">Turn compliance into competitive edge</span>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">1</span>
+          <div>
+            <div class="action-text"><strong>把合规变成你们的卖点</strong>：如果你们在孟加拉供应商中率先完成 CSDDD 认证，可以主动向欧盟买家申请"首选供应商"标签——这意味着 2027 年的订单会优先分配给你们，而不是你们的竞争对手。</div>
+            <span class="action-tag tag-inf">差异化优势</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">2</span>
+          <div>
+            <div class="action-text"><strong>Air8 帮你们降低合规门槛</strong>：CSDDD 差距评估约 $8–12K，Higg FEM 验证约 $5–8K。如果你们资金紧张，Air8 可以提供<strong>OBF 融资</strong>，最长 90 天账期，让你们先完成认证，再分期还款。</div>
+            <span class="action-tag tag-air8">Air8 可协助</span>
+          </div>
+        </div>
+
+        <div class="action-item">
+          <span class="action-num">3</span>
+          <div>
+            <div class="action-text"><strong>建立内部合规体系</strong>：完成这次认证后，把它变成你们公司的标准流程。2027 年之后，合规将成为进入欧盟市场的基本门槛——你们现在建立的能力将是长期竞争优势。</div>
+            <span class="action-tag tag-log">长期建设</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span class="kb-tag">EVT-REGULATION</span>
+    <span class="footer-stat"><span class="lbl">置信度</span><span class="vl">79%</span></span>
+    <span class="footer-stat"><span class="lbl">信号</span><span class="vl r">合规悬崖</span></span>
+    <span class="footer-stat"><span class="lbl">受影响市场</span><span class="vl">EU 42%</span></span>
+  </div>
+</div>
+
+
+<!-- ── AIR8 HELP BLOCK ── -->
+<div class="help-block">
+  <div class="help-eyebrow">How Air8 Can Help</div>
+  <div class="help-title">这3个事件，Air8 都可以帮到你们</div>
+  <div class="help-text">我们了解这些事件的紧迫性和复杂性。以下是我们可以提供的具体支持：</div>
+  <div class="help-items">
+    <div class="help-item"><span class="icon">📊</span><span><strong>Event 1（美国关税）</strong>：Air8 可以帮你们制作 Landed Cost 分析材料，并提供 OBF 融资改善现金流</span></div>
+    <div class="help-item"><span class="icon">🏭</span><span><strong>Event 2（供应链）</strong>：Air8 可以帮你们快速对接中国/越南布料替代供应商，并提供 ARP 预付融资建立安全库存</span></div>
+    <div class="help-item"><span class="icon">🇪🇺</span><span><strong>Event 3（欧盟合规）</strong>：Air8 可以帮你们协调 SGS/Bureau Veritas 认证资源，并提供合规费用的 OBF 融资支持</span></div>
+  </div>
+</div>
+
+<div class="page-footer">
+  Air8 Intelligence · Midasia Fashions Ltd Actionable Insights · 2026-08-24 · CONFIDENTIAL — Prepared for Midasia Internal Use
+</div>
+
+</body>
+</html>
