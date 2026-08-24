@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KB Module Architecture v4</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080c12;color:#e2e8f0;font-family:system-ui,sans-serif;padding:22px 20px}
+h1{font-size:14px;font-weight:700;color:#f1f5f9;letter-spacing:.03em;margin-bottom:4px}
+.sub{font-size:11px;color:#334155;margin-bottom:16px}
+.wrap{overflow-x:auto;overflow-y:visible}
+.controls{display:flex;gap:10px;margin-bottom:12px;align-items:center}
+.btn{padding:7px 20px;border-radius:7px;border:1.5px solid #1e293b;font-size:12px;font-weight:600;cursor:pointer;background:#0f172a;color:#475569;letter-spacing:.04em;transition:all .15s}
+.btn:hover{border-color:#334155;color:#64748b}
+.btn.ls{background:rgba(59,130,246,.14);border-color:#3b82f6;color:#93c5fd}
+.btn.ps{background:rgba(249,115,22,.14);border-color:#f97316;color:#fdba74}
+.hint{font-size:11px;color:#1e293b;margin-left:4px}
+.leg{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#475569}
+.sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Scorecard panel */
+#sc-toggle{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 18px;border-radius:8px;border:1.5px solid #1e293b;
+  background:#0f172a;color:#475569;font-size:12px;font-weight:600;
+  cursor:pointer;letter-spacing:.04em;transition:all .15s;width:fit-content;
+}
+#sc-toggle:hover{border-color:#334155;color:#64748b}
+#sc-toggle.open{border-color:#7c3aed;color:#c4b5fd;background:rgba(139,92,246,.10)}
+#sc-toggle .arrow{margin-left:4px;transition:transform .2s;font-size:10px}
+#sc-toggle.open .arrow{transform:rotate(180deg)}
+#sc-panel{
+  display:none;margin-top:10px;border:1.5px solid #1e293b;border-radius:10px;
+  background:#090d18;overflow:hidden
+}
+#sc-panel.open{display:block}
+.sc-header{
+  padding:12px 20px 10px;font-size:10px;font-weight:800;color:#374151;
+  letter-spacing:.15em;border-bottom:1px solid #111d2e
+}
+.sc-body{padding:18px 20px;display:flex;flex-direction:column;gap:20px}
+.sc-intro{
+  font-size:11.5px;color:#475569;line-height:1.7;
+  max-width:900px;background:#0c1520;border:1px solid #131f2e;
+  border-radius:7px;padding:10px 14px
+}
+.sc-intro span.ls{color:#93c5fd;font-weight:600}
+.sc-intro span.ps{color:#fdba74;font-weight:600}
+.sc-modules{display:flex;gap:12px;flex-wrap:wrap}
+.sc-mod{
+  flex:1;min-width:180px;max-width:230px;
+  background:#0a1120;border:1.5px solid #131f2e;
+  border-radius:8px;padding:12px 14px;position:relative
+}
+.sc-mod.ls-used{border-color:#1e40af}
+.sc-mod.ps-used{border-color:#92400e}
+.sc-mod.ls-used.ps-used{border-color:#5b21b6}
+.sc-mod-name{
+  font-size:10px;font-weight:700;color:#334155;letter-spacing:.1em;margin-bottom:6px
+}
+.sc-mod-title{font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:5px}
+.sc-mod-desc{font-size:10.5px;color:#475669;line-height:1.6}
+.sc-badges{
+  display:flex;gap:6px;margin-top:8px;flex-wrap:wrap
+}
+.sc-badge{
+  font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.06em
+}
+.sc-badge.ls{background:rgba(59,130,246,.18);color:#93c5fd;border:1px solid #1e40af}
+.sc-badge.ps{background:rgba(249,115,22,.18);color:#fdba74;border:1px solid #92400e}
+.sc-badge.both{background:rgba(139,92,246,.18);color:#c4b5fd;border:1px solid #5b21b6}
+.sc-flow{margin-top:4px}
+.sc-flow-lbl{font-size:9.5px;color:#1e3a5f;letter-spacing:.1em;font-weight:700;margin-bottom:8px}
+
+/* Tooltip */
+#tt{position:fixed;display:none;background:#0f1724;border:1px solid #1e3a5f;
+  padding:9px 13px;border-radius:7px;font-size:11.5px;color:#94a3b8;
+  max-width:250px;pointer-events:none;z-index:200;line-height:1.6;
+  box-shadow:0 4px 20px rgba(0,0,0,.5)}
+#tt .tname{font-size:10px;font-weight:700;color:#475569;letter-spacing:.1em;margin-bottom:4px}
+#tt .tdesc{color:#7ea8c9}
+</style>
+</head>
+<body>
+<h1>KB Module Architecture · Full Pipeline Flow</h1>
+<p class="sub">Horizontal: Scenario Skills → KB Processing → L1 Logic → L3 Data Nodes → Data Source &nbsp;|&nbsp; hover nodes for info &nbsp;|&nbsp; click to highlight</p>
+
+<div class="controls">
+  <button class="btn" id="bls" onclick="toggle('ls')">Lead Scoring</button>
+  <button class="btn" id="bps" onclick="toggle('ps')">Perf Scoring</button>
+  <span class="hint">Click to highlight scenario path</span>
+</div>
+<div class="leg">
+  <div class="li"><div class="sw" style="background:#3b82f6"></div>Lead Scoring path</div>
+  <div class="li"><div class="sw" style="background:#f97316"></div>Perf Scoring path</div>
+  <div class="li"><div class="sw" style="background:#22c55e"></div>Shared / both</div>
+</div>
+
+<div class="wrap">
+<svg id="svg" xmlns="http://www.w3.org/2000/svg" width="1080" height="510" viewBox="0 0 1080 510"></svg>
+</div>
+
+<button id="sc-toggle" onclick="toggleSc()">
+  <span>Supplier Scorecard — 4 modules</span>
+  <span class="arrow">▾</span>
+</button>
+<div id="sc-panel">
+  <div class="sc-header">SUPPLIER SCORECARD — MODULE BREAKDOWN</div>
+  <div class="sc-body">
+    <div class="sc-intro">
+      Both <span class="ls">Lead Scoring</span> and <span class="ps">Perf Scoring</span> feed into the same Supplier Scorecard.
+      The scorecard has <strong>4 modules</strong>. Lead Scoring only uses <strong>Buyer-Supplier Pair</strong> as a proxy.
+      Perf Scoring pre-screening uses <strong>QAQC + Performance + Buyer-Supplier Pair</strong>
+      (if QAQC data is missing, it falls back to the remaining modules — not shown in this flow).
+    </div>
+    <div class="sc-modules">
+      <div class="sc-mod ls-used ps-used">
+        <div class="sc-mod-name">MODULE 1</div>
+        <div class="sc-mod-title">QAQC</div>
+        <div class="sc-mod-desc">Quality assurance, compliance defects, audit history, and certification validity.</div>
+        <div class="sc-badges"><span class="sc-badge ps">Perf Scor</span></div>
+      </div>
+      <div class="sc-mod ps-used">
+        <div class="sc-mod-name">MODULE 2</div>
+        <div class="sc-mod-title">Performance</div>
+        <div class="sc-mod-desc">On-time delivery rate, lead-time accuracy, order completion ratio, and responsiveness.</div>
+        <div class="sc-badges"><span class="sc-badge ps">Perf Scor</span></div>
+      </div>
+      <div class="sc-mod ls-used ps-used">
+        <div class="sc-mod-name">MODULE 3</div>
+        <div class="sc-mod-title">Buyer-Supplier Pair</div>
+        <div class="sc-mod-desc">Historical match quality, category fit, volume alignment, and relationship tier.</div>
+        <div class="sc-badges">
+          <span class="sc-badge ls">Lead Scor</span>
+          <span class="sc-badge ps">Perf Scor</span>
+        </div>
+      </div>
+      <div class="sc-mod ls-used ps-used">
+        <div class="sc-mod-name">MODULE 4</div>
+        <div class="sc-mod-title">Financial Health</div>
+        <div class="sc-mod-desc">Credit rating, financing history, paymentBehaviour, and risk band classification.</div>
+        <div class="sc-badges">
+          <span class="sc-badge both">Both</span>
+        </div>
+      </div>
+    </div>
+    <div class="sc-flow">
+      <div class="sc-flow-lbl">SCORECARD USAGE FLOW</div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="background:rgba(59,130,246,.14);border:1px solid #1e40af;color:#93c5fd;font-size:10.5px;font-weight:600;padding:4px 12px;border-radius:6px">Lead Scoring</div>
+          <span style="color:#334155;font-size:12px">→</span>
+          <div style="background:#0d1a2e;border:1px solid #1e40af;color:#93c5fd;font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px">Buyer-Supplier Pair only</div>
+          <span style="color:#334155;font-size:12px">→</span>
+          <div style="color:#475569;font-size:10.5px;font-style:italic">proxy for supplier quality signal</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="background:rgba(249,115,22,.14);border:1px solid #92400e;color:#fdba74;font-size:10.5px;font-weight:600;padding:4px 12px;border-radius:6px">Perf Scoring</div>
+          <span style="color:#334155;font-size:12px">→</span>
+          <div style="background:#0d1a2e;border:1px solid #92400e;color:#fdba74;font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px">QAQC + Performance + BSP</div>
+          <span style="color:#334155;font-size:12px">→</span>
+          <div style="color:#475669;font-size:10.5px">full pre-screening tier rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tt"><div class="tname" id="tt-name"></div><div class="tdesc" id="tt-desc"></div></div>
+
+<script>
+// ── Tooltip ──────────────────────────────────────────────────────────────────
+const tt=document.getElementById('tt'),ttN=document.getElementById('tt-name'),ttD=document.getElementById('tt-desc');
+document.addEventListener('mousemove',e=>{
+  if(tt.style.display==='block'){
+    let lx=e.clientX+16,ly=e.clientY-14;
+    if(lx+260>window.innerWidth)lx=e.clientX-266;
+    if(ly+90>window.innerHeight)ly=e.clientY-90;
+    tt.style.left=lx+'px';tt.style.top=ly+'px';
+  }
+});
+function showTip(n,d){tt.style.display='block';ttN.textContent=n;ttD.textContent=d;}
+function hideTip(){tt.style.display='none';}
+function addTip(g,n,d){g.addEventListener('mouseenter',()=>showTip(n,d));g.addEventListener('mouseleave',hideTip);g.style.cursor='default';}
+
+// ── State ────────────────────────────────────────────────────────────────────
+const st={ls:false,ps:false};
+const C={
+  ls_bg:'rgba(59,130,246,.13)',ls_str:'#3b82f6',ls_txt:'#93c5fd',ls_e:'#3b82f6',
+  ps_bg:'rgba(249,115,22,.13)',ps_str:'#f97316',ps_txt:'#fdba74',ps_e:'#f97316',
+  bt_bg:'rgba(34,197,94,.13)',bt_str:'#22c55e',bt_txt:'#86efac',bt_e:'#22c55e',
+  off:'#1e3a5f',
+};
+
+// ── Column X centres ─────────────────────────────────────────────────────────
+const C1=95, C2=285, C3=510, C4=735, C5=965;
+
+// ── Data ─────────────────────────────────────────────────────────────────────
+const scenarios=[
+  {id:'ls',lbl:'lead-scoring',sub:'CP0→CP5',cy:170,ls:true,ps:false,
+   tip:'Scores new supplier leads through the full CP0→CP5 pipeline. Uses only Buyer-Supplier Pair module from the scorecard as a proxy for supplier quality.',
+   col:'#3b82f6',bg:'rgba(59,130,246,.10)',str:'#1e40af'},
+  {id:'ps',lbl:'perf-scoring',sub:'CP0→CP5',cy:350,ls:false,ps:true,
+   tip:'Evaluates existing supplier performance against benchmarks using QAQC + Performance + Buyer-Supplier Pair modules. Outputs a tier rating and risk flags.',
+   col:'#f97316',bg:'rgba(249,115,22,.10)',str:'#92400e'},
+];
+
+const kbSteps=[
+  {id:'s1',num:'Step 1',lbl:'Ingest supplier input',         cy:82, ls:true,ps:true,
+   tip:'Receive and parse raw supplier submission. Validate required fields and schema before routing.'},
+  {id:'s2',num:'Step 2',lbl:'Route to product vertical',     cy:142,ls:true,ps:true,
+   tip:'Identify the correct product vertical (Apparel, Hardgoods, Food, etc.) based on input fields.'},
+  {id:'s3',num:'Step 3',lbl:'Activate L1 logic modules',     cy:202,ls:true,ps:true,
+   tip:'Load the scenario-specific L1 modules needed for this vertical and scoring type.'},
+  {id:'s4',num:'Step 4',lbl:'Fetch L3 KB data nodes',        cy:262,ls:true,ps:true,
+   tip:'Query the relevant L3 knowledge nodes — product categories, country risk, buyer programs, compliance rules, and financing bands.'},
+  {id:'s5',num:'Step 5',lbl:'Apply Supplier Scorecard',      cy:322,ls:true,ps:true,
+   tip:'Run the Supplier Scorecard against the L3 data. Lead Scoring uses Buyer-Supplier Pair only. Perf Scoring uses QAQC + Performance + BSP.'},
+  {id:'s6',num:'Step 6',lbl:'Screen buyer-supplier pairs',   cy:382,ls:true,ps:true,
+   tip:'Match supplier profile against active buyer requirements and COMBO-B buyer programs.'},
+  {id:'s7',num:'Step 7',lbl:'Gate, sort & rank',             cy:442,ls:true,ps:true,
+   tip:'Apply pass/fail gates based on score thresholds. Sort and rank qualifying candidates by composite score.'},
+  {id:'s8',num:'Step 8',lbl:'Package to CP standard',        cy:478,ls:true,ps:true,
+   tip:'Assemble results and evidence citations into the correct CP-level format and output package.'},
+];
+
+const l1=[
+  {id:'dbmap',lbl:'db-field-mapper',     cy:82,  tip:'Maps raw supplier input fields to KB schema columns before any scoring logic runs.'},
+  {id:'vrt',  lbl:'vertical-router',     cy:142, tip:'Routes the query to the correct product vertical — Apparel, Hardgoods, Food, etc.'},
+  {id:'scr',  lbl:'banded-scorer',       cy:202, tip:'Applies weighted scoring bands and thresholds to compute a normalised score per CP level.'},
+  {id:'trnd', lbl:'market-trend-reader', cy:262, tip:'Reads live market trend signals from KB data nodes and injects them into scoring context.'},
+  {id:'pair', lbl:'buyer-pair-screener', cy:382, tip:'Screens supplier profiles against active buyer requirements; surfaces best-fit matches.'},
+  {id:'gate', lbl:'gate-and-sort',       cy:442, tip:'Final pass/fail gate check; ranks and sorts qualifying candidates by composite score.'},
+  {id:'evid', lbl:'evidence-standard',   cy:478, tip:'Validates that evidence citations meet minimum quality bar before a CP level is passed.'},
+];
+
+const l3=[
+  {id:'sigs',  lbl:'score-signals',         cy:82,  tip:'Defines the raw scoring signals and their weights used by the banded-scorer.'},
+  {id:'patfw', lbl:'pattern-framework',     cy:142, tip:'Lead scoring rubric: structured criteria patterns that define each CP level threshold.'},
+  {id:'pcat',  lbl:'product-categories/',   cy:202, tip:'Taxonomy of product categories across all verticals — used for routing and scoring context.'},
+  {id:'cntry', lbl:'countries/',            cy:262, tip:'Country-level risk ratings, compliance rules, and supplier eligibility flags by market.'},
+  {id:'combob',lbl:'COMBO-B-* (buyers)',   cy:322, tip:'Buyer combination profiles: preferred product categories, price points, and volume thresholds.'},
+  {id:'adv',   lbl:'adverse-levels',        cy:382, tip:'Severity level definitions for adverse flags across compliance, quality, and ESG dimensions.'},
+  {id:'csrc',  lbl:'country-sources',       cy:422, tip:'Approved data sources per country used for evidence gathering and validation.'},
+  {id:'fnbd',  lbl:'financing-bands',       cy:462, tip:'Financing eligibility bands categorised by supplier type and transaction size.'},
+  {id:'pitch', lbl:'pitch-guide',           cy:478, tip:'Pitch framing guidance tailored to buyer scenario, product vertical, and supplier tier.'},
+];
+
+const dataSrc=[
+  {id:'fw',lbl:'Scoring\nFramework',   cy:82,  tip:'Score-signals and pattern-framework: scoring rubric, criteria definitions, CP thresholds.'},
+  {id:'pckb',lbl:'Product &\nCountry KB', cy:142,tip:'Product categories taxonomy and country risk/compliance data pages.'},
+  {id:'bdb',lbl:'Buyer Program\nRegistry', cy:202,tip:'COMBO-B buyer profiles: category preferences, volume tiers, and active programs.'},
+  {id:'cdb',lbl:'Compliance\n& Risk DB', cy:262,tip:'Adverse level definitions, country-source data, and risk classification rules.'},
+  {id:'fdb',lbl:'Finance &\nSales Docs', cy:322,tip:'Financing band definitions and pitch guide templates.'},
+];
+
+// ── Edges: L1→L3 (specific data node each L1 module uses) ───────────────────
+const l1l3Edges=[
+  ['dbmap','sigs'],['vrt','patfw'],['scr','patfw'],['trnd','pcat'],['trnd','cntry'],
+  ['pair','combob'],['gate','patfw'],['gate','adv'],['evid','adv'],
+  ['evid','csrc'],['evid','fnbd'],['evid','pitch'],
+];
+// Edges: L3→DataSource
+const l3dsEdges=[
+  ['sigs','fw'],['patfw','fw'],['pcat','pckb'],['cntry','pckb'],
+  ['combob','bdb'],['adv','cdb'],['csrc','cdb'],['fnbd','fdb'],['pitch','fdb'],
+];
+
+function build(){
+  const svg=document.getElementById('svg');
+  const ns='http://www.w3.org/2000/svg';
+  const mk=(tag,a={},txt)=>{
+    const e=document.createElementNS(ns,tag);
+    Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));
+    if(txt!=null)e.textContent=txt;
+    return e;
+  };
+  const arr=(x,y,col)=>mk('polygon',{points:`${x-4},${y} ${x+4},${y} ${x},${y+6}`,fill:col,opacity:'.7'});
+  const bez=(x1,y1,x2,y2,col,op=.35,w=1.5)=>{
+    const g=mk('g');
+    g.appendChild(mk('path',{d:`M${x1},${y1} C${x1+55},${y1} ${x2-55},${y2} ${x2},${y2}`,
+      fill:'none',stroke:col,'stroke-width':w,opacity:op}));
+    g.appendChild(arr(x2,y2,col));
+    return g;
+  };
+
+  // ── Column backgrounds ─────────────────────────────────────────────────────
+  const colBgs=[
+    [0,0,165,510,'#030710'],  // Scenario
+    [165,0,240,510,'#040812'], // KB Process
+    [405,0,210,510,'#050a16'], // L1
+    [615,0,260,510,'#060c18'], // L3
+    [875,0,205,510,'#040912'], // Data Source
+  ];
+  colBgs.forEach(([x,y,w,h,col])=>svg.appendChild(mk('rect',{x,y,width:w,height:h,fill:col})));
+
+  // ── Column headers ─────────────────────────────────────────────────────────
+  const hdrs=[
+    {x:C1,y:22,txt:'SCENARIO\nSKILL'},
+    {x:C2,y:22,txt:'KB PROCESSING\nSKILL'},
+    {x:C3,y:22,txt:'LAYER 1\nLOGIC MODULES'},
+    {x:C4,y:22,txt:'LAYER 3\nDATA NODES'},
+    {x:C5,y:22,txt:'DATA\nSOURCE'},
+  ];
+  hdrs.forEach(h=>{
+    svg.appendChild(mk('text',{x:h.x,y:h.y,'text-anchor':'middle',
+      'font-size':8,'font-family':'system-ui','font-weight':'800',
+      fill:'#0e1e33','letter-spacing':'.12em'},h.txt));
+  });
+
+  // ── Header underlines ──────────────────────────────────────────────────────
+  [C1,C2,C3,C4,C5].forEach(cx=>{
+    svg.appendChild(mk('line',{x1:cx-65,y1:30,x2:cx+65,y2:30,stroke:'#0e1e33','stroke-width':1}));
+  });
+
+  // ── Column dividers ────────────────────────────────────────────────────────
+  [210,430,640,860].forEach(x=>{
+    svg.appendChild(mk('line',{x1:x,y1:36,x2:x,y2:510,stroke:'#0b1522','stroke-width':1}));
+  });
+
+  // ── Flow arrows between columns (general, always visible) ──────────────────
+  const midY=255;
+  // C1→C2
+  svg.appendChild(mk('path',{d:`M${C1+82},${midY} L${C2-72},${midY}`,fill:'none',stroke:'#111e2e','stroke-width':1.5,opacity:.5}));
+  svg.appendChild(arr(C2-72,midY,'#1e3a5f'));
+  // C2→C3
+  svg.appendChild(mk('path',{d:`M${C2+120},${midY} L${C3-105},${midY}`,fill:'none',stroke:'#111e2e','stroke-width':1.5,opacity:.5}));
+  svg.appendChild(arr(C3-105,midY,'#1e3a5f'));
+  // C3→C4
+  svg.appendChild(mk('path',{d:`M${C3+105},${midY} L${C4-130},${midY}`,fill:'none',stroke:'#111e2e','stroke-width':1.5,opacity:.5}));
+  svg.appendChild(arr(C4-130,midY,'#1e3a5f'));
+  // C4→C5
+  svg.appendChild(mk('path',{d:`M${C4+130},${midY} L${C5-102},${midY}`,fill:'none',stroke:'#111e2e','stroke-width':1.5,opacity:.5}));
+  svg.appendChild(arr(C5-102,midY,'#1e3a5f'));
+
+  // ── Scenario boxes ─────────────────────────────────────────────────────────
+  const ge=mk('g'); ge.id='ge'; svg.appendChild(ge);
+  const gn=mk('g'); gn.id='gn'; svg.appendChild(gn);
+  const gl1l3=mk('g'); gl1l3.id='gl1l3'; svg.appendChild(gl1l3);
+  const gl3ds=mk('g'); gl3ds.id='gl3ds'; svg.appendChild(gl3ds);
+
+  // Scenario → KB step entry-point arrows
+  scenarios.forEach(s=>{
+    const x1=s.cy===170 ? C1+82 : C1+82;
+    const y1=s.cy;
+    const x2=C2-72, y2=s.cy===170 ? 130 : 330;
+    const col=s.id==='ls'?'#1e40af':'#92400e';
+    const g=bez(x1,y1,x2,y2,col,.55,1.5);
+    g.id=`sc-kb-${s.id}`;
+    ge.appendChild(g);
+  });
+
+  scenarios.forEach(s=>{
+    const g=mk('g'); g.id='sc-'+s.id;
+    const bx=C1-82, by=s.cy-42, bw=164, bh=84;
+    g.appendChild(mk('rect',{x:bx,y:by,width:bw,height:bh,rx:8,
+      fill:s.bg,stroke:s.str,'stroke-width':'1.5',id:`sc-r-${s.id}`}));
+    g.appendChild(mk('text',{x:C1,y:by+17,'text-anchor':'middle',
+      'font-size':7.5,'font-family':'system-ui','font-weight':'800',
+      fill:s.str,'letter-spacing':'.1em'},'SCENARIO SKILL'));
+    g.appendChild(mk('text',{x:C1,y:by+40,'text-anchor':'middle',
+      'font-size':11.5,'font-family':'"Fira Code",monospace','font-weight':'700',
+      fill:s.col,id:`sc-t-${s.id}`},s.lbl));
+    g.appendChild(mk('text',{x:C1,y:by+58,'text-anchor':'middle',
+      'font-size':8,'font-family':'system-ui',fill:s.str},s.sub));
+    // "→ scorecard" tag
+    g.appendChild(mk('text',{x:C1,y:by+73,'text-anchor':'middle',
+      'font-size':7.5,'font-family':'system-ui',fill:'#1e293b'},'→ Supplier Scorecard'));
+    gn.appendChild(g);
+    addTip(g,'SCENARIO · '+s.lbl,s.tip);
+  });
+
+  // ── KB steps ───────────────────────────────────────────────────────────────
+  kbSteps.forEach(s=>{
+    const g=mk('g'); g.id='kb-'+s.id;
+    const bw=210, bh=34;
+    g.appendChild(mk('rect',{x:C2-bw/2,y:s.cy-bh/2,width:bw,height:bh,rx:6,
+      fill:'#0c1828',stroke:'#162035','stroke-width':'1.5',id:`kb-r-${s.id}`}));
+    g.appendChild(mk('text',{x:C2-bw/2+10,y:s.cy+4,'text-anchor':'start',
+      'font-size':7,'font-family':'system-ui','font-weight':'700',fill:'#1e3a5f'},s.num));
+    g.appendChild(mk('text',{x:C2-bw/2+68,y:s.cy+4,'text-anchor':'start',
+      'font-size':10,'font-family':'"Fira Code",monospace',fill:C.off,id:`kb-t-${s.id}`},s.lbl));
+    gn.appendChild(g);
+    addTip(g,'KB PROCESS · '+s.lbl,s.tip);
+  });
+
+  // KB step → L1 module arrows
+  const kbToL1=[
+    ['s1','dbmap',82],['s2','vrt',142],['s3','scr',202],
+    ['s4','trnd',262],['s6','pair',382],['s7','gate',442],['s8','evid',478],
+  ];
+  kbToL1.forEach(([kid,lid,targetCy])=>{
+    const kbNode=kbSteps.find(k=>k.id===kid);
+    const x1=C2+105, y1=kbNode.cy;
+    const x2=C3-105, y2=targetCy;
+    const g=bez(x1,y1,x2,y2,'#111e2e',.3,1.2);
+    g.id=`edge-kb-${kid}`;
+    ge.appendChild(g);
+  });
+
+  // ── L1 modules ─────────────────────────────────────────────────────────────
+  l1.forEach(n=>{
+    const g=mk('g'); g.id='l1-'+n.id;
+    g.appendChild(mk('rect',{x:C3-90,y:n.cy-17,width:180,height:34,rx:6,
+      fill:'#0e1623',stroke:'#1e2d3d','stroke-width':'1.5',id:`l1-r-${n.id}`}));
+    g.appendChild(mk('text',{x:C3,y:n.cy+4,'text-anchor':'middle',
+      'font-size':10,'font-family':'"Fira Code",monospace',fill:C.off,id:`l1-t-${n.id}`},n.lbl));
+    gn.appendChild(g);
+    addTip(g,'L1 · '+n.lbl,n.tip);
+  });
+
+  // ── L1→L3 edges ────────────────────────────────────────────────────────────
+  l1l3Edges.forEach(([l1id,l3id])=>{
+    const n1=l1.find(n=>n.id===l1id), n2=l3.find(n=>n.id===l3id);
+    if(!n1||!n2)return;
+    const g=mk('g'); g.id=`l1l3-${l1id}-${l3id}`;
+    g.appendChild(mk('path',{d:`M${C3+90},${n1.cy} C${C3+160},${n1.cy} ${C4-160},${n2.cy} ${C4-130},${n2.cy}`,
+      fill:'none',stroke:'#111e2e','stroke-width':'1',opacity:'.3',id:`l1l3-p-${l1id}-${l3id}`}));
+    ge.appendChild(g);
+  });
+
+  // ── L3 modules ─────────────────────────────────────────────────────────────
+  l3.forEach(n=>{
+    const g=mk('g'); g.id='l3-'+n.id;
+    g.appendChild(mk('rect',{x:C4-120,y:n.cy-15,width:240,height:30,rx:5,
+      fill:'#090e17',stroke:'#131f2e','stroke-width':'1.5',id:`l3-r-${n.id}`}));
+    g.appendChild(mk('text',{x:C4-10,y:n.cy+4,'text-anchor':'middle',
+      'font-size':10,'font-family':'"Fira Code",monospace',fill:C.off,id:`l3-t-${n.id}`},n.lbl));
+    gn.appendChild(g);
+    addTip(g,'L3 · '+n.lbl,n.tip);
+  });
+
+  // ── L3→DataSource edges ────────────────────────────────────────────────────
+  l3dsEdges.forEach(([l3id,dsid])=>{
+    const n1=l3.find(n=>n.id===l3id), n2=dataSrc.find(n=>n.id===dsid);
+    if(!n1||!n2)return;
+    const g=mk('g'); g.id=`l3ds-${l3id}-${dsid}`;
+    g.appendChild(mk('path',{d:`M${C4+120},${n1.cy} C${C4+180},${n1.cy} ${C5-100},${n2.cy} ${C5-102},${n2.cy}`,
+      fill:'none',stroke:'#111e2e','stroke-width':'1',opacity:'.25',id:`l3ds-p-${l3id}-${dsid}`}));
+    ge.appendChild(g);
+  });
+
+  // ── Data Source boxes ──────────────────────────────────────────────────────
+  dataSrc.forEach(n=>{
+    const g=mk('g'); g.id='ds-'+n.id;
+    const bh=46;
+    g.appendChild(mk('rect',{x:C5-96,y:n.cy-bh/2,width:192,height:bh,rx:7,
+      fill:'#080e1a',stroke:'#111d2c','stroke-width':'1.5',id:`ds-r-${n.id}`}));
+    // Label with line breaks
+    const lines=n.lbl.split('\n');
+    lines.forEach((ln,i)=>{
+      g.appendChild(mk('text',{x:C5,y:n.cy-8+i*13,'text-anchor':'middle',
+        'font-size':9.5,'font-family':'"Fira Code",monospace','font-weight':'600',fill:'#1e3048'},ln));
+    });
+    gn.appendChild(g);
+    addTip(g,'DATA SOURCE · '+lines[0],n.tip);
+  });
+
+  update();
+}
+
+// ── Update / highlight ────────────────────────────────────────────────────────
+function styleNode(pre,id,on,col,bg,str,txt){
+  const r=document.getElementById(`${pre}-r-${id}`);
+  const t=document.getElementById(`${pre}-t-${id}`);
+  if(!r)return;
+  if(on){r.setAttribute('fill',bg);r.setAttribute('stroke',str);t.setAttribute('fill',txt);}
+  else{r.setAttribute('fill','#0c1828');r.setAttribute('stroke','#162035');t.setAttribute('fill',C.off);}
+}
+
+function update(){
+  const ls=st.ls, ps=st.ps;
+  document.getElementById('bls').className='btn'+(ls?' ls':'');
+  document.getElementById('bps').className='btn'+(ps?' ps':'');
+
+  // Scenario boxes
+  scenarios.forEach(s=>{
+    const on=s.id==='ls'?ls:ps;
+    const r=document.getElementById('sc-r-'+s.id);
+    const t=document.getElementById('sc-t-'+s.id);
+    if(on){r.setAttribute('fill',s.id==='ls'?C.ls_bg:C.ps_bg);r.setAttribute('stroke',s.id==='ls'?C.ls_str:C.ps_str);t.setAttribute('fill',s.id==='ls'?C.ls_txt:C.ps_txt);}
+    else{r.setAttribute('fill',s.bg);r.setAttribute('stroke',s.str);t.setAttribute('fill',s.col);}
+  });
+
+  // Scenario → KB arrows
+  ['ls','ps'].forEach(id=>{
+    const on=id==='ls'?ls:ps;
+    const e=document.getElementById('sc-kb-'+id);
+    if(e)e.style.opacity=on?'1':'0.25';
+  });
+
+  // KB steps
+  kbSteps.forEach(s=>{
+    const on=(s.ls&&ls)||(s.ps&&ps);
+    const r=document.getElementById('kb-r-'+s.id);
+    const t=document.getElementById('kb-t-'+s.id);
+    if(on){r.setAttribute('fill','#111e2e');r.setAttribute('stroke','#1e3a5f');t.setAttribute('fill','#64748b');}
+    else{r.setAttribute('fill','#0c1828');r.setAttribute('stroke','#162035');t.setAttribute('fill',C.off);}
+  });
+
+  // KB→L1 step arrows
+  const kbToL1Ids=['s1','s2','s3','s4','s6','s7','s8'];
+  kbToL1Ids.forEach(kid=>{
+    const e=document.getElementById('edge-kb-'+kid);
+    if(e)e.style.opacity=(ls||ps)?'.55':'.25';
+  });
+
+  // L1 nodes (all active when either scenario selected)
+  l1.forEach(n=>{
+    const on=ls||ps;
+    styleNode('l1',n.id,on,C.bt_bg,C.bt_str,C.bt_txt,C.bt_txt);
+  });
+
+  // L1→L3 edges
+  l1l3Edges.forEach(([l1id,l3id])=>{
+    const e=document.getElementById(`l1l3-p-${l1id}-${l3id}`);
+    if(e){
+      e.setAttribute('stroke',(ls||ps)?'#1e3a5f':'#111e2e');
+      e.setAttribute('opacity',(ls||ps)?'.45':'.22');
+    }
+  });
+
+  // L3 nodes (all active when either scenario selected)
+  l3.forEach(n=>{
+    const on=ls||ps;
+    styleNode('l3',n.id,on,C.bt_bg,C.bt_str,C.bt_txt,C.bt_txt);
+  });
+
+  // L3→DS edges
+  l3dsEdges.forEach(([l3id,dsid])=>{
+    const e=document.getElementById(`l3ds-p-${l3id}-${dsid}`);
+    if(e){
+      e.setAttribute('stroke',(ls||ps)?'#1e3a5f':'#111e2e');
+      e.setAttribute('opacity',(ls||ps)?'.4':'.2');
+    }
+  });
+
+  // Data Source nodes
+  dataSrc.forEach(n=>{
+    const on=ls||ps;
+    const r=document.getElementById('ds-r-'+n.id);
+    if(on){r.setAttribute('fill','#0d1a28');r.setAttribute('stroke','#1e3a5f');}
+    else{r.setAttribute('fill','#080e1a');r.setAttribute('stroke','#111d2c');}
+  });
+
+  // Scorecard panel - update module highlights
+  document.querySelectorAll('.sc-mod').forEach(el=>{
+    el.style.borderColor='transparent';
+  });
+  if(ls){
+    document.querySelectorAll('.sc-mod.ls-used').forEach(el=>el.style.borderColor='#1e40af');
+  }
+  if(ps){
+    document.querySelectorAll('.sc-mod.ps-used').forEach(el=>el.style.borderColor='#92400e');
+  }
+  if(ls&&ps){
+    document.querySelectorAll('.sc-mod.ls-used.ps-used').forEach(el=>el.style.borderColor='#5b21b6');
+  }
+}
+
+function toggle(s){st[s]=!st[s];update();}
+
+function toggleSc(){
+  const btn=document.getElementById('sc-toggle');
+  const panel=document.getElementById('sc-panel');
+  btn.classList.toggle('open');
+  panel.classList.toggle('open');
+}
+
+build();
+</script>
+</body>
+</html>
