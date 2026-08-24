@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actionable Insights — Midasia Fashions Ltd</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    color: #e2e8f0;
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    padding: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+  .page-title .icon { font-size: 16px; }
+  .page-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #475569;
+  }
+  .badge-count {
+    background: #f59e0b20;
+    color: #f59e0b;
+    border: 1px solid #f59e0b40;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── INSIGHT ROW ── */
+  .insight-row {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-left: 3px solid;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .insight-row.high    { border-left-color: #f59e0b; }
+  .insight-row.threat  { border-left-color: #ef4444; }
+  .insight-row.medium  { border-left-color: #64748b; }
+
+  /* ── ROW HEADER ── */
+  .row-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-bottom: 1px solid #1e293b;
+    background: #0d1117;
+    flex-wrap: wrap;
+  }
+  .badge-level {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-level.high   { background: #f59e0b25; color: #f59e0b; border: 1px solid #f59e0b40; }
+  .badge-level.threat { background: #ef444425; color: #ef4444; border: 1px solid #ef444440; }
+  .badge-level.medium { background: #64748b25; color: #94a3b8; border: 1px solid #64748b40; }
+
+  .badge-cat {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .cat-logistics { background: #3b82f620; color: #60a5fa; }
+  .cat-commerce  { background: #f59e0b15; color: #fbbf24; }
+  .cat-prod      { background: #8b5cf620; color: #a78bfa; }
+  .cat-sourcing  { background: #22c55e20; color: #4ade80; }
+  .cat-compliance{ background: #ec489920; color: #f472b6; }
+  .cat-tariff    { background: #f9731620; color: #fb923c; }
+
+  .row-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #f1f5f9;
+    flex: 1;
+    min-width: 200px;
+  }
+  .row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .share-btn {
+    background: none;
+    border: none;
+    color: #475569;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 4px;
+  }
+  .share-btn:hover { color: #f59e0b; }
+  .view-btn {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: none;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .view-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+
+  /* ── 3-COLUMN GRID ── */
+  .row-body {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1fr;
+  }
+  .col {
+    padding: 12px 16px;
+    border-right: 1px solid #1e293b;
+  }
+  .col:last-child { border-right: none; }
+  .col-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #475569;
+    margin-bottom: 7px;
+  }
+  .col-content {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.65;
+  }
+  .col-content strong { color: #e2e8f0; font-weight: 600; }
+  .col-content .num  {
+    display: inline-block;
+    background: #1e293b;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0px 5px;
+    border-radius: 3px;
+    margin: 0 1px;
+  }
+
+  /* impact chain */
+  .chain { color: #94a3b8; }
+  .chain .node { color: #e2e8f0; font-weight: 600; }
+  .chain .arrow { color: #475569; margin: 0 2px; }
+  .chain .impact-val {
+    display: inline-block;
+    background: #ef444420;
+    color: #ef4444;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 2px;
+  }
+  .chain .opportunity-val {
+    display: inline-block;
+    background: #22c55e20;
+    color: #22c55e;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 2px;
+  }
+  .chain .caution-val {
+    display: inline-block;
+    background: #f59e0b20;
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 2px;
+  }
+
+  /* action bullets */
+  .actions-list { display: flex; flex-direction: column; gap: 7px; }
+  .action-bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+  .action-bullet strong { color: #e2e8f0; }
+  .action-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 0px;
+  }
+  .action-label {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .lbl-logistics  { background: #3b82f615; color: #60a5fa; }
+  .lbl-commerce   { background: #f59e0b15; color: #fbbf24; }
+  .lbl-sourcing   { background: #22c55e15; color: #4ade80; }
+  .lbl-compliance { background: #ec489915; color: #f472b6; }
+  .lbl-air8       { background: #f9731615; color: #fb923c; }
+
+  @media (max-width: 800px) {
+    .row-body { grid-template-columns: 1fr; }
+    .col { border-right: none; border-bottom: 1px solid #1e293b; }
+    .col:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-title">
+    <span class="icon">💡</span>
+    Actionable Insights
+  </div>
+  <div class="page-right">
+    <span class="badge-count">3 HIGH</span>
+    <span>Calculation layer · KB + Market Intelligence · Aug 24, 2026</span>
+    <span>· Midasia Fashions Ltd</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     ROW 1 — 美国关税框架
+     ════════════════════════════════════════════ -->
+<div class="insight-row high">
+  <div class="row-header">
+    <span class="badge-level high">高</span>
+    <span class="badge-cat cat-tariff">关税</span>
+    <span class="badge-cat cat-commerce">商务</span>
+    <span class="row-title">🇺🇸 美国劳工关税新框架 — 孟加拉税率洼地形成，机遇窗口打开</span>
+    <div class="row-actions">
+      <button class="share-btn" title="分享">↗</button>
+      <button class="view-btn">View Details</button>
+    </div>
+  </div>
+  <div class="row-body">
+    <!-- 新闻 -->
+    <div class="col">
+      <div class="col-label">新闻</div>
+      <div class="col-content">
+        美国 <strong>FL301</strong> 于 2026-07-24 正式生效，孟加拉服装对美有效关税升至 <strong>25.6%</strong>（含强迫劳动合规附加税）。中国 <strong>35.6%</strong>，越南 <strong>28.1%</strong>——孟加拉首次形成双重税率洼地，美国买家正在重新评估采购矩阵。
+      </div>
+    </div>
+    <!-- 原因 -->
+    <div class="col">
+      <div class="col-label">原因（影响）</div>
+      <div class="col-content chain">
+        <div>美国买家从越南/中国转单 10%
+          <span class="arrow">→</span> Midasia 年增量 <span class="opportunity-val">+$192–320K</span>
+        </div>
+        <div style="margin-top:5px;">固定价合同情景：每 $100 FOB 关税敞口 $25.6
+          <span class="arrow">→</span> 若买家不分摊
+          <span class="arrow">→</span> 年利润压缩 <span class="impact-val">$48–80K</span>
+        </div>
+        <div style="margin-top:5px; color: #64748b;">缺口：合同类型未确认 · UFLPA 溯源文件缺失 · 产能弹性 UNKNOWN</div>
+      </div>
+    </div>
+    <!-- 行动 -->
+    <div class="col">
+      <div class="col-label">行动</div>
+      <div class="actions-list">
+        <div class="action-bullet">
+          <span class="action-label lbl-commerce">商务</span>
+          <span>向美国买家（Kontoor/PVH）发 <strong>Landed Cost Deck</strong>，主动展示 BD 相较 VN/CN 的成本优势，推动订单转移。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-compliance">合规</span>
+          <span>准备 <strong>UFLPA 文件包</strong>：棉花原产地证明 + BSCI 审核报告，本月内完成。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-air8">Air8</span>
+          <span>如需承担关税成本，OBF 融资覆盖现金流缺口（约 $46–58K，90 天账期）。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     ROW 2 — 供应商关闭潮
+     ════════════════════════════════════════════ -->
+<div class="insight-row threat">
+  <div class="row-header">
+    <span class="badge-level threat">威胁 · 高</span>
+    <span class="badge-cat cat-sourcing">采购</span>
+    <span class="badge-cat cat-logistics">物流</span>
+    <span class="row-title">🏭 孟加拉 RMG 工厂关闭潮 — 布料断供，最早 8 月初出现断料</span>
+    <div class="row-actions">
+      <button class="share-btn" title="分享">↗</button>
+      <button class="view-btn">View Details</button>
+    </div>
+  </div>
+  <div class="row-body">
+    <!-- 新闻 -->
+    <div class="col">
+      <div class="col-label">新闻</div>
+      <div class="col-content">
+        孟加拉 2024–2026 年共 <strong>457 家工厂关闭</strong>，其中 <strong>170 家</strong>为纺织/RMG。主因：订单不足（205 家）、资金困难（190 家）、政治动荡（51 家）。H1 FY25-26 RMG 出口同比下滑 <strong>2.63%</strong>。布料供应商生态持续萎缩。
+      </div>
+    </div>
+    <!-- 原因 -->
+    <div class="col">
+      <div class="col-label">原因（影响）</div>
+      <div class="col-content chain">
+        <div>Midasia 60% 布料本地采购
+          <span class="arrow">→</span> <span class="node">2 家核心供应商财务困难</span>
+          <span class="arrow">→</span> 库存 <span class="caution-val">45 天</span>
+        </div>
+        <div style="margin-top:5px;">若任意一家停产
+          <span class="arrow">→</span> 断料最早 <span class="node">2026-08-08</span>
+          <span class="arrow">→</span> PO#2614 / PO#2721（交期 09-15）延误 3–6 周
+          <span class="arrow">→</span> OTP 违约 <span class="impact-val">$16–30K</span>
+        </div>
+        <div style="margin-top:5px; color: #64748b;">进口替代需 60–90 天 · EU 买家白名单变更需重新通知</div>
+      </div>
+    </div>
+    <!-- 行动 -->
+    <div class="col">
+      <div class="col-label">行动</div>
+      <div class="actions-list">
+        <div class="action-bullet">
+          <span class="action-label lbl-sourcing">采购</span>
+          <span><strong>48h 内</strong>联系 2 家高风险布料供应商，要求书面确认当前产能状态（正常/减产/停产计划）。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-logistics">物流</span>
+          <span>启动中国/越南替代布料供应商<strong>快速尽调</strong>（3 天内 Basic KYB），预锁 1 家备选。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-commerce">商务</span>
+          <span>准备 EU 买家<strong>变更预警通知</strong>草稿，确认风险后 24h 内发送 H&M / Next / Primark。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-air8">Air8</span>
+          <span>ARP 预付融资建立 90 天安全库存（约 $80–120K，解决进口备货资金占用）。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     ROW 3 — EU CSDDD + EUDR
+     ════════════════════════════════════════════ -->
+<div class="insight-row high">
+  <div class="row-header">
+    <span class="badge-level high">高</span>
+    <span class="badge-cat cat-compliance">合规</span>
+    <span class="badge-cat cat-commerce">商务</span>
+    <span class="row-title">🇪🇺 EU CSDDD + EUDR 合规截止 — $940K 欧盟订单面临冻结风险</span>
+    <div class="row-actions">
+      <button class="share-btn" title="分享">↗</button>
+      <button class="view-btn">View Details</button>
+    </div>
+  </div>
+  <div class="row-body">
+    <!-- 新闻 -->
+    <div class="col">
+      <div class="col-label">新闻</div>
+      <div class="col-content">
+        <strong>EUDR</strong>（欧盟森林砍伐法规）大型运营商截止日期 <strong>2026-12-30</strong>；<strong>CSDDD</strong> 要求全供应链劳工风险尽职调查；<strong>ESPR</strong> 2027 年全面实施，纺织品需提供可追溯性 + 再生材料证明。H&M、Next、Primark 均已升级对 Tier-3/4 供应商的合规文件要求。
+      </div>
+    </div>
+    <!-- 原因 -->
+    <div class="col">
+      <div class="col-label">原因（影响）</div>
+      <div class="col-content chain">
+        <div>Midasia EU 出口 <span class="caution-val">$1.34M（42%）</span>
+          <span class="arrow">→</span> 无 CSDDD 报告 · 无 Higg FEM · GOTS 覆盖率 <span class="node">30%</span>
+        </div>
+        <div style="margin-top:5px;">若 Q4 前未提交合规路线图
+          <span class="arrow">→</span> H&M / Next / Primark 暂停新订单审核
+          <span class="arrow">→</span> 受影响金额 <span class="impact-val">$940K</span>
+        </div>
+        <div style="margin-top:5px; color: #64748b;">
+          先行合规情景：Q4 完成 → 获"首选供应商"资格 → 锁定 2027 年优先分配权 <span class="opportunity-val">先发优势</span>
+        </div>
+      </div>
+    </div>
+    <!-- 行动 -->
+    <div class="col">
+      <div class="col-label">行动</div>
+      <div class="actions-list">
+        <div class="action-bullet">
+          <span class="action-label lbl-compliance">合规</span>
+          <span>本周委托 <strong>Bureau Veritas / SGS</strong> 启动 CSDDD + EUDR 联合差距评估（4–6 周，约 $8–12K）。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-sourcing">采购</span>
+          <span>启动 <strong>SLCP 自评</strong>（3–4 天）+ 预约 Higg FEM 验证机构（排期 8–10 周，需提前）。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-commerce">商务</span>
+          <span>主动向 H&M / Next / Primark 发送<strong>合规路线图信函</strong>，争取 2026-10-01 前获"合规中"认定。</span>
+        </div>
+        <div class="action-bullet">
+          <span class="action-label lbl-air8">Air8</span>
+          <span>OBF 融资覆盖认证费用（$13–20K，90 天账期），降低前期资金压力。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding: 16px 0; color: #1e2a3a; font-size: 11px; text-align: center;">
+  Air8 Intelligence · Midasia Fashions Ltd · 2026-08-24 · 3 HIGH signals · CONFIDENTIAL
+</div>
+
+</body>
+</html>
