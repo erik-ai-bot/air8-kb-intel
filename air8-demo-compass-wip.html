@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air8 Demo · Part 1 — A8 Compass + WIP</title>
+<style>
+
+  :root{
+    --bg:#0b1220; --card:#121b2e; --card2:#0d1526; --line:#1e2a41; --line2:#2a3a5a;
+    --txt:#e6edf7; --sub:#8b9bb4; --dim:#5b6b85;
+    --green:#2dd4a7; --amber:#f5a623; --red:#f0546c; --blue:#3aa7f0; --purple:#a78bfa; --cyan:#38cfe0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0a0f1a;color:var(--txt);font-family:"Inter","Segoe UI",sans-serif;font-size:13px;padding:0 0 40px}
+  .g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.b{color:var(--blue)}.c{color:var(--cyan)}
+  .sub{color:var(--sub)}.dim{color:var(--dim)}
+  .badge{font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+  .bd-g{background:transparent;color:var(--dim);border:1px solid var(--line2)}
+  .bd-a{background:rgba(245,166,35,.15);color:var(--amber)}
+  .bd-r{background:rgba(240,84,108,.16);color:var(--red)}
+  .bd-b{background:transparent;color:var(--dim);border:1px solid var(--line2)}
+  .bd-c{background:transparent;color:var(--dim);border:1px solid var(--line2)}
+
+  /* ===== client portal menu ===== */
+  .portal{display:flex;align-items:center;gap:4px;background:#0d1424;border-bottom:1px solid var(--line);padding:0 22px;height:48px;position:sticky;top:0;z-index:45}
+  .portal .logo{font-weight:800;font-size:15px;color:var(--txt);margin-right:18px;letter-spacing:.3px}
+  .portal .logo span{color:var(--blue)}
+  .pitem{font-size:12px;color:var(--sub);padding:14px 13px;cursor:pointer;border-bottom:2px solid transparent}
+  .pitem:hover{color:var(--txt)}
+  .pitem.on{color:var(--txt);border-bottom-color:var(--blue);font-weight:600}
+  .portal .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .portal .bell{position:relative;cursor:pointer;font-size:15px}
+  .portal .bell::after{content:'3';position:absolute;top:-4px;right:-7px;background:var(--red);color:#08111f;font-size:8px;font-weight:800;border-radius:8px;padding:1px 4px}
+  .portal .user{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--sub);cursor:pointer}
+  .portal .user .av{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#08111f;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center}
+
+  .wrap{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:12px;padding:14px 22px 0}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .top h1{font-size:17px;font-weight:700}
+  .top .s{font-size:11px;color:var(--sub);margin-top:2px}
+  .conf{font-size:11px;color:var(--sub);cursor:pointer;background:var(--card);border:1px solid rgba(245,166,35,.4);padding:7px 13px;border-radius:9px;white-space:nowrap}
+  .conf b{color:var(--amber)}
+
+  /* hero insights */
+  .hero{background:linear-gradient(180deg,rgba(240,84,108,.07),rgba(18,27,46,0));border:1px solid rgba(240,84,108,.35);border-radius:14px;padding:12px 16px}
+  .hh{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .hh b{font-size:14px}
+  .alerts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .alert{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:11px;padding:11px 14px;cursor:pointer;transition:.13s;display:flex;flex-direction:column;gap:6px}
+  .alert:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+  .alert.amb{border-left-color:var(--amber)}
+  .alert.cyn{border-left-color:var(--cyan)}
+  .alert .ttl{font-weight:600;font-size:12.5px;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+  .alert .impact{font-size:11px;color:var(--sub);line-height:1.5}
+  .alert .impact b{color:var(--txt)}
+  .money{color:var(--red);font-weight:700}
+  .alert.amb .money{color:var(--amber)}
+  .alert.cyn .money{color:var(--cyan)}
+  .mlb{display:inline-block;font-size:8px;font-weight:800;letter-spacing:.6px;color:var(--dim);border:1px solid var(--line2);border-radius:4px;padding:0 4px;margin-right:4px;vertical-align:1px}
+  .abtn{font-size:10.5px;font-weight:700;color:#08111f;background:var(--red);border-radius:7px;padding:4px 11px;display:inline-block}
+  .alert.amb .abtn{background:var(--amber)}
+  .alert.cyn .abtn{background:var(--cyan)}
+
+  .qa{display:flex;gap:9px;overflow-x:auto}
+  .qab{flex:1;min-width:126px;display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 12px;cursor:pointer;white-space:nowrap;transition:.13s}
+  .qab:hover{border-color:var(--blue);transform:translateY(-1px)}
+  .qab .qt{font-size:11.5px;font-weight:600}
+  .qab .qd{font-size:9.5px;color:var(--sub)}
+  .qab.hot{border-color:var(--line)}
+
+  /* panels */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px 14px}
+  .panel.full{grid-column:1/-1}
+  .panel.full .b,.panel.full .g,.panel.full .c{color:var(--txt)}
+  .panel.full b.r{color:var(--red)}.panel.full b.a{color:var(--amber)}
+  .ph{display:flex;align-items:center;gap:9px;margin-bottom:10px;cursor:pointer}
+  .ph h2{font-size:13.5px;font-weight:600}
+  .ph .st{font-size:10.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ph .go{margin-left:auto;font-size:11px;color:var(--dim);white-space:nowrap}
+  .ph:hover .go{color:var(--blue)}
+  .wide{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:9px 12px;cursor:pointer;transition:.13s;margin-bottom:9px}
+  .wide:hover{border-color:var(--line2)}
+  .wide.bad{border-color:rgba(240,84,108,.5)}
+  .wide.warn{border-color:rgba(245,166,35,.4)}
+  .k{font-size:9.5px;font-weight:700;letter-spacing:.7px;color:var(--sub);display:flex;justify-content:space-between;margin-bottom:5px}
+
+  .drow{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .d{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:12px 8px 10px;text-align:center;cursor:pointer;transition:.13s;position:relative;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .d:hover{border-color:var(--line2);transform:translateY(-1px)}
+  .d .rw{position:relative;width:62px;height:62px}
+  .d svg{transform:rotate(-90deg)}
+  .d .cv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+  .d .cv small{font-size:9px;color:var(--dim);font-weight:600}
+  .d .nm{font-size:9.5px;font-weight:700;letter-spacing:.6px}
+  .d .ds{font-size:9.5px;color:var(--sub);line-height:1.3;min-height:28px}
+  .d .flag{position:absolute;top:8px;right:9px;font-size:10px}
+  .d.warn{border-color:rgba(245,166,35,.45)}
+  .d.bad{border-color:rgba(240,84,108,.5)}
+  .d.ok{opacity:.68}.d.ok:hover{opacity:1}
+
+  /* ghost w/ blurred teaser preview (before-data state) */
+  .d.ghost{border:1px dashed rgba(139,155,180,.4);background:transparent;overflow:hidden}
+  .d.ghost:hover{background:rgba(58,167,240,.05);border-color:var(--blue)}
+  .d.ghost .nm{color:var(--sub)}
+  .d.ghost .act{font-size:9.5px;font-weight:700;color:var(--amber)}
+  .teaser{position:absolute;inset:0;opacity:.16;filter:blur(2.5px);pointer-events:none}
+
+  /* multi-PO WIP strip — segmented: done=solid · current=bright+glow · future=hollow */
+  .postrip{display:flex;flex-direction:column;gap:6px}
+  .porow{display:flex;align-items:center;gap:8px;font-size:10px}
+  .porow .pid{width:118px;flex:none;font-weight:700;font-size:10.5px}
+  .porow .pid small{display:block;font-weight:400;color:var(--dim);font-size:8.5px}
+  .psegs{flex:1;display:flex;gap:3px}
+  .pseg{flex:1;height:13px;border-radius:4px;border:1px solid var(--line2);background:transparent;position:relative}
+  .pseg.done{background:var(--green);border-color:var(--green);opacity:.75}
+  .pseg.cur{background:var(--blue);border-color:var(--blue);box-shadow:0 0 8px rgba(58,167,240,.5)}
+  .pseg.cur.half{background:linear-gradient(90deg,var(--blue) 55%,transparent 55%)}
+  .pseg.blocked{background:var(--red);border-color:var(--red);animation:pulse 1.6s infinite}
+  .pseg.warn3{background:var(--amber);border-color:var(--amber);box-shadow:0 0 8px rgba(245,166,35,.4)}
+  @keyframes pulse{0%,100%{box-shadow:0 0 3px rgba(240,84,108,.5)}50%{box-shadow:0 0 10px rgba(240,84,108,.95)}}
+  .porow .pst{width:104px;flex:none;text-align:right;font-size:9.5px;font-weight:700}
+  .stageaxis{display:flex;margin-left:126px;margin-right:112px;font-size:8px;color:var(--dim);padding:0 2px}
+  .stageaxis span{flex:1;text-align:center}
+
+  /* defect bars */
+  .defbar{display:flex;align-items:center;gap:8px;font-size:10px;padding:3px 0}
+  .defbar .dn{width:96px;flex:none;color:var(--sub)}
+  .defbar .db{flex:1;height:8px;background:#182640;border-radius:4px;overflow:hidden}
+  .defbar .db i{display:block;height:100%;border-radius:4px}
+  .defbar .dv{width:34px;text-align:right;font-weight:700;font-size:9.5px}
+
+  /* pay dots */
+  .paydots{display:flex;gap:3px}
+  .paydots i{width:7px;height:7px;border-radius:50%}
+  .toprow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(30,42,65,.6);font-size:11px}
+  .toprow:last-child{border:none}
+  .toprow .gr{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#08111f;flex:none}
+  .stack{display:flex;height:10px;border-radius:5px;overflow:hidden;gap:1px;margin:4px 0 3px}
+  .stack i{display:block;height:100%}
+  .legend{display:flex;gap:8px;font-size:9px;color:var(--sub);flex-wrap:wrap}
+  .legend b{color:var(--txt)}
+  .ld{width:7px;height:7px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle}
+
+  /* insight drawer (unified: read = drawer, work = navigate) */
+  .scrim{position:fixed;inset:0;background:rgba(4,8,16,.45);z-index:55;display:none}
+  #cfgdrawer{z-index:58;width:490px;right:-500px}
+  .scnrow{padding:8px 0;border-bottom:1px solid rgba(30,42,65,.6)}
+  .scntop{display:flex;justify-content:space-between;align-items:center}
+  .rcpts{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}
+  .tg2{width:34px;height:19px;border-radius:10px;background:var(--line2);position:relative;cursor:pointer;flex:none;transition:.15s;display:inline-block}
+  .tg2.on{background:var(--green)}
+  .tg2::after{content:'';position:absolute;top:2.5px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.15s}
+  .tg2.on::after{left:17px}
+  .ctc2{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(30,42,65,.6);font-size:11.5px}
+  .ctc2 b{width:118px;flex:none}
+  .ctc2 .ctv2{flex:1;color:var(--sub);font-size:10.5px}
+  .ctc2 select,.ctc2 input{background:var(--card2);border:1px solid var(--line2);border-radius:7px;color:var(--txt);font-size:10.5px;padding:5px 8px;outline:none;font-family:inherit}
+  .ctc2 select:focus,.ctc2 input:focus{border-color:var(--blue)}
+  .ceb{padding:3px 10px;font-size:10px}
+  #cfgdrawer.open{right:0}
+  .scrim.show{display:block}
+  .drawer{position:fixed;top:0;right:-480px;width:470px;height:100vh;background:var(--card);border-left:1px solid var(--line2);z-index:60;transition:right .25s;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+  .drawer.open{right:0}
+  .dhead{padding:14px 18px;border-bottom:1px solid var(--line)}
+  .dhead .drow2{display:flex;align-items:center;gap:8px}
+  .dhead h3{font-size:14px;flex:1}
+  .dhead .x{cursor:pointer;color:var(--dim);font-size:17px;padding:2px 6px}
+  .dhead .x:hover{color:var(--txt)}
+  .dhead .dtags{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+  .dbody{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+  .dsec{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:11.5px;line-height:1.6;color:var(--sub)}
+  .dsec b{color:var(--txt)}
+  .dsec .dh{font-size:9px;font-weight:800;letter-spacing:.7px;margin-bottom:5px}
+  .dfoot{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+  .dbtn{font-size:11px;font-weight:700;padding:8px 15px;border-radius:9px;cursor:pointer;border:none}
+  .dbtn.pri{background:var(--red);color:#08111f}
+  .dbtn.nav{background:rgba(58,167,240,.14);border:1px solid rgba(58,167,240,.4);color:var(--blue)}
+  .dbtn.sec{background:transparent;border:1px solid var(--line2);color:var(--sub)}
+  /* mini pipeline (simple production) */
+  .pipe{display:flex;align-items:center}
+  .pnode{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+  .pnode .c1{width:13px;height:13px;border-radius:50%;border:2px solid #3d7f6f;background:#3d7f6f}
+  .pnode.gate .c1{border-radius:3px;transform:rotate(45deg)}
+  .pnode.warn .c1{border-color:var(--amber);background:var(--amber)}
+  .pnode.late .c1{border-color:var(--red);background:var(--red);animation:pulse2 1.6s infinite}
+  @keyframes pulse2{0%,100%{box-shadow:0 0 4px rgba(240,84,108,.5)}50%{box-shadow:0 0 12px rgba(240,84,108,.95)}}
+  .pnode.todo .c1{border-color:var(--line2);background:transparent}
+  .pnode .lb{font-size:8px;color:var(--sub);margin-top:4px;white-space:nowrap}
+  .pnode.late .lb{color:var(--red);font-weight:700}
+  .pnode.warn .lb{color:var(--amber)}
+  .plink{height:2px;flex:1;background:var(--line2);margin:0 2px 13px}
+  .plink.done{background:#3d7f6f}
+
+  /* insight drawer: calc chain (v5c structure) */
+  .calcstep{background:#0a1322;border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin-top:7px;font-size:11px;color:var(--sub);line-height:1.5}
+  .calcstep b{color:var(--txt)}
+  .calcstep .ct{font-size:9px;font-weight:800;letter-spacing:.5px;display:block;margin-bottom:3px}
+  .calcf{font-family:ui-monospace,Consolas,monospace;font-size:10px;background:rgba(58,167,240,.07);border:1px solid rgba(58,167,240,.25);border-radius:6px;padding:5px 8px;margin-top:6px;color:var(--cyan);line-height:1.45}
+  .calcarrow{text-align:center;color:var(--dim);font-size:12px;margin-top:6px}
+  .whatrow{display:flex;gap:9px;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-top:7px;font-size:11px;line-height:1.5;color:var(--sub)}
+  .whatrow b{color:var(--txt)}
+  .whatrow .wn{width:20px;height:20px;border-radius:50%;background:#182640;color:var(--blue);font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px}
+  .whatrow .wd{color:var(--amber);font-weight:700;white-space:nowrap;font-size:10px}
+  .confline{font-size:9px;color:var(--dim);margin-top:9px;line-height:1.5}
+  /* right insights rail (collapsible, always discoverable) */
+  /* dynamic island — top-center floating capsule */
+  .isl{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:54;display:flex;align-items:center;gap:10px;background:rgba(9,13,24,.94);backdrop-filter:blur(16px);border:1px solid rgba(240,84,108,.45);border-radius:24px;padding:8px 16px 8px 12px;cursor:pointer;box-shadow:0 10px 34px rgba(0,0,0,.6),0 0 22px rgba(240,84,108,.12);transition:transform .18s,box-shadow .18s;min-width:430px;max-width:560px}
+  .isl:hover{transform:translateX(-50%) scale(1.03);box-shadow:0 14px 40px rgba(0,0,0,.7),0 0 30px rgba(240,84,108,.22)}
+  .isl .pd{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulseT 1.6s infinite;flex:none}
+  .isl .sev{font-size:9.5px;font-weight:800;letter-spacing:.8px;color:var(--red);white-space:nowrap;flex:none}
+  .isl .sep{width:1px;height:16px;background:var(--line2);flex:none}
+  .isl .tick{position:relative;height:16px;flex:1;overflow:hidden;min-width:0}
+  .isl .ti{position:absolute;inset:0;opacity:0;transition:opacity .45s;font-size:11.5px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:16px}
+  .isl .ti.on{opacity:1}
+  .isl .ti b{color:var(--red)}
+  .isl .ti:nth-child(2) b{color:var(--red)}
+  .isl .ti:nth-child(3) b{color:var(--amber)}
+  .isl .dots2{display:flex;gap:4px;flex:none}
+  .isl .dots2 i{width:4px;height:4px;border-radius:50%;background:#2a3a5a;transition:.3s}
+  .isl .dots2 i.on{background:var(--red);width:12px;border-radius:3px}
+  .isl .ct{min-width:19px;height:19px;border-radius:10px;background:var(--red);color:#08111f;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px;flex:none}
+  .isl .chev{color:var(--dim);font-size:11px;flex:none}
+
+  /* critical card treatment — the one card that must be seen first */
+  .d.crit2{border-color:var(--red);animation:critGlow 2s infinite}
+  @keyframes critGlow{0%,100%{box-shadow:0 0 6px rgba(240,84,108,.25)}50%{box-shadow:0 0 22px rgba(240,84,108,.55)}}
+  .ctag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--red);color:#08111f;font-size:8.5px;font-weight:800;letter-spacing:.6px;padding:2.5px 10px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 10px rgba(240,84,108,.5)}
+  .wtag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--amber);color:#08111f;font-size:8.5px;font-weight:800;letter-spacing:.6px;padding:2.5px 10px;border-radius:10px;white-space:nowrap}
+    .insrail{position:fixed;top:0;right:-380px;width:370px;height:100vh;background:var(--card);border-left:1px solid var(--line2);z-index:56;transition:right .25s;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+  .insrail.open{right:0}
+  .irh{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .irh h3{font-size:13.5px;flex:1}
+  .irh .x{cursor:pointer;color:var(--dim);font-size:16px;padding:2px 6px}
+  .irb{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .irf{padding:10px 16px;border-top:1px solid var(--line);font-size:10.5px;color:var(--sub);display:flex;justify-content:space-between;align-items:center}
+  .irf span{color:var(--blue);cursor:pointer;font-weight:700}
+  @media(max-width:1050px){.grid,.alerts{grid-template-columns:1fr}}
+
+/* ================= WIP page styles ================= */
+#pageWIP{display:none;padding:14px 18px 90px}
+
+  
+  *{box-sizing:border-box;margin:0;padding:0}
+  #pageWIP .wrap{max-width:1400px;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:18px 22px}
+  .g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.b{color:var(--blue)}.p{color:var(--purple)}.c{color:var(--cyan)}
+  .sub{color:var(--sub)}.dim{color:var(--dim)}
+  .badge{font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+  .bd-g{background:rgba(45,212,167,.13);color:var(--green)}
+  .bd-a{background:rgba(245,166,35,.15);color:var(--amber)}
+  .bd-r{background:rgba(240,84,108,.16);color:var(--red)}
+  .bd-b{background:rgba(58,167,240,.14);color:var(--blue)}
+  .bd-p{background:rgba(167,139,250,.14);color:var(--purple)}
+  .bd-c{background:rgba(56,207,224,.13);color:var(--cyan)}
+
+  .hd{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .hd h1{font-size:17px;font-weight:700}
+  .hd .cat{background:rgba(56,207,224,.13);color:var(--cyan);font-size:10px;font-weight:700;padding:3px 11px;border-radius:14px}
+  .hd .right{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:12px;color:var(--sub)}
+  .hd .right b{color:var(--txt);font-size:14px}
+  .kbtag{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid rgba(45,212,167,.4);border-radius:10px;padding:6px 12px;font-size:10.5px;cursor:pointer}
+  .kbtag:hover{border-color:var(--green)}
+  .back{font-size:11px;color:var(--sub);cursor:pointer;border:1px solid var(--line2);border-radius:8px;padding:5px 11px}
+
+  /* KPI strip */
+  .kpis{display:flex;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  .kpi{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:7px 13px;cursor:pointer}
+  .kpi.warn{border-color:rgba(245,166,35,.4)}
+  .kpi.crit{border-color:rgba(240,84,108,.45)}
+  .kpi .rw{position:relative;width:44px;height:44px;flex:none}
+  .kpi svg{transform:rotate(-90deg)}
+  .kpi .cv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800}
+  .kpi .kn{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--sub)}
+  .kpi .kd{font-size:10px;color:var(--txt);font-weight:600;margin-top:1px}
+
+  /* manual upload invite (pre-upload only) */
+  #mninvite{display:none}
+  #pageWIP.noman #mninvite{display:flex}
+  .mninvite{align-items:center;gap:12px;background:linear-gradient(90deg,rgba(245,166,35,.09),rgba(13,21,38,.4));border:1px dashed rgba(245,166,35,.55);border-radius:12px;padding:10px 16px;margin:8px 0;cursor:pointer;transition:.15s}
+  .mninvite:hover{background:rgba(245,166,35,.14)}
+  .mninvite .big{font-size:20px}
+  .mninvite .t1{font-size:12.5px;font-weight:700}
+  .mninvite .t2{font-size:10.5px;color:var(--sub);margin-top:2px}
+  .mninvite .cta{margin-left:auto;background:var(--amber);color:#08111f;font-weight:800;font-size:11px;border-radius:9px;padding:7px 15px;white-space:nowrap}
+  /* toast */
+  #toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid rgba(45,212,167,.5);border-radius:11px;padding:10px 18px;font-size:12px;z-index:90;display:none;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .fbar{display:flex;gap:7px;align-items:center;margin:8px 0;flex-wrap:wrap}
+  .fchip{font-size:10px;font-weight:700;padding:4px 12px;border-radius:16px;border:1px solid var(--line2);color:var(--sub);cursor:pointer;background:var(--card)}
+  .fchip.on{border-color:var(--blue);color:var(--txt);background:rgba(58,167,240,.12)}
+  .fchip .n{font-weight:800}
+
+  /* buyer sections */
+  .prodhd{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;margin-top:12px}
+  .prodhd:hover{border-color:var(--line2)}
+  .prodhd .pt1{font-size:12.5px;font-weight:700}
+  .prodhd .pt2{font-size:10px;color:var(--sub)}
+  .prodhd .caret{margin-left:auto;color:var(--dim);transition:.2s;font-size:12px}
+  .prodsec.open .prodhd .caret{transform:rotate(90deg)}
+  .prodsec .secbody{display:none;margin-top:8px}
+  .prodsec.open .secbody{display:block}
+  .prodsec.open .prodhd{border-color:rgba(58,167,240,.4)}
+
+  .flowbox{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:20px 14px 16px;overflow-x:auto}
+  .flow{display:flex;align-items:stretch;min-width:1240px}
+  .fcard{background:var(--card);border:1px solid var(--line2);border-radius:11px;padding:8px 10px;position:relative;flex:1;min-width:118px;cursor:pointer;transition:.15s}
+  .fcard:hover{border-color:var(--blue)}
+  .fcard.dimmed{opacity:.3}
+  .fcard .nm{font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:5px}
+  .fcard .nm .drag{color:var(--dim);font-size:9px;cursor:grab}
+  .fcard .mrow{font-size:9px;color:var(--sub);margin-top:4px}
+  .fcard .tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+  .ftag{font-size:7.5px;font-weight:800;letter-spacing:.4px;padding:2px 6px;border-radius:4px}
+  .ftag.ext{background:rgba(245,166,35,.14);color:var(--amber);border:1px dashed rgba(245,166,35,.4)}
+  .ftag.inh{background:rgba(58,167,240,.12);color:var(--blue)}
+  .ftag.lab{background:rgba(167,139,250,.15);color:var(--purple)}
+  .ftag.btl{background:rgba(240,84,108,.15);color:var(--red)}
+  .ftag.gate{background:rgba(56,207,224,.13);color:var(--cyan)}
+  .fcard.risk{border-color:var(--red);box-shadow:0 0 14px rgba(240,84,108,.15)}
+  .fcard.gatec{border-style:dashed;border-color:rgba(56,207,224,.45)}
+  .fcard.extc{border-style:dashed}
+  .fcard .stat{font-size:8.5px;margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .arrow{display:flex;align-items:center;padding:0 4px;color:var(--dim);flex:none}
+  .arrow .plus{width:15px;height:15px;border-radius:50%;background:var(--card);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;margin-left:2px}
+  .arrow .plus:hover{border-color:var(--blue);color:var(--blue)}
+  .newgate{border-color:rgba(245,166,35,.75)!important;box-shadow:0 0 14px rgba(245,166,35,.25)}
+  .newgate .ngtag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--amber);color:#08111f;font-size:7.5px;font-weight:800;letter-spacing:.4px;padding:2px 8px;border-radius:9px;white-space:nowrap}
+  .painhl{border-color:rgba(240,84,108,.8)!important;border-style:dashed!important;box-shadow:0 0 16px rgba(240,84,108,.22)}
+  .painhl .ngtag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--red);color:#08111f;font-size:7.5px;font-weight:800;letter-spacing:.4px;padding:2px 8px;border-radius:9px;white-space:nowrap}
+  .fcard{min-height:116px}
+  .fcard.mini{flex:0 0 auto;min-width:96px;min-height:92px;opacity:.45;padding:7px 8px;background:#0e1626}
+  .fcard.mini .nm{font-size:9px}
+  .fcard.mini .mrow,.fcard.mini .stat{font-size:7.5px}
+  .fcard.mini:hover{opacity:1}
+  .fcard.keyc{min-height:126px;background:#16203a}
+  .fcard.keyc:not(.risk):not(.warnc):not(.gatec){border-color:rgba(232,192,100,.6)}
+  .gtag{position:absolute;top:-9px;right:9px;font-size:7px;font-weight:800;padding:2px 8px;border-radius:9px;letter-spacing:.3px;white-space:nowrap;color:#08111f}
+  .gtag.key{background:var(--red)}
+  .gtag.std{background:var(--amber)}
+  .gtag.pp{background:#e8c064}
+  .fcard.gatec{border-style:dashed}
+  .keytag{position:absolute;top:-9px;left:10px;background:#e8c064;color:#08111f;font-size:7px;font-weight:800;padding:2px 8px;border-radius:9px;letter-spacing:.4px;white-space:nowrap}
+  .ckstrip{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:rgba(232,192,100,.05);border:1px solid rgba(232,192,100,.35);border-radius:11px;padding:8px 13px;margin:2px 0 8px;font-size:10px;color:var(--sub)}
+  .ckstrip .lb{font-size:9px;font-weight:800;letter-spacing:.6px;color:#e8c064}
+  .ckstrip .ck{background:rgba(232,192,100,.1);border:1px solid rgba(232,192,100,.4);border-radius:14px;padding:3px 11px;font-weight:700;color:var(--txt);cursor:pointer}
+  .ckstrip .ck small{color:var(--sub);font-weight:600}
+  .ckstrip .car{color:var(--dim)}
+  .flt{display:inline-block;font-size:7.5px;font-weight:800;border-radius:4px;padding:1.5px 7px;margin-top:5px}
+  .flt.zero{background:rgba(232,192,100,.16);color:#e8c064}
+  .flt.ok{background:rgba(139,155,180,.1);color:var(--sub)}
+  .flt.gate{background:rgba(56,207,224,.1);color:var(--cyan)}
+  .cpk{border-color:rgba(232,192,100,.55)!important}
+  .cpk .kn{color:#e8c064}
+  .dc-gold{border-color:rgba(232,192,100,.55)!important}
+  .dc-gold .dh{color:#e8c064!important}
+  .fcard.painhl{border-color:rgba(245,166,35,.6);box-shadow:0 0 12px rgba(245,166,35,.15)}
+  .postep{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:11px;color:var(--dim);margin-bottom:6px}
+  .postep.doing{color:var(--txt);border-color:rgba(58,167,240,.5)}
+  .postep.done2{color:var(--green);border-color:rgba(45,212,167,.35)}
+  #pageWIP.justbuilt .newgate,#pageWIP.justbuilt .painhl{animation:popin .6s both}
+  .pobar{display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,rgba(58,167,240,.1),rgba(13,21,38,.4));border:1px dashed rgba(58,167,240,.55);border-radius:12px;padding:10px 16px;margin:8px 0;cursor:pointer;transition:.15s}
+  .pobar:hover{background:rgba(58,167,240,.16)}
+  .pobar .cta{margin-left:auto;background:var(--blue);color:#08111f;font-weight:800;font-size:11px;border-radius:9px;padding:7px 15px;white-space:nowrap}
+  .fdel{position:absolute;top:-8px;left:-7px;width:17px;height:17px;border-radius:50%;background:var(--card);border:1px solid rgba(240,84,108,.6);color:var(--red);font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:6}
+  .fcard:hover .fdel{display:flex}
+
+  .nb{position:absolute;top:-9px;right:7px;display:flex;gap:4px}
+  .nbd{min-width:17px;height:17px;border-radius:9px;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;color:#08111f;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .nbd.cr{background:var(--red);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 3px rgba(240,84,108,.5)}50%{box-shadow:0 0 11px rgba(240,84,108,.95)}}
+  .nbd.gp{background:var(--amber)}
+  .nbd.xp{background:var(--purple)}
+  .nbd.ok{background:var(--green)}
+  .nbd.mn{background:var(--cyan)}
+  #pageWIP.noman .nbd.mn,#pageWIP.noman .mnp,#pageWIP.noman #mnchip{display:none}
+  @keyframes popin{0%{transform:scale(0);opacity:0}70%{transform:scale(1.35)}100%{transform:scale(1);opacity:1}}
+  #pageWIP.justparsed .nbd.mn{animation:popin .5s both}
+
+  .pop{display:none}
+  #gpop{position:fixed;width:280px;background:#141f35;border:1px solid var(--line2);border-radius:11px;padding:10px 12px;z-index:65;box-shadow:0 14px 40px rgba(0,0,0,.55);pointer-events:none;opacity:0;transition:opacity .12s}
+  #gpop.show{opacity:1}
+  #gpop .prow{display:flex;gap:7px;font-size:10px;line-height:1.4;padding:4px 0;border-bottom:1px solid rgba(30,42,65,.6)}
+  #gpop .prow:last-child{border:none}
+  #gpop .pdot{width:7px;height:7px;border-radius:50%;flex:none;margin-top:3px}
+  #gpop .pt{color:var(--sub)}
+  #gpop .pt b{color:var(--txt)}
+  #gpop .open{font-size:9.5px;color:var(--blue);text-align:center;padding-top:5px;font-weight:700}
+
+  /* PO trackers */
+  .postrip{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+  .porow{display:flex;align-items:center;gap:8px;font-size:10px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer}
+  .porow:hover{border-color:var(--line2)}
+  .porow.crit2{border-color:rgba(240,84,108,.5)}
+  .porow.warn2{border-color:rgba(245,166,35,.4)}
+  .porow .pid{width:230px;flex:none}
+  .porow .pid b{font-size:11px}
+  .porow .pid small{display:block;color:var(--dim);font-size:8.5px;margin-top:1px}
+  .psegs{flex:1;display:flex;gap:3px}
+  .pseg{flex:1;height:12px;border-radius:4px;border:1px solid var(--line2);background:transparent}
+  .pseg.done{background:var(--green);border-color:var(--green);opacity:.7}
+  .pseg.cur{background:var(--blue);border-color:var(--blue);box-shadow:0 0 8px rgba(58,167,240,.5)}
+  .pseg.blocked{background:var(--red);border-color:var(--red);animation:pulse 1.6s infinite}
+  .pseg.warn3{background:var(--amber);border-color:var(--amber)}
+  .porow .pst{width:170px;flex:none;text-align:right;font-size:9.5px;font-weight:700}
+
+  /* drawer */
+  .wdrwc{position:fixed;top:0;right:-480px;width:470px;height:100vh;background:var(--card);border-left:1px solid var(--line2);z-index:60;transition:right .25s;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+  .wdrwc.open{right:0}
+  .wdh{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .wdh h3{font-size:14px}
+  .wdh .ds2{font-size:10px;color:var(--sub)}
+  .wdh .x{margin-left:auto;cursor:pointer;color:var(--dim);font-size:17px;padding:2px 6px}
+  .wdb{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+  .dcard{background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:11px;padding:11px 13px;font-size:11.5px;line-height:1.55;color:var(--sub)}
+  .dcard.pain{border-left-color:var(--amber)}
+  .dcard.expert{border-left-color:var(--purple)}
+  .dcard.live{border-left-color:var(--blue)}
+  .dcard.crit{border-left-color:var(--red)}
+  .dcard b{color:var(--txt)}
+  .dcard .dh{font-size:9px;font-weight:800;letter-spacing:.6px;margin-bottom:4px}
+  .dcard .acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .sbtn{font-size:10px;font-weight:700;padding:4px 11px;border-radius:7px;cursor:pointer;border:none}
+  .sbtn.pri{background:var(--red);color:#08111f}
+  .sbtn.sec{background:transparent;border:1px solid var(--line2);color:var(--sub)}
+  .bigstat{background:rgba(240,84,108,.12);border:1px solid rgba(240,84,108,.55);border-radius:10px;padding:10px 14px;text-align:center;font-size:15px;font-weight:800;color:var(--red);letter-spacing:.4px;margin-bottom:9px}
+  .bigstat small{display:block;font-size:9.5px;font-weight:600;color:var(--sub);letter-spacing:0;margin-top:3px}
+  .efield{margin-bottom:10px}
+  .efield label{display:block;font-size:9.5px;font-weight:700;letter-spacing:.5px;color:var(--sub);margin-bottom:4px}
+  .efield input{width:100%;background:var(--card2);border:1px solid var(--line2);border-radius:8px;color:var(--txt);font-size:12px;padding:8px 11px;outline:none;font-family:inherit}
+  .efield input:focus{border-color:var(--blue)}
+  .chk{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:11.5px;color:var(--sub);border-bottom:1px solid rgba(30,42,65,.5);cursor:pointer}
+  .chk:last-child{border:none}
+  .chk input{accent-color:#2dd4a7;width:14px;height:14px}
+  .chk.newitem{color:var(--blue);font-weight:700}
+  .scrim{position:fixed;inset:0;background:rgba(4,8,16,.4);z-index:55;display:none}
+  .scrim.show{display:block}
+
+  /* island */
+  .island{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:52;background:rgba(17,26,44,.92);backdrop-filter:blur(14px);border:1px solid var(--line2);border-radius:20px;box-shadow:0 16px 50px rgba(0,0,0,.6);padding:9px 14px;max-width:min(900px,92vw)}
+  .isl-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .isl-pulse{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.6s infinite;flex:none}
+  .isl-t{font-size:11.5px;color:var(--sub)}
+  .isl-t b{color:var(--txt)}
+  .isl-btn{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line2);border-radius:11px;padding:6px 12px;font-size:10.5px;font-weight:700;cursor:pointer;color:var(--txt);white-space:nowrap}
+  .isl-btn:hover{border-color:var(--blue)}
+  .isl-btn.pri{background:var(--red);border-color:var(--red);color:#08111f}
+
+  /* bot */
+  .bot{position:fixed;right:20px;bottom:20px;width:362px;z-index:50;border-radius:16px;overflow:hidden;border:1px solid var(--line2);background:var(--card);box-shadow:0 18px 50px rgba(0,0,0,.55);display:flex;flex-direction:column;max-height:74vh}
+  .bothead{display:flex;align-items:center;gap:9px;padding:10px 14px;background:linear-gradient(90deg,rgba(58,167,240,.15),var(--card));cursor:pointer}
+  .bothead .av{width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#08111f}
+  .bothead .bn{font-size:12px;font-weight:700}
+  .bothead .bs{font-size:9.5px;color:var(--cyan)}
+  .bothead .min{margin-left:auto;color:var(--dim);font-size:14px}
+  .botbody{padding:11px 13px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;min-height:110px}
+  .bot.min .botbody,.bot.min .botin{display:none}
+  .ctxbar{font-size:9.5px;color:var(--cyan);background:rgba(56,207,224,.07);border:1px dashed rgba(56,207,224,.35);border-radius:8px;padding:5px 9px;line-height:1.4}
+  .sug{font-size:10.5px;color:var(--txt);background:var(--card2);border:1px solid var(--line2);border-radius:9px;padding:6px 10px;cursor:pointer;text-align:left}
+  .sug:hover{border-color:var(--blue)}
+  .bmsg{font-size:11px;line-height:1.55;border-radius:10px;padding:8px 11px;max-width:96%}
+  .bmsg.q{align-self:flex-end;background:rgba(58,167,240,.15);border:1px solid rgba(58,167,240,.3)}
+  .bmsg.ans{align-self:flex-start;background:var(--card2);border:1px solid var(--line);color:var(--sub)}
+  .bmsg.ans b{color:var(--txt)}
+  .bmsg .src{font-size:8.5px;color:var(--dim);margin-top:4px}
+  .botin{display:flex;gap:7px;padding:9px 11px;border-top:1px solid var(--line)}
+  .botin input{flex:1;background:var(--card2);border:1px solid var(--line2);border-radius:9px;color:var(--txt);font-size:11px;padding:8px 11px;outline:none;font-family:inherit}
+  .botin input:focus{border-color:var(--blue)}
+  .botin button{background:var(--blue);border:none;border-radius:9px;color:#08111f;font-weight:800;font-size:11px;padding:0 14px;cursor:pointer}
+
+
+  /* ===== critical-path-only mode ===== */
+  .cpsw{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;color:var(--sub);background:#101a2c;border:1px solid var(--line2);border-radius:14px;padding:4px 11px;cursor:pointer;user-select:none;transition:.14s}
+  .cpsw:hover{border-color:rgba(232,192,100,.4)}
+  .cpsw .kn2{width:24px;height:13px;border-radius:8px;background:#22304c;position:relative;transition:.15s;flex:none}
+  .cpsw .kn2 i{position:absolute;top:2px;left:2px;width:9px;height:9px;border-radius:50%;background:var(--dim);transition:.15s}
+  .cpsw.on{border-color:rgba(232,192,100,.6);color:#e8c064;background:rgba(232,192,100,.08)}
+  .cpsw.on .kn2{background:rgba(232,192,100,.35)}
+  .cpsw.on .kn2 i{left:13px;background:#e8c064}
+  .fcard.cphide,.arrow.cphide{display:none !important}
+  #pageWIP.cponly .keytag{display:none}
+  #pageWIP.cponly .fcard.keyc{min-height:112px;background:var(--card2)}
+  #pageWIP.cponly .fcard.keyc:not(.risk):not(.warnc):not(.gatec):not(.painhl){border-color:var(--line)}
+  .cptail{flex:0 0 auto;align-self:center;font-size:8.5px;color:var(--dim);border:1px dashed var(--line2);border-radius:9px;padding:7px 10px;line-height:1.5;text-align:center}
+  .cptail span{color:#5b6b85}
+  .cpnote{font-size:9.5px;color:var(--sub);line-height:1.55;background:rgba(232,192,100,.05);border:1px solid rgba(232,192,100,.22);border-radius:9px;padding:7px 11px;margin:8px 0 2px}
+  .cpnote b{color:#e8c064}
+  /* PO bar segments become the update control */
+  .postrip .pseg{cursor:pointer;position:relative}
+  .postrip .pseg:hover{outline:1.5px solid var(--blue);outline-offset:1.5px}
+  .postrip .pseg[data-hid]::after{content:attr(data-hid);position:absolute;top:-9px;right:1px;font-size:7px;color:#e8c064;font-weight:800;letter-spacing:-.3px}
+  .pseg.cur.half{background:linear-gradient(90deg,var(--blue) 55%,transparent 55%)}
+
+  /* ===== progress update panel ===== */
+  .uphd{margin-bottom:11px}
+  .uphd .upsub{font-size:10px;color:var(--sub);margin-top:3px}
+  .upbar{display:flex;gap:3px;margin-bottom:4px}
+  .upbar .ub{flex:1;height:13px;border-radius:4px;border:1px solid var(--line2);background:transparent}
+  .upbar .ub.dn{background:var(--green);border-color:var(--green);opacity:.7}
+  .upbar .ub.cu{background:var(--blue);border-color:var(--blue)}
+  .upbar .ub.bl{background:var(--red);border-color:var(--red)}
+  .upbar .ub.sel{background:#e8c064;border-color:#e8c064;box-shadow:0 0 9px rgba(232,192,100,.6)}
+  .upbarl{font-size:8px;color:var(--dim);margin-bottom:12px}
+  .upsec{border:1px solid var(--line);background:var(--card2);border-radius:12px;padding:11px 13px;margin-bottom:10px}
+  .upsec.hot{border-color:rgba(58,167,240,.4)}
+  .upsec h4{font-size:9px;letter-spacing:.7px;color:var(--dim);margin-bottom:8px;font-weight:800}
+  .uprow{display:flex;align-items:center;gap:9px;font-size:11px;padding:6px 0;border-bottom:1px solid rgba(30,42,65,.55)}
+  .uprow:last-child{border:none}
+  .uprow .un{flex:1;color:var(--sub)}
+  .uprow b{color:var(--txt)}
+  .upplan{font-size:9px;color:var(--dim);flex:none}
+  .upunit{font-size:9px;color:var(--dim)}
+  .upnote{font-size:9.5px;color:var(--dim);line-height:1.55;margin-bottom:8px}
+  .upnote b{color:var(--sub)}
+  .upnote2{font-size:10.5px;color:var(--sub);line-height:1.6}
+  .upnote2 b{color:var(--txt)}
+  input.di{background:#0d1626;border:1px solid var(--line2);border-radius:7px;color:var(--txt);font-size:10.5px;padding:5px 8px;font-family:inherit;outline:none;width:124px;flex:none;color-scheme:dark}
+  input.di:focus{border-color:var(--blue)}
+  input.di.qi{width:82px}
+  .tagi{font-size:7.5px;font-weight:800;padding:2px 7px;border-radius:8px;background:#2a3550;color:var(--dim);flex:none}
+  .tagi.ok{background:rgba(45,212,167,.16);color:var(--green)}
+  .stbtns{display:flex;gap:6px}
+  .stb{font-size:10px;font-weight:700;padding:5px 11px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--sub);cursor:pointer;font-family:inherit}
+  .stb.on{background:var(--blue);border-color:var(--blue);color:#08111f}
+  .stb.on.amb{background:var(--amber);border-color:var(--amber)}
+  .dchips{display:flex;gap:6px;flex-wrap:wrap}
+  .dchip{font-size:9.5px;font-weight:700;padding:4px 10px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--sub);cursor:pointer}
+  .dchip:hover{border-color:var(--blue)}
+  .dchip.on{background:rgba(245,166,35,.18);border-color:var(--amber);color:var(--amber)}
+  .lnk{font-size:9.5px;font-weight:700;color:var(--blue);cursor:pointer}
+  .upwarn{font-size:10px;color:var(--red);margin-top:8px;display:none;font-weight:700}
+  .upok{font-size:12px;font-weight:700;color:var(--green);background:rgba(45,212,167,.08);border:1px solid rgba(45,212,167,.32);border-radius:11px;padding:10px 13px;margin-bottom:11px;line-height:1.5}
+  .dlt{font-size:9px;font-weight:800;flex:none;margin-left:6px}
+  .g2{color:var(--green)}.a2{color:var(--amber)}.r2{color:var(--red)}
+
+  /* ===== Manual Center ===== */
+  .mcov{position:fixed;inset:0;background:rgba(4,8,16,.78);display:none;align-items:center;justify-content:center;z-index:80}
+  .mcov.show{display:flex}
+  .mc{width:min(860px,95vw);max-height:88vh;background:var(--card);border:1px solid var(--line2);border-radius:18px;display:flex;flex-direction:column;overflow:hidden}
+  .mch{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)}
+  .mch h3{font-size:15px}
+  .mch .x{margin-left:auto;cursor:pointer;color:var(--dim);font-size:18px;padding:2px 8px}
+  .mcb{flex:1;overflow-y:auto;padding:16px 20px}
+  .mrowm{display:flex;align-items:center;gap:12px;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:9px;cursor:pointer;transition:.13s}
+  .mrowm:hover{border-color:var(--blue)}
+  .mrowm .mi{font-size:18px}
+  .mrowm .mt{font-size:12.5px;font-weight:700}
+  .mrowm .md{font-size:10px;color:var(--sub);margin-top:2px}
+  .mrowm.up{border-style:dashed;border-color:rgba(245,166,35,.5);background:rgba(245,166,35,.04)}
+  .mrowm.up:hover{background:rgba(245,166,35,.1)}
+  .catchips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .catchip{font-size:9.5px;font-weight:700;padding:3px 10px;border-radius:14px;background:#182640;color:var(--sub)}
+  .reqrow{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid rgba(30,42,65,.6);font-size:11px}
+  .reqrow:last-child{border:none}
+  .reqrow .rs{width:74px;flex:none}
+  .reqrow .rt{flex:1;color:var(--sub)}
+  .reqrow .rt b{color:var(--txt)}
+  .reqrow .rg{width:120px;flex:none;text-align:right;font-size:9.5px;color:var(--blue);cursor:pointer}
+  .mfoot{display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line)}
+  .mbtn{font-size:11.5px;font-weight:700;padding:8px 16px;border-radius:9px;cursor:pointer;border:none;background:var(--blue);color:#08111f}
+  .mbtn.gb{background:transparent;border:1px solid var(--line2);color:var(--sub)}
+  .prog{display:none;flex-direction:column;gap:10px;padding:10px 0}
+  .prog.show{display:flex}
+  .pstep{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--dim)}
+  .pstep .pspin{width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--blue);border-radius:50%;flex:none}
+  .pstep.doing .pspin{animation:spin .8s linear infinite}
+  .pstep.done2{color:var(--sub)}
+  .pstep.done2 .pspin{border-color:var(--green);border-top-color:var(--green)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+</style>
+</head>
+<body>
+<div id="pageCT">
+
+
+<!-- ===== client portal menu ===== -->
+<div class="portal">
+  <div class="logo">air<span>8</span></div>
+  <div class="pitem">Home</div>
+  <div class="pitem">Financing</div>
+  <div class="pitem on">🧭 Compass</div>
+  <div class="pitem">Orders</div>
+  <div class="pitem">Documents</div>
+  <div class="pitem">Reports</div>
+  <div class="right">
+    <span class="conf" style="font-size:10px;padding:5px 10px">Data <b>74%</b> ›</span>
+    <span class="bell">🔔</span>
+    <div class="user"><span class="av">ZL</span> 陈生 · Z*** Glass Ornaments ▾</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>🧭 A8 Compass</h1>
+      <div class="s">E*** Seasonal Décor Co. (demo) · Christmas & Holiday Décor · 8 POs · $1.20M · Jul 2026</div>
+    </div>
+  </div>
+
+
+
+  <!-- quick actions -->
+  <div class="qa">
+    <div class="qab hot"><span>📕</span><div><div class="qt">Upload customer manual</div><div class="qd">0 of 3 buyers — unlock auto-checks</div></div></div>
+    <div class="qab"><span>📄</span><div><div class="qt">Upload inspection reports</div><div class="qd">unlock defect analytics</div></div></div>
+    <div class="qab" onclick="goPage('wip')"><span>💬</span><div><div class="qt">Ask A8 Copilot</div><div class="qd">context-aware · cites sources</div></div></div>
+    <div class="qab"><span>🔎</span><div><div class="qt">Search a buyer</div><div class="qd">Digital ID + intel in 24h</div></div></div>
+    <div class="qab" onclick="openAlertCfg()"><span>⚙️</span><div><div class="qt">Customize alerts</div><div class="qd">who · what · channel</div></div></div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ===== PRODUCTION (simple donut view) ===== -->
+    <div class="panel">
+      <div class="ph" onclick="goPage('wip')">🏭 <h2>Production</h2><span class="badge bd-r">⚠ SURFACE DELAY</span><span class="st">8 POs · $1.20M · in production</span><span class="go">Open WIP board ›</span></div>
+      <div class="wide bad" onclick="goPage('wip')">
+        <div class="k"><span>WIP · HOLIDAY DÉCOR FLOW</span><span class="r">🚨 Production — delay d2 · 2 POs</span></div>
+        <div class="pipe">
+          <div class="pnode"><div class="c1"></div><div class="lb">Raw ✓</div></div><div class="plink done"></div>
+          <div class="pnode"><div class="c1"></div><div class="lb">Cut</div></div><div class="plink done"></div>
+          <div class="pnode"><div class="c1"></div><div class="lb">Weld</div></div><div class="plink done"></div>
+          <div class="pnode warn"><div class="c1"></div><div class="lb">Grind / Prep</div></div><div class="plink done"></div>
+          <div class="pnode late"><div class="c1"></div><div class="lb">Decor Finish</div></div><div class="plink"></div>
+          <div class="pnode todo"><div class="c1"></div><div class="lb">Dry</div></div><div class="plink"></div>
+          <div class="pnode todo"><div class="c1"></div><div class="lb">Pack</div></div><div class="plink"></div>
+          <div class="pnode todo"><div class="c1"></div><div class="lb">Insp · Ship</div></div>
+        </div>
+        <div style="font-size:8.5px;color:var(--dim);margin-top:5px">● done &nbsp;·&nbsp; ◆ gate &nbsp;·&nbsp; <span class="r">●</span> issue now &nbsp;·&nbsp; <span class="a">◆</span> awaiting result &nbsp;·&nbsp; ○ not started yet</div>
+      </div>
+      <div class="drow">
+        <div class="d crit2" onclick="goPage('wip')">
+          <span class="ctag">● CRITICAL · ACT TODAY</span>
+          <div class="rw" data-ring="seg:6,1,1"><div class="cv">6<small>/8</small></div></div>
+          <div class="nm">PO ON-TRACK</div><div class="ds"><span class="r">Production delay — Q4-031/033 · $570K</span></div>
+          <span class="badge bd-r">1 CRITICAL</span>
+        </div>
+        <div class="d"><div class="rw" data-ring="96,green"><div class="cv">96%</div></div><div class="nm">OTP SCORE</div><div class="ds">FY25 + YTD26</div><span class="badge bd-g">EXCELLENT</span></div>
+        <div class="d"><div class="rw" data-ring="72,green"><div class="cv">72%</div></div><div class="nm">PROD LOAD</div><div class="ds">Healthy headroom</div><span class="badge bd-g">GOOD</span></div>
+        <div class="d ghost"><div class="rw" data-ring="40,ghost"><div class="cv" style="color:var(--sub)">+9</div></div><div class="nm">UNTRACKED POs</div><div class="ds">Other buyers' orders</div><span class="act">Add POs →</span></div>
+      </div>
+    </div>
+
+    <!-- ===== QAQC (simple donut view) ===== -->
+    <div class="panel">
+      <div class="ph">🔍 <h2>QAQC</h2><span class="badge bd-g">GOOD</span><span class="st">12M inspections · 11 gates</span><span class="go">Details ›</span></div>
+      <div class="wide">
+        <div class="k"><span>DEFECT TYPES · PRODUCT ONLY · LAST 90D</span><span class="dim">click for pareto ›</span></div>
+        <div class="stack" style="height:12px">
+          <i style="background:var(--amber);width:32%"></i><i style="background:#4a5c78;width:27%"></i><i style="background:#39485e;width:23%"></i><i style="background:#2c3a50;width:18%"></i>
+        </div>
+        <div class="legend">
+          <span><span class="ld" style="background:var(--amber)"></span>Color diff <b>32%</b></span>
+          <span><span class="ld" style="background:#4a5c78"></span>Print <b>27%</b></span>
+          <span><span class="ld" style="background:#39485e"></span>Shape <b>23%</b></span>
+          <span><span class="ld" style="background:#2c3a50"></span>Construction <b>18%</b></span>
+        </div>
+      </div>
+      <div class="drow">
+        <div class="d"><div class="rw" data-ring="96,green"><div class="cv">95.8%</div></div><div class="nm">INSPECTION PASS</div><div class="ds">incl. waived · first-pass 75.0% + waived 20.8%</div><span class="badge bd-a">FAIR</span></div>
+        <div class="d"><div class="rw" data-ring="40,amber"><div class="cv">1.2%</div></div><div class="nm">DEFECT RATIO</div><div class="ds">vs peer median 0.9% · surface finish 36% of defects</div><span class="badge bd-a">WATCH</span></div>
+        <div class="d ghost">
+          <svg class="teaser" viewBox="0 0 100 60"><rect x="5" y="30" width="12" height="25" fill="#3aa7f0"/><rect x="25" y="20" width="12" height="35" fill="#3aa7f0"/><rect x="45" y="35" width="12" height="20" fill="#f5a623"/><rect x="65" y="15" width="12" height="40" fill="#3aa7f0"/></svg>
+          <div class="rw" data-ring="30,ghost"><div class="cv" style="color:var(--sub)">3</div></div>
+          <div class="nm">INSPECTION REPORTS</div><div class="ds">Upload 5+ → defect trend by line & buyer</div><span class="act">Upload reports →</span>
+        </div>
+        <div class="d ghost"><div class="rw" data-ring="15,ghost"><div class="cv" style="color:var(--sub)">0<small>/3</small></div></div><div class="nm">MANUAL COVERAGE</div><div class="ds">Buyer manuals unlock auto-checks</div><span class="act">Upload →</span></div>
+      </div>
+    </div>
+
+    <!-- ===== BUYER RELATIONS (risk view) ===== -->
+    <div class="panel">
+      <div class="ph">🤝 <h2>Buyer Relations</h2><span class="badge bd-b">3 BUYERS</span><span class="st">Ko***&rsquo;s 59% GMV concentration</span><span class="go">Details ›</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr;gap:9px">
+        <div class="d">
+          <div class="rw" data-ring="seg:2,1,0"><div class="cv">3</div></div>
+          <div class="nm">BY RISK</div>
+          <div class="ds"><span class="g">2 stable</span> · <span class="a">1 watch</span> · <span class="r">0 risk</span></div>
+          <span class="badge bd-c">A8 MONITORED</span>
+        </div>
+        <div class="wide" style="margin:0">
+          <div class="k"><span>TOP BUYERS · BY GMV</span><span class="b" style="cursor:pointer">All ›</span></div>
+          <div class="toprow"><span class="gr" style="background:#2a3a5a;color:#9fb3cf">✓</span><b style="width:100px">Ko***&rsquo;s</b><span class="sub" style="flex:1">59% GMV · Holiday Décor · pays 51d</span><span class="badge bd-g">STABLE</span></div>
+          <div class="toprow"><span class="gr" style="background:#2a3a5a;color:#9fb3cf">✓</span><b style="width:100px">Ro*** (US)</b><span class="sub" style="flex:1">30% GMV · Glass Ornaments · orders +11% QoQ</span><span class="badge bd-g">STABLE</span></div>
+          <div class="toprow"><span class="gr" style="background:var(--amber)">!</span><b style="width:100px">Lo***&rsquo;s (CA)</b><span class="sub" style="flex:1;color:var(--amber)">10% GMV · deductions ↑ since Jun (A8 intel)</span><span class="badge bd-a">WATCH</span></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:9px;border:1px dashed rgba(139,155,180,.4);border-radius:10px;padding:9px 13px;cursor:pointer">
+        <span style="font-size:15px">🔎</span>
+        <span style="font-size:10.5px;color:var(--sub);flex:1"><b style="color:var(--txt)">New buyer check</b> — digital ID + real payment behavior from the A8 network + risk signals, in 24h, <b style="color:var(--txt)">before you accept the order</b></span>
+        <span style="font-size:10px;color:var(--amber);font-weight:800;white-space:nowrap">Search any buyer →</span>
+      </div>
+    </div>
+
+    <!-- ===== PERFORMANCE (donut aging) ===== -->
+    <div class="panel">
+      <div class="ph">📈 <h2>Performance</h2><span class="badge bd-g">GOOD</span><span class="st">AR $1.9M · DSO 51d</span><span class="go">Details ›</span></div>
+      <div class="drow">
+        <div class="d warn">
+          <span class="wtag">WATCH</span>
+          <div class="rw" data-ring="seg:ar"><div class="cv" style="font-size:11px">$1.9M</div></div>
+          <div class="nm">AR AGING</div><div class="ds"><span class="g">64% current</span> · <span class="r">$90K &gt;60d</span></div>
+          <span class="badge bd-a">WATCH</span>
+        </div>
+        <div class="d"><div class="rw" data-ring="57,blue"><div class="cv">51d</div></div><div class="nm">COLLECTION DSO</div><div class="ds">terms avg NET52</div><span class="badge bd-b">ON TERMS</span></div>
+        <div class="d"><div class="rw" data-ring="98,green"><div class="cv">98%</div></div><div class="nm">ON-TIME DELIVERY</div><div class="ds">your record · FY25+YTD</div><span class="badge bd-g">EXCELLENT</span></div>
+        <div class="d"><div class="rw" data-ring="6,green"><div class="cv">0.6%</div></div><div class="nm">CLAIM RATIO</div><div class="ds">chargebacks / revenue</div><span class="badge bd-g">LOW</span></div>
+      </div>
+      <div style="display:flex;gap:12px;font-size:9.5px;color:var(--sub);margin-top:9px;justify-content:center">
+        <span><span class="ld" style="background:#4a6580"></span>Current <b style="color:var(--txt)">$1.2M</b></span>
+        <span><span class="ld" style="background:#39506a"></span>1–30d <b style="color:var(--txt)">$430K</b></span>
+        <span><span class="ld" style="background:var(--amber)"></span>31–60d <b style="color:var(--txt)">$180K</b></span>
+        <span><span class="ld" style="background:var(--red)"></span>&gt;60d <b style="color:var(--txt)">$90K</b></span>
+      </div>
+    </div>
+
+    <!-- ===== DIGEST full width ===== -->
+    <div class="panel full">
+      <div class="ph">🤖 <h2>What A8 did for you today</h2><span class="badge bd-b">AUTO · DAILY</span><span class="go dim" style="font-size:10px">delivered 8:00 via WhatsApp + Email</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-size:11px;line-height:1.6;color:var(--sub)">
+        <div><span style="color:var(--dim)">✔</span> Caught <b class="r">finish-stage slowdown on day 1</b> → owner + line manager alerted via WeChat, cause isolated same morning</div>
+        <div><span style="color:var(--dim)">✔</span> Verified <b class="b">Lab test test scope</b> → phthalates correctly excluded — <b class="g">one wasted test cycle saved</b></div>
+        <div><span style="color:var(--dim)">✔</span> Mapped <b class="c">T1 tariff exposure by pigment</b> → $555K US-bound GMV identified across 3 POs</div>
+        <div><span style="color:var(--dim)">✔</span> Tracked 11 gates × 4 POs → Q3-028 QC passed, <b class="g">Aug 20 shipment confirmed</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- insights tab + rail -->
+<div class="isl" onclick="document.getElementById('insrail').classList.toggle('open')" title="Open insights">
+  <span class="pd"></span><span class="sev">1 CRITICAL</span><span class="sep"></span>
+  <div class="tick">
+    <span class="ti on"><b>India tariff</b> — $4.6M US book · see your edge →</span>
+    <span class="ti"><b>EN 71-3 Pb 0.1%</b> — 38% of SKUs · EU renewals Sept–Oct · $3.8M</span>
+    <span class="ti"><b>Finish stage delay d2</b> — 2 POs · $570K impacted</span>
+  </div>
+  <div class="dots2"><i class="on"></i><i></i><i></i></div>
+  <span class="ct">3</span><span class="chev">▾</span>
+</div>
+<div class="insrail" id="insrail">
+  <div class="irh"><span style="font-size:15px">💡</span><h3>Actionable Insights <span class="badge bd-r" style="margin-left:6px">1 CRITICAL</span></h3><span class="x" onclick="document.getElementById('insrail').classList.remove('open')">✕</span></div>
+  <div class="irb">
+    <div class="alert" onclick="railOpen('tariff')">
+      <div class="ttl">US Tariff on China Décor — Compete on Edge, Not Price <span class="badge bd-r">CRITICAL</span></div>
+      <div class="impact"><span class="mlb">WHY</span> Cost +$1.55/pc AND price −8–12% · <span class="money">$4.6M US book</span> — ~60% defensible</div>
+      <div><span class="mlb">WHAT</span><span class="abtn">See your edge vs India →</span></div>
+    </div>
+    <div class="alert" onclick="railOpen('reach')">
+      <div class="ttl">EN 71-3 Lead 0.35%→0.1% — Oct 2026 <span class="badge bd-r">CRITICAL</span></div>
+      <div class="impact"><span class="mlb">WHY</span> ~38% of SKUs non-compliant → <span class="money">$3.8M EU revenue at risk</span> at Sept–Oct renewals</div>
+      <div><span class="mlb">WHAT</span><span class="abtn">Audit SKUs by Jul 25 →</span></div>
+    </div>
+    <div class="alert amb" onclick="railOpen('surface')">
+      <div class="ttl">Production Delay — Day 2 <span class="badge bd-a">LIVE · OPERATIONAL</span></div>
+      <div class="impact"><span class="mlb">WHY</span> Bottleneck at 45% output · 2 POs impacted (<span class="money">$570K</span>) · OTP buffer 6d</div>
+      <div><span class="mlb">WHAT</span><span class="abtn">Owner alerted 09:12 · view thread →</span></div>
+    </div>
+    
+  </div>
+  <div class="irf">6 insights total · updated 2h ago<span onclick="openAlertCfg()">⚙️ Customize alerts</span></div>
+</div>
+
+<!-- alert customization modal -->
+<div class="scrim" id="cfgscrim" onclick="closeAlertCfg()" style="z-index:57"></div>
+<div class="drawer" id="cfgdrawer">
+  <div class="dhead"><div class="drow2"><h3>⚙️ Alert Rules</h3><span class="x" onclick="closeAlertCfg()">✕</span></div>
+  <div class="dtags"><span class="badge bd-b">PER SCENARIO · PER ROLE · PER CHANNEL</span></div></div>
+  <div class="dbody">
+    <div class="dsec"><div class="dh b">SCENARIOS — who gets notified, per event type</div>
+      <div class="scnrow"><div class="scntop"><b>🏭 WIP stage delay / stoppage</b><span class="tg2 on" onclick="this.classList.toggle('on')"></span></div>
+        <div class="rcpts"><span class="badge bd-c">陈生 Owner · WeChat</span><span class="badge bd-c">李厂 Plant Mgr · WeChat</span><span class="badge bd-c">王工 Line Mgr · WeChat</span><span class="badge bd-b" style="border-style:dashed;cursor:pointer">+ add</span></div></div>
+      <div class="scnrow"><div class="scntop"><b>◆ Gate failure (G1 / G2 / G3)</b><span class="tg2 on" onclick="this.classList.toggle('on')"></span></div>
+        <div class="rcpts"><span class="badge bd-c">陈生 Owner · WeChat</span><span class="badge bd-c">QC 主管 · WeChat</span><span class="badge bd-c">Amy Sales · WhatsApp</span><span class="badge bd-b" style="border-style:dashed;cursor:pointer">+ add</span></div></div>
+      <div class="scnrow"><div class="scntop"><b>📕 Customer manual conflict</b><span class="tg2 on" onclick="this.classList.toggle('on')"></span></div>
+        <div class="rcpts"><span class="badge bd-c">陈生 Owner · WeChat</span><span class="badge bd-c">QC 主管 · WeChat</span><span class="badge bd-b" style="border-style:dashed;cursor:pointer">+ add</span></div></div>
+      <div class="scnrow" style="border:none"><div class="scntop"><b>💡 Critical market / compliance insight</b><span class="tg2 on" onclick="this.classList.toggle('on')"></span></div>
+        <div class="rcpts"><span class="badge bd-c">陈生 Owner · WeChat + Email</span><span class="badge bd-c">Amy Sales · WhatsApp</span><span class="badge bd-b" style="border-style:dashed;cursor:pointer">+ add</span></div></div>
+    </div>
+    <div class="dsec"><div class="dh g">CONTACTS — edit channel & ID</div>
+      <div class="ctc2" data-n="陈生 (Owner)" data-ch="WeChat" data-id="wxid_chan_hk88">
+        <b>陈生 (Owner)</b><span class="ctv2">WeChat · wxid_chan_hk88</span><button class="dbtn sec ceb" onclick="editCt2(this)">✎</button>
+      </div>
+      <div class="ctc2" data-n="李厂 (Plant Mgr)" data-ch="WeChat" data-id="wxid_li_gz01">
+        <b>李厂 (Plant Mgr)</b><span class="ctv2">WeChat · wxid_li_gz01</span><button class="dbtn sec ceb" onclick="editCt2(this)">✎</button>
+      </div>
+      <div class="ctc2" data-n="王工 (Line Mgr)" data-ch="WeChat" data-id="wxid_wang_st07">
+        <b>王工 (Line Mgr)</b><span class="ctv2">WeChat · wxid_wang_st07</span><button class="dbtn sec ceb" onclick="editCt2(this)">✎</button>
+      </div>
+      <div class="ctc2" data-n="Amy (Sales)" data-ch="WhatsApp" data-id="+852 9123 4567">
+        <b>Amy (Sales)</b><span class="ctv2">WhatsApp · +852 9123 4567</span><button class="dbtn sec ceb" onclick="editCt2(this)">✎</button>
+      </div>
+      <div style="margin-top:8px"><span class="badge bd-b" style="cursor:pointer;border-style:dashed;font-size:10px;padding:4px 12px">+ Add contact</span></div>
+    </div>
+    <div class="dsec"><div class="dh a">HOW IT BEHAVES</div>Same event → each role gets its own message, own language, own actions. Delivery / read / confirm status flows back here.</div>
+  </div>
+  <div class="dfoot"><button class="dbtn pri" onclick="closeAlertCfg()">Save rules</button><button class="dbtn sec" onclick="closeAlertCfg()">Cancel</button></div>
+</div>
+
+<!-- ===== insight drawer ===== -->
+<div class="scrim" id="scrim" onclick="closeIns()"></div>
+<div class="drawer" id="drawer">
+  <div class="dhead">
+    <div class="drow2"><h3 id="dtitle">—</h3><span class="x" onclick="closeIns()">✕</span></div>
+    <div class="dtags" id="dtags"></div>
+  </div>
+  <div class="dbody" id="dbody"></div>
+  <div class="dfoot" id="dfoot"></div>
+</div>
+
+
+</div>
+<div id="pageWIP" class="noman" style="display:none">
+
+<div class="wrap">
+
+  <!-- header -->
+  <div class="hd">
+    <span class="back" onclick="goPage('ct')">‹ Compass</span>
+    <h1>🏭 WIP Production Planner</h1><span class="cat">By Buyer · Product</span>
+    <div class="kbtag" id="kbtag" onclick="openMC()">📕 <span id="kbtagtxt"><b>Customer Manual: none uploaded</b> · flow is checked against <b>A8 KB only</b> · <span class="a">upload a buyer manual → requirements auto-map to your gates ›</span></span></div>
+    <div class="right" id="hdright"><span><b>8</b> POs · <b>$1.20M</b> · 2 products</span><span class="badge bd-g">6 ✓</span><span class="badge bd-a">1 ⚠</span><span class="badge bd-r">1 🚨</span></div>
+  </div>
+  <div style="font-size:11px;color:var(--sub);margin-bottom:10px">E*** Seasonal Décor Co. (demo) · Christmas & Holiday Décor · Demo</div>
+
+  <!-- KPI strip -->
+  <div class="kpis">
+    <div class="kpi crit" onclick="openDrawer('finA')"><div class="rw" id="kpiRing" data-ring="seg:6,1,1"><div class="cv" id="kpiCV">6<small style="color:var(--dim)">/8</small></div></div><div><div class="kn">PO ON-TRACK</div><div class="kd"><span class="r">Production delay — 2 impacted</span></div></div></div>
+    <div class="kpi warn"><div class="rw" data-ring="40,amber"><div class="cv">1.2%</div></div><div><div class="kn">DEFECT RATIO</div><div class="kd"><span class="a">marks/stains · scratched coating · glue marks</span></div></div></div>
+    <div class="kpi"><div class="rw" data-ring="96,green"><div class="cv">96%</div></div><div><div class="kn">OTP SCORE</div><div class="kd">FY25 + YTD26</div></div></div>
+    <div class="kpi cpk" onclick="openDrawer('cpath')"><div class="rw" data-ring="72,amber"><div class="cv">41<small style="color:var(--dim)">-82d</small></div></div><div><div class="kn">⛓ CRITICAL PATH</div><div class="kd"><span style="color:#e8c064">paced by Production · 5 of 7 steps have 0 float</span></div></div></div>
+    <div class="kpi warn" onclick="ask('tariff')"><div class="rw" data-ring="62,amber"><div class="cv">$1.54M</div></div><div><div class="kn">US TARIFF EXPOSED</div><div class="kd">US-bound · China origin</div></div></div>
+  </div>
+<div class="mninvite" id="mninvite" onclick="openMC()">
+    <span class="big">📕</span>
+    <div><div class="t1">Turn your buyer's manual into a live safety net — and a selling point.</div>
+    <div class="t2">Upload once: every requirement is checked against this flow and every PO, automatically, forever. Catch spec issues weeks before packing · walk into buyer audits pre-covered · quote new programs (incl. kids lines) knowing exactly what they take.</div></div>
+    <span class="cta">⬆ Unlock it</span>
+  </div>
+  <div class="fbar">
+    <span style="font-size:10px;color:var(--dim);font-weight:700">INSIGHTS</span>
+    <span class="fchip" id="fall" onclick="filt('all',this)">All</span>
+    <span class="fchip" id="fcr" onclick="filt('cr',this)">🚨 Critical <span class="n r">1</span></span>
+    <span class="fchip" onclick="filt('gp',this)">⚠ Pain points <span class="n a" id="gpn">1</span></span>
+    <span class="fchip on" id="fcp" onclick="filt('cp',this)" style="border-color:rgba(232,192,100,.5)">⛓ Critical path</span>
+    <span class="fchip" id="mnchip" onclick="filt('mn',this)">📕 Manual reqs <span class="n" style="color:var(--cyan)" id="mnn">3</span></span>
+    <span class="cpsw" id="cpsw" onclick="toggleCP()" title="Track only the critical path — untracked steps keep their lead time, merged into the next tracked step"><span class="kn2"><i></i></span>CRITICAL PATH ONLY</span>
+    <button onclick="openPO()" style="margin-left:auto;background:var(--blue);color:#08111f;font-weight:800;font-size:10.5px;border:none;border-radius:8px;padding:6px 14px;cursor:pointer">⬆ Upload PO</button>
+  </div>
+
+  <!-- empty state until PO uploaded -->
+  <!-- ===== METAL DECOR - built on PO upload (hidden until then) ===== -->
+  <div class="prodsec open" id="psB" style="display:none">
+  <div class="prodhd" onclick="this.parentElement.classList.toggle('open')">
+    <span style="font-size:15px">🏺</span>
+    <div><div class="pt1">Glass Ornaments — Balls · Drops · Figurines · Ro*** <span class="badge bd-b">NEW · BUILT FROM YOUR PO</span> <span class="badge bd-b">A8 STANDARD WIP</span></div>
+    <div class="pt2">EU · FOB · 3 POs · 43,000 pcs · $516K · A8 standard WIP for Christmas Ornaments · 8 steps · 5 on the critical path</div></div>
+    <span class="caret">▶</span>
+  </div>
+  <div class="secbody">
+  <div class="flowbox">
+    <div class="flow" style="min-width:1780px">
+      <div class="fcard" data-f="mn" onclick="openDrawer('matB')">
+        <div class="nb"><span class="nbd mn">M</span></div><div class="nm"><span class="drag">≡</span>Materials</div>
+        <div class="mrow">⏱ 7–14d · glass blanks · caps · hangers · pigments</div>
+        <div class="stat g">✓ Sourced · pigment certs on file</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:#3d7f6f"></span><span class="pt">Pigment supplier, lot number and certificate recorded at intake — G2 becomes a lookup</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.96:</b> kids-scope paint lead ≤90ppm — classification decides scope</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard" data-f="mn" onclick="openDrawer('stampB')">
+        <div class="nb"><span class="nbd mn">M</span></div><div class="nm"><span class="drag">≡</span>Forming</div>
+        <div class="mrow">⏱ 3–7d · blow · press · cast · ⚡ 800 pcs/d</div>
+        <div class="stat b">▶ Q1-009 forming</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--blue)"></span><span class="pt">First measurable output of the flow — a schedule slip becomes visible here</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.11–12:</b> sharp edges — 100% edge check for kids-scope SKUs</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard gatec" data-f="" onclick="openDrawer('g1')">
+        <span class="gtag std">🟡 GATE</span>
+        <div class="nm"><span class="drag">≡</span>◆G1 Colour &amp; Finish Swatch</div>
+        <div class="mrow">⏱ 3–5d · paint · glitter · decoration</div>
+        <div class="stat b">▶ Q1-007 with buyer</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt">Colour standard must be confirmed <b>before bulk decoration</b> — and it freezes the formula G2 is about to test</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard gatec" data-f="" onclick="openDrawer('g2')">
+        <span class="gtag key">🔴 KEY GATE</span>
+        <div class="nm"><span class="drag">≡</span>◆G2 Heavy Metal Test</div>
+        <div class="mrow">⏱ 3–5d · Pb / Cd · ASTM F963 · EN 71</div>
+        <div class="stat dim">◻ Before decoration starts</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--red)"></span><span class="pt"><b>100% rejection with no remedy</b> if found at the buyer · re-test on every colour or coating formula change</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard painhl" data-f="gp" onclick="openDrawer('finB')">
+        <div class="nb"><span class="nbd gp">!</span></div><div class="nm"><span class="drag">≡</span>Decoration — Printing · Glitter · Paint</div>
+        <div class="mrow">⏱ 5–10d · ⚡ 400 pcs/d · multi-colour</div>
+        <div class="tags"><span class="ftag btl">PAIN POINT</span></div><div class="stat a">⚠ Highest-risk stage in the category</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt"><b>Why pain point:</b> low-price multi-colour printed ornaments are where heavy-metal failures are actually found</span></div><div class="prow"><span class="pdot" style="background:var(--purple)"></span><span class="pt"><b>Preventive:</b> G1 locks the colour, G2 clears every formula — nothing is on fire here</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard gatec" data-f="mn" onclick="openDrawer('g3')">
+        <span class="gtag pp">⭐ KEY GATE ★</span>
+        <div class="nm"><span class="drag">≡</span>◆G3 PP Sample ★</div>
+        <div class="mrow">⏱ 7–14d · buyer written sign-off</div>
+        <div class="stat dim">◻ Decorated article + hanger</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt">Fully decorated article <b>including its hook / hanger</b> — colour, adhesion, glitter, dimensions, hanger pull</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.10:</b> use-&amp;-abuse for kids-scope SKUs</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard" data-f="mn" onclick="openDrawer('mpB')">
+        <div class="nb"><span class="nbd mn">M</span></div><div class="nm"><span class="drag">≡</span>Mass Production</div>
+        <div class="mrow">⏱ 14–28d · ⚡ 400 pcs/d · reinforced packing</div>
+        <div class="stat dim">◻ Pending PP release</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt"><b>Pain:</b> glass breaks in transit — reinforced inner boxes are a cost line, not an option</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.89:</b> tracking marks on product AND packaging</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard extc" data-f="" onclick="openDrawer('shipB')">
+        <div class="nm"><span class="drag">≡</span>Ship</div>
+        <div class="mrow">External · FOB</div>
+        <div class="stat dim">◻ Not booked</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--dim)"></span><span class="pt">Booking after mass production and final release</span></div><div class="open">Open details →</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="postrip">
+    <div class="porow" onclick="openDrawer('g1')">
+      <span class="pid"><b>PO #ON-2026-Q1-007</b><small>Glass Ball Set 12-pc · 15,000 · $180K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg done"></span><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ Colour swatch</span>
+    </div>
+    <div class="porow" onclick="openDrawer('stampB')">
+      <span class="pid"><b>PO #ON-2026-Q1-009</b><small>Hand-painted Glass Drops · 20,000 · $240K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ Forming</span>
+    </div>
+    <div class="porow" onclick="openDrawer('matB')">
+      <span class="pid"><b>PO #ON-2026-Q1-012</b><small>Shatterproof Ball 24-pc · 8,000 · $96K</small></span>
+      <div class="psegs"><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ Materials inbound</span>
+    </div>
+  </div>
+  </div>
+  </div><!-- /psB -->
+
+  <!-- ===== BRASS ARTWARE - default live board ===== -->
+  <div class="prodsec open" id="psA">
+  <div class="prodhd" onclick="this.parentElement.classList.toggle('open')">
+    <span style="font-size:15px">🕯️</span>
+    <div><div class="pt1">Holiday Décor — Wreaths · Garlands · Figurines · Ko***&rsquo;s <span class="badge bd-r">⚠ FINISH DELAY</span></div>
+    <div class="pt2">US Mass Market · FOB · 6 POs · 108,000 pcs · $1.02M · A8 standard WIP for Holiday Décor · 7 steps · 5 on the critical path</div></div>
+    <span class="caret">▶</span>
+  </div>
+  <div class="secbody">
+  <div class="flowbox">
+    <div class="flow" style="min-width:1560px">
+      <div class="fcard" data-f="mn" onclick="openDrawer('rawA')">
+        <div class="nb"><span class="nbd mn">M</span></div><div class="nm"><span class="drag">≡</span>Materials</div>
+        <div class="mrow">⏱ 7–14d · FR fabric · wire · botanicals · holder parts</div>
+        <div class="stat g">✓ Sourced · FR grade confirmed at purchase</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:#3d7f6f"></span><span class="pt">FR grade of every synthetic material confirmed <b>at purchase</b>, not later</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.96:</b> kids-scope paint lead ≤90ppm — classification decides scope</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard gatec" data-f="" onclick="openDrawer('g1A')">
+        <span class="gtag std">🟡 GATE</span>
+        <div class="nm"><span class="drag">≡</span>◆G1 Colour &amp; Finish Swatch</div>
+        <div class="mrow">⏱ 3–5d · paint · spray · decorative finish</div>
+        <div class="stat g">✓ Approved · candle-holder heat verified</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt"><b>Candle holders:</b> heat management verified at this gate, not at inspection</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard gatec" data-f="" onclick="openDrawer('g2A')">
+        <span class="gtag key">🔴 KEY GATE</span>
+        <div class="nm"><span class="drag">≡</span>◆G2 FR &amp; Flammability Test</div>
+        <div class="mrow">⏱ 5–7d · EN 71-2 · EN 13501 · UL 588</div>
+        <div class="stat b">▶ Q4-033 at lab</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--red)"></span><span class="pt"><b>Scope is the dispute, not the test:</b> synthetic materials must be tested · natural botanicals are exempt and only need a keep-away-from-fire label</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard risk" data-f="" onclick="openDrawer('finA')">
+        <div class="nm"><span class="drag">≡</span>Production — Assembly · Wiring · Electronics</div>
+        <div class="mrow">⏱ 5–14d · ⚡ 400 pcs/d</div>
+        <div class="stat r">🚨 DELAY d2 — 180/d vs 400/d · 2 POs hit</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--red)"></span><span class="pt"><b>Live:</b> output 45% of plan · impacts Q4-031 + Q4-033 · alerts auto-sent per your rules</span></div><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt"><b>Lit décor:</b> UL/CE certificate required for the light set — supplier declaration is not accepted</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard gatec" data-f="mn" onclick="openDrawer('g3A')">
+        <span class="gtag pp">⭐ KEY GATE ★</span>
+        <div class="nm"><span class="drag">≡</span>◆G3 PP Sample ★</div>
+        <div class="mrow">⏱ 7–14d · buyer written sign-off</div>
+        <div class="stat a">▶ Q3-018 · tilt test</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt"><b>Candle holders must pass the tilt test here</b> — a failure found at bulk is 100% rework</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.10:</b> use-&amp;-abuse for kids-scope SKUs</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard" data-f="mn" onclick="openDrawer('mpA')">
+        <div class="nb"><span class="nbd mn">M</span></div><div class="nm"><span class="drag">≡</span>Mass Production</div>
+        <div class="mrow">⏱ 14–28d · ⚡ 400 pcs/d</div>
+        <div class="stat b">▶ Q3-012 running</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--amber)"></span><span class="pt"><b>Pain:</b> wreaths and garlands ship large and irregular — Q4 container space is the real constraint</span></div><div class="prow mnp"><span class="pdot" style="background:var(--cyan)"></span><span class="pt"><b>📕 Manual p.89:</b> tracking marks on product AND packaging</span></div><div class="open">Open details →</div></div>
+      </div>
+      <div class="arrow">→<span class="plus">+</span></div>
+      <div class="fcard extc" data-f="" onclick="openDrawer('shipA')">
+        <div class="nm"><span class="drag">≡</span>Ship</div>
+        <div class="mrow">External · FOB / DDP</div>
+        <div class="stat dim">◻ Booking after PP release</div>
+        <div class="pop"><div class="prow"><span class="pdot" style="background:var(--dim)"></span><span class="pt">Booking after mass production and final release</span></div><div class="open">Open details →</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="postrip">
+    <div class="porow crit2" onclick="openDrawer('finA')">
+      <span class="pid"><b>PO #XD-2026-Q4-031</b><small>Pre-lit Wreath 24" · 35,000 · $420K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg done"></span><span class="pseg done"></span><span class="pseg blocked"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst r">🚨 Production — delay d2</span>
+    </div>
+    <div class="porow" onclick="openDrawer('g2A')">
+      <span class="pid"><b>PO #XD-2026-Q4-033</b><small>Garland 9ft Frosted · 18,000 · $150K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg done"></span><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst a">⚠ FR test — heads into delay</span>
+    </div>
+    <div class="porow" onclick="openDrawer('mpA')">
+      <span class="pid"><b>PO #XD-2026-Q3-012</b><small>Wreath 18" Berry · 22,000 · $198K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg done"></span><span class="pseg done"></span><span class="pseg done"></span><span class="pseg done"></span><span class="pseg cur"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ Mass production</span>
+    </div>
+    <div class="porow" onclick="openDrawer('g3A')">
+      <span class="pid"><b>PO #XD-2026-Q3-018</b><small>Candle Holder Set 3-pc · 12,000 · $88K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg done"></span><span class="pseg done"></span><span class="pseg done"></span><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ PP sample · tilt test</span>
+    </div>
+    <div class="porow" onclick="openDrawer('g1A')">
+      <span class="pid"><b>PO #XD-2026-Q4-029</b><small>Garland 6ft Pine · 9,000 · $96K</small></span>
+      <div class="psegs"><span class="pseg done"></span><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ Colour swatch</span>
+    </div>
+    <div class="porow" onclick="openDrawer('rawA')">
+      <span class="pid"><b>PO #XD-2026-Q4-041</b><small>Nutcracker Figurine Set · 12,000 · $72K</small></span>
+      <div class="psegs"><span class="pseg cur"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span><span class="pseg"></span></div>
+      <span class="pst g">✓ Materials inbound</span>
+    </div>
+  </div>
+  </div>
+  </div><!-- /psA -->
+
+  <div class="prodhd" style="opacity:.75;cursor:default;margin-top:10px">
+    <span style="font-size:15px">🛋️</span>
+    <div><div class="pt1">Scented Candles · Lo***&rsquo;s (CA)</div>
+    <div class="pt2">2 POs · $180K · all on track · details collapsed for this demo</div></div>
+    <span class="badge bd-b">COLLAPSED</span>
+  </div>
+
+</div>
+
+<!-- drawer -->
+<div class="scrim" id="wscrim" onclick="closeDrawer()"></div>
+<div class="wdrwc" id="wdrw">
+  <div class="wdh"><div><h3 id="wdtitle">—</h3><div class="ds2" id="wdsub">—</div></div><span class="x" onclick="closeDrawer()">✕</span></div>
+  <div class="wdb" id="wdbody"></div>
+</div>
+
+<!-- bot -->
+<div class="bot" id="bot">
+  <div class="bothead" onclick="document.getElementById('bot').classList.toggle('min')">
+    <div class="av">A8</div>
+    <div><div class="bn">A8 Copilot</div><div class="bs">● Context: WIP · Ko***&rsquo;s + Ro*** POs · Christmas-Décor KB · EN 71-3 intel</div></div>
+    <span class="min">—</span>
+  </div>
+  <div class="botbody" id="botlog">
+    <div class="ctxbar">📍 You're viewing <b>WIP — Christmas & Holiday Décor</b>. Expert KB + EN 71-3/tariff intel loaded — ask anything, answers cite the source.</div>
+    <div id="botsugs">
+    <button class="sug" onclick="ask('crvi')">💬 Do I need the phthalates test for décor?</button>
+    <button class="sug" onclick="ask('adhesion')">💬 What if the adhesion test fails on Jul 28?</button>
+    <button class="sug" onclick="ask('reach')">💬 Will Q3-012 pass EN 71-3 with Pigment RD-14 (legacy red)?</button>
+    <button class="sug" onclick="ask('tariff')">💬 Which POs have T1 tariff exposure?</button>
+    <button class="sug" onclick="ask('manuals')">📕 What does the customer manual require?</button>
+  </div>
+  </div>
+  <div class="botin">
+    <input id="botq" placeholder="Ask about gates, EN 71-3, pigments, deadlines…" onkeydown="if(event.key==='Enter')freeAsk()">
+    <button onclick="freeAsk()">➤</button>
+  </div>
+</div>
+
+<!-- toast -->
+<div id="toast"></div>
+<!-- alert-owner modal (triggered by manual conflict) -->
+<div class="mcov" id="alov" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="mc" style="width:min(520px,94vw)">
+    <div class="mch"><span style="font-size:16px">⚠️</span><div><h3>Manual flagged a decision — alert the owner?</h3><div style="font-size:10px;color:var(--sub)">Hard limit + live PO + classification unknown → worth the owner's 30 seconds · 陈生 · WeChat / WhatsApp</div></div><span class="x" onclick="document.getElementById('alov').classList.remove('show')">✕</span></div>
+    <div class="mcb">
+      <div style="background:#0a1014;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:11.5px;line-height:1.65;color:#d9e3ec">
+        <span style="color:#25d366;font-weight:800;font-size:10px;letter-spacing:.5px">⚠ CLASSIFICATION CHECK NEEDED · CUSTOMER MANUAL · G4</span><br><br>
+        Manual parsed today. One hard limit needs a decision from us: <b>children's products cap paint-layer lead at 90ppm</b> (p.96). Our Pigment RD-14 (legacy red) runs ~0.2% Pb — <b>fine for general décor, out of range if a SKU counts as a children's product</b>.<br><br>
+        <b>Where it touches us:</b> the kids-room wall-hook lines on #XD-2026-Q3-012 could fall under that definition (intended for 12 & under). Classification is the buyer's call — not ours to guess.<br><br>
+        <b>Ask:</b> confirm SKU classification with the buyer before bulk. If any line is kids-classified → we already have the compliant Pigment RD-22 route (trial Aug 31), so this is a routing decision, not a crisis.<br><br>
+        Reply <b>1</b> — I'll raise it with the buyer this week<br>Reply <b>2</b> — set a call with the A8 compliance expert first
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="mbtn" style="background:#07c160" onclick="document.getElementById('alov').classList.remove('show');showToast('✅ 已通过微信发送给陈生 — 回复会出现在对话流')">💬 Send via WeChat</button>
+      <button class="mbtn" style="background:transparent;border:1px solid #25d366;color:#25d366" onclick="document.getElementById('alov').classList.remove('show');showToast('✅ Sent via WhatsApp')">📱 WhatsApp</button>
+      <button class="mbtn gb" onclick="document.getElementById('alov').classList.remove('show')">Later</button>
+    </div>
+  </div>
+</div>
+<!-- ===== PO UPLOAD → WIP BUILDER ===== -->
+<div class="mcov" id="poov" onclick="if(event.target===this)closePO()">
+  <div class="mc">
+    <div class="mch"><span style="font-size:17px">📄</span><div><h3>Upload PO — auto-build WIP</h3><div style="font-size:10px;color:var(--sub)">Product type → flow template → pain points → control gates → your to-dos</div></div><span class="x" onclick="closePO()">✕</span></div>
+    <div class="mcb" id="pob"></div>
+    <div class="mfoot" id="pofoot"></div>
+  </div>
+</div>
+<!-- ===== PO PROGRESS UPDATE ===== -->
+<div class="mcov" id="upov" onclick="if(event.target===this)closeUP()">
+  <div class="mc" style="width:min(680px,95vw)">
+    <div class="mch"><span style="font-size:17px">📌</span><div><h3 id="uphdt">Update progress</h3><div style="font-size:10px;color:var(--sub)">Tap any step on the bar · A8 re-projects the finish date and the buffer to your production deadline</div></div><span class="x" onclick="closeUP()">✕</span></div>
+    <div class="mcb" id="upb"></div>
+    <div class="mfoot" id="upfoot"></div>
+  </div>
+</div>
+<!-- ===== MANUAL CENTER: before → upload → after ===== -->
+<div class="mcov" id="mcov" onclick="if(event.target===this)closeMC()">
+  <div class="mc">
+    <div class="mch"><span style="font-size:17px">📕</span><div><h3>Customer Manual Center</h3><div style="font-size:10px;color:var(--sub)">Upload once → live requirements checked against every PO, forever</div></div><span class="x" onclick="closeMC()">✕</span></div>
+    <div class="mcb" id="mcb"></div>
+    <div class="mfoot" id="mcfoot"></div>
+  </div>
+</div>
+<div id="gpop"></div>
+
+</div>
+<script>
+function goPage(p){
+  document.getElementById("pageCT").style.display=p==="ct"?"":"none";
+  document.getElementById("pageWIP").style.display=p==="wip"?"block":"none";
+  window.scrollTo(0,0);
+  /* WIP opens on the full board — critical path hierarchy is the default lens */
+}
+/* ===== Control Tower JS ===== */
+
+function ringSVG(spec){
+  const R=26,C=2*Math.PI*R,cx=31,cy=31,W=5.5,S=62;
+  const colors={green:'#3d7f6f',amber:'#f5a623',red:'#f0546c',blue:'#50708f',cyan:'#50708f'};
+  const track=`<circle cx="${cx}" cy="${cy}" r="${R}" stroke="#1e2a41" stroke-width="${W}" fill="none"/>`;
+  if(spec==='seg:ar'){
+    const parts=[[64,'#4a6580'],[22,'#39506a'],[9,'#f5a623'],[5,'#f0546c']];
+    let off=0,arcs='';
+    parts.forEach(([p,col])=>{const len=p/100*C;
+      arcs+=`<circle cx="${cx}" cy="${cy}" r="${R}" stroke="${col}" stroke-width="${W}" fill="none" stroke-dasharray="${Math.max(len-2,0)} ${C-len+2}" stroke-dashoffset="${-off}"/>`;off+=len;});
+    return `<svg width="${S}" height="${S}">${track}${arcs}</svg>`;
+  }
+  if(spec.startsWith('seg:')){
+    const nums=spec.slice(4).split(',').map(Number),tot=nums.reduce((a,b)=>a+b,0)||1;
+    const cols=['#3d7f6f','#f5a623','#f0546c'];let off=0,arcs='';
+    nums.forEach((n,i)=>{if(!n)return;const len=n/tot*C;
+      arcs+=`<circle cx="${cx}" cy="${cy}" r="${R}" stroke="${cols[i]}" stroke-width="${W}" fill="none" stroke-dasharray="${Math.max(len-2,0)} ${C-len+2}" stroke-dashoffset="${-off}"/>`;off+=len;});
+    return `<svg width="${S}" height="${S}">${track}${arcs}</svg>`;
+  }
+  const [pct,style]=spec.split(',');
+  if(style==='ghost')return `<svg width="${S}" height="${S}"><circle cx="${cx}" cy="${cy}" r="${R}" stroke="rgba(139,155,180,.45)" stroke-width="${W}" fill="none" stroke-dasharray="4 7" stroke-linecap="round"/></svg>`;
+  const len=(+pct)/100*C;
+  return `<svg width="${S}" height="${S}">${track}<circle cx="${cx}" cy="${cy}" r="${R}" stroke="${colors[style]}" stroke-width="${W}" fill="none" stroke-dasharray="${len} ${C-len}" stroke-linecap="round"/></svg>`;
+}
+document.querySelectorAll('#pageCT [data-ring]').forEach(el=>{el.insertAdjacentHTML('afterbegin',ringSVG(el.dataset.ring));});
+
+/* insight drawer: read here, navigate only for deep work */
+const INS={
+  tariff:{t:'US Tariff on China Décor — Compete on Edge, Not Price',tags:['<span class="badge bd-r">EVENT · CRITICAL</span>','<span class="badge bd-b">🥇 COMMERCIAL</span>','<span class="badge bd-b">📐 ENGINEERING</span>','<span class="badge bd-b">🔎 A8</span>'],
+    news:'Two signals, read together: <b>①</b> Section 232 effective Apr 6 2026 — 25% duty on China-origin holiday décor (HS 9505); List 4A scope; Vietnam-origin exempt. <b>②</b> China metal-décor export volume is up while <b>price is down 8–12%</b> — the order lift is CN suppliers cutting price to hold volume, not buyers paying more.',
+    steps:[
+      {ct:'⚡ TRIGGER — TARIFF',cc:'b',d:'25% duty at full customs value. Duty applies to the full FOB value of the finished item.',f:'25% × $6.20/pc FOB = <b>+$1.55/pc</b> landed cost increase on every kg of décor processed'},
+      {ct:'📍 INDIA GAP TURNS STRUCTURAL',cc:'a',d:'India\'s domestic-tariff-scope exemption widens its price advantage from ~8% to <b>~20% vs CN</b> — no cost-cutting closes that on low-end volume SKUs. Matching India\'s price = negative margin.',f:'India delta post-tariff ≈ −20% vs CN FOB · structural, not cyclical'},
+      {ct:'📍 DEMAND SIGNAL COMPOUNDS IT',cc:'a',d:'Export volume up but price conceding 8–12% means <b>the market is already re-pricing CN low-end supply downward</b> — cost rises while selling price falls. This is why low-end CN holiday décor feels it first and hardest: thin-margin, price-led, decoration-heavy.',f:'Cost +$1.55/pc AND price −8–12% = margin squeezed from both ends'},
+      {ct:'📍 WHERE YOU STILL WIN',cc:'b',d:'<b>① Compliance & quality:</b> verified heavy-metal record (Pb 18–24ppm), expert-verified test scope, defect 1.8% vs industry ~3%, OTP 96% — fragmented workshop clusters can\'t match audit-ready consistency. <b>② Capacity:</b> 3,500 pcs/d bulk line runs 30K+ unit programs in one batch — beyond most single competitor workshops.',f:'Your edge = compliance record + quality consistency + large-run capacity'},
+      {ct:'💥 SO WHAT',cc:'r',d:'Segment the book: price-only small-lot SKUs will migrate regardless of effort. <b>Defend the segment India can\'t serve</b> (compliance-audited, high-volume) and <b>re-engineer the price-sensitive segment</b> so it stops depending on tariff-scope.',f:'$4.6M US book: ~40% price-only at risk · ~60% defensible · plating route converts part of the 40%'}],
+    what:[
+      ['🥇 COMMERCIAL','Know your edge — build the India comparison one-pager: price loses, but compliance (verified EN 71-3 + audit-ready certs), quality (1.8% defect, 96% OTP) and 30K+ run capacity win. Arm every sales conversation with it','⚡ Generate sales flyer','生成可转发的 PDF flyer(WeChat / WhatsApp / Email)'],
+      ['📊 STRATEGY','Refocus targeting — prioritize buyers with strict compliance/quality programs (EU regulated retail, US audit-heavy big-box) and large-volume consolidated orders; deprioritize price-only small-lot RFQs','➤ Share list with sales','目标买家画像清单已转发销售'],
+      ['📐 ENGINEERING','Plating option to ease the tariff/price pressure — natural-botanical / non-lit "value line": same shelf look, FR-test and electrical scope drop away → tariff +$1.55/pc→~+$0.35/pc, landed cost ≈ −35%','➤ Send to engineering','工程简报已发,含 G1/G3 质检要求'],
+      ['🔎 A8','Upload your product catalog — A8 matches it against buyer demand inside Buyer Outlook (compliance-heavy, high-volume programs) and opens indicative introductions','⬆ Upload product catalog','目录已接收 — Buyer Outlook 将生成匹配买家清单(demo)']],
+    conf:'Confidence 90% · Sources: US Commerce Dept Section 232 FR · China customs export data · expert-verified supplier profile (Jul 2026) · LME Jul 2026 · your verified G4/QC record',
+    foot:[['See buyer-match options','pri'],['Open in WIP board →','nav','t1_décor_wip_ross.html'],['Share','sec']]},
+  reach:{t:'Heavy Metals — Pb / Cd per Colour Formula (EN 71)',tags:['<span class="badge bd-r">EVENT · CRITICAL</span>','<span class="badge bd-a">⚖️ COMPLIANCE</span>','<span class="badge bd-b">🤝 COMMERCIAL</span>'],
+    news:'ECHA Annex XVII: lead in décor articles drops <b>0.35% Pb → 0.1% Pb</b>. In force Oct 2026; 18-month transition = non-compliant product off EU market by <b>Apr 2028</b>. Sept–Oct contract renewals are the enforcement gate.',
+    steps:[
+      {ct:'⚡ TRIGGER',cc:'b',d:'Permissible lead in décor articles cut by 71%. Products on EU shelf must comply by April 2028.',f:'0.35% → 0.1% Pb = <b>71% reduction</b> in max lead content'},
+      {ct:'📍 EXPOSURE',cc:'a',d:'EU revenue = <b>$3.8M (38% of $10M)</b>. Current grades Pigment RD-14 (legacy red) (~0.25% Pb) and Pigment GR-08 (legacy green) (~0.20% Pb) are industry-standard non-low-Pb grades. <b>~38% of SKUs non-compliant</b> — concentrated in decorative décor.',f:'Pigment RD-14 (legacy red) ≈ 2.5% Pb = 25× the new limit'},
+      {ct:'💥 IMPACT',cc:'r',d:'At Sept–Oct renewal, EU buyers will require updated EN 71-3 / F963 certs per SKU. Non-compliant = <b>contract not renewed or 5–8% forced price concession</b>.',f:'$3.8M EU × 5% concession = <b>$190K</b> margin erosion · or delisting = full <b>$3.8M</b> at risk'}],
+    what:[
+      ['SKU AUDIT','Pull pigment certs for every SKU in production — flag the ~38% above 0.1% Pb before renewal season','➤ Start audit · due Jul 25','SKU 审计任务已建立'],
+      ['LOW-Pb PIGMENT TRIAL','Qualify Pigment RD-22 (reformulated, 180–240ppm) across the red range now — pigment qualification takes 6–9 weeks','➤ Send to sourcing · Aug 31','采购简报已发'],
+      ['EU DOC PACK','Update SDS + Declaration of Conformity for all EU-bound SKUs before renewal meetings','➤ Assign to QC · Sep 15','文档任务已分派 QC']],
+    conf:'Confidence 92% · Sources: ECHA Annex XVII · expert-verified profile · Pigment RD-22 pigment cert',
+    foot:[['Start SKU audit','pri'],['Open in WIP board →','nav','t1_décor_wip_ross.html'],['Share','sec']]},
+  surface:{t:'Production Delay — Live Operational Alert',tags:['<span class="badge bd-a">LIVE · OPERATIONAL</span>','<span class="badge bd-b">🏭 PRODUCTION</span>','<span class="badge bd-b">2 POs IMPACTED</span>'],
+    news:'WIP monitor detected surface-treatment output at <b>180 pcs/d vs 400 pcs/d plan</b>, second consecutive day. The decorative finish line (spray · flock · glitter) is the flow bottleneck and carries Gate 1 (shade & finish confirmation).',
+    steps:[
+      {ct:'🚨 PROBLEM',cc:'r',d:'<span style="display:block;background:rgba(240,84,108,.12);border:1px solid rgba(240,84,108,.5);border-radius:9px;padding:9px 12px;text-align:center;font-size:14px;font-weight:800;color:var(--red)">EST. DELAY +3 DAYS — AND GROWING</span>',f:'output 180/d vs 400/d plan (45%) · 2nd consecutive day · bottleneck stage'},
+      {ct:'📍 EXPOSURE',cc:'a',d:'<b>#XD-2026-Q4-031</b> ($420K, 35K sets) in the stage now — OTP Sep 5, buffer 6d. <b>#XD-2026-Q4-033</b> ($150K) enters the same line in ~4d — delay compounds.',f:'Impacted GMV = $420K + $150K = <b>$570K</b> · downstream G3 + curing + G2 lab (3–5d fixed) leave no slack'},
+      {ct:'✅ DISPATCHED — PER YOUR ALERT RULES',cc:'a',d:'09:12 auto-sent: <b>owner</b> (this summary) · <b>line manager</b> (investigation task + collection checklist link). No manual forwarding needed.',f:'Latest: cause identified (paint batch mismatch) · trial spray running · est. recovery to +1d'}],
+    what:[
+      ['LINE MGR','Investigating now with the collection checklist — cause, photos, batch no., oven log','👁 View collection status','收集进行中:2/5 项已提交'],
+      ['PLANT MGR','Weekend overtime slot to recover ~2 of the 3 slipped days','➤ Request confirmation','已请李厂确认加班位'],
+      ['SALES','Buyer note drafted — sends only if the slip exceeds +2 days','👁 Preview draft','买家沟通草稿(仅在延迟>2天时发送)']],
+    conf:'Confidence: live data · Sources: WIP monitor · A8 KB bottleneck & finish rules · PO schedule',
+    foot:[['Open in WIP board →','nav','t1_décor_wip_ross.html'],['Share','sec']]},
+  gaps:{t:'Expert Gate Insights — active across your standard flow',tags:['<span class="badge bd-r">1 CRITICAL</span>','<span class="badge bd-a">5 PAIN POINTS</span>'],
+    news:'A8 Christmas-Décor KB mapped to your 11-step flow: shade & finish lock at the colour swatch (G1 — approved standard, not a lab dip), adhesion tape-test on the PP sample (G3 — lifting = STOP before bulk release), correct test scope at the heavy-metal test (G2 — one formula, one test), plus PP float rule and first-article finish discipline.',
+    steps:[{ct:'📍 HIGHEST VALUE',cc:'a',d:'🚨 Surface treatment delay (Q4-031/033, $570K) · ⏳ Lab result Jul 24 (Q3-012, $198K) · 💡 phthalate scope rule already saved one wasted test cycle.',f:''}],
+    what:[['ALL','Every insight is pinned to its gate in the WIP board — hover a node for the summary, click for detail','Open WIP →','跳转 WIP board']],
+    conf:'Source: A8 Christmas-Décor KB',
+    foot:[['Open in WIP board →','nav','t1_décor_wip_ross.html'],['Share','sec']]}
+};
+const drawer=document.getElementById('drawer'),scrim=document.getElementById('scrim');
+function openIns(k){
+  const i=INS[k];if(!i)return;
+  document.getElementById('dtitle').textContent=i.t;
+  document.getElementById('dtags').innerHTML=i.tags.join(' ');
+  const cc={b:'color:var(--blue)',a:'color:var(--amber)',r:'color:var(--red)'};
+  let h=`<div class="dsec"><div class="dh b">📰 NEWS</div>${i.news}</div>`;
+  h+=`<div class="dsec" style="border-color:rgba(245,166,35,.35)"><div class="dh a">⚠️ WHY — CALCULATION CHAIN</div>`;
+  i.steps.forEach((st,ix)=>{
+    if(ix>0)h+=`<div class="calcarrow">↓</div>`;
+    h+=`<div class="calcstep"><span class="ct" style="${cc[st.cc]||''}">${st.ct}</span>${st.d}${st.f?`<div class="calcf">${st.f}</div>`:''}</div>`;
+  });
+  h+=`<div class="confline">${i.conf}</div></div>`;
+  h+=`<div class="dsec" style="border-color:rgba(45,212,167,.35)"><div class="dh g"><span style="color:var(--dim)">✔</span> WHAT — EXECUTION</div>`;
+  i.what.forEach((w,ix)=>{
+    h+=`<div class="whatrow"><span class="wn">${ix+1}</span><span style="flex:1"><b>${w[0]}</b> — ${w[1]}</span>${w[2]?`<button class="dbtn nav" style="padding:5px 12px;font-size:10px;white-space:nowrap;align-self:center" onclick="alert('Demo: ${w[3]||w[2]}')">${w[2]}</button>`:''}</div>`;
+  });
+  h+=`</div>`;
+  document.getElementById('dbody').innerHTML=h;
+  document.getElementById('dfoot').innerHTML=i.foot.map(f=>{
+    if(f[1]==='nav')return `<button class="dbtn nav" onclick="goPage('wip')">${f[0]}</button>`;
+    if(f[1]==='wx')return `<button class="dbtn pri" onclick="window.open('air8_demo_part2_wechat_tool.html')">${f[0]}</button>`;
+    return `<button class="dbtn ${f[1]}" onclick="closeIns()">${f[0]}</button>`;}).join('');
+  drawer.classList.add('open');scrim.classList.add('show');
+}
+function closeIns(){drawer.classList.remove('open');scrim.classList.remove('show')}
+/* insight ticker */
+(function(){const tis=document.querySelectorAll('.isl .ti');const dots=document.querySelectorAll('.isl .dots2 i');let i=0;
+  setInterval(()=>{tis[i].classList.remove('on');dots[i].classList.remove('on');
+    i=(i+1)%tis.length;tis[i].classList.add('on');dots[i].classList.add('on');},3200);})();
+function railOpen(k){document.getElementById('insrail').classList.remove('open');openIns(k);}
+function openAlertCfg(){document.getElementById('insrail').classList.remove('open');document.getElementById('cfgdrawer').classList.add('open');document.getElementById('cfgscrim').classList.add('show');}
+function closeAlertCfg(){document.getElementById('cfgdrawer').classList.remove('open');document.getElementById('cfgscrim').classList.remove('show');}
+function editCt2(btn){
+  const row=btn.closest('.ctc2');const v=row.querySelector('.ctv2');
+  if(btn.textContent==='✎'){
+    const ch=row.dataset.ch,id=row.dataset.id;
+    v.innerHTML=`<select class="cesel">${['WeChat','WhatsApp','Email','WeChat + Email','WhatsApp + Email'].map(o=>`<option ${o===ch?'selected':''}>${o}</option>`).join('')}</select> <input class="ceid" value="${id}" style="width:150px">`;
+    btn.textContent='✓';btn.style.borderColor='var(--green)';btn.style.color='var(--green)';
+  }else{
+    const ch=row.querySelector('.cesel').value,id=row.querySelector('.ceid').value;
+    row.dataset.ch=ch;row.dataset.id=id;
+    v.textContent=ch+' · '+id;
+    btn.textContent='✎';btn.style.borderColor='';btn.style.color='';
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeIns()});
+
+/* ===== WIP JS ===== */
+
+function ringSVGW(spec){
+  const R=18,C=2*Math.PI*R,cx=22,cy=22,W=4.5,S=44;
+  const colors={green:'#2dd4a7',amber:'#f5a623',red:'#f0546c',blue:'#3aa7f0',cyan:'#38cfe0'};
+  const track=`<circle cx="${cx}" cy="${cy}" r="${R}" stroke="#1e2a41" stroke-width="${W}" fill="none"/>`;
+  if(spec.startsWith('seg:')){
+    const nums=spec.slice(4).split(',').map(Number),tot=nums.reduce((a,b)=>a+b,0)||1;
+    const cols=['#2dd4a7','#f5a623','#f0546c'];let off=0,arcs='';
+    nums.forEach((n,i)=>{if(!n)return;const len=n/tot*C;
+      arcs+=`<circle cx="${cx}" cy="${cy}" r="${R}" stroke="${cols[i]}" stroke-width="${W}" fill="none" stroke-dasharray="${Math.max(len-1.5,0)} ${C-len+1.5}" stroke-dashoffset="${-off}"/>`;off+=len;});
+    return `<svg width="${S}" height="${S}">${track}${arcs}</svg>`;
+  }
+  const [pct,style]=spec.split(',');
+  const len=(+pct)/100*C;
+  return `<svg width="${S}" height="${S}">${track}<circle cx="${cx}" cy="${cy}" r="${R}" stroke="${colors[style]}" stroke-width="${W}" fill="none" stroke-dasharray="${len} ${C-len}" stroke-linecap="round"/></svg>`;
+}
+document.querySelectorAll('#pageWIP [data-ring]').forEach(el=>{el.insertAdjacentHTML('afterbegin',ringSVGW(el.dataset.ring));});
+
+/* flow editing: delete on card, insert via + */
+document.querySelectorAll('.fcard').forEach(c=>{
+  const d=document.createElement('span');d.className='fdel';d.textContent='✕';d.title='Delete step';
+  d.onclick=(e)=>{e.stopPropagation();
+    if(!confirm('Delete this step? Gates & history will be archived.'))return;
+    const prev=c.previousElementSibling,next=c.nextElementSibling;
+    if(next&&next.classList.contains('arrow'))next.remove();else if(prev&&prev.classList.contains('arrow'))prev.remove();
+    c.remove();showToast('🗑 Step deleted — flow & PO tracking re-sequenced (demo)');};
+  c.appendChild(d);
+});
+document.querySelectorAll('.arrow .plus').forEach(pl=>{
+  pl.onclick=(e)=>{e.stopPropagation();
+    const arrow=pl.parentElement;
+    const card=document.createElement('div');card.className='fcard';card.style.borderStyle='dashed';
+    card.innerHTML='<div class="nm"><span class="drag">≡</span>New Step</div><div class="mrow">⏱ set lead time · ⚙ set capacity</div><div class="stat dim">click ✎ in drawer to configure</div>';
+    const na=document.createElement('div');na.className='arrow';na.innerHTML='→<span class="plus">+</span>';
+    arrow.after(card);card.after(na);
+    na.querySelector('.plus').onclick=pl.onclick;
+    const d=document.createElement('span');d.className='fdel';d.textContent='✕';
+    d.onclick=(ev)=>{ev.stopPropagation();na.remove();card.remove();};
+    card.appendChild(d);
+    showToast('＋ Step inserted — drag to reorder disabled in demo');};
+});
+
+/* global popover */
+const gpop=document.getElementById('gpop');
+document.querySelectorAll('.fcard').forEach(card=>{
+  const src=card.querySelector('.pop');if(!src)return;
+  card.addEventListener('mouseenter',()=>{
+    gpop.innerHTML=src.innerHTML;
+    const r=card.getBoundingClientRect();
+    let x=Math.max(10,Math.min(r.left+r.width/2-140,window.innerWidth-300));
+    let y=r.bottom+9;if(y+170>window.innerHeight)y=r.top-9-170;
+    gpop.style.left=x+'px';gpop.style.top=y+'px';gpop.classList.add('show');
+  });
+  card.addEventListener('mouseleave',()=>gpop.classList.remove('show'));
+  card.addEventListener('click',()=>gpop.classList.remove('show'));
+});
+
+function filt(k,el){
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));el.classList.add('on');
+  document.querySelectorAll('.fcard').forEach(c=>{
+    if(k==='all'){c.classList.remove('dimmed');return}
+    c.classList.toggle('dimmed',!(c.dataset.f||'').split(' ').includes(k));
+  });
+  /* critical view also focuses the PO trackers on the one PO that needs action */
+  document.querySelectorAll('.porow').forEach(r=>{
+    r.classList.toggle('dimmed', k==='cr' && !r.classList.contains('crit2'));
+  });
+  /* critical-path view: keep the mini (pass-through) nodes readable, just de-emphasised */
+  if(k==='cp')document.querySelectorAll('#pageWIP .fcard.mini').forEach(c=>c.classList.remove('dimmed'));
+}
+
+/* drawer: 3 layers — BUYER REQUIREMENT / EXPERT PAIN+TIP / LIVE PO STATUS */
+const NODES={
+  rawA:{t:'Materials',s:'A8 standard step 1 of 7 · 7–14d · FR fabric · wire · botanicals · holder parts',c:[
+    {cls:'live',h:'✓ SOURCED',b:'All 6 POs sourced; material and FR certificates on file.'},
+    {cls:'expert',h:'◆ WHY THE FR DECISION STARTS HERE',b:'A8 KB, Holiday Décor: the supplier must confirm <b>FR grade before the material is used</b>. Deciding it at intake is what makes G2 a formality instead of an argument — tag every material FR-required (fabric, foam, artificial vine) or FR-exempt (pine cones, dried flowers, natural branches, shells) in writing, on the purchase record.'},
+    {cls:'pain',h:'⚠ CATEGORY PAIN — FR TREATMENT COST',b:'FR chemical treatment plus per-batch testing stacks up on fabric and foam décor. If the quotation was won on price, this is the budget that gets squeezed — and the squeeze shows up as a missing report at customs, not as a cheaper product.'},
+    {mn:1,cls:'crit',h:'📕 CUSTOMER MANUAL · p.96 · Lead — CLASSIFICATION CHECK',b:'Children\'s-product paint limit <b>90ppm</b> — any kids-classified SKU needs the low-Pb route. Confirm classification with the buyer at spec sign-off.',acts:['Confirm classification']}]},
+  g1A:{t:'◆ G1 — Colour & Finish Swatch',s:'A8 standard step 2 of 7 · 🟡 GATE · 3–5d',c:[
+    {cls:'expert',h:'◆ WHAT THIS GATE DECIDES',b:'The paint / spray / decorative finish is confirmed against the buyer standard before bulk — and for <b>candle holders, heat management is verified at the same moment</b>. Confirming the finish here also freezes the material set that G2 is about to test, so the FR test only has to run once.'},
+    {cls:'live',h:'📋 DEFAULT CHECKING POINTS',b:'Finish vs buyer standard (spray / paint / flock) · colour vs approved reference · candle-holder heat management verified · swatch retained, dated and signed · buyer confirmation recorded before bulk.',acts:['✎ Edit checking points|EDITG1A']}]},
+  g2A:{t:'◆ G2 — FR & Flammability Test',s:'A8 standard step 3 of 7 · 🔴 KEY GATE · 5–7d · EN 71-2 / EN 13501 / UL 588',c:[
+    {cls:'expert',h:'◆ THE DISPUTE IS SCOPE, NOT THE TEST',b:'A8 KB: <b>synthetic materials must be tested</b> — fabric, foam, artificial vine, artificial flowers. <b>Natural botanicals are exempt</b> — pine cones, dried flowers, natural branches, shells — and only need a keep-away-from-fire label. The recurring failure is a factory assuming a small run is exempt and then being unable to produce a report at customs inspection. Define the scope in the contract, in writing, by material.'},
+    {cls:'live',h:'📋 DEFAULT CHECKING POINTS',b:'Every synthetic material listed and classified · FR certificate per material per batch · natural botanicals tagged exempt with the warning label applied · report filed against the shipment · scope confirmed in writing with the buyer.',acts:['✎ Edit checking points|EDITG2A']},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH',b:'External lab, 5–7 days, and you do not control the queue. A day lost here is a day off the delivery date — there is nothing downstream to absorb it.'}]},
+  finA:{t:'Production — Assembly · Wiring · Electronics — LIVE ISSUE',s:'A8 standard step 4 of 7 · 5–14d · 400 pcs/d plan',c:[
+    {cls:'crit',h:'🚨 OUTPUT AT 45% OF PLAN — DAY 2',b:'180 pcs/day against a 400 pcs/day plan. <b>XD-2026-Q4-031</b> (Pre-lit Wreath, 35,000 pcs) is held here and <b>XD-2026-Q4-033</b> is queued behind it.',acts:['Alert the line manager|ALERT','Open the recovery options|delay']},
+    {cls:'pain',h:'⚠ LIT DÉCOR — ELECTRICAL COMPLIANCE',b:'A8 KB: décor with electronic components needs an <b>additional electrical compliance check</b>, and <b>UL / CE certification for light sets is expensive enough that suppliers routinely skip it</b>. A supplier declaration is not evidence. <b>XD-2026-Q4-031 is a pre-lit wreath</b> — its light set needs a certificate on file before this stage completes, not at inspection.',acts:['Add electrical check to this step']},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH — PACER',b:'This stage paces the flow: every day of delay here is one day off the delivery date. Upstream steps can be traded against each other; this one cannot.'}]},
+  g3A:{t:'◆ G3 — PP Sample ★',s:'A8 standard step 5 of 7 · ⭐ KEY GATE · 7–14d · buyer written sign-off',c:[
+    {cls:'expert',h:'◆ WHAT THIS GATE HOLDS',b:'A fully assembled décor item with the approved finish, checked for <b>stability</b> — and <b>candle holders must pass a tilt test on an inclined surface</b>. Buyer sign-off is written, and mass production does not start without it.'},
+    {cls:'pain',h:'⚠ CATEGORY PAIN — TILT TEST FAILURE RATE',b:'A8 KB: the tilt-test failure rate is high on complex shapes with a raised centre of gravity, and a tip-over is a fire hazard — one of the most serious incident types in this category. Caught on the PP sample it is a design tweak; caught at bulk it is <b>100% rework</b>. <b>PO #XD-2026-Q3-018 (Candle Holder Set 3-pc, 12,000 pcs) is at this gate now.</b>'},
+    {cls:'live',h:'📋 DEFAULT CHECKING POINTS',b:'Full assembled item with approved finish · stability / tilt test on an inclined surface (candle holders) · electrical function and certificate (lit items) · finish vs approved swatch · buyer written sign-off filed before mass production.',acts:['✎ Edit checking points|EDITG3A']},
+    {mn:1,cls:'pain',h:'📕 CUSTOMER MANUAL · p.10 · Use &amp; Abuse',b:'Kids-scope SKUs: tension 15 lbf + torque 4 in&middot;lb both directions, then small-parts / sharp check — run it on the PP sample so a failure is a design change, not a recall.',acts:['Add to checklist']},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH',b:'A8 KB flags buyer sign-off time as uncontrollable — typically 2–3 iterations at 3–4 weeks each on a new development. Submit the day the sample exists, and chase in writing; this is the single largest schedule risk you do not own.'}]},
+  mpA:{t:'Mass Production',s:'A8 standard step 6 of 7 · 14–28d · 400 pcs/d',c:[
+    {cls:'live',h:'▶ RUNNING',b:'Q3-012 (Wreath 18" Berry) in mass production.'},
+    {cls:'pain',h:'⚠ CATEGORY PAIN — BULKY, IRREGULAR PACKING',b:'A8 KB: wreaths and garlands ship large and irregular, so warehousing and freight cost more per dollar of goods — and in Q4 the container slot itself is the constraint. Book space ahead of the peak instead of after the inspection passes.'},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH',b:'The longest single block in the flow (14–28 days) and the one where a capacity clash between POs actually bites. Watch the load here, not the queue in front of it.'},
+    {mn:1,cls:'pain',h:'📕 CUSTOMER MANUAL · p.89 · Tracking Label',b:'Marks on <b>product AND packaging</b> — confirm product-level marks in artwork before mass production.',acts:['Add product mark']}]},
+  shipA:{t:'Ship',s:'A8 standard step 7 of 7 · external · FOB / DDP',c:[
+    {cls:'live',h:'◻ BOOKINGS',b:'Booked after mass production and final release. Q4-031 / Q4-033 pending production recovery.'},
+    {cls:'pain',h:'⚠ SEASONAL CASH SQUEEZE',b:'A8 KB: orders land in Q3 and ship in Q4 while the buyer pays after shipment — the supplier funds materials, labour and packaging across the whole gap. This is the window A8 finance is designed for.'}]},
+  matB:{t:'Materials',s:'A8 standard step 1 of 8 · 7–14d · glass blanks · caps · hangers · pigments',c:[
+    {cls:'live',h:'✓ SOURCED',b:'Blanks, caps, hangers and pigments sourced for all 3 POs; certificates filed per lot.'},
+    {cls:'expert',h:'◆ BUILD THE PIGMENT FILE HERE',b:'A8 KB: the recurring failure in this category is a pigment whose Pb/Cd status nobody can produce on demand. Record supplier, lot number and test certificate at intake and G2 becomes a lookup instead of a scramble.'},
+    {mn:1,cls:'crit',h:'📕 CUSTOMER MANUAL · p.96 · Lead — CLASSIFICATION CHECK',b:'Children\'s-product paint limit <b>90ppm</b> — any kids-classified SKU needs the low-Pb route. Confirm classification with the buyer at spec sign-off.',acts:['Confirm classification']}]},
+  stampB:{t:'Forming',s:'A8 standard step 2 of 8 · 3–7d · blow / press / cast · 800 pcs/d',c:[
+    {cls:'live',h:'▶ RUNNING',b:'Q1-009 forming; on plan. First measurable output of the flow — this is where a schedule slip first becomes visible.'},
+    {mn:1,cls:'pain',h:'📕 CUSTOMER MANUAL · p.11–12 · Sharp Edges',b:'No accessible sharp points or edges before and after use-and-abuse for kids-scope SKUs — 100% edge / burr check.',acts:['Add edge check']}]},
+  g1:{t:'◆ G1 — Colour & Finish Swatch',s:'A8 standard step 3 of 8 · 🟡 GATE · 3–5d',c:[
+    {cls:'expert',h:'◆ WHAT THIS GATE DECIDES',b:'Paint colour, glitter finish and decoration are confirmed against the buyer standard <b>before bulk decoration</b>. Once 43,000 pieces carry the wrong shade there is no cheap fix. Locking the swatch also freezes the pigment formula G2 is about to test, so the two gates only run once.'},
+    {cls:'pain',h:'⚠ CATEGORY PAIN — PP ITERATION COST SITS WITH YOU',b:'A8 KB: every sample round means new pigment and tooling adjustment, and the supplier carries that cost. Getting the swatch right first time is the cheapest round you will ever run.'},
+    {cls:'live',h:'📋 DEFAULT CHECKING POINTS',b:'Paint colour vs buyer Pantone / approved standard · glitter type and coverage · decoration artwork vs approved layout · swatch retained, dated and signed · buyer written confirmation before bulk · re-issue on any pigment or supplier change.',acts:['✎ Edit checking points|EDITG1']}]},
+  g2:{t:'◆ G2 — Heavy Metal Test (Pb / Cd)',s:'A8 standard step 4 of 8 · 🔴 KEY GATE · 3–5d · ASTM F963 / EN 71',c:[
+    {cls:'expert',h:'◆ WHY THIS GATE IS NON-NEGOTIABLE',b:'<b>Lead (Pb) and cadmium (Cd) in the paint or coating layer.</b> Testing must finish <b>before decoration starts</b> and be repeated <b>every time a colour or coating formula changes</b>. A heavy-metal finding at the buyer is a <b>100% rejection with no remedy</b> — the lot is returned or destroyed.'},
+    {cls:'pain',h:'⚠ WHERE IT ACTUALLY GOES WRONG',b:'A8 KB: low-price multi-colour printed ornaments are where over-limit results are most often found — every extra colour is another formula that has to clear on its own. And compliance testing is exactly the cost that gets cut when the price is squeezed.'},
+    {cls:'live',h:'📋 DEFAULT CHECKING POINTS',b:'Pb within limit (paint layer) · Cd within limit · one test per colour / coating formula · pigment lot number recorded · certificate filed against the batch · no decoration release without a pass.',acts:['✎ Edit checking points|EDITG2']},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH',b:'External lab, 3–5 days, and decoration cannot start until it clears. Send the samples the day the swatch is approved.'}]},
+  finB:{t:'Decoration — Printing · Glitter · Paint',s:'A8 standard step 5 of 8 · 5–10d · 400 pcs/d · PAIN POINT',c:[
+    {cls:'pain',h:'⚠ WHY THIS IS THE PAIN POINT',b:'This is where the pigment actually lands on 43,000 pieces. A8 KB: <b>heavy metal over-limit is a 100% rejection with no remedy</b>, and <b>multi-colour printed ornaments carry the highest exposure in the category</b>. Nothing is wrong today — this is what goes wrong if the input is not controlled.'},
+    {cls:'expert',h:'◆ HOW THE UPSTREAM GATES PROTECT IT',b:'Problems here are prevented, not fixed: <b>G1</b> locks the colour and finish standard · <b>G2</b> proves every formula is Pb/Cd compliant before the first piece is decorated. Both run inside existing handoffs.',acts:['Review G2 checklist|EDITG2']},
+    {cls:'live',h:'💰 WHY A8 CARES',b:'Compliance cost per colour formula is exactly what gets cut when a supplier is squeezed — and the resulting rejection is a total loss on the shipment. Testing is cheap to finance; a destroyed lot is not.'},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH — PACER',b:'Zero float from here on. A decoration failure found later costs delivery days one for one.'}]},
+  g3:{t:'◆ G3 — PP Sample ★',s:'A8 standard step 6 of 8 · ⭐ KEY GATE · 7–14d · buyer written sign-off',c:[
+    {cls:'expert',h:'◆ WHAT THIS GATE HOLDS',b:'A8 KB: the ornament PP sample is a <b>fully decorated article including its hook / hanger</b>, checked for colour, coating adhesion, glitter distribution, dimensions and hanger pull strength — then <b>signed off in writing by the buyer before mass production</b>.'},
+    {cls:'pain',h:'⚠ SHIP THE SAMPLE THE WAY YOU WILL SHIP THE BULK',b:'A8 KB: glass ornaments break in transit and the PP sample is the first casualty. Send it in the reinforced pack you intend to use for production — it doubles as your transit test and it removes an argument later.'},
+    {cls:'live',h:'📋 DEFAULT CHECKING POINTS',b:'Fully decorated article incl. hook / hanger · colour vs approved swatch · coating adhesion (tape test) · glitter distribution · dimensions · hanger pull strength · reinforced pack for sample transit · buyer written sign-off filed before mass production.',acts:['✎ Edit checking points|EDITG3']},
+    {mn:1,cls:'pain',h:'📕 CUSTOMER MANUAL · p.10 · Use &amp; Abuse',b:'Kids-scope SKUs: tension 15 lbf + torque 4 in&middot;lb both directions, then small-parts / sharp check — run it on the PP sample so a failure is a design change, not a recall.',acts:['Add to checklist']},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH',b:'Buyer sign-off time is the one duration you do not control. Submit the day the first decorated articles exist and chase in writing.'}]},
+  mpB:{t:'Mass Production',s:'A8 standard step 7 of 8 · 14–28d · 400 pcs/d · reinforced packing',c:[
+    {cls:'live',h:'◻ PENDING PP RELEASE',b:'Starts on the buyer&rsquo;s written sign-off at G3.'},
+    {cls:'pain',h:'⚠ CATEGORY PAIN — TRANSIT BREAKAGE',b:'A8 KB: breakage in transit is one of the top margin leaks for glass ornaments and the packaging that prevents it is expensive. Reinforced inner boxes are a cost line to be priced in, not absorbed.'},
+    {cls:'expert',h:'⛓ ON THE CRITICAL PATH',b:'The longest block in the flow (14–28 days) and where POs compete for the same line. Watch the load here.'},
+    {mn:1,cls:'pain',h:'📕 CUSTOMER MANUAL · p.89 · Tracking Label',b:'Marks on <b>product AND packaging</b> — confirm product-level marks in artwork before mass production.',acts:['Add product mark']}]},
+  shipB:{t:'Ship',s:'A8 standard step 8 of 8 · external · FOB',c:[
+    {cls:'live',h:'◻ NOT BOOKED',b:'Booking after mass production and final release.'},
+    {cls:'pain',h:'⚠ SEASONAL CASH SQUEEZE',b:'A8 KB: Q3 order intake, Q4 shipment, payment after shipment — the supplier funds the entire gap. Cancellation of a seasonal order is a total loss because the goods cannot be resold next season at value.'}]},
+};
+const GATE_LISTS={
+  EDITG1A:{t:'G1 · Colour & Finish Swatch (Holiday Décor)',items:[
+    ['Finish vs buyer standard (spray / paint / flock)','表面处理对照买家标准',1],
+    ['Colour vs approved reference','颜色对照签样',1],
+    ['Candle-holder heat management verified','烛台耐热性能验证',1],
+    ['Swatch retained, dated and signed','色板留样并签署日期',1],
+    ['Buyer confirmation recorded before bulk','大货前买家确认记录',1]]},
+  EDITG2A:{t:'G2 · FR & Flammability Test (EN 71-2 / EN 13501 / UL 588)',items:[
+    ['Every synthetic material listed and classified','合成material逐项列明分类',1],
+    ['FR certificate per material per batch','每种material每批阻燃证书',1],
+    ['Natural botanicals tagged exempt + warning label','天然材料标注豁免并贴警示标',1],
+    ['Report filed against the shipment','报告归档至该批出运',1],
+    ['Test scope confirmed in writing with the buyer','测试范围与买家书面确认',1]]},
+  EDITG3A:{t:'G3 · PP Sample ★ (Holiday Décor)',items:[
+    ['Full assembled item with approved finish','完整组装成品含已批准表面',1],
+    ['Stability / tilt test on an inclined surface','倾斜面稳定性测试（烛台）',1],
+    ['Electrical function + UL / CE certificate (lit items)','电气功能与UL/CE证书（带灯）',1],
+    ['Finish vs approved swatch','表面对照已签色板',1],
+    ['Buyer written sign-off filed before mass production','量产前买家书面签字归档',1]]},
+  EDITG1:{t:'G1 · Colour & Finish Swatch (Ornaments)',items:[
+    ['Paint colour vs buyer Pantone / standard','颜色对照买家色标',1],
+    ['Glitter type & coverage vs standard','闪粉种类与覆盖率',1],
+    ['Decoration artwork vs approved layout','装饰图稿对照签样',1],
+    ['Swatch retained, dated and signed','色板留样并签署日期',1],
+    ['Buyer written confirmation before bulk','大货前买家书面确认',1],
+    ['Re-issue on any pigment / supplier change','换颜料或供应商需重新确认',0]]},
+  EDITG2:{t:'G2 · Heavy Metal Test (Pb / Cd)',items:[
+    ['Pb (lead) within limit — paint layer','涂层铅含量达标',1],
+    ['Cd (cadmium) within limit','镉含量达标',1],
+    ['One test per colour / coating formula','每种颜色/涂层配方单独测试',1],
+    ['Pigment lot number recorded','颜料批号记录',1],
+    ['Certificate filed against the batch','证书归档至批次',1],
+    ['No decoration release without a pass','未通过不得放行装饰',0]]},
+  EDITG3:{t:'G3 · PP Sample ★ (Ornaments)',items:[
+    ['Fully decorated article incl. hook / hanger','完整装饰成品含挂钩',1],
+    ['Colour vs approved swatch','颜色对照已签色板',1],
+    ['Coating adhesion — tape test','涂层附着力（胶带测试）',1],
+    ['Glitter distribution & dimensions','闪粉分布与尺寸',1],
+    ['Hanger pull strength','挂环拉力强度',1],
+    ['Reinforced pack for sample transit','样品运输加固包装',1],
+    ['Buyer written sign-off filed before bulk','大货前买家书面签字归档',1]]}
+};
+const wdrwEl=document.getElementById('wdrw'),wscrimEl=document.getElementById('wscrim');
+function openDrawer(k){
+  const n=NODES[k];if(!n)return;
+  document.getElementById('wdtitle').textContent=n.t;
+  document.getElementById('wdsub').textContent=n.s;
+  document.getElementById('wdbody').innerHTML=n.c.filter(c=>!c.mn||MANUAL_ON).map(c=>`
+    <div class="dcard ${c.cls}"><div class="dh ${c.cls==='pain'?'a':c.cls==='expert'?'p':c.cls==='crit'?'r':'b'}">${c.h}</div>${c.b}
+    ${c.acts?`<div class="acts">${c.acts.map(a=>{const[l,act]=a.split('|');
+      if(act==='ALERT')return `<button class="sbtn pri" onclick="alert('Alert composer — recipient picker opens here, message adapts per role')">${l}</button>`;
+      if(act==='WX')return `<button class="sbtn pri" onclick="window.open('air8_demo_part2_wechat_tool.html')">${l}</button>`;
+      if(act&&act.startsWith('EDITG'))return `<button class="sbtn pri" style="background:var(--blue)" onclick="openEditStep('${act}')">${l}</button>`;
+      if(act)return `<button class="sbtn sec" onclick="ask('${act}')">${l}</button>`;
+      return `<button class="sbtn sec">${l}</button>`;}).join('')}</div>`:''}</div>`).join('');
+  wdrwEl.classList.add('open');wscrimEl.classList.add('show');
+}
+function closeDrawer(){wdrwEl.classList.remove('open');wscrimEl.classList.remove('show')}
+function openEditStep(gk){
+  const G=GATE_LISTS[gk]||GATE_LISTS.EDITG3;
+  document.getElementById('wdtitle').textContent='✎ Checking Points — '+G.t;
+  document.getElementById('wdsub').textContent='Pick / add what must be checked & captured — syncs to the line manager\'s task tool (photo evidence per point)';
+  document.getElementById('wdbody').innerHTML=`
+    <div class="dcard live"><div class="dh b">BASICS</div>
+      <div class="efield"><label>GATE</label><input id="e_name" value="${G.t}" readonly style="opacity:.7"></div>
+      <div style="display:flex;gap:10px">
+        <div class="efield" style="flex:1"><label>CHECK FREQUENCY</label><input id="e_lead" value="every lot"></div>
+        <div class="efield" style="flex:1"><label>EVIDENCE</label><input id="e_cap" value="photo per point"></div>
+      </div>
+    </div>
+    <div class="dcard pain"><div class="dh a">📋 CHECKING POINTS & INFO TO CAPTURE</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:10.5px;color:var(--sub)">
+        Tool language 收集工具语言:
+        <select id="e_lang" onchange="swapListLang()" style="background:var(--card2);border:1px solid var(--line2);border-radius:7px;color:var(--txt);font-size:10.5px;padding:4px 8px;outline:none">
+          <option value="en" selected>English</option><option value="zh">中文</option><option value="bi">Bilingual 双语</option>
+        </select>
+      </div>
+      <div id="e_list">${G.items.map(it=>`<label class="chk"><input type="checkbox" ${it[2]?'checked':''}><span class="cit" data-en="${it[0]}" data-zh="${it[1]}">${it[0]}</span></label>`).join('')}</div>
+      <div style="display:flex;gap:7px;margin-top:8px">
+        <input id="e_new" placeholder="＋ type a custom item & press Enter" style="flex:1;background:var(--card2);border:1px dashed var(--line2);border-radius:8px;color:var(--txt);font-size:11px;padding:7px 11px;outline:none" onkeydown="if(event.key==='Enter')addCollectItem()">
+        <button class="sbtn sec" onclick="addCollectItem()">Add</button>
+      </div>
+      <div style="margin-top:8px"><button class="sbtn sec" onclick="window.open('air8_demo_part2_wechat_tool.html#tool')">👁 Preview the line-manager tool</button></div>
+    </div>
+    <div class="dcard live"><div class="dh b">ACTIONS</div>
+      <div class="acts">
+        <button class="sbtn pri" style="background:var(--green)" onclick="saveStep()">✓ Save & sync</button>
+        <button class="sbtn sec" onclick="openDrawer('finA')">Cancel</button>
+        <button class="sbtn sec" style="border-color:rgba(240,84,108,.5);color:var(--red)" onclick="deleteStep()">🗑 Delete step</button>
+      </div>
+    </div>`;
+}
+function swapListLang(){
+  const l=document.getElementById('e_lang').value;
+  document.querySelectorAll('#e_list .cit').forEach(sp=>{
+    const en=sp.dataset.en,zh=sp.dataset.zh;
+    if(!en)return; /* custom items keep as typed */
+    sp.textContent=l==='zh'?zh:(l==='bi'?en+' · '+zh:en);
+  });
+  const inp=document.getElementById('e_new');
+  if(inp)inp.placeholder=l==='zh'?'＋ 输入自定义收集项,回车添加':(l==='bi'?'＋ custom item 自定义收集项 · Enter':'＋ type a custom item & press Enter');
+}
+function addCollectItem(){
+  const inp=document.getElementById('e_new');const v=inp.value.trim();if(!v)return;
+  const l=document.createElement('label');l.className='chk';
+  l.innerHTML='<input type="checkbox" checked><span class="cit">'+v+'</span> <span style="font-size:9px;color:var(--blue)">(new)</span>';
+  document.getElementById('e_list').appendChild(l);inp.value='';inp.focus();
+}
+function saveStep(){
+  const n=document.getElementById('e_list').querySelectorAll('input:checked').length;
+  closeDrawer();
+  showToast('✅ Saved · '+n+' checking points synced — 王工 receives the task tool (photo evidence per point)');
+}
+function deleteStep(){
+  if(!confirm('Remove this suggested gate? You can re-add it any time from the + between steps.'))return;
+  closeDrawer();showToast('🗑 Gate removed (demo) — use ✕ on the node card to remove it from the flow');
+}
+function showToast(msg){const t=document.getElementById('toast');t.innerHTML=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3800);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMC()});
+
+/* ===== Manual Center: no-manual -> upload -> live ===== */
+let MANUAL_ON=false;
+const MC_EMPTY=`
+  <div style="background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:11.5px;color:var(--sub);margin-bottom:10px">
+    Your flow is currently checked against the <b style="color:var(--txt)">A8 Christmas-Décor KB only</b> (expert pain points & tips).<br>
+    <span class="a">No customer manual on file — buyer-specific requirements are NOT being checked.</span>
+  </div>
+  <div class="mrowm up" onclick="mcUpload()"><span class="mi">⬆️</span>
+    <div style="flex:1"><div class="mt" style="color:var(--amber)">Upload a customer manual</div>
+    <div class="md">PDF / Word / scan · ~4 min: parse → extract requirements → map to YOUR gates & live POs · gaps and conflicts surface automatically</div></div><span class="a">+</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;opacity:.55">
+    <div style="border:1px dashed var(--line2);border-radius:10px;padding:10px;text-align:center;font-size:10px;color:var(--dim)">📌 requirements pinned<br>on flow nodes</div>
+    <div style="border:1px dashed var(--line2);border-radius:10px;padding:10px;text-align:center;font-size:10px;color:var(--dim)">💬 ask the Copilot<br>anything, cited by page</div>
+    <div style="border:1px dashed var(--line2);border-radius:10px;padding:10px;text-align:center;font-size:10px;color:var(--dim)">⬇ factory checklist<br>export (CN/EN)</div>
+  </div>`;
+const MC_FOOT_EMPTY=`<button class="mbtn" onclick="mcUpload()">⬆️ Upload manual</button><button class="mbtn gb" onclick="closeMC()">Close</button>`;
+const MC_UP=`
+  <div style="font-size:11px;color:var(--sub);margin-bottom:8px">‹ <span style="cursor:pointer;color:var(--blue)" onclick="mcHome()">Back</span></div>
+  <div class="mrowm up" style="justify-content:center;padding:26px" id="dropzone" onclick="mcStart()">
+    <div style="text-align:center"><div style="font-size:28px">📄</div><div style="font-weight:700;margin-top:6px">DemoBuyer_Childrens_Safety_Manual_v2025.1.pdf</div><div style="font-size:10px;color:var(--sub);margin-top:3px">click to upload · 106 pages · also accepted via WhatsApp / WeChat forward to the A8 bot</div></div>
+  </div>
+  <div class="prog" id="mcprog">
+    <div class="pstep" id="pp1"><span class="pspin"></span><span>Parsing 106 pages…</span></div>
+    <div class="pstep" id="pp2"><span class="pspin"></span><span>Extracting 118 requirements → safety · chemical · labeling · components…</span></div>
+    <div class="pstep" id="pp3"><span class="pspin"></span><span>Mapping against YOUR flow, pigments & active POs…</span></div>
+    <div class="pstep" id="pp4"><span class="pspin"></span><span>Checking conflicts with your gate configs & lab results…</span></div>
+  </div>
+  <div id="mcresult" style="display:none">
+    <div style="background:rgba(45,212,167,.07);border:1px solid rgba(45,212,167,.35);border-radius:11px;padding:12px 14px;font-size:11.5px;margin-top:10px;line-height:1.6">
+      ✅ <b>Parsed in 3m 48s — 118 rules extracted · 6 relevant to your flow:</b><br>
+      <span class="r">⛔ 1 conflict</span> — kids-product lead 100ppm vs Pigment RD-14 (legacy red) (p.96) → Lab Test G2<br>
+      <span class="a">⚠ 4 gaps</span> — Ni-content screening (p.16) · edge check (p.11) · use-&-abuse (p.10) · product tracking marks (p.89)<br>
+      <span class="a">🔎 1 check</span> — Pigment RD-22 (reformulated) 180–240ppm vs kids classification (p.96)<br>
+      <span style="font-size:10px;color:var(--sub)">112 rules not relevant to current POs — monitored silently, auto-activate on new product categories.</span>
+    </div>
+  </div>`;
+const MC_FOOT_UP=`<button class="mbtn" id="applybtn" style="display:none" onclick="applyManual()">📌 Apply to flow — show pins</button><button class="mbtn gb" onclick="mcHome()">Back</button>`;
+const MC_PARSED=`
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span style="font-size:16px">📕</span><b style="font-size:13.5px">Demo Buyer · Children's Safety Manual · v2025.1</b><span class="badge bd-g">118 RULES</span><span class="badge bd-r">1 CONFLICT</span><span class="badge bd-a">4 GAPS</span><span class="badge bd-a">1 CHECK</span></div>
+  <div class="catchips"><span class="catchip">🧒 Physical safety 31</span><span class="catchip">🧪 Chemical 24</span><span class="catchip">🏷 Labeling 22</span><span class="catchip">🧷 Components 26</span><span class="catchip">📄 Docs 15</span></div>
+  <div style="font-size:9.5px;font-weight:700;letter-spacing:.6px;color:var(--sub);margin:10px 0 2px">MAPPED TO YOUR FLOW · 6 OF 118</div>
+  <div class="reqrow"><span class="rs"><span class="badge bd-r">CONFLICT</span></span><span class="rt"><b>p.96</b> Paint-layer lead ≤90ppm (children's) — <b>Pigment RD-14 (legacy red) = 1,500–2,500ppm</b> · kids-classified SKUs cannot use this pigment</span><span class="rg" onclick="closeMC();openDrawer('lab')">→ Lab Test G2</span></div>
+  <div class="reqrow"><span class="rs"><span class="badge bd-a">CHECK</span></span><span class="rt"><b>p.96</b> Pigment RD-22 (reformulated) 180–240ppm: passes EN 71-3, <b>exceeds 90ppm kids paint limit</b> — confirm SKU classification</span><span class="rg" onclick="closeMC();openDrawer('lab')">→ Lab Test G2</span></div>
+  <div class="reqrow"><span class="rs"><span class="badge bd-a">GAP</span></span><span class="rt"><b>p.16</b> "Free of nickel — detectable = not permitted" — EN 1811 tests release, not content · add Ni screening</span><span class="rg" onclick="closeMC();openDrawer('lab')">→ Lab Test G2</span></div>
+  <div class="reqrow"><span class="rs"><span class="badge bd-a">GAP</span></span><span class="rt"><b>p.11–12</b> No accessible sharp points/edges before & after use-and-abuse — add 100% edge check</span><span class="rg" onclick="closeMC();openDrawer('trim')">→ Trim · Polish</span></div>
+  <div class="reqrow"><span class="rs"><span class="badge bd-a">GAP</span></span><span class="rt"><b>p.10</b> Tension 15 lbf + torque 4 in·lb both directions, then small-parts check</span><span class="rg" onclick="closeMC();openDrawer('insp')">→ Inspection</span></div>
+  <div class="reqrow"><span class="rs"><span class="badge bd-a">GAP</span></span><span class="rt"><b>p.89</b> Tracking label on product AND packaging — your product-level marks missing</span><span class="rg" onclick="closeMC();openDrawer('pack')">→ Packaging</span></div>
+  <div style="font-size:10.5px;color:var(--dim);margin-top:10px">112 rules on file, not relevant to current POs — auto-activate if you take a PO in a matching category.</div>`;
+const MC_FOOT_PARSED=`<button class="mbtn" onclick="mcUpload()">⬆️ Upload another manual</button><button class="mbtn gb" onclick="closeMC()">📌 View pins on flow</button><button class="mbtn gb" onclick="alert('Exports a 1-page factory checklist (CN/EN) for line leads')">⬇ Export factory checklist</button><button class="mbtn gb" onclick="closeMC();ask('manuals')">💬 Ask Copilot</button>`;
+function openMC(){if(event)event.stopPropagation();document.getElementById('mcov').classList.add('show');mcHome();}
+function closeMC(){document.getElementById('mcov').classList.remove('show')}
+function mcHome(){
+  document.getElementById('mcb').innerHTML=MANUAL_ON?MC_PARSED:MC_EMPTY;
+  document.getElementById('mcfoot').innerHTML=MANUAL_ON?MC_FOOT_PARSED:MC_FOOT_EMPTY;}
+function mcUpload(){if(event)event.stopPropagation();document.getElementById('mcb').innerHTML=MC_UP;document.getElementById('mcfoot').innerHTML=MC_FOOT_UP;}
+function mcStart(){
+  const prog=document.getElementById('mcprog');prog.classList.add('show');
+  document.getElementById('dropzone').style.opacity=.4;
+  ['pp1','pp2','pp3','pp4'].forEach((id,i)=>{
+    setTimeout(()=>{document.getElementById(id).classList.add('doing')},i*900);
+    setTimeout(()=>{const el=document.getElementById(id);el.classList.remove('doing');el.classList.add('done2');el.querySelector('span:last-child').textContent=el.querySelector('span:last-child').textContent.replace('…',' ✓')},i*900+850);
+  });
+  setTimeout(()=>{document.getElementById('mcresult').style.display='block';document.getElementById('applybtn').style.display='inline-block'},3900);
+}
+function applyManual(){
+  MANUAL_ON=true;
+  document.getElementById('pageWIP').classList.remove('noman');
+  document.getElementById('pageWIP').classList.add('justparsed');
+  document.getElementById('kbtagtxt').innerHTML='<b>Demo Buyer Children\'s Safety Manual v2025.1</b> · <span class="g">118 rules parsed ✓</span> · <span class="a">6 mapped · 1 conflict</span> — pinned on flow · ask the bot ›';
+  document.getElementById('kbtag').style.borderColor='rgba(45,212,167,.5)';
+  closeMC();
+  setTimeout(()=>document.getElementById('pageWIP').classList.remove('justparsed'),1600);
+  const _pb=document.getElementById('psB');const _both=_pb&&_pb.style.display!=='none';document.getElementById('mnn').textContent=_both?'8':'4';
+  showToast(_both?'📕 Manual mapped — requirements pinned on BOTH products (cyan M badges)':'📕 Manual mapped — 6 requirements · 4 nodes pinned (cyan M badges)');
+  setTimeout(()=>{document.getElementById('alov').classList.add('show')},2200);
+  /* bot context switches to manual Q&A */
+  const sg=document.getElementById('botsugs');
+  if(sg)sg.innerHTML=`
+    <button class="sug" onclick="ask('manuals')">📕 What does the manual require that I'm missing?</button>
+    <button class="sug" onclick="ask('leadq')">📕 Can Pigment RD-14 (legacy red) still be used after this manual?</button>
+    <button class="sug" onclick="ask('nickelq')">📕 Is our EN 1811 nickel test enough?</button>
+    <button class="sug" onclick="ask('trackq')">📕 What exactly is the tracking-label rule?</button>`;
+  addQ('Manual applied — what changed on my flow?');
+  addA('📕 <b>Requirements now live</b> (cyan M badges): <b>Materials</b> — kids-lead classification check (p.96) · <b>Forming</b> — 100% sharp-edge check (p.11–12) · <b>G3 PP Sample</b> — use-&-abuse protocol (p.10) · <b>Mass Production</b> — product tracking marks (p.89). Use the <b>📕 Manual reqs</b> filter to isolate them, or click any M badge.<div class="src">Buyer manual v2025.1 · parsed 3m 48s</div>');
+}
+/* bot — canned + free input, all grounded in the uploaded KB */
+const ANS={
+ delay:{q:'Why is the finish delay critical?',a:'Three reasons this one earns the red badge:<br>· <b>Trend, not blip</b> — 2nd consecutive day at 180/d against a 400/d plan, and the gap is widening (+3 days and growing).<br>· <b>Money in the stage</b> — #XD-2026-Q4-031 ($420K) is in it now with only <b>6 days of buffer</b>; #XD-2026-Q4-033 ($150K) enters in ~3 days.<br>· <b>Root cause upstream</b> — finish failures trace to surface prep, contamination or process control before the coat goes on, so waiting does not fix it.<br><br><b>Already moving:</b> alerts went out per your rules; 王工 is confirming cause on the floor (colour rework vs spray booth vs manpower vs incoming FR material).<div class="src">Source: live line output vs plan · PO schedule · A8 KB pain point</div>'},
+  crvi:{q:'Do we need a phthalates test for Christmas décor?',a:'<b>No — phthalates is not the décor test that matters.</b> For holiday décor the two that do are <b>flammability</b> (UL 588 / BS 4578 / EN 13501) on synthetic materials, and <b>heavy metals</b> (ASTM F963 / EN 71) on any painted or coated surface. Natural botanicals — pine cone, dried flower, natural twig — are <b>exempt from FR testing</b> and carry a keep-away-from-fire label instead.<div class="src">Source: A8 Christmas-Décor KB · Holiday Décor G2 scope rule</div>'},
+  adhesion:{q:'What if the coating adhesion test fails at PP?',a:'Failure = <b>100% PP rejection → strip and re-decorate = +10–15 days</b>. With only <b>15 days of float</b> between PP approval and the production deadline, that is a certain miss on the $150K order.<br><br><b>That is why the KB says: run a tape-pull pre-test on 3 pieces BEFORE formal PP.</b> Do it now: if it fails you still control the clock; if it passes, formal PP proceeds with confidence.<div class="src">Source: A8 KB · PP-stage pain point + expert tip · PO #XD-2026-Q4-033</div>'},
+  reach:{q:'Will the new red glitter formula pass EN 71?',a:'Result due <b>Aug 24</b>. The first submission <b>failed the lead limit</b> on the new red glitter, so the pigment supplier was changed and the batch re-submitted — decoration is correctly <b>held</b> in the meantime, because decorating now would put non-compliant paint on 22,000 pieces.<br><br><b>KB rule:</b> heavy-metal testing must be repeated <b>every time a colour or coating formula changes</b> — this is not a one-time PP test. Low-cost multi-colour printed ornaments are where it goes wrong most often.<div class="src">Source: A8 KB · Ornaments G2 · ASTM F963 / EN 71</div>'},
+  tariff:{q:'Which POs carry US tariff exposure?',a:'Exposure follows <b>destination and origin</b>, not product type:<br>· <b>EXPOSED</b> — US-bound, China-origin: <b>Ko***&rsquo;s Holiday Décor</b> ($1.02M) + <b>Ro*** Glass Ornaments</b> ($516K) → <b>$1.54M</b><br>· <b>NOT EXPOSED</b> — <b>Lo***&rsquo;s</b> Scented Candles ship to Canada ($180K)<br><br><b>Expert framing:</b> the KB notes Vietnam capacity as the standard hedge for China-origin décor, but current Vietnam cost and maturity are still behind China — so the practical lever is product mix and price, not relocation.<div class="src">Source: A8 KB · cross-category tariff note · destination mix on file</div>'},
+  kb:{q:'What&rsquo;s in the Christmas Décor KB?',a:'Four product families, each with its own gates: <b>Trees</b> — FR test per batch, colour swatch, electrical safety (UL 1598 / EN 60598), PP sample. <b>Ornaments</b> — colour/finish swatch, <b>heavy metal (Pb/Cd) before decoration</b>, PP sample with hook. <b>Holiday Décor</b> — colour/finish swatch (holders add a heat check), FR test on synthetic materials only, PP sample with <b>tilt test for candle holders</b>. <b>Candles</b> — fragrance/IFRA + flash point, <b>burn test in an external lab on production-run samples</b>, PP per fragrance+size.<br>Plus the monitoring thresholds: FR coverage &lt;100%, PP unsigned &gt;4 weeks, payment &gt;60 days past terms, materials pre-paid &lt;30%.<div class="src">Source: A8 Christmas-Décor KB (2026-06-30 FINAL)</div>'},
+  swatch:{q:'Swatch rules?',a:'<b>Approve the finish on the production substrate — never on a paper chip or lab dip</b> (not representative of a sprayed or flocked surface). Retain the approved swatch as the golden sample. For candle holders the swatch stage also verifies <b>heat management</b>; for ornaments it locks glitter density and print registration. Lock the pigment brand and grade at swatch, and keep a retention sample of the pigment lot.<div class="src">Source: A8 KB · G1 colour & finish swatch</div>'},
+  float:{q:'How much schedule float do I have?',a:'<b>15 days between PP approval and the production deadline</b> — the tightest constraint in the flow, and the deadline itself sits <b>14 days before CRD</b> to cover booking. Expert rule: start PP prep the same day the lab result lands; PP submission is day 1 of the buyer&rsquo;s approval clock, and the KB escalation threshold is <b>4 weeks unsigned</b>.<br>Current: XD-2026-Q3-012 PP est. Aug 30 (fine if the finish line recovers) · XD-2026-Q4-033 adhesion Aug 28 vs deadline Sep 12 — <b>no room for a re-decorate cycle</b>.<div class="src">Source: A8 KB · PP-stage float rule · PO schedule</div>'}
+};
+ANS.manuals={q:'What does the customer manual require that I am missing?',get a(){
+  if(!MANUAL_ON)return 'No customer manual uploaded yet — your flow is checked against the <b>A8 KB only</b>. Upload a buyer manual and I\'ll map every requirement to your gates, pigments and live POs automatically.<div class="src"><span style="color:var(--blue);cursor:pointer" onclick="openMC()">Open Manual Center →</span></div>';
+  return '<b>Buyer manual: 6 requirements mapped, sharpest first:</b><br>⛔ <b>p.96 lead conflict</b> — kids-scope paint limit 90ppm; Pigment RD-14 (legacy red) = 1,500–2,500ppm (200× over) and even your clean Pigment RD-22 (reformulated) (180–240ppm) exceeds it. <b>EN 71-3 pass ≠ CPSIA kids pass</b> — SKU classification decides everything.<br>⚠ <b>p.16</b> no detectable nickel (EN 1811 release test isn\'t enough — add content screening)<br>⚠ <b>p.11–12</b> sharp edges · <b>p.10</b> use-&-abuse · <b>p.89</b> product-level tracking marks<br><br>All pinned on flow nodes (M badges) with per-batch fixes.<div class="src">Buyer manual v2025.1 · pages cited inline</div>';}};
+ANS.delay={q:'Why is the surface treatment delay critical?',a:'Three compounding reasons:<br>① <b>It\'s the bottleneck</b> — 400/d plan is the slowest stage; lost days cannot be recovered downstream.<br>② <b>Two POs stack</b> — Q4-031 ($420K) is in the stage; Q4-033 ($150K) enters in ~4d. The delay doubles.<br>③ <b>Downstream chain</b> — drying/curing + packaging + final inspection all sit behind it; OTP buffer on Q4-031 is only <b>6 days</b>.<br><br>That\'s why the alert went to the owner at day 2, not day 5 — the WeChat thread shows the full dispatch.<div class="src">Source: WIP monitor · KB bottleneck rule · PO schedule</div>'};
+ANS.leadq={q:'Can Pigment RD-14 (legacy red) still be used after this manual?',a:'<b>For general (non-kids) décor: yes.</b> For any SKU classified as a children\'s product (intended primarily for 12 & under): <b>no</b> — the manual caps paint-layer lead at <b>90ppm</b> (p.96) and Pigment RD-14 (legacy red) runs 1,500–2,500ppm. Even Pigment RD-22 (reformulated) (180–240ppm) exceeds the kids paint limit. Action: confirm SKU classification with the buyer; kids lines go on the low-Pb route.<div class="src">Buyer manual v2025.1 p.96</div>'};
+ANS.nickelq={q:'Is our EN 1811 nickel test enough?',a:'<b>Not for this buyer.</b> EN 1811 measures nickel <i>release</i>; the manual requires <b>no detectable nickel content</b> (p.16) — a stricter standard. Add Ni-content screening to the lab scope for this buyer\'s POs and verify no Ni underplate in the antique finishes.<div class="src">Buyer manual v2025.1 p.16</div>'};
+ANS.trackq={q:'What exactly is the tracking-label rule?',a:'Permanent marks on <b>the product AND its packaging</b>: production location, date, batch/cohort (p.89). Your inner-box codes cover packaging only — add a laser/stamp batch mark at finishing (≈ zero cycle time). A separate label, if used, must be under 20×20mm.<div class="src">Buyer manual v2025.1 p.89</div>'};
+const KEYMAP=[[/cr\s?vi|chrome|chromium/i,'crvi'],[/adhes|tape|strip|replate|re-plate|fail/i,'adhesion'],[/reach|pb|lead|cw614|amendment|0\.1/i,'reach'],[/tariff|tariff-scope|t1|cu |botanical|pigment/i,'tariff'],[/swatch|dip|color|golden|compound/i,'swatch'],[/delay|surface|bottleneck|180/i,'delay'],[/float|otp|deadline|schedule|late/i,'float'],[/manual|nordhaus|lumen|packaging|eps|fsc|salt|label|prop 65/i,'manuals'],[/kb|knowledge|expert|rule/i,'kb']];
+function ask(k){if(event)event.stopPropagation();const e=ANS[k];if(!e)return;addQ(e.q);addA(e.a);}
+function freeAsk(){
+  const inp=document.getElementById('botq');const t=inp.value.trim();if(!t)return;inp.value='';
+  addQ(t);
+  const hit=KEYMAP.find(([re])=>re.test(t));
+  if(hit)setTimeout(()=>addA(ANS[hit[1]].a),450);
+  else setTimeout(()=>addA('I don\'t have a confident answer in the KB or your WIP data — escalated to an <b>A8 expert</b> (1 business day, ticket #A8-3117). Try: phthalate scope, adhesion risk, heavy-metal limits, tariff exposure, swatch rules, schedule float.<div class="src">Escalated</div>'),450);
+}
+function addQ(t){const log=document.getElementById('botlog');document.getElementById('bot').classList.remove('min');
+  const q=document.createElement('div');q.className='bmsg q';q.textContent=t;log.appendChild(q);log.scrollTop=log.scrollHeight;}
+function addA(h){const log=document.getElementById('botlog');
+  const a=document.createElement('div');a.className='bmsg ans';a.innerHTML=h;log.appendChild(a);log.scrollTop=log.scrollHeight;}
+
+
+/* ===== PO upload -> build Metal Decor WIP ===== */
+/* ===== CRITICAL PATH layer (computed from A8 knowledge — no client excel needed) ===== */
+NODES.cpath={t:'⛓ Critical Path — what actually decides on-time delivery',s:'from the A8 holiday-décor knowledge base · no data needed from you to start · refined as live data arrives',c:[
+  {cls:'expert',h:'★ HOW TO READ YOUR BOARD',b:'<b>Big bright cards = the nodes that decide your delivery</b> — the pacer stage, the control gates, and the inspections. <b>Small dim cards = pass-through steps</b>: they matter, but a good factory rarely loses a delivery there. The gold strip above the flow lists the exact MOMENTS to check — each is event-triggered (when material arrives / before the finish coat starts), not a calendar date.'},
+  {cls:'expert',h:'⛓ HOW A8 PICKS THE CRITICAL PATH',b:'These flows are serial, so in strict CPM terms every step has zero float and the whole flow is "critical" — which would make the filter useless. A8 uses a sharper test instead. A step is on the critical path if <b>you cannot buy your way out of it with your own resources</b>:<br><br>· <b>Hard predecessor</b> — nothing downstream may start until it clears (<b>all three gates</b>: the swatch releases bulk decoration, the lab release starts the paint, the PP sign-off starts mass production)<br>· <b>Pacer</b> — it sets the throughput of the whole flow (Production / Decoration, your lowest capacity)<br>· <b>Longest block</b> — it dominates the duration and it is where two POs collide (Mass Production)<br>· <b>Not yours to control</b> — an external lab or a buyer signature does not move faster because you add a shift<br><br>Everything else is recoverable with overtime, an extra line or an expedited purchase — that is why <b>Materials</b> and <b>Ship</b> are the only steps left off.'},
+  {cls:'expert',h:'⛓ WHAT IT IS',b:'Add up the A8 standard leads for your product type: Materials 7–14d → G1 swatch 3–5d → <b>G2 FR test 5–7d</b> → <b>Production 5–14d</b> → <b>G3 PP sample 7–14d</b> → <b>Mass production 14–28d</b> → Ship ≈ <b>41–82 days</b>, midpoint 61d — inside the A8 Christmas-Décor KB benchmark of 6–9 weeks order-to-ship. Five of the seven steps carry zero float. Only <b>Materials</b> and <b>Ship</b> sit outside — those are the two you can buy your way out of with expediting or air freight.. The chain is paced by its slowest, least-flexible stage — for holiday décor that is <b>Production &mdash; assembly, wiring, electronics (400 pcs/d, your lowest capacity)</b>.'},
+  {cls:'pain',h:'🥇 THE RULE THAT MATTERS',b:'<b>Before the pacer: delays get absorbed.</b> Materials / forming / assembly / trim sit in front of a queue — they can slip ~4–5 days before your ship date moves at all (that\u2019s their <b>float</b>).<br><b>After the pacer: zero float.</b> Every day lost at Finish, Dry, Pack or Inspection moves your delivery date <b>1 : 1</b>. Gold-underlined nodes = the zero-float chain.'},
+  {cls:'crit',h:'🚨 LIVE ON YOUR BOARD RIGHT NOW',b:'The Production delay is ON the critical path → it passes straight through to #XD-2026-Q4-031\u2019s delivery unless recovered — there is no downstream slack to absorb it. That\u2019s why this one alert is red while everything else stays quiet.'},
+  {cls:'live',h:'🛡 HOW THE GATES FIT',b:'G1–G3 sit on the path but add <b>≈0 days</b> — checks run inside existing handoffs. They exist to protect the pacer: a finish or paint failure discovered AFTER the coat means strip-and-redo <b>on the zero-float chain</b> = pure delivery delay. Cheap insurance exactly where a day costs a day.',acts:['Ask bot: why critical|delay']}]};
+(function(){
+  /* tiers: key = gates + pain/pacer + inspections + lab · mini = pass-through steps · normal = manual-pinned context */
+  var KEY={g1A:['⛓ CRITICAL PATH','bulk cannot start · float 0d'],
+           g2A:['⛓ CRITICAL PATH','external lab · float 0d'],
+           finA:['⛓ CRITICAL PATH · PACER','float 0d · pacer'],
+           g3A:['⛓ CRITICAL PATH','buyer sign-off · float 0d'],
+           mpA:['⛓ CRITICAL PATH','longest block · float 0d'],
+           g1:['⛓ CRITICAL PATH','bulk cannot start · float 0d'],
+           g2:['⛓ CRITICAL PATH','external lab · float 0d'],
+           finB:['⛓ CRITICAL PATH · PACER','float 0d · pacer'],
+           g3:['⛓ CRITICAL PATH','buyer sign-off · float 0d'],
+           mpB:['⛓ CRITICAL PATH','longest block · float 0d']};
+  var MINI=['rawA','shipA','matB','stampB','shipB'];
+  document.querySelectorAll('#pageWIP .fcard').forEach(function(c){
+    var m=(c.getAttribute('onclick')||'').match(/openDrawer\('(\w+)'\)/);
+    if(!m)return;var k=m[1];
+    if(KEY[k]){
+      c.classList.add('keyc');
+      c.dataset.f=((c.dataset.f||'')+' cp').trim();
+      if(KEY[k][0]){var t=document.createElement('span');t.className='keytag';t.textContent=KEY[k][0];c.appendChild(t);}
+      var f=document.createElement('span');f.className='flt zero';f.textContent='⛓ '+KEY[k][1];c.appendChild(f);
+    }else if(MINI.indexOf(k)>=0){
+      c.classList.add('mini');
+    }
+  });
+  /* board and filter chip agree from first paint: critical path is the default lens */
+  var _cp=document.getElementById('fcp');if(_cp)filt('cp',_cp);
+})();
+
+const PO_UP=`
+  <div style="background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:11.5px;color:var(--sub);margin-bottom:10px">
+    Drop any customer PO — A8 reads it, identifies the <b style="color:var(--txt)">product type</b>, and returns the <b style="color:var(--txt)">A8 standard WIP</b> for that category with the <b style="color:var(--txt)">critical path</b> and the <b style="color:var(--txt)">pain point</b> marked. You decide whether to track every step or the critical path only.</div>
+  <div class="mrowm up" style="justify-content:center;padding:26px" id="podrop" onclick="poStart()">
+    <div style="text-align:center"><div style="font-size:28px">📄</div><div style="font-weight:700;margin-top:6px">PO_ON-2026-Q1-007_Nor.pdf</div><div style="font-size:10px;color:var(--sub);margin-top:3px">click to upload · 214 KB · also accepted via WhatsApp / WeChat forward to the A8 bot</div></div>
+  </div>
+  <div class="prog" id="poprog">
+    <div class="pstep" id="pq1"><span class="pspin"></span><span>Reading PO — buyer · SKUs · quantities · target dates…</span></div>
+    <div class="pstep" id="pq2"><span class="pspin"></span><span>Identifying product type → matching flow template…</span></div>
+    <div class="pstep" id="pq3"><span class="pspin"></span><span>Building WIP — mapping your 3 live POs onto the steps…</span></div>
+    <div class="pstep" id="pq4"><span class="pspin"></span><span>Locating pain points · inserting control gates · drafting your to-dos…</span></div>
+  </div>
+  <div id="pores2" style="display:none">
+    <div style="background:rgba(45,212,167,.07);border:1px solid rgba(45,212,167,.35);border-radius:11px;padding:12px 14px;font-size:11.5px;margin-top:10px;line-height:1.6">
+      ✅ <b>Built in 42s — A8 standard WIP for Christmas Ornaments · 8 steps · 3 POs mapped:</b><br>
+      <span class="a">⚠ 1 pain point</span> — Decoration: heavy metal over-limit in the pigment is a 100% rejection with no remedy, and multi-colour printing carries the highest exposure in the category<br>
+      <span class="a">⛓ 5 of 8 steps are on the critical path</span> — G1 swatch · G2 heavy-metal test · decoration · G3 PP sample ★ · mass production. Track the whole flow, or switch to <b>critical path only</b> and report 5 steps instead of 8.<br>
+      <span style="font-size:10px;color:var(--sub)">Every gate carries a default checking list from the A8 Christmas-Décor KB — review &amp; edit; it syncs to your line manager\'s task tool with photo evidence per point.</span>
+    </div>
+  </div>`;
+function openPO(){
+  document.getElementById('pob').innerHTML=PO_UP;
+  document.getElementById('pofoot').innerHTML='<button class="mbtn" id="poapply" style="display:none" onclick="applyPO()">📌 Apply to board — show gates & pain point</button><button class="mbtn gb" onclick="closePO()">Close</button>';
+  document.getElementById('poov').classList.add('show');
+}
+function closePO(){document.getElementById('poov').classList.remove('show')}
+function poStart(){
+  const prog=document.getElementById('poprog');prog.classList.add('show');
+  document.getElementById('podrop').style.opacity=.4;
+  ['pq1','pq2','pq3','pq4'].forEach((id,i)=>{
+    setTimeout(()=>{document.getElementById(id).classList.add('doing')},i*900);
+    setTimeout(()=>{const el=document.getElementById(id);el.classList.remove('doing');el.classList.add('done2');el.querySelector('span:last-child').textContent=el.querySelector('span:last-child').textContent.replace('…',' ✓')},i*900+850);
+  });
+  setTimeout(()=>{document.getElementById('pores2').style.display='block';document.getElementById('poapply').style.display='inline-block'},3900);
+}
+function applyPO(){
+  closePO();
+  window._wipBuilt=true;
+  const fall=document.getElementById('fall');if(fall)filt('all',fall);
+  const ps=document.getElementById('psB');ps.style.display='';
+  const hr=document.getElementById('hdright');
+  if(hr)hr.innerHTML='<span><b>11</b> POs · <b>$1.72M</b> · 3 products</span><span class="badge bd-g">9 ✓</span><span class="badge bd-a">1 ⚠</span><span class="badge bd-r">1 🚨</span>';
+  const kr=document.getElementById('kpiRing'),kc=document.getElementById('kpiCV');
+  if(kr){kr.dataset.ring='seg:9,1,1';kr.innerHTML='';kr.insertAdjacentHTML('afterbegin',ringSVGW('seg:9,1,1'));kr.insertAdjacentHTML('beforeend','<div class=\'cv\' id=\'kpiCV\'>9<small style=\'color:var(--dim)\'>/11</small></div>');}
+  const gp=document.getElementById('gpn');if(gp)gp.textContent='2';
+  document.getElementById('pageWIP').classList.add('justbuilt');
+  setTimeout(()=>document.getElementById('pageWIP').classList.remove('justbuilt'),1900);
+  ps.scrollIntoView({behavior:'smooth',block:'start'});
+  if(MANUAL_ON)document.getElementById('mnn').textContent='7';
+  showToast('🏭 A8 standard WIP for Christmas Ornaments — 8 steps, 5 on the critical path. Click any gate to review & edit its checking points.');
+  const sg=document.getElementById('botsugs');
+  if(sg&&!MANUAL_ON)sg.innerHTML=`
+    <button class="sug" onclick="ask('kb')">◆ Why is G2 before decoration, not after?</button>
+    <button class="sug" onclick="ask('swatch')">◆ What does the G3 PP sample check?</button>
+    <button class="sug" onclick="ask('tariff')">Which POs carry tariff exposure?</button>`;
+}
+
+/* ===== CRITICAL-PATH-ONLY MODE + TAP-THE-BAR PROGRESS UPDATE ===== */
+(function(){
+'use strict';
+var TODAY=new Date('2026-08-12T00:00:00');
+function D(s){return new Date(s+'T00:00:00');}
+function addD(d,n){var x=new Date(d.getTime());x.setDate(x.getDate()+Math.round(n));return x;}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmt(d){return d.getDate()+' '+MN[d.getMonth()];}
+function dif(a,b){return Math.round((a-b)/864e5);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+/* lead ranges per node (gates ≈0d — they run inside existing handoffs; shipment excluded from production ETA) */
+var LEAD={rawA:[7,14],g1A:[3,5],g2A:[5,7],finA:[5,14],g3A:[7,14],mpA:[14,28],shipA:null,
+ matB:[7,14],stampB:[3,7],g1:[3,5],g2:[3,5],finB:[5,10],g3:[7,14],mpB:[14,28],shipB:null};
+function mid(k){var l=LEAD[k];return l?(l[0]+l[1])/2:0;}
+
+/* PO book — dt = production deadline (FWL); crd = commercial ship date; dt = crd − 14 on every line
+   rep = how many leading steps the client has actually reported (the rest are A8 assumptions) */
+var POS={
+'XD-2026-Q4-031':{sec:'psA',prod:'Pre-lit Wreath 24"',qty:35000,dt:'2026-09-14',crd:'2026-09-28',rep:2,eta:'2026-09-28',pen:6,pd:{3:'2026-08-10'}},
+'XD-2026-Q4-033':{sec:'psA',prod:'Garland 9ft Frosted',qty:18000,dt:'2026-10-06',crd:'2026-10-20',rep:0,eta:'2026-09-28',pen:0},
+'XD-2026-Q3-012':{sec:'psA',prod:'Wreath 18" Berry',qty:22000,dt:'2026-09-13',crd:'2026-09-27',rep:4,eta:'2026-09-02',pen:0},
+'XD-2026-Q3-018':{sec:'psA',prod:'Candle Holder Set 3-pc',qty:12000,dt:'2026-09-30',crd:'2026-10-14',rep:3,eta:'2026-09-12',pen:0},
+'XD-2026-Q4-029':{sec:'psA',prod:'Garland 6ft Pine',qty:9000,dt:'2026-10-29',crd:'2026-11-12',rep:0,eta:'2026-10-02',pen:0},
+'XD-2026-Q4-041':{sec:'psA',prod:'Nutcracker Figurine Set',qty:12000,dt:'2026-11-14',crd:'2026-11-28',rep:0,eta:'2026-10-12',pen:0},
+'ON-2026-Q1-007':{sec:'psB',prod:'Glass Ball Set 12-pc',qty:15000,dt:'2026-10-22',crd:'2026-11-05',rep:1,eta:'2026-09-28',pen:0},
+'ON-2026-Q1-009':{sec:'psB',prod:'Hand-painted Glass Drops',qty:20000,dt:'2026-10-29',crd:'2026-11-12',rep:0,eta:'2026-10-03',pen:0},
+'ON-2026-Q1-012':{sec:'psB',prod:'Shatterproof Ball 24-pc',qty:8000,dt:'2026-11-14',crd:'2026-11-28',rep:0,eta:'2026-10-13',pen:0}};
+
+var SECS={},CPON=false,UP=null;
+
+function buildSecs(){
+  document.querySelectorAll('#pageWIP .prodsec').forEach(function(sec){
+    var flow=sec.querySelector('.flow');if(!flow||!sec.id)return;
+    var o={keys:[],crit:[],names:[],cards:[],minw:flow.style.minWidth||''};
+    flow.querySelectorAll('.fcard').forEach(function(c){
+      var m=(c.getAttribute('onclick')||'').match(/openDrawer\('(\w+)'\)/);if(!m)return;
+      o.keys.push(m[1]);o.crit.push(c.classList.contains('keyc'));o.cards.push(c);
+      var nm=c.querySelector('.nm');
+      o.names.push(nm?nm.textContent.replace(/[≡◆]/g,'').trim():m[1]);
+      if(c.dataset.mrow0===undefined){var mr=c.querySelector('.mrow');c.dataset.mrow0=mr?mr.innerHTML:'';}
+    });
+    SECS[sec.id]=o;
+  });
+}
+function poOf(row){var b=row.querySelector('.pid b');return b?b.textContent.replace(/^PO\s*#/,'').trim():null;}
+
+function buildPOs(){
+  document.querySelectorAll('#pageWIP .porow').forEach(function(row){
+    var po=poOf(row);if(!po||!POS[po])return;
+    var P=POS[po];P.row=row;
+    if(!P.segs){
+      P.segs=[];row.querySelectorAll('.pseg').forEach(function(s){
+        P.segs.push(s.classList.contains('blocked')?'blocked':s.classList.contains('cur')?'cur':s.classList.contains('done')?'done':'');
+      });
+    }
+    P.cur=P.segs.indexOf('done')<0?0:0;
+    for(var i=0;i<P.segs.length;i++){if(P.segs[i]!=='done'){P.cur=i;break;}}
+    P.pst0=row.querySelector('.pst').outerHTML;
+  });
+}
+
+/* ---- plan dates: back-scheduled from the production deadline (Dt) ---- */
+function planDate(po,i){
+  var P=POS[po],o=SECS[P.sec],s=0;
+  if(P.pd&&P.pd[i])return D(P.pd[i]);
+  for(var j=i+1;j<o.keys.length;j++)s+=mid(o.keys[j]);
+  return addD(D(P.dt),-s);
+}
+function actualDate(po,i){
+  var P=POS[po],seed=0,k;for(k=0;k<po.length;k++)seed+=po.charCodeAt(k);
+  var v=((seed+i*7)%5)-2;
+  var a=addD(planDate(po,i),v);
+  var lim=addD(TODAY,-1);
+  return a>lim?lim:a;
+}
+function remLead(po,from){
+  var o=SECS[POS[po].sec],s=0;
+  for(var j=from;j<o.keys.length;j++){if(LEAD[o.keys[j]])s+=mid(o.keys[j]);}
+  return s;
+}
+function tierOf(buf,sm){return buf<0?'r':buf<sm?'a':'g';}
+function smOf(po,from){
+  var o=SECS[POS[po].sec],s=0;
+  for(var j=from;j<o.keys.length;j++){var l=LEAD[o.keys[j]];if(!l)continue;
+    var sp=(l[1]-l[0])*0.5,C=1,K=1,k=o.keys[j];
+    if(k==='finA'||k==='finB'||k==='mpA'||k==='mpB'){K=1.5;}
+    if(k==='g2A'||k==='g2'){C=2;}
+    if(k==='g3A'||k==='g3'){C=2;}
+    if(k==='rawA'||k==='matB'){C=1.5;}
+    s+=sp*C*K;}
+  return Math.max(2,Math.round(s));
+}
+
+/* ================= CRITICAL-PATH-ONLY MODE ================= */
+function groupSegs(po){
+  var P=POS[po],o=SECS[P.sec],out=[],pend=[],hid=0;
+  o.keys.forEach(function(k,i){
+    if(CPON&&!o.crit[i]){pend.push(P.segs[i]);hid++;return;}
+    var grp=pend.concat([P.segs[i]]),st='';
+    if(grp.indexOf('blocked')>=0)st='blocked';
+    else if(grp.every(function(x){return x==='done';}))st='done';
+    else if(grp.indexOf('cur')>=0||grp.indexOf('done')>=0)st='cur';
+    out.push({st:st,hid:hid,i:i,half:st==='cur'&&grp.indexOf('done')>=0&&grp.indexOf('cur')<0});
+    pend=[];hid=0;
+  });
+  return out;
+}
+function paintSegs(po){
+  var P=POS[po];if(!P.row)return;
+  var g=groupSegs(po),box=P.row.querySelector('.psegs'),h='';
+  g.forEach(function(x){
+    h+='<span class="pseg '+x.st+(x.half?' half':'')+'" data-i="'+x.i+'"'+(x.hid?' data-hid="+'+x.hid+'"':'')+
+       ' title="'+esc(SECS[P.sec].names[x.i])+(x.hid?' (incl. '+x.hid+' untracked step'+(x.hid>1?'s':'')+')':'')+' — click to update"></span>';
+  });
+  box.innerHTML=h;
+}
+function applyCP(on){
+  CPON=on;
+  var page=document.getElementById('pageWIP');page.classList.toggle('cponly',on);
+  Object.keys(SECS).forEach(function(id){
+    var o=SECS[id],sec=document.getElementById(id);if(!sec)return;
+    var flow=sec.querySelector('.flow'),lo=0,hi=0,n=0;
+    o.keys.forEach(function(k,i){
+      var c=o.cards[i],pa=c.previousElementSibling,na=c.nextElementSibling;
+      var arr=(pa&&pa.classList.contains('arrow'))?pa:((na&&na.classList.contains('arrow'))?na:null);
+      if(on&&!o.crit[i]){
+        c.classList.add('cphide');if(arr)arr.classList.add('cphide');
+        var l=LEAD[k];if(l){lo+=l[0];hi+=l[1];}n++;
+      }else{
+        c.classList.remove('cphide');if(arr)arr.classList.remove('cphide');
+        var mr=c.querySelector('.mrow');
+        if(mr){
+          if(on){
+            var ll=LEAD[k]||[0,0],base=(c.dataset.mrow0||'').replace(/⏱\s*\d+–\d+d\s*·?\s*/,'');
+            var isGate=ll[0]===0&&ll[1]===0;
+            mr.innerHTML=isGate
+              ?(n?'⏱ '+lo+'–'+hi+'d upstream <b style="color:#e8c064">＋'+n+' merged</b> · gate 0d':'gate 0d · '+base)
+              :'⏱ '+(ll[0]+lo)+'–'+(ll[1]+hi)+'d'+(n?' <b style="color:#e8c064">＋'+n+' merged</b>':'')+(base?' · '+base:'');
+          }else mr.innerHTML=c.dataset.mrow0;
+        }
+        lo=0;hi=0;n=0;
+      }
+    });
+    var tail=sec.querySelector('.cptail');
+    if(on&&n){
+      if(!tail){tail=document.createElement('div');tail.className='cptail';flow.appendChild(tail);}
+      tail.innerHTML='＋'+n+' step'+(n>1?'s':'')+' after inspection<br><span>not tracked (external)</span>';
+      tail.style.display='';
+    }else if(tail)tail.style.display='none';
+    flow.style.minWidth=on?'':o.minw;
+    var note=sec.querySelector('.cpnote');
+    if(!note){note=document.createElement('div');note.className='cpnote';flow.parentElement.insertAdjacentElement('afterend',note);}
+    var nk=o.crit.filter(Boolean).length;
+    note.innerHTML=on
+      ?'⛓ <b>Tracking '+nk+' of '+o.keys.length+' steps.</b> Untracked steps are not requested from the factory — their lead time is merged into the next tracked step, so the schedule still adds up. A slip inside a merged step surfaces as a late date on the step that follows it.'
+      :'';
+    note.style.display=on?'':'none';
+  });
+  Object.keys(POS).forEach(function(po){if(POS[po].row)paintSegs(po);});
+  var chip=document.getElementById('fcp'),fall=document.getElementById('fall');
+  if(chip)chip.style.display=on?'none':'';
+  if(on&&fall&&typeof filt==='function')filt('all',fall);
+  if(!on&&chip&&typeof filt==='function')filt('cp',chip);
+  var sw=document.getElementById('cpsw');if(sw)sw.classList.toggle('on',on);
+  if(typeof showToast==='function')showToast(on
+    ?'⛓ Critical path only — 4 tracked steps per flow. Untracked lead time merged forward; PO bars shortened to match.'
+    :'Full flow restored — all steps visible and tracked.');
+}
+window.toggleCP=function(){applyCP(!CPON);};
+
+/* ================= TAP-THE-BAR UPDATE PANEL ================= */
+function tracked(sec){var o=SECS[sec],a=[];o.keys.forEach(function(k,i){if(!CPON||o.crit[i])a.push(i);});return a;}
+
+function openUp(po,ci){
+  var P=POS[po],o=SECS[P.sec];
+  UP={po:po,ci:ci,state:'c',reason:null,bf:[]};
+  var tr=tracked(P.sec);
+  if(tr.indexOf(ci)<0)ci=UP.ci=tr.filter(function(x){return x>=ci;})[0]!==undefined?tr.filter(function(x){return x>=ci;})[0]:tr[tr.length-1];
+  UP.bf=tr.filter(function(j){return j<ci&&j>=P.rep;});
+  var plan=planDate(po,ci),dt=D(P.dt),crd=D(P.crd),eta=D(P.eta),buf=dif(dt,eta),sm=smOf(po,P.cur);
+  var h='';
+  h+='<div class="uphd"><div><b>'+po+'</b> · '+esc(P.prod)+' · '+P.qty.toLocaleString()+' pcs</div>'+
+     '<div class="upsub">Production deadline (FWL) <b>'+fmt(dt)+'</b> · ship CRD '+fmt(crd)+' · current projection <b class="'+tierOf(buf,sm)+'2">'+fmt(eta)+'</b> ('+(buf>=0?'+':'')+buf+'d buffer)</div></div>';
+
+  /* mini bar */
+  h+='<div class="upbar">';
+  tr.forEach(function(j){
+    var st=P.segs[j],cl=j===ci?'sel':(st==='done'?'dn':(st==='blocked'?'bl':(st==='cur'?'cu':'')));
+    h+='<span class="ub '+cl+'" title="'+esc(o.names[j])+'"></span>';
+  });
+  h+='</div><div class="upbarl">'+esc(o.names[tr[0]])+'<span style="float:right">'+esc(o.names[tr[tr.length-1]])+'</span></div>';
+
+  /* backfill */
+  if(UP.bf.length){
+    var pre={},cap=TODAY;
+    for(var bi=UP.bf.length-1;bi>=0;bi--){var bj=UP.bf[bi],pdt=planDate(po,bj);pre[bj]=pdt>cap?cap:pdt;cap=addD(pre[bj],-1);}
+    h+='<div class="upsec"><h4>① EARLIER STEPS — NEVER REPORTED ('+UP.bf.length+')</h4>'+
+       '<div class="upnote">Pre-filled with the planned date and full order quantity so you can confirm in one click. Anything you leave untouched is stored as <b>estimated</b> and is excluded from lead-time learning.</div>';
+    UP.bf.forEach(function(j){
+      h+='<div class="uprow"><span class="un">'+esc(o.names[j])+'</span>'+
+         '<span class="tagi" id="tg_'+j+'">est. from plan</span>'+
+         '<input class="di" type="date" id="bf_'+j+'" value="'+iso(pre[j])+'" oninput="UPmark('+j+')">'+
+         '<input class="di qi" type="number" id="bq_'+j+'" value="'+P.qty+'" oninput="UPmark('+j+')"><span class="upunit">pcs</span></div>';
+    });
+    h+='<div style="text-align:right;margin-top:7px"><span class="lnk" onclick="UPall()">Confirm all as planned →</span></div></div>';
+  }
+  /* the clicked step */
+  h+='<div class="upsec hot"><h4>'+(UP.bf.length?'② ':'')+'THIS STEP · '+esc(o.names[ci]).toUpperCase()+'</h4>'+
+     '<div class="uprow"><span class="un">Status</span><div class="stbtns">'+
+     '<button class="stb on" id="st_c" onclick="UPst(\'c\')">✓ Completed</button>'+
+     '<button class="stb" id="st_p" onclick="UPst(\'p\')">◐ Partly done</button>'+
+     '<button class="stb" id="st_n" onclick="UPst(\'n\')">⏸ Not started</button></div></div>'+
+     '<div id="upfields">'+
+     '<div class="uprow"><span class="un" id="dlbl">Completion date</span>'+
+     '<span class="upplan">plan '+fmt(plan)+'</span>'+
+     '<input class="di" type="date" id="upDate" value="" oninput="UPchk()"></div>'+
+     '<div class="uprow" style="border:none;padding-top:0"><span class="un"></span><span class="dchips">'+
+     '<span class="dchip" onclick="UPd(0)">Today</span><span class="dchip" onclick="UPd(-1)">Yesterday</span>'+
+     '<span class="dchip" onclick="UPd(\'plan\')">Plan '+fmt(plan)+'</span></span></div>'+
+     '<div class="uprow"><span class="un" id="qlbl">Output quantity</span>'+
+     '<span class="upplan">order '+P.qty.toLocaleString()+'</span>'+
+     '<input class="di qi" type="number" id="upQty" value="'+P.qty+'" oninput="UPchk()"> <span class="upunit">pcs</span></div>'+
+     '<div id="rsnbox" style="display:none"><div class="uprow" style="border:none"><span class="un" style="color:var(--amber)">Later than plan — what held it up?</span></div>'+
+     '<div class="dchips" style="padding-bottom:4px">'+
+     ['Upstream material','Capacity shortfall','Quality rework','Buyer change','Other'].map(function(r,ri){
+       return '<span class="dchip" id="rs_'+ri+'" onclick="UPr('+ri+',\''+r+'\')">'+r+'</span>';}).join('')+
+     '</div><div class="upnote">One tap. This is the only way a delay inside an untracked step ever becomes visible — and it feeds the A8 knowledge base.</div></div>'+
+     '</div><div class="upwarn" id="upwarn"></div></div>';
+
+  document.getElementById('upb').innerHTML=h;
+  document.getElementById('upfoot').innerHTML='<button class="mbtn" id="upsave" onclick="UPsave()">✓ Save update</button><button class="mbtn gb" onclick="closeUP()">Cancel</button>';
+  document.getElementById('uphdt').textContent='Update progress — '+po;
+  document.getElementById('upov').classList.add('show');
+}
+window.closeUP=function(){document.getElementById('upov').classList.remove('show');};
+window.UPmark=function(j){var t=document.getElementById('tg_'+j);if(t){t.textContent='confirmed';t.classList.add('ok');}};
+window.UPall=function(){UP.bf.forEach(function(j){UPmark(j);});};
+window.UPd=function(v){
+  var d=v==='plan'?planDate(UP.po,UP.ci):addD(TODAY,v);
+  document.getElementById('upDate').value=iso(d);UPchk();};
+window.UPr=function(ri,r){
+  UP.reason=r;[0,1,2,3,4].forEach(function(i){document.getElementById('rs_'+i).classList.remove('on');});
+  document.getElementById('rs_'+ri).classList.add('on');};
+window.UPst=function(s){
+  UP.state=s;['c','p','n'].forEach(function(x){document.getElementById('st_'+x).classList.toggle('on',x===s);});
+  document.getElementById('st_p').classList.toggle('amb',s==='p');
+  document.getElementById('upfields').style.display=s==='n'?'none':'';
+  document.getElementById('dlbl').textContent=s==='p'?'Progress as of':'Completion date';
+  document.getElementById('qlbl').textContent=s==='p'?'Output so far':'Output quantity';
+  var q=document.getElementById('upQty');
+  if(s==='p'&&+q.value===POS[UP.po].qty)q.value=Math.round(POS[UP.po].qty*0.45);
+  if(s==='c')q.value=POS[UP.po].qty;
+  UPchk();};
+function warn(m){var w=document.getElementById('upwarn');w.textContent=m;w.style.display=m?'block':'none';return !m;}
+window.UPchk=function(){
+  var P=POS[UP.po],v=document.getElementById('upDate').value;
+  if(!v)return warn('');
+  var d=D(v);
+  if(d>TODAY)return warn('⚠ Date is in the future — enter the date it actually happened.');
+  var last=null;
+  UP.bf.forEach(function(j){var b=document.getElementById('bf_'+j);if(b&&b.value){var x=D(b.value);if(!last||x>last)last=x;}});
+  if(!last&&P.rep>0)last=actualDate(UP.po,P.rep-1);
+  if(last&&d<last)return warn('⚠ Earlier than the previous step ('+fmt(last)+'). Steps cannot run backwards.');
+  var plan=planDate(UP.po,UP.ci);
+  document.getElementById('rsnbox').style.display=(UP.state!=='n'&&d>plan)?'block':'none';
+  return warn('');
+};
+window.UPsave=function(){
+  var P=POS[UP.po],o=SECS[P.sec],ci=UP.ci;
+  if(UP.state==='n'){closeUP();if(typeof showToast==='function')showToast('No change recorded for '+o.names[ci]+'.');return;}
+  var v=document.getElementById('upDate').value;
+  if(!v){warn('⚠ Enter the date for this step.');return;}
+  if(!UPchk())return;
+  var d=D(v),plan=planDate(UP.po,ci),late=dif(d,plan);
+  if(late>0&&!UP.reason){warn('⚠ '+late+' day'+(late>1?'s':'')+' later than plan — pick a reason (one tap).');return;}
+  var qty=Math.max(0,Math.min(P.qty,+document.getElementById('upQty').value||0));
+  var pct=qty/P.qty, done=UP.state==='c';
+  var oldEta=D(P.eta), oldBuf=dif(D(P.dt),oldEta);
+  var newCur, base, extra;
+  if(done){newCur=ci+1;base=d;extra=0;}
+  else {newCur=ci;base=TODAY>d?TODAY:d;extra=mid(o.keys[ci])*(1-pct);}
+  var eta=addD(base,extra+remLead(UP.po,newCur));
+  if(P.pen&&newCur<=o.keys.indexOf('finA'))eta=addD(eta,P.pen);
+  var buf=dif(D(P.dt),eta),sm=smOf(UP.po,newCur),tier=tierOf(buf,sm);
+  /* commit */
+  for(var i=0;i<newCur;i++)P.segs[i]='done';
+  if(newCur<P.segs.length)P.segs[newCur]=(tier==='r'&&newCur===o.keys.indexOf('finA'))?'blocked':'cur';
+  P.rep=newCur;P.eta=iso(eta);P.cur=newCur;
+  paintSegs(UP.po);
+  var lbl=newCur;
+  if(CPON){var trk=tracked(P.sec).filter(function(x){return x>=newCur;});if(trk.length)lbl=trk[0];}
+  var nm2=lbl<o.keys.length?o.names[lbl]:'Complete';
+  if(nm2.length>19)nm2=nm2.slice(0,18)+'…';
+  var pst=P.row.querySelector('.pst');
+  pst.className='pst '+tier;
+  pst.textContent=(tier==='r'?'🚨 ':tier==='a'?'⚠ ':'✓ ')+nm2+' · '+(buf>=0?'+':'')+buf+'d';
+  P.row.classList.toggle('crit2',tier==='r');P.row.classList.toggle('warn2',tier==='a');
+  /* result view */
+  var dd=dif(eta,oldEta),db=buf-oldBuf;
+  var h='<div class="upok">✓ Update saved · '+esc(o.names[ci])+' '+(done
+        ?'completed '+fmt(d)+(late>0?' <span class="a2">('+late+'d later than plan · '+esc(UP.reason)+')</span>':late<0?' <span class="g2">('+(-late)+'d ahead of plan)</span>':' <span class="g2">(on plan)</span>')
+        :'at '+Math.round(pct*100)+'% as of '+fmt(d)+' <span class="a2">('+Math.round((1-pct)*100)+'% of this step still to run)</span>')+'</div>';
+  h+='<div class="upsec"><h4>WHAT THIS CHANGED</h4>'+
+     '<div class="uprow"><span class="un">Projected production finish</span><b>'+fmt(oldEta)+' → <span class="'+tier+'2">'+fmt(eta)+'</span></b>'+(dd?'<span class="dlt '+(dd>0?'a2':'g2')+'">'+(dd>0?'+':'')+dd+'d</span>':'<span class="dlt g2">no change</span>')+'</div>'+
+     '<div class="uprow"><span class="un">Buffer to FWL '+fmt(D(P.dt))+'</span><b>'+(oldBuf>=0?'+':'')+oldBuf+'d → <span class="'+tier+'2">'+(buf>=0?'+':'')+buf+'d</span></b>'+(db?'<span class="dlt '+(db<0?'a2':'g2')+'">'+(db>0?'+':'')+db+'d</span>':'<span class="dlt g2">—</span>')+'</div>'+
+     '<div class="uprow"><span class="un">Safety margin needed for the remaining path</span><b>'+sm+'d</b></div>'+
+     '<div class="uprow"><span class="un">Ship CRD '+fmt(D(P.crd))+'</span><b class="'+tier+'2">'+(tier==='r'?'booking buffer being consumed':tier==='a'?'holds, but no slack left':'protected')+'</b></div></div>';
+  h+='<div class="upsec"><h4>WHAT A8 DOES NEXT</h4><div class="upnote2">'+
+     (tier==='r'
+      ?'Projection is past the production deadline. Owner + line manager notified now; compression options (overtime on the pacer, split shipment) sent with the days each buys back.'
+      :tier==='a'
+      ?'Buffer is thinner than the remaining path needs. This PO moves to the watch list and the pacer stage gets a checking task before the batch arrives.'
+      :'On track. Next request goes out automatically when <b>'+esc(o.names[lbl]||'shipment')+'</b> reaches its planned date ('+fmt(planDate(UP.po,Math.min(lbl,o.keys.length-1)))+').')+
+     '</div></div>';
+  var shrt=[];UP.bf.forEach(function(j){var q=document.getElementById('bq_'+j);if(q&&+q.value<P.qty)shrt.push(esc(o.names[j])+' '+(+q.value).toLocaleString());});
+  if(shrt.length)h+='<div class="upnote">⚠ Short output recorded upstream: <b>'+shrt.join(' · ')+'</b> vs order '+P.qty.toLocaleString()+'. A step that never reaches full quantity caps everything downstream — flagged for the owner.</div>';
+  if(late>0)h+='<div class="upnote">Reason logged against <b>'+esc(o.names[ci])+'</b>. Three logs of the same reason on the same step and A8 raises it as a structural finding for the expert review.</div>';
+  document.getElementById('upb').innerHTML=h;
+  document.getElementById('upfoot').innerHTML='<button class="mbtn" onclick="closeUP()">Done</button>';
+  if(typeof showToast==='function')showToast('📌 '+UP.po+' updated — projection '+fmt(eta)+' · buffer '+(buf>=0?'+':'')+buf+'d to FWL.');
+};
+
+/* ---- wire up ---- */
+function boot(){
+  buildSecs();buildPOs();
+  document.querySelectorAll('#pageWIP .postrip').forEach(function(strip){
+    strip.addEventListener('click',function(e){
+      var s=e.target.closest('.pseg');if(!s)return;
+      e.stopPropagation();
+      var row=s.closest('.porow'),po=poOf(row);
+      if(!po||!POS[po])return;
+      openUp(po,+s.dataset.i);
+    },true);
+  });
+  Object.keys(POS).forEach(function(po){if(POS[po].row)paintSegs(po);});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+
+</script>
+</body>
+</html>
