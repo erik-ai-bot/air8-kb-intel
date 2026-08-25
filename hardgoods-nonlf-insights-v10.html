@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Hardgoods Non-LF — Deep Insights V10</title>
+<style>
+  *{box-sizing:border-box;} html{scroll-behavior:smooth;}
+  body{font-family:-apple-system,'Segoe UI','Helvetica Neue',sans-serif;background:#f8fafc;margin:0;color:#0f172a;}
+  .wrap{max-width:1240px;margin:0 auto;padding:24px;}
+  .header{background:linear-gradient(135deg,#0f172a 0%,#1e40af 60%,#0ea5a4 100%);color:white;padding:30px 28px;border-radius:14px;margin-bottom:16px;box-shadow:0 12px 32px rgba(15,23,42,.18);}
+  .header h1{margin:0 0 6px;font-size:26px;letter-spacing:.5px;}
+  .header p{margin:4px 0 0;opacity:.9;font-size:13.5px;}
+  .navbar{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:white;border-radius:12px;box-shadow:0 4px 12px rgba(15,23,42,.06);margin-bottom:24px;position:sticky;top:0;z-index:10;}
+  .navchip{font-size:12px;font-weight:600;color:#334155;background:#f1f5f9;padding:7px 12px;border-radius:20px;text-decoration:none;transition:all .15s;border:1px solid transparent;}
+  .navchip:hover{background:#14b8a6;color:white;border-color:#14b8a6;}
+  .parthdr{color:white;padding:18px 22px;border-radius:12px;margin:30px 0 14px;box-shadow:0 6px 18px rgba(15,23,42,.12);}
+  .ptag{font-size:11px;font-weight:800;letter-spacing:2px;opacity:.85;}
+  .ptitle{font-size:22px;font-weight:800;margin-top:2px;}
+  .pdesc{font-size:13px;opacity:.92;margin-top:4px;}
+  .subhead{font-size:15px;margin:22px 0 10px;color:#0f172a;font-weight:700;padding-left:10px;border-left:3px solid #14b8a6;}
+  .kpis{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:16px;}
+  .kpi{background:white;border-radius:11px;padding:12px;box-shadow:0 4px 12px rgba(15,23,42,.06);border-top:3px solid #14b8a6;}
+  .kpi .lbl{font-size:10.5px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
+  .kpi .val{font-size:19px;font-weight:800;margin-top:6px;color:#0f172a;}
+  .card{background:white;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(15,23,42,.06);margin-bottom:14px;}
+  .callout{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #f97316;padding:10px 14px;border-radius:8px;margin-top:12px;font-size:13px;color:#7c2d12;}
+  .callout.green{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);border-left-color:#22c55e;color:#065f46;}
+  .callout.red{background:linear-gradient(135deg,#fee2e2 0%,#fecaca 100%);border-left-color:#ef4444;color:#7f1d1d;}
+  .callout.gray{background:#f1f5f9;border-left-color:#64748b;color:#334155;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{background:#f1f5f9;text-align:left;padding:8px 10px;color:#334155;font-weight:700;border-bottom:2px solid #e2e8f0;}
+  td{padding:7px 10px;border-bottom:1px solid #f1f5f9;}
+  table.compact th, table.compact td{padding:5px 7px;font-size:11.5px;}
+  tr:hover td{background:#f8fafc;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid2-wide{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .insight{background:white;border-radius:11px;padding:14px;box-shadow:0 4px 12px rgba(15,23,42,.06);border-left:4px solid #14b8a6;}
+  .insight .ihead{font-size:13.5px;color:#0f172a;margin-bottom:8px;display:flex;align-items:center;gap:8px;line-height:1.35;}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .iwhy{font-size:12px;color:#475569;margin:6px 0;line-height:1.55;}
+  .iact{font-size:12px;color:#0f172a;margin-top:8px;line-height:1.55;}
+  .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:6px;}
+  .glossary{background:#0f172a;color:#e2e8f0;padding:22px;border-radius:12px;margin-top:20px;}
+  .glossary h3{margin:0 0 12px;font-size:15px;color:white;}
+  .glossary table{font-size:12.5px;color:#cbd5e1;}
+  .glossary th{background:#1e293b;color:#94a3b8;}
+  .glossary td{border-color:#1e293b;}
+  .footer{text-align:center;color:#94a3b8;font-size:12px;margin-top:20px;padding:20px;}
+  .tip{cursor:help;border-bottom:1px dotted #94a3b8;}
+  @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr);} .grid2,.grid2-wide,.grid3{grid-template-columns:1fr;}}
+
+  /* ── retention heatmap tooltips ── */
+  .tt-wrap { position: relative; display: inline-block; width: 100%; height: 100%; }
+.tt-box { display: none !important; }
+#tt-global { display: none; position: fixed; z-index: 9999;
+  background: #0f172a; color: #e2e8f0; font-size: 11px; padding: 8px 12px; border-radius: 7px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.5); border: 1px solid #334155;
+  white-space: nowrap; line-height: 1.7; text-align: left;
+  max-height: 260px; overflow-y: auto; max-width: 280px; pointer-events: none; }
+
+  .cohort-cell { cursor: pointer; user-select: none; transition: outline .15s; position: relative; }
+  .cohort-cell:hover { outline: 2px solid #14b8a6; outline-offset: -2px; }
+  .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(15,23,42,.45); z-index:999; }
+  .modal-backdrop.show { display:block; }
+  .cohort-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1000;
+                  background:white; border-radius:14px; box-shadow:0 30px 60px rgba(15,23,42,.30);
+                  width:min(520px, 92vw); max-height:80vh; overflow:hidden; flex-direction:column; }
+  .cohort-modal.show { display:flex; }
+  .cohort-modal .mhdr { padding:16px 20px; background:linear-gradient(135deg,#0ea5a4 0%, #0e7490 100%); color:white; display:flex; justify-content:space-between; align-items:center; }
+  .cohort-modal .mhdr h4 { margin:0; font-size:15px; font-weight:700; }
+  .cohort-modal .mhdr .meta { font-size:12px; opacity:.9; margin-top:2px; }
+  .cohort-modal .mclose { background:rgba(255,255,255,.18); border:none; color:white; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:16px; line-height:1; }
+  .cohort-modal .mclose:hover { background:rgba(255,255,255,.3); }
+  .cohort-modal .mbody { padding:14px 20px; overflow-y:auto; flex:1; }
+  .cohort-modal .mbody ul { margin:0; padding-left:20px; font-size:13px; color:#0f172a; line-height:1.8; }
+  .cohort-modal .mbody ul li { margin-bottom:2px; }
+  .cohort-modal .empty { padding:20px; text-align:center; color:#94a3b8; font-size:13px; }
+</style></head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <h1>🔍 Hardgoods Non-LF Suppliers — Deep Insights V10</h1>
+    <p>Plain-English edition · $124.69M / 11,921 FRs / 124 total suppliers (LF 20 · Non-LF 104) · 71 buyers (LF 14 · Non-LF 57) · 175 supplier–buyer pairs · 40 active in 2026Q2</p>
+    <p style="font-size:12px;opacity:.75;">Source: Data Catalog · Pulselink · KB · Window 2024-01 → 2026-Q2 · Requestor: Jerri Zhou · Owner: AI + Expert (Josephine) · Generated 2026-06-23</p>
+  </div>
+
+  <div class="navbar"><a href="#part1" class="navchip">📊&nbsp;Portfolio Snapshot</a><a href="#part2" class="navchip">🗺️&nbsp;Market Coverage</a><a href="#part3" class="navchip">📦&nbsp;Product Portfolio</a><a href="#part4" class="navchip">💰&nbsp;Deal Size Dynamics</a><a href="#part5" class="navchip">🔄&nbsp;Customer Lifecycle</a><a href="#part6" class="navchip">⚠️&nbsp;Concentration & Buyer Risk</a><a href="#part7" class="navchip">⚙️&nbsp;Operational Patterns</a><a href="#part8" class="navchip">🎫&nbsp;Supplier Rating Status</a><a href="#part9" class="navchip">🔥&nbsp;Key Findings</a></div>
+
+  <div id="part1" class="parthdr" style="background:linear-gradient(135deg,#0ea5a4 0%, #0e7490 100%);">
+    <div class="ptag">PART I</div>
+    <div class="ptitle">📊&nbsp;&nbsp;Portfolio Snapshot</div>
+    <div class="pdesc">8 headline metrics at a glance.</div>
+  </div>
+  <h3 class="subhead">1.1 &nbsp; Headline KPIs</h3>
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Total Financing</div><div class="val">$124.69M</div></div>
+    <div class="kpi" style="border-top-color:#3b82f6;"><div class="lbl">Total FRs</div><div class="val">11,921</div></div>
+    <div class="kpi" style="border-top-color:#3b82f6;"><div class="lbl">Total Suppliers</div><div class="val">124</div></div>
+    <div class="kpi" style="border-top-color:#14b8a6;"><div class="lbl">Median Deal Size</div><div class="val">$2.4K</div></div>
+    <div class="kpi" style="border-top-color:#f97316;"><div class="lbl">90th-pct Deal Size</div><div class="val">$27.8K</div></div>
+    <div class="kpi" style="border-top-color:#22c55e;"><div class="lbl">Same-Day Disb.</div><div class="val">100.0%</div></div>
+    <div class="kpi" style="border-top-color:#ef4444;"><div class="lbl">Active (2026Q2)</div><div class="val">40</div></div>
+    <div class="kpi" style="border-top-color:#8b5cf6;"><div class="lbl">New in 2026 H1</div><div class="val">17</div></div>
+  </div>
+
+
+  <div id="part2" class="parthdr" style="background:linear-gradient(135deg,#10b981 0%, #0e7490 100%);">
+    <div class="ptag">PART II</div>
+    <div class="ptitle">🗺️&nbsp;&nbsp;Market Coverage</div>
+    <div class="pdesc">Where we play today by country and Hardgoods category (mapped from product descriptions).</div>
+  </div>
+  <h3 class="subhead">2.1 &nbsp; Country × Hardgoods Category Coverage Matrix</h3>
+  <div class="card" style="overflow-x:auto;">
+    <table class='compact'><tr><th>Country</th><th style='font-size:11px;'>Bath Towels</th><th style='font-size:11px;'>Bedding</th><th style='font-size:11px;'>Decorative Textile Accessories</th><th style='font-size:11px;'>Dinnerware / Tableware</th><th style='font-size:11px;'>Furniture - Others</th><th style='font-size:11px;'>Home Textile - Others</th><th style='font-size:11px;'>Indoor Furniture</th><th style='font-size:11px;'>Rugs & Flooring</th><th style='font-size:11px;'>Table Décor</th><th style='font-size:11px;'>Table linen / Napery</th></tr><tr><td><b>India</b></td><td style='background:rgba(20,184,166,0.60);text-align:center;font-weight:700;color:white;'>2</td><td style='background:rgba(20,184,166,0.60);text-align:center;font-weight:700;color:white;'>2</td><td style='background:rgba(20,184,166,0.60);text-align:center;font-weight:700;color:white;'>2</td><td style='background:rgba(20,184,166,0.90);text-align:center;font-weight:700;color:white;'>4</td><td style='background:rgba(20,184,166,0.75);text-align:center;font-weight:700;color:white;'>3</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:rgba(20,184,166,0.75);text-align:center;font-weight:700;color:white;'>3</td></tr><tr><td><b>China</b></td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:rgba(20,184,166,0.75);text-align:center;font-weight:700;color:white;'>3</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td></tr><tr><td><b>HONG KONG</b></td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td></tr><tr><td><b>Vietnam</b></td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:rgba(20,184,166,0.45);text-align:center;font-weight:700;color:#0f172a;'>1</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;font-weight:700;color:#cbd5e1;'>·</td></tr></table>
+    <div class="callout">
+      📍 <b>India dominates Hardgoods supplier diversity</b> — clusters across Dinnerware, Bath Towels, Bedding, Decorative Textile, Table linen, Furniture.
+      <b>China</b> concentrates in Furniture &amp; Indoor Furniture; <b>Vietnam</b> contributes Indoor Furniture; <b>Hong Kong</b> is Furniture-Others.
+    </div>
+  </div>
+
+
+  <h3 class="subhead">2.2 &nbsp; Top 8 Hardgoods Categories (# suppliers)</h3>
+  <div class="card">
+    <div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Furniture - Others</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:420.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">12 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Dinnerware / Tableware</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:315.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">9 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Indoor Furniture</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:280.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">8 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Kitchenware</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:245.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">7 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Bedding</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:210.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">6 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Wall Décor</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:175.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">5 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Bath Towels</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:175.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">5 sup</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Table linen / Napery</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:140.0px;height:100%;background:#22c55e;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">4 sup</div>
+        </div>
+    <div class="callout green">
+      ✅ <b>Furniture - Others (12 suppliers)</b> is the broadest single category. Dinnerware, Indoor Furniture and Kitchenware form a stable mid-band; Bath Towels and Bedding are tighter specialised pockets.
+    </div>
+  </div>
+
+
+  <div id="part3" class="parthdr" style="background:linear-gradient(135deg,#8b5cf6 0%, #0e7490 100%);">
+    <div class="ptag">PART III</div>
+    <div class="ptitle">📦&nbsp;&nbsp;Product Portfolio</div>
+    <div class="pdesc">What products our suppliers actually sell — mapped from FR product descriptions to Hardgoods categories.</div>
+  </div>
+  <h3 class="subhead">3.1 &nbsp; Top 10 Suppliers by Product Category Breadth</h3>
+  <div class="card">
+    <div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">PD SD EXPORTS</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:420.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">7 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">DYNAMICK DECOR PRIVATE LIMITED</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:420.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">7 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">AVC TEXTILES</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:300.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">5 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">GLOBE METAL & GLASS EXPORTS</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:240.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">4 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">CURIO CRAFTS PRIVATE LIMITED</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:240.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">4 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">KAYSONS HANDICRAFTS</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:240.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">4 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">RAJKAMAL INTERNATIONAL</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:240.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">4 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ELITE HOMES</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:180.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">3 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">OASIS HOMETEX PRIVATE LIMITED</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:180.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">3 cats</div>
+        </div><div style="display:flex;align-items:center;margin:5px 0;font-size:12px;">
+          <div style="width:240px;color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ABDS OVERSEAS LLP</div>
+          <div style="flex:1;background:#f1f5f9;border-radius:5px;height:18px;position:relative;">
+            <div style="width:180.0px;height:100%;background:#8b5cf6;border-radius:5px;"></div>
+          </div>
+          <div style="width:90px;text-align:right;font-weight:700;color:#0f172a;margin-left:8px;">3 cats</div>
+        </div>
+    <div class="callout">
+      📌 <b>PD SD EXPORTS</b> and <b>DYNAMICK DECOR PRIVATE LIMITED</b> both span <b>7 Hardgoods categories</b> — the broadest multi-category platforms.
+    </div>
+  </div>
+  <h3 class="subhead">3.2 &nbsp; Top 10 Product Categories — Volume vs Supplier Coverage</h3>
+  <div class="grid2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#3b82f6;margin-bottom:8px;">🔵 By # of Records (depth)</div>
+      <table>
+        <tr><th>Product Category</th><th>Records</th><th>Suppliers</th></tr>
+        <tr><td style='max-width:240px;'>Dinnerware / Tableware</td><td><b>425</b></td><td>9</td></tr><tr><td style='max-width:240px;'>Furniture - Others</td><td><b>367</b></td><td>12</td></tr><tr><td style='max-width:240px;'>Bath Towels</td><td><b>237</b></td><td>5</td></tr><tr><td style='max-width:240px;'>Kitchenware</td><td><b>166</b></td><td>7</td></tr><tr><td style='max-width:240px;'>Decorative Textile Accessories</td><td><b>126</b></td><td>3</td></tr><tr><td style='max-width:240px;'>Wall Décor</td><td><b>123</b></td><td>5</td></tr><tr><td style='max-width:240px;'>Table Décor</td><td><b>122</b></td><td>3</td></tr><tr><td style='max-width:240px;'>Indoor Furniture</td><td><b>97</b></td><td>8</td></tr><tr><td style='max-width:240px;'>Bedding</td><td><b>67</b></td><td>6</td></tr><tr><td style='max-width:240px;'>Table linen / Napery</td><td><b>54</b></td><td>4</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:8px;">🟢 By # of Suppliers (breadth)</div>
+      <table>
+        <tr><th>Product Category</th><th>Suppliers</th><th>Records</th></tr>
+        <tr><td style='max-width:240px;'>Furniture - Others</td><td><b>12</b></td><td>367</td></tr><tr><td style='max-width:240px;'>Dinnerware / Tableware</td><td><b>9</b></td><td>425</td></tr><tr><td style='max-width:240px;'>Indoor Furniture</td><td><b>8</b></td><td>97</td></tr><tr><td style='max-width:240px;'>Kitchenware</td><td><b>7</b></td><td>166</td></tr><tr><td style='max-width:240px;'>Bedding</td><td><b>6</b></td><td>67</td></tr><tr><td style='max-width:240px;'>Wall Décor</td><td><b>5</b></td><td>123</td></tr><tr><td style='max-width:240px;'>Bath Towels</td><td><b>5</b></td><td>237</td></tr><tr><td style='max-width:240px;'>Table linen / Napery</td><td><b>4</b></td><td>54</td></tr><tr><td style='max-width:240px;'>Decorative Textile Accessories</td><td><b>3</b></td><td>126</td></tr><tr><td style='max-width:240px;'>Table Décor</td><td><b>3</b></td><td>122</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="callout">
+      📌 <b>13 Hardgoods categories</b> covered.
+      <b>"Dinnerware / Tableware"</b> leads by volume (425 records) — concentration pocket.
+      <b>"Furniture - Others"</b> has the broadest supplier base (12 suppliers) — the natural vertical anchor.
+    </div>
+  </div>
+
+
+  <div id="part4" class="parthdr" style="background:linear-gradient(135deg,#3b82f6 0%, #0e7490 100%);">
+    <div class="ptag">PART IV</div>
+    <div class="ptitle">💰&nbsp;&nbsp;Deal Size Dynamics</div>
+    <div class="pdesc">How big each FR is, and how that size has changed over time.</div>
+  </div>
+  <h3 class="subhead">4.1 &nbsp; Deal Size Distribution — Long-tail Pattern</h3>
+  <div class="card">
+    <table><tr><th>Bucket</th><th>FR Count (% of all FRs)</th><th>USD Amount (% of total)</th></tr><tr>
+            <td style="font-weight:600;"><$5K</td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:68.0%;height:100%;background:#3b82f6;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">8,102 (68.0%)</div>
+            </td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:11.4%;height:100%;background:#f97316;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">$14.26M (11.4%)</div>
+            </td></tr><tr>
+            <td style="font-weight:600;">$5K–$20K</td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:18.2%;height:100%;background:#3b82f6;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">2,165 (18.2%)</div>
+            </td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:18.2%;height:100%;background:#f97316;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">$22.71M (18.2%)</div>
+            </td></tr><tr>
+            <td style="font-weight:600;">$20K–$50K</td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:9.8%;height:100%;background:#3b82f6;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">1,171 (9.8%)</div>
+            </td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:29.5%;height:100%;background:#f97316;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">$36.76M (29.5%)</div>
+            </td></tr><tr>
+            <td style="font-weight:600;">$50K–$100K</td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:2.7%;height:100%;background:#3b82f6;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">321 (2.7%)</div>
+            </td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:17.9%;height:100%;background:#f97316;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">$22.34M (17.9%)</div>
+            </td></tr><tr>
+            <td style="font-weight:600;">$100K–$500K</td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:1.3%;height:100%;background:#3b82f6;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">157 (1.3%)</div>
+            </td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:19.9%;height:100%;background:#f97316;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">$24.84M (19.9%)</div>
+            </td></tr><tr>
+            <td style="font-weight:600;">$500K+</td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:0.0%;height:100%;background:#3b82f6;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">5 (0.0%)</div>
+            </td>
+            <td style="width:35%;">
+              <div style="background:#f1f5f9;border-radius:5px;height:14px;">
+                <div style="width:3.0%;height:100%;background:#f97316;border-radius:5px;"></div>
+              </div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px;">$3.77M (3.0%)</div>
+            </td></tr></table>
+    <div class="callout">
+      ⚠️ <b>68.0% of FRs are below $5K</b>, contributing only 11.4% of dollars;
+      meanwhile <b>4.1% of large deals (≥$50K) drive 40.9% of dollars</b> — a textbook long-tail.
+    </div>
+  </div>
+  <h3 class="subhead">4.2 &nbsp; Deal Size Trend — Mean vs Median</h3>
+  <div class="card">
+    <svg viewBox="0 0 900 260" style="width:100%;max-width:900px;">
+      <line x1="60" y1="220" x2="880" y2="220" stroke="#e2e8f0" stroke-dasharray="3,3"/><text x="54" y="224" text-anchor="end" font-size="10" fill="#94a3b8">$0K</text>
+      <line x1="60" y1="172" x2="880" y2="172" stroke="#e2e8f0" stroke-dasharray="3,3"/><text x="54" y="176" text-anchor="end" font-size="10" fill="#94a3b8">$12K</text>
+      <line x1="60" y1="120" x2="880" y2="120" stroke="#e2e8f0" stroke-dasharray="3,3"/><text x="54" y="124" text-anchor="end" font-size="10" fill="#94a3b8">$25K</text>
+      <line x1="60" y1="72"  x2="880" y2="72"  stroke="#e2e8f0" stroke-dasharray="3,3"/><text x="54" y="76"  text-anchor="end" font-size="10" fill="#94a3b8">$37K</text>
+      <line x1="60" y1="20"  x2="880" y2="20"  stroke="#e2e8f0" stroke-dasharray="3,3"/><text x="54" y="24"  text-anchor="end" font-size="10" fill="#94a3b8">$50K</text>
+      <polyline fill="none" stroke="#f97316" stroke-width="2.5" points="60.0,20.0 151.1,147.0 242.2,185.7 333.3,193.4 424.4,170.2 515.6,179.0 606.7,183.7 697.8,182.1 788.9,180.5 880.0,181.3"/>
+      <polyline fill="none" stroke="#14b8a6" stroke-width="2.5" points="60.0,123.1 151.1,203.8 242.2,209.5 333.3,209.6 424.4,210.2 515.6,210.4 606.7,209.2 697.8,209.8 788.9,212.4 880.0,212.9"/>
+      <circle cx="60.0" cy="20.0" r="3.5" fill="#f97316"/><circle cx="60.0" cy="123.1" r="3.5" fill="#14b8a6"/><circle cx="151.1" cy="147.0" r="3.5" fill="#f97316"/><circle cx="151.1" cy="203.8" r="3.5" fill="#14b8a6"/><circle cx="242.2" cy="185.7" r="3.5" fill="#f97316"/><circle cx="242.2" cy="209.5" r="3.5" fill="#14b8a6"/><circle cx="333.3" cy="193.4" r="3.5" fill="#f97316"/><circle cx="333.3" cy="209.6" r="3.5" fill="#14b8a6"/><circle cx="424.4" cy="170.2" r="3.5" fill="#f97316"/><circle cx="424.4" cy="210.2" r="3.5" fill="#14b8a6"/><circle cx="515.6" cy="179.0" r="3.5" fill="#f97316"/><circle cx="515.6" cy="210.4" r="3.5" fill="#14b8a6"/><circle cx="606.7" cy="183.7" r="3.5" fill="#f97316"/><circle cx="606.7" cy="209.2" r="3.5" fill="#14b8a6"/><circle cx="697.8" cy="182.1" r="3.5" fill="#f97316"/><circle cx="697.8" cy="209.8" r="3.5" fill="#14b8a6"/><circle cx="788.9" cy="180.5" r="3.5" fill="#f97316"/><circle cx="788.9" cy="212.4" r="3.5" fill="#14b8a6"/><circle cx="880.0" cy="181.3" r="3.5" fill="#f97316"/><circle cx="880.0" cy="212.9" r="3.5" fill="#14b8a6"/>
+      <text x="60.0" y="12.0" text-anchor="middle" font-size="10" fill="#f97316" font-weight="700">$71.6K</text><text x="60.0" y="137.1" text-anchor="middle" font-size="10" fill="#14b8a6" font-weight="700">$24.2K</text><text x="880.0" y="173.3" text-anchor="middle" font-size="10" fill="#f97316" font-weight="700">$9.7K</text><text x="880.0" y="226.9" text-anchor="middle" font-size="10" fill="#14b8a6" font-weight="700">$1.8K</text>
+      <text x="60.0" y="236" text-anchor="middle" font-size="10" fill="#475569">2024Q1</text><text x="151.1" y="236" text-anchor="middle" font-size="10" fill="#475569">2024Q2</text><text x="242.2" y="236" text-anchor="middle" font-size="10" fill="#475569">2024Q3</text><text x="333.3" y="236" text-anchor="middle" font-size="10" fill="#475569">2024Q4</text><text x="424.4" y="236" text-anchor="middle" font-size="10" fill="#475569">2025Q1</text><text x="515.6" y="236" text-anchor="middle" font-size="10" fill="#475569">2025Q2</text><text x="606.7" y="236" text-anchor="middle" font-size="10" fill="#475569">2025Q3</text><text x="697.8" y="236" text-anchor="middle" font-size="10" fill="#475569">2025Q4</text><text x="788.9" y="236" text-anchor="middle" font-size="10" fill="#475569">2026Q1</text><text x="880.0" y="236" text-anchor="middle" font-size="10" fill="#475569">2026Q2</text>
+      <g><rect x="720" y="10" width="170" height="44" fill="white" stroke="#e2e8f0" rx="6"/>
+        <circle cx="740" cy="24" r="4" fill="#f97316"/><text x="750" y="28" font-size="11" fill="#334155">Avg deal size</text>
+        <circle cx="740" cy="44" r="4" fill="#14b8a6"/><text x="750" y="48" font-size="11" fill="#334155">Median deal size</text>
+      </g>
+    </svg>
+    <div class="callout red">
+      🚨 <b>Median deal size fell from $24.2K in 2024Q1 to $1.8K in 2026Q2 — a 13.7× compression</b>.
+      Aggregate "sum of financing" hides this entirely.
+    </div>
+  </div>
+
+
+  <div id="part5" class="parthdr" style="background:linear-gradient(135deg,#7c3aed 0%, #0e7490 100%);">
+    <div class="ptag">PART V</div>
+    <div class="ptitle">🔄&nbsp;&nbsp;Customer Lifecycle</div>
+    <div class="pdesc">Who joined when, who stayed, and who went inactive.</div>
+  </div>
+  <h3 class="subhead">5.1 &nbsp; Joining-Quarter Group Retention Heatmap</h3>
+  <div class="card" style="overflow-x:auto;">
+    <div style="font-size:12px;color:#64748b;margin-bottom:10px;">💡 <b>Click any teal cell</b> to see the supplier names active in that quarter.</div>
+    <table class='compact'><tr><th>Joining<br/>Quarter</th><th>2024Q1</th><th>2024Q2</th><th>2024Q3</th><th>2024Q4</th><th>2025Q1</th><th>2025Q2</th><th>2025Q3</th><th>2025Q4</th><th>2026Q1</th><th>2026Q2</th><th>Cum $</th></tr><tr><td><b>2024Q1</b><br/><span style='color:#94a3b8;font-size:10px;'>43 sup</span></td><td class='cohort-cell' onclick="openCohort('2024Q1','2024Q1')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2024Q2')" style='background:rgba(20,184,166,0.55);text-align:center;font-size:11px;font-weight:600;color:white;'>56%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2024Q3')" style='background:rgba(20,184,166,0.27);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>21%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2024Q4')" style='background:rgba(20,184,166,0.19);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>12%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2025Q1')" style='background:rgba(20,184,166,0.16);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>7%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2025Q2')" style='background:rgba(20,184,166,0.17);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>9%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2025Q3')" style='background:rgba(20,184,166,0.16);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>7%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2025Q4')" style='background:rgba(20,184,166,0.16);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>7%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2026Q1')" style='background:rgba(20,184,166,0.17);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>9%</td><td class='cohort-cell' onclick="openCohort('2024Q1','2026Q2')" style='background:rgba(20,184,166,0.17);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>9%</td><td style='text-align:right;font-weight:700;'>$29.46M</td></tr><tr><td><b>2024Q2</b><br/><span style='color:#94a3b8;font-size:10px;'>14 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2024Q2','2024Q2')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2024Q2','2024Q3')" style='background:rgba(20,184,166,0.16);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>7%</td><td class=''  style='background:rgba(20,184,166,0.10);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>0%</td><td class='cohort-cell' onclick="openCohort('2024Q2','2025Q1')" style='background:rgba(20,184,166,0.21);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>14%</td><td class='cohort-cell' onclick="openCohort('2024Q2','2025Q2')" style='background:rgba(20,184,166,0.21);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>14%</td><td class=''  style='background:rgba(20,184,166,0.10);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>0%</td><td class=''  style='background:rgba(20,184,166,0.10);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>0%</td><td class=''  style='background:rgba(20,184,166,0.10);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>0%</td><td class=''  style='background:rgba(20,184,166,0.10);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>0%</td><td style='text-align:right;font-weight:700;'>$1.63M</td></tr><tr><td><b>2024Q3</b><br/><span style='color:#94a3b8;font-size:10px;'>9 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2024Q3','2024Q3')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2024Q4')" style='background:rgba(20,184,166,0.72);text-align:center;font-size:11px;font-weight:600;color:white;'>78%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2025Q1')" style='background:rgba(20,184,166,0.63);text-align:center;font-size:11px;font-weight:600;color:white;'>67%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2025Q2')" style='background:rgba(20,184,166,0.46);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>44%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2025Q3')" style='background:rgba(20,184,166,0.54);text-align:center;font-size:11px;font-weight:600;color:white;'>56%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2025Q4')" style='background:rgba(20,184,166,0.63);text-align:center;font-size:11px;font-weight:600;color:white;'>67%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2026Q1')" style='background:rgba(20,184,166,0.54);text-align:center;font-size:11px;font-weight:600;color:white;'>56%</td><td class='cohort-cell' onclick="openCohort('2024Q3','2026Q2')" style='background:rgba(20,184,166,0.54);text-align:center;font-size:11px;font-weight:600;color:white;'>56%</td><td style='text-align:right;font-weight:700;'>$32.30M</td></tr><tr><td><b>2024Q4</b><br/><span style='color:#94a3b8;font-size:10px;'>9 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2024Q4','2024Q4')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2024Q4','2025Q1')" style='background:rgba(20,184,166,0.81);text-align:center;font-size:11px;font-weight:600;color:white;'>89%</td><td class='cohort-cell' onclick="openCohort('2024Q4','2025Q2')" style='background:rgba(20,184,166,0.72);text-align:center;font-size:11px;font-weight:600;color:white;'>78%</td><td class='cohort-cell' onclick="openCohort('2024Q4','2025Q3')" style='background:rgba(20,184,166,0.54);text-align:center;font-size:11px;font-weight:600;color:white;'>56%</td><td class='cohort-cell' onclick="openCohort('2024Q4','2025Q4')" style='background:rgba(20,184,166,0.37);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>33%</td><td class='cohort-cell' onclick="openCohort('2024Q4','2026Q1')" style='background:rgba(20,184,166,0.46);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>44%</td><td class='cohort-cell' onclick="openCohort('2024Q4','2026Q2')" style='background:rgba(20,184,166,0.46);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>44%</td><td style='text-align:right;font-weight:700;'>$16.21M</td></tr><tr><td><b>2025Q1</b><br/><span style='color:#94a3b8;font-size:10px;'>8 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2025Q1','2025Q1')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2025Q1','2025Q2')" style='background:rgba(20,184,166,0.80);text-align:center;font-size:11px;font-weight:600;color:white;'>88%</td><td class='cohort-cell' onclick="openCohort('2025Q1','2025Q3')" style='background:rgba(20,184,166,0.80);text-align:center;font-size:11px;font-weight:600;color:white;'>88%</td><td class='cohort-cell' onclick="openCohort('2025Q1','2025Q4')" style='background:rgba(20,184,166,0.80);text-align:center;font-size:11px;font-weight:600;color:white;'>88%</td><td class='cohort-cell' onclick="openCohort('2025Q1','2026Q1')" style='background:rgba(20,184,166,0.70);text-align:center;font-size:11px;font-weight:600;color:white;'>75%</td><td class='cohort-cell' onclick="openCohort('2025Q1','2026Q2')" style='background:rgba(20,184,166,0.40);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>38%</td><td style='text-align:right;font-weight:700;'>$8.62M</td></tr><tr><td><b>2025Q2</b><br/><span style='color:#94a3b8;font-size:10px;'>7 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2025Q2','2025Q2')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2025Q2','2025Q3')" style='background:rgba(20,184,166,0.56);text-align:center;font-size:11px;font-weight:600;color:white;'>57%</td><td class='cohort-cell' onclick="openCohort('2025Q2','2025Q4')" style='background:rgba(20,184,166,0.56);text-align:center;font-size:11px;font-weight:600;color:white;'>57%</td><td class='cohort-cell' onclick="openCohort('2025Q2','2026Q1')" style='background:rgba(20,184,166,0.33);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>29%</td><td class='cohort-cell' onclick="openCohort('2025Q2','2026Q2')" style='background:rgba(20,184,166,0.44);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>43%</td><td style='text-align:right;font-weight:700;'>$15.85M</td></tr><tr><td><b>2025Q3</b><br/><span style='color:#94a3b8;font-size:10px;'>14 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2025Q3','2025Q3')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2025Q3','2025Q4')" style='background:rgba(20,184,166,0.73);text-align:center;font-size:11px;font-weight:600;color:white;'>79%</td><td class='cohort-cell' onclick="openCohort('2025Q3','2026Q1')" style='background:rgba(20,184,166,0.56);text-align:center;font-size:11px;font-weight:600;color:white;'>57%</td><td class='cohort-cell' onclick="openCohort('2025Q3','2026Q2')" style='background:rgba(20,184,166,0.27);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>21%</td><td style='text-align:right;font-weight:700;'>$13.86M</td></tr><tr><td><b>2025Q4</b><br/><span style='color:#94a3b8;font-size:10px;'>3 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2025Q4','2025Q4')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2025Q4','2026Q1')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2025Q4','2026Q2')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td style='text-align:right;font-weight:700;'>$1.38M</td></tr><tr><td><b>2026Q1</b><br/><span style='color:#94a3b8;font-size:10px;'>4 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2026Q1','2026Q1')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td class='cohort-cell' onclick="openCohort('2026Q1','2026Q2')" style='background:rgba(20,184,166,0.50);text-align:center;font-size:11px;font-weight:600;color:#0f172a;'>50%</td><td style='text-align:right;font-weight:700;'>$1.89M</td></tr><tr><td><b>2026Q2</b><br/><span style='color:#94a3b8;font-size:10px;'>13 sup</span></td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td style='background:#f8fafc;text-align:center;color:#cbd5e1;'>·</td><td class='cohort-cell' onclick="openCohort('2026Q2','2026Q2')" style='background:rgba(20,184,166,0.90);text-align:center;font-size:11px;font-weight:600;color:white;'>100%</td><td style='text-align:right;font-weight:700;'>$3.48M</td></tr>
+      <tr style="border-top:2px solid #cbd5e1;background:#f1f5f9;">
+        <td colspan="11" style="text-align:right;padding:8px 10px;font-size:13px;font-weight:800;color:#0f172a;">
+          Grand Total: <span style="color:#0ea5a4;font-size:16px;">$124.69M</span>
+          <span style="font-size:11px;color:#64748b;margin-left:8px;">(sum across 124 suppliers)</span>
+        </td>
+      </tr>
+    </table>
+    <div class="callout green">
+      ✅ The <b>2024Q1 cohort (43 suppliers)</b> is the largest historical anchor. 2025Q3 and 2026Q2 are the most recent strong intake waves (14 and 13 new suppliers).
+    </div>
+  </div>
+  <h3 class="subhead">5.2 &nbsp; New vs Active Suppliers per Quarter</h3>
+  <div class="grid2">
+    <div class="card">
+      <table><tr><th>Quarter</th><th>Active</th><th>New</th><th>New %</th></tr><tr><td>2024Q1</td><td>43</td><td>43</td><td>100.0% 🟢</td></tr><tr><td>2024Q2</td><td>38</td><td>14</td><td>36.8% 🟢</td></tr><tr><td>2024Q3</td><td>19</td><td>9</td><td>47.4% 🟢</td></tr><tr><td>2024Q4</td><td>21</td><td>9</td><td>42.9% 🟢</td></tr><tr><td>2025Q1</td><td>27</td><td>8</td><td>29.6% 🟢</td></tr><tr><td>2025Q2</td><td>31</td><td>7</td><td>22.6% 🟢</td></tr><tr><td>2025Q3</td><td>38</td><td>14</td><td>36.8% 🟢</td></tr><tr><td>2025Q4</td><td>37</td><td>3</td><td>8.1% 🔴</td></tr><tr><td>2026Q1</td><td>36</td><td>4</td><td>11.1% 🔴</td></tr><tr><td>2026Q2</td><td>40</td><td>13</td><td>32.5% 🟢</td></tr></table>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:10px;">Key observations</div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:#334155;line-height:1.7;">
+        <li>2024Q1 was the launch wave (43 new suppliers · 100% of active base)</li>
+        <li>Intake stabilised at 7–14 / quarter through 2025</li>
+        <li>2025Q4 → 2026Q1 dipped (3–4 new), then 2026Q2 rebounded to 13 new</li>
+        <li>Active supplier count grew from 19 → 40 over 6 quarters</li>
+      </ul>
+    </div>
+  </div>
+  <h3 class="subhead">5.3 &nbsp; Wallet Stickiness &amp; Inactive Suppliers</h3>
+  <div class="card">
+    <div class="callout red">
+      🪙 <b>Only 4 suppliers were active in both H1 2024 (57) and H1 2026 (50)</b> — wallet stickiness is weak.
+      <b>84 suppliers were dormant in 2026Q2</b> (68% of 124 ever-active). Only 40 active in the latest quarter.
+    </div>
+  </div>
+
+
+  <div id="part6" class="parthdr" style="background:linear-gradient(135deg,#ef4444 0%, #0e7490 100%);">
+    <div class="ptag">PART VI</div>
+    <div class="ptitle">⚠️&nbsp;&nbsp;Concentration &amp; Buyer Risk</div>
+    <div class="pdesc">Top supplier share, buyer dependency, LF cross-over, buyer split.</div>
+  </div>
+  <h3 class="subhead">6.1 &nbsp; Supplier Concentration</h3>
+  <div class="grid3">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;">
+        <span class="tip" title="HHI = sum of squared market shares × 10,000. 0 = perfectly competitive, 10,000 = monopoly. Above 2,500 = highly concentrated.">SUPPLIER HHI ⓘ</span>
+      </div>
+      <div style="font-size:28px;font-weight:800;color:#22c55e;">~505</div>
+      <div style="font-size:11px;color:#94a3b8;">Well below 2,500 → low concentration</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;">TOP 1 SHARE</div>
+      <div style="font-size:28px;font-weight:800;color:#f97316;">~10.5%</div>
+      <div style="font-size:11px;color:#94a3b8;">SUN SOUTHKEEN INTERNATIONAL LIMITED</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;">TOP 10 SHARE</div>
+      <div style="font-size:28px;font-weight:800;color:#f97316;">~62.3%</div>
+      <div style="font-size:11px;color:#94a3b8;">Top 10 of 124 active suppliers</div>
+    </div>
+  </div>
+  <h3 class="subhead">6.2 &nbsp; Top 10 Suppliers by Financing Volume</h3>
+  <div class="card">
+    <table class="compact"><tr><th>#</th><th>Supplier</th><th style="text-align:right;">$ Volume</th><th style="text-align:right;">Share</th></tr><tr><td>1</td><td>SUN SOUTHKEEN INTERNATIONAL LIMITED</td><td style='text-align:right;'>$13.09M</td><td style='text-align:right;'>10.5%</td></tr><tr><td>2</td><td>JIVA DESIGNS PVT. LTD.</td><td style='text-align:right;'>$12.44M</td><td style='text-align:right;'>10.0%</td></tr><tr><td>3</td><td>YANGZHOU RICH ARTS & CRAFTS CO. LTD</td><td style='text-align:right;'>$11.11M</td><td style='text-align:right;'>8.9%</td></tr><tr><td>4</td><td>AVANTI OVERSEAS PRIVATE LIMITED</td><td style='text-align:right;'>$10.47M</td><td style='text-align:right;'>8.4%</td></tr><tr><td>5</td><td>PD SD EXPORTS</td><td style='text-align:right;'>$8.43M</td><td style='text-align:right;'>6.8%</td></tr><tr><td>6</td><td>GLOBE METAL & GLASS EXPORTS</td><td style='text-align:right;'>$6.03M</td><td style='text-align:right;'>4.8%</td></tr><tr><td>7</td><td>KAYSONS HANDICRAFTS</td><td style='text-align:right;'>$4.57M</td><td style='text-align:right;'>3.7%</td></tr><tr><td>8</td><td>Nomenta Industries International B.V.</td><td style='text-align:right;'>$4.53M</td><td style='text-align:right;'>3.6%</td></tr><tr><td>9</td><td>PEARL GLOBAL INDUSTRIES LTD</td><td style='text-align:right;'>$3.74M</td><td style='text-align:right;'>3.0%</td></tr><tr><td>10</td><td>CREATEGLORY LIMITED</td><td style='text-align:right;'>$3.22M</td><td style='text-align:right;'>2.6%</td></tr></table>
+    <div class="callout">
+      🏆 Top 3 (SUN SOUTHKEEN INTERNATION · JIVA DESIGNS PVT. LTD. · YANGZHOU RICH ARTS & CRAF) together hold <b>29.4%</b> of total volume — moderate concentration with a healthy 4th–6th cohort right behind.
+    </div>
+  </div>
+  <h3 class="subhead">6.3 &nbsp; LF × Non-LF Cross-over (175 supplier–buyer pairs)</h3>
+  <div class="card">
+    <table style="width:100%;border-collapse:separate;border-spacing:6px;">
+      <tr><td></td><th style='font-size:12px;color:#475569;'>Non-LF Buyer (N)</th><th style='font-size:12px;color:#475569;'>LF Buyer (Y) 🔗</th></tr>
+      <tr>
+        <th style='font-size:12px;color:#475569;text-align:right;'>Non-LF Supplier (N)</th>
+        <td style='background:#cbd5e1;color:white;text-align:center;padding:18px 10px;border-radius:6px;'>
+          <div style='font-size:24px;font-weight:800;'>139 pairs</div>
+          <div style='font-size:11px;opacity:.95;margin-top:2px;'>104 suppliers · 50 buyers</div>
+          <div style='font-size:11px;opacity:.85;margin-top:2px;'>Core Non-LF book</div>
+        </td>
+        <td style='background:#22c55e;color:white;text-align:center;padding:18px 10px;border-radius:6px;'>
+          <div style='font-size:24px;font-weight:800;'>0 pairs</div>
+          <div style='font-size:11px;opacity:.95;margin-top:2px;'>cross-sell white space</div>
+          <div style='font-size:11px;opacity:.85;margin-top:2px;'>—</div>
+        </td>
+      </tr>
+      <tr>
+        <th style='font-size:12px;color:#475569;text-align:right;'>LF Supplier (Y)</th>
+        <td style='background:#f97316;color:white;text-align:center;padding:18px 10px;border-radius:6px;'>
+          <div style='font-size:24px;font-weight:800;'>9 pairs</div>
+          <div style='font-size:11px;opacity:.95;margin-top:2px;'>5 suppliers · 8 buyers</div>
+          <div style='font-size:11px;opacity:.85;margin-top:2px;'>reverse cross-sell</div>
+        </td>
+        <td style='background:#14b8a6;color:white;text-align:center;padding:18px 10px;border-radius:6px;'>
+          <div style='font-size:24px;font-weight:800;'>27 pairs</div>
+          <div style='font-size:11px;opacity:.95;margin-top:2px;'>17 suppliers · 14 buyers</div>
+          <div style='font-size:11px;opacity:.85;margin-top:2px;'>Premium LF↔LF</div>
+        </td>
+      </tr>
+    </table>
+    <div class="callout green" style="margin-top:14px;">
+      🔗 <b>Non-LF Supplier × LF Buyer: 0 pairs</b> — 104 Non-LF suppliers have never transacted with any of the 14 LF buyers. Largest cross-sell white space.
+    </div>
+    <div class="callout" style="margin-top:8px;">
+      🔁 <b>LF Supplier × Non-LF Buyer: 9 pairs</b> (5 LF suppliers · 8 Non-LF buyers) — reverse cross-sell already in motion; scalable to the wider Non-LF buyer pool.
+    </div>
+  </div>
+  <h3 class="subhead">6.4 &nbsp; Buyer Portfolio Split (71 unique buyers)</h3>
+  <div class="grid3">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;">TOTAL UNIQUE BUYERS</div>
+      <div style="font-size:28px;font-weight:800;color:#0f172a;">71</div>
+      <div style="font-size:11px;color:#94a3b8;">Across 175 supplier–buyer pairs</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;">LF BUYERS 🔗</div>
+      <div style="font-size:28px;font-weight:800;color:#14b8a6;">14 <span style="font-size:14px;color:#64748b;font-weight:600;">(19.7%)</span></div>
+      <div style="font-size:11px;color:#94a3b8;">Connected to 17 LF + 0 Non-LF suppliers</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;">NON-LF BUYERS</div>
+      <div style="font-size:28px;font-weight:800;color:#f97316;">57 <span style="font-size:14px;color:#64748b;font-weight:600;">(80.3%)</span></div>
+      <div style="font-size:11px;color:#94a3b8;">Connected to 104 Non-LF + 5 LF suppliers</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="callout green">
+      🌉 Only <b>1 bridge buyer</b> currently links both supplier tags — pilot LF supplier cross-sell here, then expand to the remaining 56 pure Non-LF buyers using the 5 LF suppliers as proof points.
+    </div>
+  </div>
+
+
+  <div id="part7" class="parthdr" style="background:linear-gradient(135deg,#0ea5e9 0%, #0e7490 100%);">
+    <div class="ptag">PART VII</div>
+    <div class="ptitle">⚙️&nbsp;&nbsp;Operational Patterns</div>
+    <div class="pdesc">FR frequency outliers + same-day disbursement discipline.</div>
+  </div>
+  <h3 class="subhead">7.1 &nbsp; FR Frequency Outliers (FRs / Active Month)</h3>
+  <div class="grid2">
+    <div class="card">
+      <table><tr><th>Supplier</th><th>FRs / Active Month</th></tr><tr><td style='max-width:300px;'>KAYSONS HANDICRAFTS</td><td><span style='background:#ef4444;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>188.7</span></td></tr><tr><td style='max-width:300px;'>GLOBE METAL & GLASS EXPORTS</td><td><span style='background:#ef4444;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>107.1</span></td></tr><tr><td style='max-width:300px;'>PD SD EXPORTS</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>46.2</span></td></tr><tr><td style='max-width:300px;'>YANGZHOU RICH ARTS & CRAFTS CO. LTD</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>41.9</span></td></tr><tr><td style='max-width:300px;'>KINGWING (SHENZHEN) TECHNOLOGY CO., LTD.</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>37.4</span></td></tr><tr><td style='max-width:300px;'>ABDS OVERSEAS LLP</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>26.6</span></td></tr><tr><td style='max-width:300px;'>AVANTI OVERSEAS PRIVATE LIMITED</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>26.0</span></td></tr><tr><td style='max-width:300px;'>DYNAMICK DECOR PRIVATE LIMITED</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>23.4</span></td></tr><tr><td style='max-width:300px;'>NANJING HENIEMO HOME TEXTILES CO., LTD</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>23.0</span></td></tr><tr><td style='max-width:300px;'>JIVA DESIGNS PVT. LTD.</td><td><span style='background:#f97316;color:white;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;'>21.3</span></td></tr></table>
+    </div>
+    <div class="card">
+      <div class="callout">
+        📌 Median FR frequency is just <b>1.8 FRs/month</b>, but top suppliers sit far above the median — classic invoice-splitting behaviour.
+      </div>
+      <ul style="margin:10px 0 0;padding-left:18px;font-size:13px;color:#334155;line-height:1.7;">
+        <li>Audit whether single POs are being split into many small FRs</li>
+        <li>Migrate to <b>batch invoice / pool financing</b> to reduce ops friction</li>
+        <li>Frees up ≥30% of ops manual effort on document handling</li>
+      </ul>
+    </div>
+  </div>
+  <h3 class="subhead">7.2 &nbsp; Same-Day Disbursement Discipline</h3>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:56px;font-weight:800;color:#22c55e;">100.0%</div>
+    <div style="color:#64748b;font-size:14px;">of FRs disbursed on the expected lending date (n = 11,921)</div>
+    <div class="callout green">
+      ✅ Same-day disbursement at <b>100.0%</b> is an exceptional operational moat — one of our strongest commercial differentiators.
+    </div>
+  </div>
+
+
+  <div id="part8" class="parthdr" style="background:linear-gradient(135deg,#64748b 0%, #0e7490 100%);">
+    <div class="ptag">PART VIII</div>
+    <div class="ptitle">🎫&nbsp;&nbsp;Supplier Rating Status</div>
+    <div class="pdesc">Quick read on rating coverage of the book.</div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;color:#475569;margin-bottom:6px;">Distribution of 124 suppliers across rating status:</div>
+    <div style="margin-top:14px;">
+      <div style="display:flex;height:28px;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);">
+        <div style="width:4%;background:#22c55e;"></div>
+        <div style="width:6%;background:#f97316;"></div>
+        <div style="width:90%;background:#94a3b8;"></div>
+      </div>
+      <div style="display:flex;margin-top:10px;font-size:12px;">
+        <div style="width:33%;text-align:center;">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>
+          <b>Rated (score ≥ 50)</b><br><span style="color:#64748b;">4% · 5 sup</span>
+        </div>
+        <div style="width:33%;text-align:center;">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f97316;margin-right:5px;vertical-align:middle;"></span>
+          <b>Partial Rated (&lt; 50)</b><br><span style="color:#64748b;">6% · 8 sup</span>
+        </div>
+        <div style="width:33%;text-align:center;">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#94a3b8;margin-right:5px;vertical-align:middle;"></span>
+          <b>Unrated</b><br><span style="color:#64748b;">90% · 111 sup</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout gray">
+      ℹ️ <b>The "Unrated" segment is NOT a credit concern</b> — these are legacy suppliers onboarded before the current scoring framework, simply awaiting rating back-fill.
+      The real attention area is <b>"Partial Rated"</b>, where 8 suppliers have scores below 50.
+    </div>
+  </div>
+
+
+  <div id="part9" class="parthdr" style="background:linear-gradient(135deg,#ef4444 0%, #0e7490 100%);">
+    <div class="ptag">PART IX</div>
+    <div class="ptitle">🔥&nbsp;&nbsp;Key Findings</div>
+    <div class="pdesc">9 prioritised insights — each with the data and the recommended action.</div>
+  </div>
+  <div class="grid3">
+    <div class="insight" style="border-left-color:#ef4444;">
+      <div class="ihead"><span class="dot" style="background:#ef4444;"></span><b>📍 Long-tail deal compression</b></div>
+      <div class="iwhy">Median deal dropped from $24.2K → $1.8K (13.7× compression) while # FRs stays high — invoice-splitting risk.</div>
+      <div class="iact">→ <b>Action:</b> Pilot batch financing for top 5 frequency outliers.</div>
+    </div>
+    <div class="insight" style="border-left-color:#22c55e;">
+      <div class="ihead"><span class="dot" style="background:#22c55e;"></span><b>🔗 Cross-sell white space</b></div>
+      <div class="iwhy">104 Non-LF suppliers × 14 LF buyers = 0 pairs today — biggest cross-sell pocket.</div>
+      <div class="iact">→ <b>Action:</b> Warm-intro top Non-LF suppliers (by USD) to LF buyer book.</div>
+    </div>
+    <div class="insight" style="border-left-color:#3b82f6;">
+      <div class="ihead"><span class="dot" style="background:#3b82f6;"></span><b>🌉 Bridge buyer scarcity</b></div>
+      <div class="iwhy">Only 1 buyer bridges LF & Non-LF supplier sides. Reverse cross-sell already on 9 pairs.</div>
+      <div class="iact">→ <b>Action:</b> Expand 5 LF suppliers' reach to more of the 57 Non-LF buyers.</div>
+    </div>
+    <div class="insight" style="border-left-color:#f97316;">
+      <div class="ihead"><span class="dot" style="background:#f97316;"></span><b>🪙 Weak wallet stickiness</b></div>
+      <div class="iwhy">Only 4 suppliers active in both H1 2024 and H1 2026 vs 84 dormant in 2026Q2.</div>
+      <div class="iact">→ <b>Action:</b> Reactivation program for 2024 cohorts with high cum $.</div>
+    </div>
+    <div class="insight" style="border-left-color:#22c55e;">
+      <div class="ihead"><span class="dot" style="background:#22c55e;"></span><b>🏆 Concentration normalised</b></div>
+      <div class="iwhy">HHI 505, Top1 10.5%, Top10 62.3% — healthy diversification.</div>
+      <div class="iact">→ <b>Action:</b> Maintain Top-10 monitoring; no breakup pressure.</div>
+    </div>
+    <div class="insight" style="border-left-color:#8b5cf6;">
+      <div class="ihead"><span class="dot" style="background:#8b5cf6;"></span><b>📦 Product breadth winners</b></div>
+      <div class="iwhy">PD SD EXPORTS and DYNAMICK DECOR PRIVATE LIMITED each span 7 Hardgoods categories.</div>
+      <div class="iact">→ <b>Action:</b> Leverage as multi-category showcase suppliers for new buyer pitches.</div>
+    </div>
+    <div class="insight" style="border-left-color:#10b981;">
+      <div class="ihead"><span class="dot" style="background:#10b981;"></span><b>🌏 India = diversity hub</b></div>
+      <div class="iwhy">India dominates across multiple Hardgoods categories vs China concentrated in Furniture.</div>
+      <div class="iact">→ <b>Action:</b> Country playbooks: India → category breadth, China → furniture depth.</div>
+    </div>
+    <div class="insight" style="border-left-color:#22c55e;">
+      <div class="ihead"><span class="dot" style="background:#22c55e;"></span><b>⚙️ Same-day moat</b></div>
+      <div class="iwhy">100.0% same-day disbursement across 11,921 FRs — outstanding ops discipline.</div>
+      <div class="iact">→ <b>Action:</b> Market this as #1 differentiator in BD pitches.</div>
+    </div>
+    <div class="insight" style="border-left-color:#64748b;">
+      <div class="ihead"><span class="dot" style="background:#64748b;"></span><b>🎫 Rating back-fill</b></div>
+      <div class="iwhy">111 suppliers (90%) Unrated, 8 Partial Rated below 50.</div>
+      <div class="iact">→ <b>Action:</b> Schedule rating back-fill sprint; review Partial Rated cohort risk.</div>
+    </div></div>
+  <div class="glossary">
+    <h3>📖 Glossary — Plain-English Terms</h3>
+    <table>
+      <tr><th>Term</th><th>What it means</th></tr>
+      <tr><td><b>LF / Non-LF</b></td><td>Whether the supplier or buyer has an existing relationship with the LF ecosystem</td></tr>
+      <tr><td><b>Pair</b></td><td>A specific supplier–buyer transactional link (from the Pair tab)</td></tr>
+      <tr><td><b>Bridge buyer</b></td><td>A buyer connected to BOTH LF &amp; Non-LF suppliers — fastest cross-sell entry point</td></tr>
+      <tr><td><b>Deal size</b></td><td>The $ amount of a single FR (financing request)</td></tr>
+      <tr><td><b>90th-percentile deal size</b></td><td>9 out of 10 deals are smaller than this number</td></tr>
+      <tr><td><b>Long-tail</b></td><td>Many small deals + a few very large ones; totals dominated by the extremes</td></tr>
+      <tr><td><b>Wallet stickiness</b></td><td>Whether suppliers who joined early are still active years later</td></tr>
+      <tr><td><b>HHI (Concentration Index)</b></td><td>0–10,000 score; sum of squared market shares × 10,000. Above 2,500 = highly concentrated</td></tr>
+      <tr><td><b>FR frequency</b></td><td>How many FRs a supplier draws per active month</td></tr>
+      <tr><td><b>Joining-quarter cohort</b></td><td>Suppliers grouped by the quarter they had their first FR</td></tr>
+      <tr><td><b>Dominant Hardgoods category</b></td><td>The category most frequently associated with a supplier's FR product descriptions (HARDGOODS_FLAG = Yes)</td></tr>
+    </table>
+  </div>
+  <div class="footer">
+    Data source: <code>Hardgoods_statistic (1).xlsx</code> · 11,921 FRs · 124 suppliers · 71 buyers · 175 pairs · V10 · Prepared for Jerri Zhou · 2026-06-24
+  </div>
+
+</div>
+
+<div class="modal-backdrop" id="cohort-backdrop"></div>
+<div class="cohort-modal" id="cohort-modal">
+  <div class="mhdr">
+    <div>
+      <h4 id="cohort-title">Cohort</h4>
+      <div class="meta" id="cohort-meta"></div>
+    </div>
+    <button class="mclose" onclick="closeCohortModal()">×</button>
+  </div>
+  <div class="mbody" id="cohort-body"></div>
+</div>
+<script>
+(function(){
+  window.COHORT_DATA = {"2024Q1": {"2024Q1": {"pct": 100, "names": ["ABHIRAM INDUSTRIES", "AVC TEXTILES", "CREATEGLORY LIMITED", "HOANG QUAN FURNITURE TRADING PRODUCTION COMPANY LIMITED", "Nomenta Industries International B.V.", "ORUN EXIM PRIVATE LIMITED", "PD SD EXPORTS", "RAM COIR MILLS", "Skyang Products LLP", "东莞市森荟金属制品有限公司", "东莞市泓灏精密传动科技有限公司", "东莞市诺尔电器有限公司", "东莞市骤升实业有限公司", "中垣林业科技（定南）有限公司", "中山市东凤镇伟华电子接扦件厂", "中山市凯迪五金有限公司", "中山市小榄镇富联印刷厂", "中山市小榄镇永昇印刷厂", "中山市惟天金属制品有限公司", "中山市海之深电子有限公司", "中山市禾田塑胶制品有限公司", "佛山市富智彩材料有限公司", "佛山市高明区鑫鸿祥科技有限公司", "共青城晶众特科技有限公司", "婺源正龙电子有限公司", "惠州市诺恒塑胶制品有限公司", "惠州市鑫城盛五金塑胶制品有限公司", "新乡市鑫星商贸有限公司", "永州市顺合智能科技有限公司", "江西佳维诚电子科技有限公司", "江门市新会区崖门骏强泡沫厂", "江门市江海区长明线路板厂", "河南恒一锂能科技有限公司", "深圳市华凯电机制造有限公司", "深圳市卓立燊塑胶制品有限公司", "深圳市卓越塑胶有限公司", "深圳市合兴隆塑胶五金有限公司", "深圳市啸易科技有限公司", "深圳市德凯微电机有限公司", "深圳市永亿豪电子有限公司", "赣州森江木业有限公司", "鹤山市广裕电器实业有限公司", "龙南恩嘉智能科技有限公司"]}, "2024Q2": {"pct": 56, "names": ["AVC TEXTILES", "CREATEGLORY LIMITED", "HOANG QUAN FURNITURE TRADING PRODUCTION COMPANY LIMITED", "PD SD EXPORTS", "中垣林业科技（定南）有限公司", "中山市东凤镇伟华电子接扦件厂", "中山市凯迪五金有限公司", "中山市小榄镇富联印刷厂", "中山市小榄镇永昇印刷厂", "中山市惟天金属制品有限公司", "中山市禾田塑胶制品有限公司", "佛山市富智彩材料有限公司", "佛山市高明区鑫鸿祥科技有限公司", "共青城晶众特科技有限公司", "婺源正龙电子有限公司", "新乡市鑫星商贸有限公司", "永州市顺合智能科技有限公司", "江西佳维诚电子科技有限公司", "江门市新会区崖门骏强泡沫厂", "江门市江海区长明线路板厂", "河南恒一锂能科技有限公司", "深圳市德凯微电机有限公司", "深圳市永亿豪电子有限公司", "鹤山市广裕电器实业有限公司"]}, "2024Q3": {"pct": 21, "names": ["AVC TEXTILES", "CREATEGLORY LIMITED", "HOANG QUAN FURNITURE TRADING PRODUCTION COMPANY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS", "Skyang Products LLP", "东莞市森荟金属制品有限公司", "东莞市泓灏精密传动科技有限公司", "深圳市华凯电机制造有限公司"]}, "2024Q4": {"pct": 12, "names": ["AVC TEXTILES", "CREATEGLORY LIMITED", "HOANG QUAN FURNITURE TRADING PRODUCTION COMPANY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}, "2025Q1": {"pct": 7, "names": ["CREATEGLORY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}, "2025Q2": {"pct": 9, "names": ["AVC TEXTILES", "CREATEGLORY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}, "2025Q3": {"pct": 7, "names": ["CREATEGLORY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}, "2025Q4": {"pct": 7, "names": ["CREATEGLORY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}, "2026Q1": {"pct": 9, "names": ["AVC TEXTILES", "CREATEGLORY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}, "2026Q2": {"pct": 9, "names": ["AVC TEXTILES", "CREATEGLORY LIMITED", "Nomenta Industries International B.V.", "PD SD EXPORTS"]}}, "2024Q2": {"2024Q2": {"pct": 100, "names": ["INSPIRATION OVERSEAS", "PARADIGUM", "TEKINP(HK)CO.,LIMITED", "东莞市佳煌电子有限公司", "中山市双华达电子科技有限公司", "中山市澳能电器有限公司", "佛山市银畅贸易有限公司", "佛山市顺德区加丰收塑料制品有限公司", "佛山市顺德区浩星贸易有限公司", "江门市雄昌科技有限公司", "江门市鼎信泰塑料金属制品有限公司", "深圳市久鑫电子实业有限公司", "深圳市景润供应链有限公司", "深圳市科芯达电子有限公司"]}, "2024Q3": {"pct": 7, "names": ["INSPIRATION OVERSEAS"]}, "2024Q4": {"pct": 0, "names": []}, "2025Q1": {"pct": 14, "names": ["INSPIRATION OVERSEAS", "PARADIGUM"]}, "2025Q2": {"pct": 14, "names": ["INSPIRATION OVERSEAS", "PARADIGUM"]}, "2025Q3": {"pct": 0, "names": []}, "2025Q4": {"pct": 0, "names": []}, "2026Q1": {"pct": 0, "names": []}, "2026Q2": {"pct": 0, "names": []}}, "2024Q3": {"2024Q3": {"pct": 100, "names": ["AUSTGROW INTERNATIONAL GROUP LIMITED", "AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "GM GLOBAL", "HOANGPHAT CO., LTD", "RASIK PRODUCTS PRIVATE LIMITED", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}, "2024Q4": {"pct": 78, "names": ["AUSTGROW INTERNATIONAL GROUP LIMITED", "AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "RASIK PRODUCTS PRIVATE LIMITED", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}, "2025Q1": {"pct": 67, "names": ["AUSTGROW INTERNATIONAL GROUP LIMITED", "GLOBE METAL & GLASS EXPORTS", "HOANGPHAT CO., LTD", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}, "2025Q2": {"pct": 44, "names": ["AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING"]}, "2025Q3": {"pct": 56, "names": ["AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}, "2025Q4": {"pct": 67, "names": ["AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "RASIK PRODUCTS PRIVATE LIMITED", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}, "2026Q1": {"pct": 56, "names": ["AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}, "2026Q2": {"pct": 56, "names": ["AVANTI OVERSEAS PRIVATE LIMITED", "GLOBE METAL & GLASS EXPORTS", "SUN SOUTHKEEN INTERNATIONAL LIMITED", "TEXTILE MERCHANDISING", "VIVSUN EXPORTS"]}}, "2024Q4": {"2024Q4": {"pct": 100, "names": ["CURIO CRAFTS PRIVATE LIMITED", "ELITE HOMES", "Fastway Garments", "GALA INDIA CANDLES PRIVATE LIMITED", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD.", "KATEX EXIM LIMITED", "NOMAD ORIGINALS OVERSEAS PRIVATE LIMITED", "TRIPLE999 RETAIL PRIVATE LIMITED"]}, "2025Q1": {"pct": 89, "names": ["CURIO CRAFTS PRIVATE LIMITED", "ELITE HOMES", "Fastway Garments", "GALA INDIA CANDLES PRIVATE LIMITED", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD.", "NOMAD ORIGINALS OVERSEAS PRIVATE LIMITED", "TRIPLE999 RETAIL PRIVATE LIMITED"]}, "2025Q2": {"pct": 78, "names": ["CURIO CRAFTS PRIVATE LIMITED", "ELITE HOMES", "Fastway Garments", "GALA INDIA CANDLES PRIVATE LIMITED", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD.", "KATEX EXIM LIMITED"]}, "2025Q3": {"pct": 56, "names": ["CURIO CRAFTS PRIVATE LIMITED", "ELITE HOMES", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD.", "TRIPLE999 RETAIL PRIVATE LIMITED"]}, "2025Q4": {"pct": 33, "names": ["CURIO CRAFTS PRIVATE LIMITED", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD."]}, "2026Q1": {"pct": 44, "names": ["CURIO CRAFTS PRIVATE LIMITED", "ELITE HOMES", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD."]}, "2026Q2": {"pct": 44, "names": ["CURIO CRAFTS PRIVATE LIMITED", "ELITE HOMES", "GEE GEE EXPORTS", "JIVA DESIGNS PVT. LTD."]}}, "2025Q1": {"2025Q1": {"pct": 100, "names": ["BEONE INC.", "BOOM CLOTHING PRIVATE LIMITED", "DYNAMICK DECOR PRIVATE LIMITED", "INNOWEAVE GLOBAL PACKAGING SOLUTIONS PRIVATE LIMITED", "KAYSONS HANDICRAFTS", "Pariflex Fibc Private Limited", "SUMI APPARELS (PVT.) LTD.", "SURYA ROSHNI LIMITED"]}, "2025Q2": {"pct": 88, "names": ["BEONE INC.", "BOOM CLOTHING PRIVATE LIMITED", "DYNAMICK DECOR PRIVATE LIMITED", "INNOWEAVE GLOBAL PACKAGING SOLUTIONS PRIVATE LIMITED", "KAYSONS HANDICRAFTS", "SUMI APPARELS (PVT.) LTD.", "SURYA ROSHNI LIMITED"]}, "2025Q3": {"pct": 88, "names": ["BEONE INC.", "BOOM CLOTHING PRIVATE LIMITED", "DYNAMICK DECOR PRIVATE LIMITED", "INNOWEAVE GLOBAL PACKAGING SOLUTIONS PRIVATE LIMITED", "KAYSONS HANDICRAFTS", "SUMI APPARELS (PVT.) LTD.", "SURYA ROSHNI LIMITED"]}, "2025Q4": {"pct": 88, "names": ["BEONE INC.", "BOOM CLOTHING PRIVATE LIMITED", "DYNAMICK DECOR PRIVATE LIMITED", "INNOWEAVE GLOBAL PACKAGING SOLUTIONS PRIVATE LIMITED", "KAYSONS HANDICRAFTS", "SUMI APPARELS (PVT.) LTD.", "SURYA ROSHNI LIMITED"]}, "2026Q1": {"pct": 75, "names": ["BEONE INC.", "BOOM CLOTHING PRIVATE LIMITED", "DYNAMICK DECOR PRIVATE LIMITED", "INNOWEAVE GLOBAL PACKAGING SOLUTIONS PRIVATE LIMITED", "KAYSONS HANDICRAFTS", "SUMI APPARELS (PVT.) LTD."]}, "2026Q2": {"pct": 38, "names": ["BOOM CLOTHING PRIVATE LIMITED", "DYNAMICK DECOR PRIVATE LIMITED", "KAYSONS HANDICRAFTS"]}}, "2025Q2": {"2025Q2": {"pct": 100, "names": ["ABDS OVERSEAS LLP", "PN POLYBAGS PRIVATE LIMITED", "RF GALA INDIA DECOR PRIVATE LIMITED", "SKD FINE DECOR", "This & That", "XIANJU YINHAI ARTS AND CRAFTS CO.,LTD", "YANGZHOU RICH ARTS & CRAFTS CO. LTD"]}, "2025Q3": {"pct": 57, "names": ["ABDS OVERSEAS LLP", "RF GALA INDIA DECOR PRIVATE LIMITED", "XIANJU YINHAI ARTS AND CRAFTS CO.,LTD", "YANGZHOU RICH ARTS & CRAFTS CO. LTD"]}, "2025Q4": {"pct": 57, "names": ["ABDS OVERSEAS LLP", "RF GALA INDIA DECOR PRIVATE LIMITED", "XIANJU YINHAI ARTS AND CRAFTS CO.,LTD", "YANGZHOU RICH ARTS & CRAFTS CO. LTD"]}, "2026Q1": {"pct": 29, "names": ["RF GALA INDIA DECOR PRIVATE LIMITED", "XIANJU YINHAI ARTS AND CRAFTS CO.,LTD"]}, "2026Q2": {"pct": 43, "names": ["ABDS OVERSEAS LLP", "RF GALA INDIA DECOR PRIVATE LIMITED", "XIANJU YINHAI ARTS AND CRAFTS CO.,LTD"]}}, "2025Q3": {"2025Q3": {"pct": 100, "names": ["A N S", "ARCHIES LIMITED", "BZAAR, INC", "EMSONS COMPANY LIMITED", "FAIRFAX COUTURE PRIVATE LIMITED", "GAINUP TECHNOTEK LIMITED", "KINGWING (SHENZHEN) TECHNOLOGY CO., LTD.", "M/S POOJA INTERNATIONAL", "PEARL GLOBAL INDUSTRIES LTD", "RAJKAMAL INTERNATIONAL", "SVM INC", "SVMINC FASHIONS PRIVATE LIMITED", "YONGHUI HOME PRODUCT CO., LIMITED", "YUTAI (ASIA) LIMITED"]}, "2025Q4": {"pct": 79, "names": ["A N S", "ARCHIES LIMITED", "EMSONS COMPANY LIMITED", "KINGWING (SHENZHEN) TECHNOLOGY CO., LTD.", "M/S POOJA INTERNATIONAL", "PEARL GLOBAL INDUSTRIES LTD", "RAJKAMAL INTERNATIONAL", "SVM INC", "SVMINC FASHIONS PRIVATE LIMITED", "YONGHUI HOME PRODUCT CO., LIMITED", "YUTAI (ASIA) LIMITED"]}, "2026Q1": {"pct": 57, "names": ["A N S", "EMSONS COMPANY LIMITED", "KINGWING (SHENZHEN) TECHNOLOGY CO., LTD.", "M/S POOJA INTERNATIONAL", "PEARL GLOBAL INDUSTRIES LTD", "SVMINC FASHIONS PRIVATE LIMITED", "YONGHUI HOME PRODUCT CO., LIMITED", "YUTAI (ASIA) LIMITED"]}, "2026Q2": {"pct": 21, "names": ["EMSONS COMPANY LIMITED", "PEARL GLOBAL INDUSTRIES LTD", "SVMINC FASHIONS PRIVATE LIMITED"]}}, "2025Q4": {"2025Q4": {"pct": 100, "names": ["BANATOYS CO.,LIMITED.", "N2N FIBC SOLUTIONS PRIVATE LIMITED", "PIONEER LINENS"]}, "2026Q1": {"pct": 100, "names": ["BANATOYS CO.,LIMITED.", "N2N FIBC SOLUTIONS PRIVATE LIMITED", "PIONEER LINENS"]}, "2026Q2": {"pct": 100, "names": ["BANATOYS CO.,LIMITED.", "N2N FIBC SOLUTIONS PRIVATE LIMITED", "PIONEER LINENS"]}}, "2026Q1": {"2026Q1": {"pct": 100, "names": ["DRESSMEN GARMENTS LIMITED", "HAINING ZHONGXIANG TEXTILE CO LTD", "NANJING HENIEMO HOME TEXTILES CO., LTD", "TOOLTECH PACKAGING"]}, "2026Q2": {"pct": 50, "names": ["DRESSMEN GARMENTS LIMITED", "TOOLTECH PACKAGING"]}}, "2026Q2": {"2026Q2": {"pct": 100, "names": ["AHMED FINE TEXTILE MILLS LIMITED", "AIN GUATEMALA S.A", "Dongguan JunCheng Trading Co.,Ltd", "G P HOME TEX EXPORTS", "GOLDSTAR FASHIONS LTD", "Hongkong Jiahe International Holding Limited", "LDP APPAREL (HK) LIMITED", "MAHAJAN OVERSEAS PRIVATE LIMITED", "Mahajan UK Limited", "OASIS HOMETEX PRIVATE LIMITED", "SHRI PARSHWANATH ENTERPRISES", "VENTUREWAY RETAIL PRIVATE LIMITED", "中山市莱特美特科技有限公司"]}}};
+  window.openCohort = function(cohort, q){
+    var modal = document.getElementById('cohort-modal');
+    var bd = document.getElementById('cohort-backdrop');
+    var t = document.getElementById('cohort-title');
+    var m = document.getElementById('cohort-meta');
+    var b = document.getElementById('cohort-body');
+    var data = COHORT_DATA[cohort] && COHORT_DATA[cohort][q];
+    if(!data){ return; }
+    t.textContent = cohort + ' cohort — active in ' + q;
+    m.textContent = data.pct + '% retention · ' + data.names.length + ' supplier(s)';
+    if(data.names.length === 0){
+      b.innerHTML = '<div class="empty">No active suppliers from this cohort in ' + q + '</div>';
+    } else {
+      var html = '<ul>';
+      data.names.forEach(function(n){ html += '<li>' + n.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</li>'; });
+      html += '</ul>';
+      b.innerHTML = html;
+    }
+    modal.classList.add('show'); bd.classList.add('show');
+  };
+  window.closeCohortModal = function(){
+    document.getElementById('cohort-modal').classList.remove('show');
+    document.getElementById('cohort-backdrop').classList.remove('show');
+  };
+  document.getElementById('cohort-backdrop').addEventListener('click', closeCohortModal);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeCohortModal(); });
+})();
+</script>
+</body></html>

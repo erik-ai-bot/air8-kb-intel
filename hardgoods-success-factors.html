@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier Financing — Success Factors</title>
+<style>
+  :root{
+    --ink:#1a2332; --muted:#5f6b7c; --line:#e3e8ef; --bg:#f6f8fb;
+    --brand:#1f4e79; --brand2:#2f6db0; --good:#1b8a5a; --warn:#c47f17; --bad:#b23b3b;
+    --a:#1b8a5a; --b:#c47f17; --c:#8a94a3; --x:#b23b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 32px 80px;}
+  header.masthead{border-bottom:3px solid var(--brand);padding-bottom:20px;margin-bottom:8px;}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand2);font-weight:700;}
+  h1{font-size:30px;margin:6px 0 6px;line-height:1.2;}
+  .sub{color:var(--muted);font-size:15px;}
+  .meta{font-size:12.5px;color:var(--muted);margin-top:14px;}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line);}
+  h2 .n{color:var(--brand2);font-weight:800;margin-right:10px;}
+  .lead{color:var(--muted);font-size:14.5px;margin:2px 0 18px;}
+  h3{font-size:15px;margin:24px 0 8px;color:var(--brand);}
+  p{margin:10px 0;font-size:14.5px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:16px 0;
+    box-shadow:0 1px 2px rgba(20,40,80,.04);}
+  .tldr{background:linear-gradient(180deg,#fff, #fbfdff);border-left:4px solid var(--brand);}
+  .tldr ul{margin:6px 0 0;padding-left:20px;}
+  .tldr li{margin:9px 0;font-size:14.5px;}
+  .tldr b{color:var(--brand);}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0;}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 16px;text-align:center;}
+  .stat .big{font-size:30px;font-weight:800;color:var(--brand);line-height:1;}
+  .stat .lbl{font-size:12px;color:var(--muted);margin-top:8px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.8px;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);}
+  th{background:#eef3f9;color:var(--brand);font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;}
+  tr:last-child td{border-bottom:none;}
+  /* bar chart */
+  .bars{margin:14px 0;}
+  .bar-row{display:grid;grid-template-columns:190px 1fr 52px;align-items:center;gap:12px;margin:7px 0;font-size:13.5px;}
+  .bar-track{background:#eef1f5;border-radius:6px;height:22px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;display:block;}
+  .bar-val{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;}
+  .t-good{background:var(--good);} .t-warn{background:var(--warn);} .t-bad{background:var(--bad);}
+  .callout{background:#fef8ec;border:1px solid #f0dfb8;border-radius:10px;padding:14px 18px;margin:16px 0;font-size:14px;}
+  .callout b{color:var(--warn);}
+  .why{background:#eef6f1;border:1px solid #cfe6da;border-radius:10px;padding:14px 18px;margin:12px 0;font-size:14px;}
+  .why b{color:var(--good);}
+  .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);}
+  .legend{font-size:12px;color:var(--muted);margin-top:6px;}
+  .pill{display:inline-block;background:#eef3f9;color:var(--brand);border-radius:20px;padding:3px 11px;font-size:12px;font-weight:600;margin:2px 4px 2px 0;}
+  @media(max-width:680px){.grid{grid-template-columns:1fr}.bar-row{grid-template-columns:120px 1fr 46px}}
+  @media print{body{background:#fff}.wrap{padding:0}.card,.stat{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="kicker">Supplier Financing · Business Development</div>
+  <h1>What Makes a Supplier Convert &amp; Stick</h1>
+  <div class="sub">Success factors from our onboarded financing clients — the patterns in the data and the logic behind them.</div>
+  <div class="meta">Basis: 139 onboarded hardgoods suppliers · 14,048 financing transactions · Jan 2024 – Jun 2026. Stickiness measured on the 97 suppliers with at least 12 months of track record.</div>
+</header>
+
+<div class="card tldr">
+  <h3 style="margin-top:0">Bottom line</h3>
+  <ul>
+    <li><b>How a supplier trades predicts success far better than how big they are.</b> The strongest clients ship <b>many small invoices frequently</b>; the weakest ship <b>a few large ones</b>.</li>
+    <li><b>Volume is a trap.</b> Our worst-performing group actually had <b>higher</b> monthly volume than a mid group — but churned within ~6 weeks. We should not chase leads on headline size.</li>
+    <li><b>Seven factors separate winners from churners:</b> shipment frequency, invoice structure, product category, growth momentum, product breadth, buyer quality (selling to major US retailers), and country / export orientation. These are all visible <b>before</b> we finance — in customs / 1688 data.</li>
+    <li><b>Several factors behave differently by category</b> — product breadth is decisive for textiles and tableware but not decor; a US-retailer buyer matters most for tableware and decor. The read must be category-aware, not one-size-fits-all.</li>
+    <li><b>One high-value persona</b> — frequent small-ticket exporters — is only <b>11% of our client count but 64% of financed value.</b> Finding more of them is the prize.</li>
+  </ul>
+</div>
+
+<div class="grid">
+  <div class="stat"><div class="big">4&times;</div><div class="lbl">Higher stickiness for high-frequency vs low-frequency shippers</div></div>
+  <div class="stat"><div class="big">64%</div><div class="lbl">Of financed value comes from just 11% of clients (frequent small-ticket exporters)</div></div>
+  <div class="stat"><div class="big">8%</div><div class="lbl">Stickiness of the "big-ticket, low-frequency" profile — looks attractive, isn't</div></div>
+</div>
+
+<!-- FACTOR 1 -->
+<h2><span class="n">1</span>Shipment frequency — the single strongest signal</h2>
+<div class="lead">How often a supplier ships beats every other metric at predicting a lasting relationship.</div>
+<p>We grouped clients by how many financing transactions they did in their first 90 days. The pattern is steep and consistent: the more frequently a supplier transacts early, the more likely they are still active a year or more later.</p>
+<div class="card">
+  <div class="bars">
+    <div class="bar-row"><span>16+ shipments / 90d</span><span class="bar-track"><span class="bar-fill" style="width:88%;background:var(--a)"></span></span><span class="bar-val">88%</span></div>
+    <div class="bar-row"><span>6–15 shipments / 90d</span><span class="bar-track"><span class="bar-fill" style="width:35%;background:var(--b)"></span></span><span class="bar-val">35%</span></div>
+    <div class="bar-row"><span>3–5 shipments / 90d</span><span class="bar-track"><span class="bar-fill" style="width:19%;background:var(--c)"></span></span><span class="bar-val">19%</span></div>
+    <div class="bar-row"><span>1–2 shipments / 90d</span><span class="bar-track"><span class="bar-fill" style="width:11%;background:var(--x)"></span></span><span class="bar-val">11%</span></div>
+  </div>
+  <div class="legend">Bars = share of suppliers still active / long-tenured (our "stickiness" measure).</div>
+</div>
+<div class="why"><b>Why it works:</b> a supplier who ships often has a continuous working-capital need — that is exactly the cash-flow gap our financing fills. They embed the facility into their operating rhythm. An occasional shipper takes financing once and drifts away.</div>
+
+<!-- FACTOR 2 -->
+<h2><span class="n">2</span>Small, frequent invoices &gt; large, occasional ones</h2>
+<div class="lead">The same monthly volume can be a great client or a terrible one — depending on invoice structure.</div>
+<p>Sticky clients have a <b>median invoice around $2.6K</b>; churned clients sit near <b>$18K</b>. Suppliers whose typical invoice exceeds <b>$50K</b> have only 8% stickiness (92% churn). Critically, total monthly flow was <b>almost identical</b> between sticky and churned groups (~$58–66K/month) — so size tells us nothing on its own.</p>
+<div class="callout"><b>The volume trap:</b> Two suppliers each move $60K/month. Supplier X does 20 invoices of $3K → sticks. Supplier Y does 2 invoices of $30K → gone in weeks. If BD ranks leads by headline volume, it will systematically pick the wrong ones.</div>
+<div class="why"><b>Why it works:</b> frequent small invoices mean a diversified, recurring, operational financing relationship. A couple of large invoices is a one-off event — high concentration, no rhythm, no stickiness.</div>
+
+<!-- FACTOR 3 -->
+<h2><span class="n">3</span>Product category — some verticals are structurally better</h2>
+<div class="lead">Stickiness differs sharply by what the supplier makes.</div>
+<div class="card">
+  <div class="bars">
+    <div class="bar-row"><span>Home Textile &amp; Bedding</span><span class="bar-track"><span class="bar-fill" style="width:75%;background:var(--a)"></span></span><span class="bar-val">75%</span></div>
+    <div class="bar-row"><span>Home Decor</span><span class="bar-track"><span class="bar-fill" style="width:71%;background:var(--a)"></span></span><span class="bar-val">71%</span></div>
+    <div class="bar-row"><span>Kitchen &amp; Dining</span><span class="bar-track"><span class="bar-fill" style="width:64%;background:var(--a)"></span></span><span class="bar-val">64%</span></div>
+    <div class="bar-row"><span>Furniture</span><span class="bar-track"><span class="bar-fill" style="width:29%;background:var(--b)"></span></span><span class="bar-val">29%</span></div>
+    <div class="bar-row"><span>Components / Electronics mfg</span><span class="bar-track"><span class="bar-fill" style="width:3%;background:var(--x)"></span></span><span class="bar-val">0%</span></div>
+  </div>
+  <div class="legend">Stickiness by product category (suppliers with 12+ months of track record).</div>
+</div>
+<p>Home textiles, decor and tableware — small-ticket, high-frequency home goods — are our strongest verticals. Furniture is weak (big-ticket, infrequent). A large cluster of Chinese component / electronics manufacturers (~38 accounts) had <b>zero</b> sticky clients — they are a different business entirely and should not be treated as target leads.</p>
+<div class="callout"><b>Composition note:</b> of the 139 accounts, only ~59 are true home-goods suppliers. 38 are component/electronics manufacturers and 21 are apparel — different verticals with different economics. The success pattern below is drawn from the home-goods core.</div>
+
+<!-- FACTOR 4 -->
+<h2><span class="n">4</span>Growth momentum — rising suppliers convert best</h2>
+<div class="lead">A supplier whose order flow is accelerating is both a better bet and a more motivated buyer.</div>
+<div class="grid">
+  <div class="stat"><div class="big">60%</div><div class="lbl">Sticky — suppliers growing quarter-on-quarter</div></div>
+  <div class="stat"><div class="big">24%</div><div class="lbl">Sticky — flat or declining suppliers</div></div>
+  <div class="stat"><div class="big">100%</div><div class="lbl">Sticky — already-frequent AND still growing (7 of 7)</div></div>
+</div>
+<div class="why"><b>Why it works:</b> growth is also <i>timing</i>. A supplier scaling up faces a widening gap between production outlay and buyer payment — the moment financing becomes most attractive. Momentum signals both quality and readiness to buy.</div>
+
+<!-- FACTOR 5 -->
+<h2><span class="n">5</span>Country &amp; export orientation</h2>
+<div class="lead">Cross-border exporters outperform; supply base and category mix differ by country.</div>
+<table>
+  <thead><tr><th>Signal</th><th>Stickiness</th><th>Read</th></tr></thead>
+  <tbody>
+    <tr><td>India-based suppliers</td><td class="num">56%</td><td><span class="tag t-good">Strong</span></td></tr>
+    <tr><td>Hong Kong-based suppliers</td><td class="num">60%</td><td><span class="tag t-good">Strong</span></td></tr>
+    <tr><td>China-based suppliers</td><td class="num">8%</td><td><span class="tag t-bad">Weak (in this book)</span></td></tr>
+    <tr><td>Domestic-only suppliers (no export flow)</td><td class="num">0%</td><td><span class="tag t-bad">Exclude</span></td></tr>
+  </tbody>
+</table>
+<p>India and Hong Kong suppliers are our strongest by country; the current China cohort is weak, largely reflecting its category mix (many were component makers, not home goods). Suppliers with <b>no export flow</b> have never been sticky — there are no cross-border receivables to finance — so an export orientation is a baseline requirement, not a plus.</p>
+
+<!-- FACTOR 6 -->
+<h2><span class="n">6</span>Product breadth — a real relationship ships many products</h2>
+<div class="lead">How many distinct products a supplier ships separates a genuine manufacturing partner from a one-off deal.</div>
+<p>Suppliers shipping a wide range of products are far more sticky than those shipping just a few — and this holds <b>even when we compare suppliers who ship equally often</b>, so it is a signal in its own right, not just a by-product of frequency.</p>
+<div class="card">
+  <div class="bars">
+    <div class="bar-row"><span>50+ distinct products</span><span class="bar-track"><span class="bar-fill" style="width:89%;background:var(--a)"></span></span><span class="bar-val">89%</span></div>
+    <div class="bar-row"><span>11–50 products</span><span class="bar-track"><span class="bar-fill" style="width:73%;background:var(--a)"></span></span><span class="bar-val">73%</span></div>
+    <div class="bar-row"><span>4–10 products</span><span class="bar-track"><span class="bar-fill" style="width:27%;background:var(--x)"></span></span><span class="bar-val">27%</span></div>
+    <div class="bar-row"><span>1–3 products</span><span class="bar-track"><span class="bar-fill" style="width:32%;background:var(--x)"></span></span><span class="bar-val">32%</span></div>
+  </div>
+  <div class="legend">Stickiness by number of distinct products shipped.</div>
+</div>
+<p><b>This differs by category</b> — sticky vs churned suppliers, median distinct products: Home Textile <b>26 vs 5</b>, Kitchen &amp; Dining <b>14 vs 5</b>, Furniture <b>12 vs 2</b>. In Home Decor both groups ship broad ranges, so breadth matters less there — decor is product-heavy by nature.</p>
+<div class="why"><b>Why it works:</b> a broad, evolving product line signals an established factory with ongoing buyer programs — repeat, renewing demand. A one- or two-product supplier is often fulfilling a single order, with no continuing financing need once it ships.</div>
+
+<!-- FACTOR 7 -->
+<h2><span class="n">7</span>Buyer quality — selling to a major US retailer</h2>
+<div class="lead">Who the supplier sells to is as informative as how they ship.</div>
+<div class="grid">
+  <div class="stat"><div class="big">80%</div><div class="lbl">Sticky — suppliers selling to a major US retailer</div></div>
+  <div class="stat"><div class="big">24%</div><div class="lbl">Sticky — suppliers selling elsewhere</div></div>
+  <div class="stat"><div class="big">✓</div><div class="lbl">Holds among export-only suppliers — a true buyer-quality signal</div></div>
+</div>
+<p>Suppliers whose buyers are large US retailers (Walmart, Target, TJX, Ross, Gap, Lowe's and similar) are dramatically more sticky. The effect is <b>strongest in Kitchen &amp; Dining (0.75 vs 0.33) and Home Decor (0.88 vs 0.50)</b>; Home Textile suppliers tend to be sticky regardless of destination.</p>
+<div class="why"><b>Why it works:</b> a blue-chip retail buyer means stable, recurring purchase orders and a creditworthy receivable — exactly the anchor that keeps a financing relationship alive and safe to underwrite.</div>
+
+<!-- THE WINNING PROFILE, BY DIMENSION -->
+<h2><span class="n">8</span>The winning profile</h2>
+<div class="lead">The winning profile is not any single metric — it is the <b>combination of the seven factors</b>. Split by dimension, here is what a sticky client looks like versus the churn signal to avoid. All are observable before we finance.</div>
+<table>
+  <thead><tr><th>#</th><th>Dimension</th><th>Sticky client (stays)</th><th>Churn signal — avoid</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><b>Shipment frequency</b></td><td>Ships often — many shipments per month</td><td>Occasional, ~1 / month or less</td></tr>
+    <tr><td>2</td><td><b>Invoice structure</b></td><td>Many small invoices (~$3–15K)</td><td>A few large invoices (&gt;$50K typical)</td></tr>
+    <tr><td>3</td><td><b>Product category</b></td><td>Home textile / home decor / kitchen &amp; dining</td><td>Furniture, components, apparel</td></tr>
+    <tr><td>4</td><td><b>Growth momentum</b></td><td>Shipment volume rising quarter-on-quarter</td><td>Flat or declining</td></tr>
+    <tr><td>5</td><td><b>Product breadth</b></td><td>Many distinct products (&gt;10)</td><td>Only 1–3 products (one-off deal)</td></tr>
+    <tr><td>6</td><td><b>Buyer quality</b></td><td>Sells to a major US retailer (Walmart, Target, TJX, Ross, Gap…)</td><td>Small / unknown buyer</td></tr>
+    <tr><td>7</td><td><b>Country &amp; export</b></td><td>Exporter; India / Hong Kong strongest today</td><td>Domestic-only (no export flow)</td></tr>
+  </tbody>
+</table>
+<div class="why"><b>Category-aware:</b> the dimensions do not all weigh the same in every category. <b>Product breadth</b> (5) is decisive for textile / tableware / furniture but less so for decor; <b>buyer quality</b> (6) matters most for tableware &amp; decor, while textile suppliers stay sticky regardless of buyer. Read each lead against its own category, not a single global bar.</div>
+
+<h3>Where the value sits — the traits cluster into four profiles</h3>
+<div class="lead">When the seven factors combine, clients fall into four recognizable profiles. Stickiness and value concentrate sharply in the top one.</div>
+<table>
+  <thead><tr><th>Profile</th><th>Trade pattern</th><th>Stickiness</th><th>Churn rate</th><th>Share of value</th></tr></thead>
+  <tbody>
+    <tr><td><b>Frequent small-ticket exporter</b></td><td>~20+ shipments/mo, $3–15K each, broad range, US retail buyers, growing</td><td><span class="tag t-good">78%</span></td><td class="num">22%</td><td class="num">64%</td></tr>
+    <tr><td>Steady small-ticket</td><td>~5–10 shipments/mo, small invoices, exporter</td><td><span class="tag t-warn">50%</span></td><td class="num">50%</td><td class="num">16%</td></tr>
+    <tr><td>Occasional mid-ticket</td><td>~1 shipment/mo, mid-size invoices, narrow range</td><td><span class="tag t-bad">24%</span></td><td class="num">76%</td><td class="num">7%</td></tr>
+    <tr><td>Big-ticket one-shot</td><td>Large invoices, infrequent, single buyer, few products</td><td><span class="tag t-bad">4%</span></td><td class="num">96%</td><td class="num">13%</td></tr>
+  </tbody>
+</table>
+<p>The top profile is only <b>11% of accounts but 64% of financed value</b>, and by far the stickiest. The bottom profile looks sizeable by monthly volume yet churns at 96% — essentially a one-off transaction that leaves within weeks. <b>Our BD priority should be finding more of the top profile — and not being seduced by the bottom one.</b></p>
+
+<!-- LOGIC -->
+<h2><span class="n">9</span>The logic — how we'd turn this into lead prioritization</h2>
+<div class="lead">These same factors are observable in external data before we ever finance a supplier, so we can screen new leads on them.</div>
+<p>Every success factor above can be estimated from customs records and 1688 / marketplace data at the lead stage:</p>
+<p>
+  <span class="pill">Shipment frequency → count of shipments/month</span>
+  <span class="pill">Invoice structure → typical shipment value</span>
+  <span class="pill">Category → product listings</span>
+  <span class="pill">Momentum → shipment trend quarter-on-quarter</span>
+  <span class="pill">Product breadth → number of distinct products shipped</span>
+  <span class="pill">Buyer quality → is the buyer a major US retailer</span>
+  <span class="pill">Country &amp; export → origin + is it an exporter</span>
+</p>
+<p>The logic for prioritizing outreach follows directly from the patterns:</p>
+<table>
+  <thead><tr><th>Step</th><th>Logic</th></tr></thead>
+  <tbody>
+    <tr><td><b>Exclude</b></td><td>Wrong vertical (components, apparel), domestic-only flow, and the big-ticket / single-buyer / low-frequency "one-shot" profile (96% churn).</td></tr>
+    <tr><td><b>Prioritize</b></td><td>The seven winning-profile factors: high shipment frequency · small-ticket structure · strong category (textile / decor / tableware) · rising trend · broad product range · major US-retailer buyer · exporter (India / HK strongest). The more a lead hits — weighted by what matters in its category — the higher the priority.</td></tr>
+    <tr><td><b>Nurture</b></td><td>Right category but low current activity — keep warm, act when their shipment trend turns up.</td></tr>
+    <tr><td><b>Sequence</b></td><td>Within the priority group, contact the largest estimated volume first — size decides ordering, <i>after</i> convertibility qualifies the lead.</td></tr>
+  </tbody>
+</table>
+<div class="why"><b>Guiding principle:</b> convertibility first, size second. We qualify a lead on how it trades, then use estimated volume only to decide who to call first. The exact scoring can be defined later — this report is about the pattern and the logic.</div>
+
+<div class="foot">
+  Prepared for internal BD review. <b>Stickiness</b> = share of clients still active at data cut-off or with 12+ months of continuous activity; <b>churn rate</b> = the remainder (100% − stickiness). All figures derived from the onboarded-client financing record (Jan 2024 – Jun 2026); they describe value and stickiness <i>after</i> onboarding. A separate exercise (tracking leads we pursue but do not win) would be needed to measure raw conversion likelihood.
+</div>
+
+</div>
+</body>
+</html>
