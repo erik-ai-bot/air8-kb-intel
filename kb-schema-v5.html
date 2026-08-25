@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KB Layer Schema — Air8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E131C; --paper:#EAE4D6; --muted:#8792A8;
+  --f1:#E9A83F; --f2:#47B598; --f3:#6FA8FF;
+  --s2:#B49BFF; --s3:#FF8FC7;
+  --co:#E28362; --ok:#6FBF73; --vi:#9D8FE8;
+  --l1c:#FF8FC7; --l2c:#9D8FE8; --secc:#C3B9F5; --dtc:#47B598; --poc:#EAE4D6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow:hidden;
+  background-image:radial-gradient(1200px 700px at 62% 40%,rgba(157,143,232,.09),transparent 70%),
+                   radial-gradient(900px 600px at 12% 88%,rgba(71,181,152,.07),transparent 70%);}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* ---------------- header ---------------- */
+#top{position:fixed;left:0;right:0;top:0;height:104px;padding:14px 22px 0;z-index:30;
+  background:linear-gradient(180deg,rgba(14,19,28,.97) 0%,rgba(14,19,28,.92) 62%,rgba(14,19,28,0) 100%);}
+#kicker{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--muted);display:flex;gap:8px;align-items:center}
+#kicker i{width:5px;height:5px;border-radius:50%;background:var(--ok);font-style:normal;box-shadow:0 0 8px var(--ok)}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:27px;line-height:1.12;letter-spacing:-.012em;margin-top:6px}
+h1 em{font-style:normal;color:var(--l2c)}
+#sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--muted);margin-top:5px}
+#sub b{color:var(--paper);font-weight:500}
+
+#bar{position:fixed;left:22px;top:112px;z-index:30;display:flex;gap:7px;flex-wrap:wrap;align-items:center;max-width:calc(100% - 400px)}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;padding:6px 12px;border-radius:999px;
+  border:1px solid rgba(234,228,214,.2);background:rgba(234,228,214,.035);color:var(--muted);cursor:pointer;
+  transition:all .18s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.btn:hover{color:var(--paper);border-color:rgba(234,228,214,.42)}
+.btn u{width:7px;height:7px;border-radius:50%;background:currentColor;text-decoration:none;opacity:.55}
+.btn.b1.on{background:rgba(233,168,63,.16);border-color:#E9A83F;color:#F3C87E}
+.btn.b2.on{background:rgba(71,181,152,.16);border-color:#47B598;color:#8FD8C2}
+.btn.b3.on{background:rgba(111,168,255,.16);border-color:#6FA8FF;color:#A9CBFF}
+.btn.on u{opacity:1}
+.btn.util.on{background:rgba(234,228,214,.14);border-color:rgba(234,228,214,.5);color:var(--paper)}
+.sep{width:1px;height:18px;background:rgba(234,228,214,.14);margin:0 3px}
+
+/* ---------------- stage ---------------- */
+#stage{position:fixed;inset:0;z-index:1;cursor:grab}
+#stage.drag{cursor:grabbing}
+svg#g{width:100%;height:100%;display:block}
+#g text{font-family:'IBM Plex Sans',sans-serif;-webkit-user-select:none;user-select:none;pointer-events:none}
+
+.ed{fill:none;stroke-linecap:round;transition:opacity .18s;pointer-events:stroke;cursor:help}
+.ed.dim{pointer-events:none}
+.fed{fill:none;display:none;pointer-events:stroke;cursor:help}
+.mring path{pointer-events:none}
+.ed.dim{opacity:.055}
+.ed.near{opacity:.3}
+.nd{cursor:grab}
+.nd.dragging{cursor:grabbing}
+.nd.dragging .core{filter:drop-shadow(0 0 10px currentColor)}
+.nd circle.hit{fill:transparent;stroke:none}
+.nd .core{transition:opacity .14s}
+.nd.dim .core{opacity:.16}
+.nd.dim .lb{opacity:.13}
+.nd.near .core{opacity:.62}
+.nd.near .lb{opacity:.42}
+.nd.sel .core{filter:drop-shadow(0 0 12px currentColor)}
+.elab{font-family:'IBM Plex Mono',monospace;font-size:7.4px;letter-spacing:.07em;fill:var(--muted);
+  paint-order:stroke;stroke:#0E131C;stroke-width:3.4px;stroke-linejoin:round;display:none}
+.elab.show{display:block}
+.nlab{font-size:9.6px;font-weight:500;fill:var(--paper);paint-order:stroke;stroke:#0E131C;stroke-width:4.4px;stroke-linejoin:round}
+.nlab2{font-family:'IBM Plex Mono',monospace;font-size:6.8px;letter-spacing:.09em;fill:var(--muted);
+  paint-order:stroke;stroke:#0E131C;stroke-width:4px;stroke-linejoin:round}
+.nlab.big{font-family:'Fraunces',Georgia,serif;font-size:13.5px;font-weight:600}
+.nlab.sm{font-size:8.6px;fill:#C3B9F5}
+.tagtxt{font-family:'IBM Plex Mono',monospace;font-size:6.4px;letter-spacing:.14em;font-weight:500}
+
+/* ---------------- side ---------------- */
+#side{position:fixed;right:0;top:0;bottom:0;width:352px;z-index:26;padding:18px 20px 16px;overflow-y:auto;
+  background:linear-gradient(270deg,rgba(14,19,28,.985) 0%,rgba(14,19,28,.95) 78%,rgba(14,19,28,0) 100%);
+  border-left:1px solid rgba(234,228,214,.07)}
+#side::-webkit-scrollbar{width:8px}
+#side::-webkit-scrollbar-track{background:rgba(234,228,214,.04)}
+#side::-webkit-scrollbar-thumb{background:rgba(157,143,232,.4);border-radius:99px}
+.card{border:1px solid rgba(234,228,214,.1);border-radius:11px;padding:12px 13px;margin-bottom:11px;background:rgba(234,228,214,.022)}
+.card h3{font-family:'IBM Plex Mono',monospace;font-size:8.4px;letter-spacing:.2em;color:var(--muted);font-weight:400;margin-bottom:9px}
+.card h3 b{color:var(--l2c);font-weight:500}
+
+#meta svg{width:100%;height:auto;display:block;overflow:visible;margin-top:2px}
+#meta{padding-bottom:16px}
+
+#selT{font-family:'Fraunces',Georgia,serif;font-size:17px;font-weight:600;line-height:1.15}
+#selL{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;margin:5px 0 8px}
+#selF{font-family:'IBM Plex Mono',monospace;font-size:8.6px;color:var(--muted);word-break:break-all}
+#selD{font-size:11px;line-height:1.5;color:#C4CBD8;margin-top:7px}
+.kv{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.kv span{font-family:'IBM Plex Mono',monospace;font-size:7.6px;letter-spacing:.1em;padding:3px 8px;border-radius:999px;
+  border:1px solid rgba(234,228,214,.18);color:var(--muted)}
+.rel{margin-top:11px;border-top:1px dashed rgba(234,228,214,.12);padding-top:9px}
+.rel:first-child{border:0;padding-top:0;margin-top:0}
+.rel i{font-family:'IBM Plex Mono',monospace;font-size:7.6px;letter-spacing:.13em;font-style:normal;display:block;margin-bottom:5px}
+.rel p{font-size:10.6px;line-height:1.55;color:#C4CBD8}
+.rel p u{text-decoration:none;color:var(--paper)}
+#cy{font-family:'IBM Plex Mono',monospace;font-size:9px;line-height:1.62;white-space:pre-wrap;color:#9FB3CC}
+#cy k{color:var(--s3)}
+#cy v{color:var(--f1)}
+#cy s{text-decoration:none;color:var(--f2)}
+
+/* ---------------- legend ---------------- */
+#lg{position:fixed;left:22px;bottom:14px;z-index:26;display:flex;gap:16px;align-items:flex-end}
+.lgb.row{display:flex;gap:15px;align-items:center;padding:9px 14px}
+.lgb.row span{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:8.6px;letter-spacing:.07em;color:#B9C2D2;white-space:nowrap}
+.lgb.row em{font-style:normal;color:var(--muted)}
+#side .lgr{margin-bottom:6px}
+.lgb{border:1px solid rgba(234,228,214,.1);border-radius:11px;padding:10px 12px;background:rgba(14,19,28,.86);backdrop-filter:blur(4px)}
+.lgb h4{font-family:'IBM Plex Mono',monospace;font-size:7.6px;letter-spacing:.2em;color:var(--muted);font-weight:400;margin-bottom:8px}
+.lgr{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-family:'IBM Plex Mono',monospace;font-size:8.4px;letter-spacing:.06em;color:#B9C2D2}
+.lgr:last-child{margin-bottom:0}
+.lgr b{width:11px;height:11px;border-radius:50%;flex:none;border:1.6px solid}
+.lgr s{width:24px;height:0;border-top:1.6px solid;flex:none;text-decoration:none}
+.lgr em{font-style:normal;color:var(--muted);margin-left:2px}
+#hint{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:27;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--muted);
+  background:rgba(14,19,28,.9);border:1px solid rgba(234,228,214,.1);border-radius:999px;padding:7px 15px;
+  max-width:520px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hint b{color:var(--paper);font-weight:500}
+@media(max-width:1400px){#side{width:300px}#bar{max-width:calc(100% - 340px)}}
+</style></head>
+<body>
+
+<div id="stage"><svg id="g"><g id="vp">
+  <g id="eL"></g><g id="tL"></g><g id="nL"></g>
+</g></svg></div>
+
+<div id="top">
+  <div id="kicker"><i></i>AIR8 · KNOWLEDGE BASE · GRAPH SCHEMA</div>
+  <h1>The base is a <em>graph</em>, not a stack of folders</h1>
+  <div id="sub"><b>Scenario → L1Module → L2Node ⟨+Section⟩ → DataSource</b>, plus <b>L1↔L1</b> and <b>L2↔L2</b> &nbsp;·&nbsp; CHIPS ARE ADDITIVE — PICK TWO OR THREE AT ONCE</div>
+</div>
+
+<div id="bar">
+  <div class="btn b1" data-f="f1"><u></u>LEAD SCORING</div>
+  <div class="btn b2" data-f="f2"><u></u>SUPPLIER 360</div>
+  <div class="btn b3" data-f="f3"><u></u>BUYER ASSESSMENT</div>
+  <div class="btn util" id="bAll">ALL 3 AT ONCE</div>
+  <div class="sep"></div>
+  <div class="btn util on" id="bLab">EDGE LABELS · ALL</div>
+  <div class="btn util on" id="bIntra">L1↔L1 · L2↔L2 ON</div>
+  <div class="btn util" id="bSec">SCORECARD SECTIONS</div>
+  <div class="btn util" id="bFit">FIT</div>
+  <div class="btn util" id="bReset">RESET POSITIONS</div>
+</div>
+
+<div id="side">
+  <div class="card" id="meta"><h3>DB.SCHEMA.<b>VISUALIZATION</b></h3><div id="metaSvg"></div></div>
+  <div class="card" id="sel">
+    <div id="selT">Nothing selected</div>
+    <div id="selL" class="mono">:Graph</div>
+    <div id="selF"></div>
+    <div id="selD">Click any circle to open its relationships. Click a scenario chip to walk one whole path — <b>Scenario → L1 → L2 → Section → Data</b> — with the CP step written on every LOADS edge.</div>
+    <div class="kv" id="selK"></div>
+    <div id="selR"></div>
+  </div>
+  <div class="card"><h3>CYPHER · <b>CURRENT VIEW</b></h3><div id="cy"></div></div>
+  <div class="card"><h3>HOW TO <b>READ IT</b></h3>
+    <div class="lgr"><s style="border-color:#E9A83F;border-top-width:2.4px"></s>a picked scenario paints its whole path</div>
+    <div class="lgr"><s style="border-color:#47B598;border-top-style:dashed;border-top-width:2.4px"></s>a line used by 2–3 interleaves their colours</div>
+    <div class="lgr"><b style="border-color:#8792A8;background:none;border-style:dotted"></b>arcs round a circle = which ones picked it</div>
+    <div class="lgr"><b style="border-color:#47B598;background:rgba(19,44,39,.94);border-radius:2px"></b><em style="color:#8FD8C2">INT</em> our own system &nbsp;<b style="border-color:#8792A8;background:none;border-radius:2px"></b>EXT third-party</div>
+    <div class="lgr" style="color:#C4CBD8">drag any circle to rearrange · RESET POSITIONS puts it back</div>
+    <div class="lgr" style="margin-top:9px;padding-top:9px;border-top:1px dashed rgba(234,228,214,.12)"><s style="border-color:#E9A83F"></s>LOADS <em>· carries the CP step</em></div>
+    <div class="lgr"><s style="border-color:#FF8FC7;border-top-style:dashed"></s>GOVERNS</div>
+    <div class="lgr"><s style="border-color:#47B598"></s>READS</div>
+    <div class="lgr"><s style="border-color:#C3B9F5;border-top-width:2.6px"></s>PART_OF <em>· section of its node</em></div>
+    <div class="lgr"><s style="border-color:#47B598;border-top-style:dotted"></s>COMPUTED_FROM</div>
+    <div class="lgr"><s style="border-color:#E28362;border-top-style:dotted"></s>WRITES_TO <em>· the loop</em></div>
+    <div class="lgr"><s style="border-color:#E28362;border-top-style:dashed"></s>HANDS_OFF_TO</div>
+    <div class="lgr" style="margin-top:9px;padding-top:9px;border-top:1px dashed rgba(234,228,214,.12)"><s style="border-color:#FF8FC7;border-top-style:dashed"></s>L1↔L1 <em>· PRECEDES · CONSTRAINS</em></div>
+    <div class="lgr"><s style="border-color:#9D8FE8"></s>L2↔L2 <em>· SPECIALISED_BY · FEEDS</em></div>
+    <div class="lgr" style="color:#C4CBD8">these two arc back inside their own column</div>
+  </div>
+</div>
+
+<div id="lg">
+  <div class="lgb row">
+    <span><b style="border-color:#E9A83F;background:rgba(233,168,63,.25)"></b>Scenario<em id="cSc"></em></span>
+    <span><b style="border-color:#FF8FC7;background:rgba(255,143,199,.25)"></b>L1Module<em id="cL1"></em></span>
+    <span><b style="border-color:#9D8FE8;background:rgba(157,143,232,.25)"></b>L2Node<em id="cL2"></em></span>
+    <span><b style="border-color:#C3B9F5;background:rgba(195,185,245,.2);width:8px;height:8px"></b>Section<em id="cSe"></em></span>
+    <span><b style="border-color:#47B598;background:rgba(71,181,152,.25)"></b>DataSource<em id="cDt"></em></span>
+  </div>
+</div>
+
+<div id="hint">DRAG TO PAN · SCROLL TO ZOOM · <b>circle size = how many of the three scenarios reuse that node</b></div>
+
+<script>
+const FLOW=[
+ {id:'f1',n:1,cv:'#E9A83F',k:'FLOW 1',t:'Lead Scoring',s:'new supplier leads · CP0–CP5',
+  q:'A raw lead / target list lands — <b>who does BD call first?</b>',
+  per:'BD team',por:['Notion','WhatsApp'],out:'Call List / Bench / Pipeline + A/B/C/D rating'},
+ {id:'f2',n:2,cv:'#47B598',k:'FLOW 2',t:'Supplier Scoring',s:'performance · confirmed pair · CP0–CP5',
+  q:'A confirmed buyer–supplier pair needs a rating — <b>what limit, on what terms?</b>',
+  per:'Risk / Credit',por:['Credit Dashboard'],out:'Supplier Total Score → A/B/C/D + risk flags · pair terms'},
+ {id:'f3',n:3,cv:'#6FA8FF',k:'FLOW 3',t:'Buyer Assessment',s:'buyer rating · CP0–CP5',
+  q:'A buyer needs a rating — <b>full assessment, or web proxy?</b>',
+  per:'Credit analyst',por:['Credit Dashboard'],out:'Buyer rating + limit view → written back for reuse'}
+];
+const CP=[
+ /* ---- FLOW 1 · Lead Scoring ---- */
+ {f:'f1',id:'a0',k:'CP0',  n:'Data Load',            d:'raw supplier data → standard indicator fields',
+  l1:['contract'], l2:['ind']},
+ {f:'f1',id:'a1',k:'CP1',  n:'Vertical Routing',     d:'HS chapter → Apparel / Hardgoods framework',
+  l1:['route'],    l2:['frame']},
+ {f:'f1',id:'a2',k:'CP2',  n:'Component Scoring',
+  d:'Pattern Score + <b>Scorecard §B_S only</b> &mdash; at lead stage that is the one computable section, so it proxies the whole scorecard',
+  l1:['method','cov'], l2:['frame','appa','hard','perf'], dtx:{perf:['pulse','ci','cust']}},
+ {f:'f1',id:'a3',k:'CP3',  n:'Gate Checks',          d:'flow-stale · cny-domestic · kill-combo · furniture cap',
+  l1:['gates'],    l2:['frame']},
+ {f:'f1',id:'a4',k:'CP4',  n:'Sort + Call List',     d:'merge scores → A/B/C/D → Call List / Bench / Pipeline',
+  l1:['gates'],    l2:['frame','rate']},
+ {f:'f1',id:'a45',k:'CP4.5',n:'Top N Research + Buyer Lookup',
+  d:'Background check · financing need · contacts · trends · <b>map Credit Dashboard for buyer rating &amp; limit, else web proxy (no S&amp;P)</b>',
+  l1:['evid','trend','advm','blkp'], l2:['adv','fin','out','src','pt','mt','br','bprox'],
+  dtx:{br:['cd']}},
+ {f:'f1',id:'a5',k:'CP5',  n:'Output Assembly → Notion', d:'Assembly + template skill · no KB reasoning',
+  l1:[], l2:[], out:true},
+
+ /* ---- FLOW 2 · Supplier Performance Scoring ---- */
+ {f:'f2',id:'b0',k:'CP0',  n:'Data Load',            d:'confirmed-pair data + availability check',
+  l1:['contract'], l2:['ind'], dtx:{ind:[]}},
+ {f:'f2',id:'b1',k:'CP1',  n:'Coverage + Buyer Lookup',
+  d:'<b>§Coverage</b> per dimension → full / proxy / missing · <b>map Credit Dashboard first; on miss, run the full Buyer Assessment</b>',
+  l1:['cov','blkp'], l2:['perf','br'], dtx:{br:['cd']}},
+ {f:'f2',id:'b2',k:'CP2',  n:'Indicator Scoring',
+  d:'<b>SCORECARD §QAQC + §Performance + §B_S</b> (full data at this stage) and <b>TREND 2 dims</b> (Market · Product) scored separately + adverse news',
+  l1:['method','brm','trend','advm'], l2:['perf','br','pt','mt','adv'], dtx:{br:['cd']}},
+ {f:'f2',id:'b3',k:'CP3',  n:'Score Assembly',       d:'Scorecard score + Trend score merged → Total Score → A/B/C/D',
+  l1:['gates'],    l2:['perf','rate']},
+ {f:'f2',id:'b4',k:'CP4',  n:'Limit &amp; Terms Decision',
+  d:'Score already set in CP3 — the pair matrix decides <b>limit · tenor · pricing · covenants</b>',
+  l1:['pair'],     l2:['pmx']},
+ {f:'f2',id:'b5',k:'CP5',  n:'Output Assembly → Dashboard', d:'Assembly + template skill · buyer file reused by Lead CP4.5',
+  l1:[], l2:[], out:true},
+
+ /* ---- FLOW 3 · Buyer Assessment ---- */
+ {f:'f3',id:'c0',k:'CP0',  n:'Buyer Resolution + Dashboard Lookup',
+  d:'Entity resolution → look up existing rating / limit in Credit Dashboard',
+  l1:['contract','blkp'], l2:['ind','br'], dtx:{ind:[],br:['cd']}},
+ {f:'f3',id:'c1',k:'CP1',  n:'Path Choice · full vs proxy',
+  d:'S&amp;P + financials available → full assessment; otherwise <b>web proxy (no S&amp;P)</b>',
+  l1:['cov','blkp'], l2:['br','bprox']},
+ {f:'f3',id:'c2',k:'CP2',  n:'Credit Rating',
+  d:'Financial analysis + market position → base credit rating',
+  l1:['method','brm'], l2:['br']},
+ {f:'f3',id:'c3',k:'CP3',  n:'Context Overlay',
+  d:'Buyer market trend + product trend + <b>adverse news (buyer rules &amp; severity)</b>',
+  l1:['trend','advm'], l2:['mt','pt','adv']},
+ {f:'f3',id:'c4',k:'CP4',  n:'Buyer Rating Output',  d:'Blend → A/B/C/D + limit view',
+  l1:['gates','brm'], l2:['rate','br']},
+ {f:'f3',id:'c5',k:'CP5',  n:'Output Assembly → Credit Dashboard',
+  d:'Assembly + template skill · reused by Lead CP4.5 and Supplier CP1',
+  l1:[], l2:[], out:true}
+];
+const L1M=[
+ {id:'contract',t:'Field Contract',          n:'L1-db-field-contract',    d:'Field mapping · multi-row dedupe · missing-field handling'},
+ {id:'route',   t:'Vertical Router',         n:'L1-vertical-routing',     d:'HS-chapter routing · borderline categories · Park conditions'},
+ {id:'method',  t:'Scoring Method',          n:'L1-scoring-method',       d:'Banded additive · missing → Enrichment · merge logic'},
+ {id:'gates',   t:'Gate & Order Logic',      n:'L1-ordering-and-gates',   d:'Gate order · sorting · edge-case handling'},
+ {id:'evid',    t:'Evidence Discipline',     n:'L1-evidence-discipline',  d:'Evidence standard · source credibility · NOT FOUND · audit log'},
+ {id:'trend',   t:'Trend Judgement Method',  n:'L1-trend-method',         d:'How trend signals are assessed and qualified — supplier &amp; buyer'},
+ {id:'cov',     t:'Coverage & Proxy Method', n:'L1-performance-coverage', d:'Which dimensions are computable at this stage &rarr; full / proxy / missing'},
+ {id:'brm',     t:'Buyer Rating Method',     n:'L1-buyer-rating-method',  d:'Financial analysis + market position weighting · downgrade conditions'},
+ {id:'blkp',    t:'Buyer Lookup & Fallback', n:'L1-buyer-lookup-fallback',d:'Credit Dashboard first; on miss → proxy (leads) / full assessment (pair)'},
+ {id:'advm',    t:'Adverse News Method',     n:'L1-adverse-news-method',  d:'Screening method · severity judgement · different rules for buyer vs supplier'},
+ {id:'pair',    t:'Limit &amp; Terms Method',    n:'L1-pair-terms-method',    d:'How a rating plus the pair situation is reasoned into an offer'}
+];
+const L2M=[
+ {id:'ind',  t:'Indicator Dictionary',   n:'NODE-indicator',             d:'Indicator column locations · field-name lookup',                       dt:['raw']},
+ {id:'frame',t:'Lead Scoring Framework', n:'NODE-scoring-framework',     d:'Indicator set · weights · tier cuts · Gates · TIEBREAK · ROUTED_FROM', dt:['cust']},
+ {id:'appa', t:'Apparel Scoring Rules',  n:'NODE-scoring-apparel',       d:'Per-indicator scoring bands and cut-offs &mdash; Apparel vertical',        dt:[]},
+ {id:'hard', t:'Hardgoods Scoring Rules',n:'NODE-scoring-hardgoods',     d:'Per-indicator scoring bands and cut-offs &mdash; Hardgoods vertical',      dt:[]},
+ {id:'rate', t:'Rating Assembly',        n:'NODE-rating-assembly',       d:'Score-merge weights · A/B/C/D cut thresholds',                 dt:[]},
+ {id:'adv',  t:'Adverse Screen Rules',   n:'NODE-adverse-screen',        d:'§Supplier / §Buyer search rules and severity grading',   dt:['news','web']},
+ {id:'fin',  t:'Financing-Need Rules',   n:'NODE-financing-need',        d:'Rules for judging financing need',                               dt:['cust','web','a8']},
+ {id:'out',  t:'Outreach / Contact Rules',n:'NODE-outreach-profile',     d:'Contact-identification rules',                                 dt:['web','ci']},
+ {id:'src',  t:'Source Hierarchy',       n:'NODE-evidence-source',       d:'Source priority hierarchy',                                 dt:['web']},
+ {id:'pt',   t:'Product Trend Rules',    n:'NODE-product-trend',         d:'Product-category trend sources and interpretation',                      dt:['mtr','cust'],sys:'trend'},
+ {id:'mt',   t:'Market Trend Rules',     n:'NODE-market-trend',          d:'Buyer market-trend signal rules',                           dt:['mtr','news','cust'],sys:'trend'},
+ {id:'perf', t:'Performance Scorecard',  n:'NODE-performance-scorecard', d:'One scorecard, sectioned &mdash; §QAQC ← inspection + Social &amp; TA compliance + certifications · §Performance ← trading doc · §B_S ← company profile + PulseLink + customs · §Coverage says which sections are computable', dt:['insp','comp','cert','tdoc','pulse','ci','cust'],sys:'card'},
+ {id:'br',   t:'Buyer Rating Framework', n:'NODE-buyer-rating',          d:'Credit rating from S&amp;P + financials + web · Dashboard lookup · proxy/full · dilution', dt:['sp','bfin','web','ci','pulse','cd'],sys:'card'},
+ {id:'bprox',t:'Buyer Proxy Rules',      n:'NODE-buyer-proxy',           d:'No S&amp;P — proxy rating from web + company profile + PulseLink + customs', dt:['web','ci','pulse','cust']},
+ {id:'pmx',  t:'Limit &amp; Terms Matrix',   n:'NODE-pair-terms-matrix',     d:'Limit bands · tenor · pricing · covenants, by pair situation',      dt:['cd','a8','pulse']}
+];
+const DT=[
+ {id:'raw', k:'i',n:'Potential leads list'},
+ {id:'pulse',k:'i',n:'PulseLink'},
+ {id:'insp',k:'i',n:'Inspection reports'},
+ {id:'tdoc',k:'i',n:'Trading documents'},
+ {id:'comp',k:'i',n:'Social &amp; TA compliance report'},
+ {id:'cert',k:'i',n:'Certifications'},
+ {id:'a8',  k:'i',n:'A8 financing data'},
+ {id:'cd',  k:'i',n:'Credit Dashboard'},
+ {id:'cust',k:'e',n:'Customs data (1688)'},
+ {id:'ci',  k:'e',n:'Company profile'},
+ {id:'news',k:'e',n:'News & signals'},
+ {id:'mtr', k:'e',n:'Market & product trends'},
+ {id:'sp',  k:'e',n:'S&P ratings'},
+ {id:'bfin',k:'e',n:'Buyer financial statements'},
+ {id:'web', k:'e',n:'Deep research / web'}
+];
+const GOV={
+ contract:['ind'], route:['frame'],
+ method:['frame','appa','hard','perf','br'],
+ gates:['frame','rate','perf'],
+ evid:['adv','fin','out','src'],
+ trend:['pt','mt'],
+ cov:['perf','bprox'],
+ brm:['br'],
+ blkp:['br','bprox'],
+ advm:['adv'],
+ pair:['pmx']
+};
+
+
+/* ============================= derived model ============================= */
+const CVF={}; FLOW.forEach(f=>CVF[f.id]=f.cv);
+const FI={}; FLOW.forEach(f=>FI[f.id]=f);
+
+const SEC=[
+ {id:'qaqc',t:'§QAQC',       d:['insp','comp','cert'], use:{f2:['CP2']},            note:'Inspection outcomes, Social &amp; TA compliance reports and certifications. Computable only once the pair is trading and the vendor file exists.'},
+ {id:'pfm', t:'§Performance',d:['tdoc'],               use:{f2:['CP2']},            note:'On-time / claims / volume from trading documents.'},
+ {id:'bs',  t:'§B_S',        d:['ci','pulse','cust'],  use:{f1:['CP2'],f2:['CP2']}, note:'The buyer–supplier pair score. At lead stage this is the ONLY computable section, so it proxies the whole scorecard.'},
+ {id:'cvg', t:'§Coverage',   d:[],                     use:{f1:['CP2'],f2:['CP1']}, note:'Declares which sections are full / proxy / missing at this stage.'}
+];
+
+/* which flows touch each module, and at which CP */
+const useL1={}, useL2={};
+CP.forEach(c=>{
+  (c.l1||[]).forEach(m=>{(useL1[m]=useL1[m]||{})[c.f]=(useL1[m][c.f]||[]).concat(c.k)});
+  (c.l2||[]).forEach(m=>{(useL2[m]=useL2[m]||{})[c.f]=(useL2[m][c.f]||[]).concat(c.k)});
+});
+/* data restriction per step (dtx) → which data a scenario really reaches through an L2 node */
+const useDT={};
+CP.forEach(c=>(c.l2||[]).forEach(mid=>{
+  const m=L2M.find(x=>x.id===mid); if(!m)return;
+  (((c.dtx||{})[mid])||m.dt).forEach(d=>{(useDT[d]=useDT[d]||{})[c.f]=1});
+}));
+
+/* ============================= nodes ============================= */
+const N=[], ND={};
+function add(o){N.push(o); ND[o.id]=o; return o;}
+const BASE={f1:-Math.PI/2, f2:Math.PI/6, f3:5*Math.PI/6};
+
+FLOW.forEach(f=>add({id:f.id,lab:'Scenario',t:f.t,sub:'CP0–CP5',c:f.cv,ring:'sc',fl:new Set([f.id]),
+  r:26,ang:BASE[f.id],R:78,det:f.q.replace(/<\/?b>/g,''),file:'skills/'+f.t.toLowerCase().replace(/ /g,'-')+'/SKILL.md'}));
+
+L1M.forEach(m=>{const fl=new Set(Object.keys(useL1[m.id]||{}));
+  add({id:'p_'+m.id,lab:'L1Module',t:m.t,sub:'L1 · method',c:'#FF8FC7',ring:'l1',fl,
+    r:10+4.2*fl.size,det:m.d,file:'kb/L1/'+m.n+'.md',mid:m.id});});
+
+L2M.forEach(m=>{const fl=new Set(Object.keys(useL2[m.id]||{}));
+  add({id:'k_'+m.id,lab:'L2Node',t:m.t,sub:'L2 · policy',c:'#9D8FE8',ring:'l2',fl,
+    r:9+3.6*fl.size,det:m.d,file:'kb/L2/'+m.n+'.md',mid:m.id});});
+
+SEC.forEach(s=>add({id:'s_'+s.id,lab:'Section',t:s.t,sub:'§ of NODE-performance-scorecard',c:'#C3B9F5',ring:'sec',
+  fl:new Set(Object.keys(s.use)),r:7.6,det:s.note,file:'kb/L2/NODE-performance-scorecard.md '+s.t}));
+
+DT.forEach(d=>{const fl=new Set(Object.keys(useDT[d.id]||{}));
+  const dual=d.id==='cd';
+  add({id:'d_'+d.id,lab:dual?'DataSource:Portal':'DataSource',t:d.n,tag:d.k==='i'?'INT':'EXT',sub:d.k==='i'?'internal':'external',
+    c:'#47B598',ring:'dt',fl,r:7+1.6*fl.size,dual,det:dual
+      ?'Read as a source AND written to as a portal — this is the loop: Buyer Assessment writes the rating, Lead CP4.5 and Supplier CP1 read it back.'
+      :(d.k==='i'?'Internal Air8 system.':'External / third-party source.'),file:d.id});});
+
+/* ============================= edges ============================= */
+const E=[];
+function ed(a,b,type,o){if(!ND[a]||!ND[b])return; E.push(Object.assign({a,b,type},o||{}));}
+
+/* Scenario -LOADS{step}-> L1Module */
+Object.entries(useL1).forEach(([mid,fs])=>Object.entries(fs).forEach(([f,ks])=>
+  ed(f,'p_'+mid,'LOADS',{f,steps:[...new Set(ks)],c:CVF[f],k:'ld'})));
+/* L1Module -GOVERNS-> L2Node  (only real pairs seen in a step) */
+const govSeen=new Set();
+CP.forEach(c=>(c.l1||[]).forEach(a=>(c.l2||[]).forEach(b=>{
+  if((GOV[a]||[]).includes(b))govSeen.add(a+'>'+b);})));
+[...govSeen].forEach(p=>{const [a,b]=p.split('>');
+  const fl=[...new Set(CP.filter(c=>(c.l1||[]).includes(a)&&(c.l2||[]).includes(b)).map(c=>c.f))];
+  ed('p_'+a,'k_'+b,'GOVERNS',{fs:fl,c:'#FF8FC7',k:'gv'});});
+/* L2Node -READS-> DataSource */
+L2M.forEach(m=>m.dt.forEach(d=>{
+  const fl=[...new Set(CP.filter(c=>(c.l2||[]).includes(m.id)&&(((c.dtx||{})[m.id])||m.dt).includes(d)).map(c=>c.f))];
+  ed('k_'+m.id,'d_'+d,'READS',{fs:fl,c:'#47B598',k:'rd'});}));
+/* Section -PART_OF-> perf ; Section -COMPUTED_FROM-> data ; Scenario -USES_SECTION{step}-> Section */
+SEC.forEach(s=>{
+  ed('s_'+s.id,'k_perf','PART_OF',{fs:[...ND['s_'+s.id].fl],c:'#C3B9F5',k:'po',w:2.4});
+  s.d.forEach(d=>ed('s_'+s.id,'d_'+d,'COMPUTED_FROM',{fs:[...ND['s_'+s.id].fl],c:'#47B598',k:'cf'}));
+  Object.entries(s.use).forEach(([f,ks])=>ed(f,'s_'+s.id,'USES_SECTION',{f,steps:ks,c:CVF[f],k:'us'}));
+});
+/* Buyer Assessment hands its rating to the other two */
+ed('f3','f1','HANDS_OFF_TO',{f:'f3',steps:['CP4.5'],c:'#E28362',k:'ho',w:1.8});
+ed('f3','f2','HANDS_OFF_TO',{f:'f3',steps:['CP1'],c:'#E28362',k:'ho',w:1.8});
+ed('f3','d_cd','WRITES_TO',{f:'f3',c:'#E28362',k:'wt'});
+ed('f2','d_cd','WRITES_TO',{f:'f2',c:'#47B598',k:'wt'});
+
+/* ---- L1↔L1 and L2↔L2: methods relate to methods, rules to rules ----
+   ASSERTED, not derived from the step lists. Every one carries its reason so
+   it can be argued with. Mirrored in kbmap/cp-map.yaml → relations:        */
+const REL1=[
+ {a:'contract',b:'route',  t:'PRECEDES',      w:'fields must be mapped before an HS chapter can be read'},
+ {a:'contract',b:'cov',    t:'PRECEDES',      w:'coverage can only be judged on fields the contract has mapped'},
+ {a:'route',   b:'method', t:'PRECEDES',      w:'the router picks the vertical the method then scores in'},
+ {a:'method',  b:'gates',  t:'PRECEDES',      w:'score first, then apply the gates'},
+ {a:'gates',   b:'pair',   t:'PRECEDES',      w:'the score is already set — the matrix only decides terms'},
+ {a:'trend',   b:'gates',  t:'PRECEDES',      w:'trend scores merge in the same blend — they must exist before it runs'},
+ {a:'brm',     b:'gates',  t:'PRECEDES',      w:'the buyer rating is blended at assembly — it must exist before it runs'},
+ {a:'cov',     b:'method', t:'CONSTRAINS',    w:'coverage says which sections are computable; the method may only score those'},
+ {a:'cov',     b:'brm',    t:'CONSTRAINS',    w:'full assessment or web proxy — coverage decides which path the rating method takes'},
+ {a:'evid',    b:'advm',   t:'CONSTRAINS',    w:'evidence standard and source credibility bound every severity call'},
+ {a:'evid',    b:'trend',  t:'CONSTRAINS',    w:'a trend signal has to clear the same evidence bar'},
+ {a:'blkp',    b:'brm',    t:'FALLS_BACK_TO', w:'Credit Dashboard first; on a miss, run the full buyer rating method'}
+];
+const REL2=[
+ {a:'frame', b:'appa',  t:'SPECIALISED_BY', w:'the shared framework, narrowed to the Apparel vertical'},
+ {a:'frame', b:'hard',  t:'SPECIALISED_BY', w:'the shared framework, narrowed to the Hardgoods vertical'},
+ {a:'frame', b:'ind',   t:'LOOKS_UP',       w:'the framework names indicators; the dictionary says which column they live in'},
+ {a:'frame', b:'rate',  t:'FEEDS',          w:'component scores go into the rating assembly'},
+ {a:'perf',  b:'rate',  t:'FEEDS',          w:'scorecard score goes into the rating assembly'},
+ {a:'pt',    b:'rate',  t:'FEEDS',          w:'product-trend score is merged, not scored as a scorecard dimension'},
+ {a:'mt',    b:'rate',  t:'FEEDS',          w:'market-trend score is merged, not scored as a scorecard dimension'},
+ {a:'br',    b:'bprox', t:'FALLS_BACK_TO',  w:'no S&amp;P and no financials — fall back to the web proxy rating'},
+ {a:'br',    b:'pmx',   t:'FEEDS',          w:'the buyer rating is one axis of the limit &amp; terms matrix'},
+ {a:'rate',  b:'pmx',   t:'FEEDS',          w:'the assembled A/B/C/D is the other axis of the matrix'},
+ {a:'adv',   b:'src',   t:'RESOLVES_VIA',   w:'which source wins when two disagree'},
+ {a:'fin',   b:'src',   t:'RESOLVES_VIA',   w:'which source wins when two disagree'},
+ {a:'out',   b:'src',   t:'RESOLVES_VIA',   w:'which source wins when two disagree'}
+];
+function inter(a,b){const A=ND[a],B=ND[b]; if(!A||!B)return [];
+  return [...A.fl].filter(f=>B.fl.has(f));}
+REL1.forEach(r=>ed('p_'+r.a,'p_'+r.b,r.t,{fs:inter('p_'+r.a,'p_'+r.b),c:'#FF8FC7',k:'i1',w:1.3,why:r.w}));
+REL2.forEach(r=>ed('k_'+r.a,'k_'+r.b,r.t,{fs:inter('k_'+r.a,'k_'+r.b),c:'#B49BFF',k:'i2',w:1.3,why:r.w}));
+
+/* adjacency */
+const ADJ={}; N.forEach(n=>ADJ[n.id]=[]);
+E.forEach((e,i)=>{e.i=i; ADJ[e.a].push(i); ADJ[e.b].push(i);});
+function edFlows(e){return e.f?[e.f]:(e.fs||[]);}
+
+const _dec=document.createElement('textarea');
+function txt(v){_dec.innerHTML=String(v);return _dec.value;}
+
+/* ============================= layout ============================= */
+/* four bands left→right, but nodes are free inside them: barycentre ordering
+   gives the starting y, then a box-separation relaxation lets everything
+   drift into an organic Neo4j-ish arrangement with zero label collisions.
+   Sections are not a band — they hang off their parent node as satellites. */
+const COLS=[['sc'],['l1'],['l2'],['dt']];
+const CX  =[  66,   402,   744,  1286 ];
+const CH  =['01 :Scenario','02 :L1Module','03 :L2Node','04 :DataSource'];
+const BAND=[  46,    92,     92,    92  ];
+const HH=690;
+const colOf={}; COLS.forEach((g,i)=>g.forEach(r=>colOf[r]=i));
+
+/* label footprint, so separation can guarantee readable text */
+function subText(n){
+  return n.ring==='sc' ? ':Scenario · CP0–CP5'
+    : (n.fl.size>=3?'ALL 3 SCENARIOS':(n.fl.size===2?'×2 SCENARIOS':[...n.fl].map(f=>FI[f].t.toUpperCase()).join('')));
+}
+N.forEach(n=>{n.sub=subText(n);
+  const w1=txt(n.t).length*(n.ring==='sc'?7.4:5.25), w2=n.sub.length*4.45;
+  n.lw=Math.max(w1,w2)+16;});
+
+const FREE=N.filter(n=>n.ring!=='sec'), SATS=N.filter(n=>n.ring==='sec');
+FREE.forEach(n=>n.col=colOf[n.ring]);
+const BUCK=COLS.map(()=>[]); FREE.forEach(n=>BUCK[n.col].push(n));
+
+/* ---- 1. barycentre ordering (minimise crossings) ---- */
+const FW={f1:0,f2:1,f3:2};
+/* CP-order keys: the earliest step each module appears in, globally and per flow */
+const CPIDX={}, FSTEP={f1:{},f2:{},f3:{}};
+CP.forEach(c=>{
+  const k=parseFloat(c.k.replace('CP',''));
+  [['l1','p_'],['l2','k_']].forEach(([fld,pre])=>(c[fld]||[]).forEach(m=>{
+    const id=pre+m;
+    if(CPIDX[id]===undefined||k<CPIDX[id])CPIDX[id]=k;
+    if(FSTEP[c.f][id]===undefined||k<FSTEP[c.f][id])FSTEP[c.f][id]=k;
+  }));
+});
+BUCK.forEach((L,ci)=>{
+  L.forEach(n=>{const fs=[...n.fl];
+    if(ci===0){n._k=FW[n.id];return;}
+    if(ci===1||ci===2){
+      /* pipeline order: earliest CP step first; shared-early modules rise */
+      n._k=(CPIDX[n.id]??99)*10 + (fs.length? fs.reduce((s,f)=>s+FW[f],0)/fs.length : 1)*0.1;
+      return;
+    }
+    n._k = fs.length? fs.reduce((s,f)=>s+FW[f],0)/fs.length : 1;
+    if(fs.length>=3)n._k=1;});
+  L.sort((a,b)=>a._k-b._k||a.t.localeCompare(b.t));
+  L.forEach((n,i)=>n.rk=i);
+});
+function enforceOrder(ci){
+  const L=BUCK[ci].slice().sort((a,b)=>a.rk-b.rk);
+  const ys=BUCK[ci].map(n=>n.y).sort((a,b)=>a-b);
+  L.forEach((n,i)=>n.y=ys[i]);
+}
+function spread(){BUCK.forEach((L,ci)=>{const n=L.length,pitch=Math.min(ci===0?230:56,(HH-40)/Math.max(1,n));
+  L.forEach(x=>{x.y=HH/2+(x.rk-(n-1)/2)*pitch;});});}
+spread();
+for(let pass=0;pass<14;pass++){
+  [3].forEach(ci=>{
+    const L=BUCK[ci]; if(L.length<2)return;
+    L.forEach(n=>{const nb=ADJ[n.id].map(i=>ND[E[i].a===n.id?E[i].b:E[i].a]).filter(x=>x.ring!=='sec'&&x.col!==ci);
+      n._b = nb.length? nb.reduce((s,x)=>s+x.y,0)/nb.length : n.y;});
+    L.sort((a,b)=>a._b-b._b||a.rk-b.rk);
+    L.forEach((n,i)=>n.rk=i); spread();
+  });
+}
+/* deterministic seed jitter so the start is not a dead straight line */
+FREE.forEach(n=>{n.x=CX[n.col]+(((n.rk*7)%5)-2)*BAND[n.col]*0.22;});
+/* the three scenarios are the anchors of the picture — pin them, spread wide */
+BUCK[0].forEach((n,i)=>{n.pinY=HH*(0.17+0.33*i); n.y=n.pinY;});
+
+/* ---- 2. relaxation: edge springs + box separation + band pull ---- */
+function boxOf(n){const vy=Math.max(13,n.r+5);
+  return {x0:n.x-n.r-(n.tag?34:5), x1:n.x+n.r+8+n.lw, y0:n.y-vy, y1:n.y+vy+2};}
+function relaxAll(iters,movable,obstacles){
+  const ALL=movable.concat(obstacles||[]);
+  for(let it=0;it<iters;it++){
+    const cool=0.55*(1-it/iters)+0.18;
+    movable.forEach(n=>{n.dx=0;n.dy=0;});
+    /* edge springs — mostly vertical, a little horizontal lean */
+    E.forEach(e=>{const A=ND[e.a],B=ND[e.b];
+      if(A.ring==='sec'||B.ring==='sec')return;
+      const fy=(B.y-A.y)*0.016, fx=(B.x-A.x)*0.0012;
+      if(A.dy!==undefined){A.dy+=fy;A.dx+=fx;}
+      if(B.dy!==undefined){B.dy-=fy;B.dx-=fx;}});
+    /* band pull, or anchor pull for a satellite */
+    movable.forEach(n=>{
+      if(n.anch){n.dx+=(n.anch.x-n.x)*0.10; n.dy+=(n.anch.y-n.y)*0.10;}
+      else n.dx+=(CX[n.col]-n.x)*0.075;});
+    /* box separation */
+    for(let i=0;i<ALL.length;i++)for(let j=i+1;j<ALL.length;j++){
+      const a=ALL[i],b=ALL[j], A=boxOf(a),B=boxOf(b);
+      const px=Math.min(A.x1,B.x1)-Math.max(A.x0,B.x0);
+      const py=Math.min(A.y1,B.y1)-Math.max(A.y0,B.y0);
+      if(!(px>0)||!(py>0))continue;
+      const ma=a.dx!==undefined, mb=b.dx!==undefined;
+      const sh=(ma&&mb)?0.5:1;
+      if(py<px*0.35){ const s=(a.y<b.y?-1:1)*(py/2+0.6)*sh;
+        if(ma)a.dy+=s; if(mb)b.dy-=s; }
+      else { const s=(a.x<b.x?-1:1)*(px/2+0.6)*sh*0.42;
+        if(ma)a.dx+=s; if(mb)b.dx-=s; }
+    }
+    movable.forEach(n=>{
+      n.x+=n.dx*cool; if(n.pinY===undefined)n.y+=n.dy*cool; else n.y=n.pinY;
+      if(n.anch){
+        n.x=Math.max(n.anch.x-46,Math.min(n.anch.x+64,n.x));
+        n.y=Math.max(n.anch.y-70,Math.min(n.anch.y+70,n.y));
+      }else{
+        const lim=BAND[n.col];
+        n.x=Math.max(CX[n.col]-lim,Math.min(CX[n.col]+lim,n.x));
+      }
+      n.y=Math.max(14,Math.min(HH-14,n.y));});
+  }
+  movable.forEach(n=>{delete n.dx;delete n.dy;});
+}
+relaxAll(230,FREE); enforceOrder(1); enforceOrder(2);
+
+/* ---- 3. sections hang off their parent node as children ---- */
+const PARENT='k_perf';
+(function sats(){
+  const p=ND[PARENT], A=[-0.72,-0.24,0.24,0.72];
+  SATS.forEach((n,i)=>{n.r=6.4; n.col=2;
+    n.anch={x:p.x+Math.cos(A[i])*84, y:p.y+Math.sin(A[i])*84};
+    n.x=n.anch.x; n.y=n.anch.y;});
+})();
+/* springs contract everything toward the middle — stretch each band back out,
+   order preserved, so the picture actually uses the frame                    */
+function stretch(){
+  BUCK.forEach((L,ci)=>{
+    if(ci===0||L.length<3)return;
+    L.sort((a,b)=>a.y-b.y);
+    const lo=Math.min(...L.map(n=>Math.max(14,n.r+16))), hi=HH-lo;
+    const y0=L[0].y, y1=L[L.length-1].y, span=Math.max(1,y1-y0);
+    L.forEach(n=>{n.y=lo+((n.y-y0)/span)*(hi-lo);});
+  });
+}
+stretch(); enforceOrder(1); enforceOrder(2);
+relaxAll(140,SATS,FREE);   /* satellites find room; the bands stay put */
+relaxAll(110,FREE,SATS);   /* then the bands settle around them */
+stretch();
+
+/* ---- 4. hard separation: no springs, no cooling — labels must never touch ---- */
+function hardSep(iters){
+  for(let it=0;it<iters;it++){
+    let worst=0;
+    N.forEach(n=>{n.dx=0;n.dy=0;});
+    for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){
+      const a=N[i],b=N[j],A=boxOf(a),B=boxOf(b);
+      const px=Math.min(A.x1,B.x1)-Math.max(A.x0,B.x0);
+      const py=Math.min(A.y1,B.y1)-Math.max(A.y0,B.y0);
+      if(!(px>0)||!(py>0))continue;
+      worst=Math.max(worst,Math.min(px,py));
+      const s=(a.y<b.y?-1:1)*(py/2+0.8);
+      a.dy+=s; b.dy-=s;
+    }
+    N.forEach(n=>{n.y=Math.max(12,Math.min(HH-12,n.y+n.dy));
+      if(n.anch)n.anch.y=n.y;});
+    if(worst===0)break;
+  }
+  N.forEach(n=>{delete n.dx;delete n.dy;});
+}
+hardSep(320); enforceOrder(1); enforceOrder(2);
+/* re-glue the satellites to wherever their parent finally landed */
+(function reglue(){
+  const p=ND[PARENT], A=[-0.72,-0.24,0.24,0.72];
+  SATS.forEach((n,i)=>{n.anch={x:p.x+Math.cos(A[i])*84,y:p.y+Math.sin(A[i])*84};
+    n.x=n.anch.x; n.y=n.anch.y;});
+  relaxAll(120,SATS,FREE);
+})();
+/* ============================= render ============================= */
+const $=i=>document.getElementById(i);
+const eL=$('eL'), tL=$('tL'), nL=$('nL');
+const NS='http://www.w3.org/2000/svg';
+function mk(t,at){const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);return e;}
+const DASH={GOVERNS:'6 5',USES_SECTION:'1.6 4',HANDS_OFF_TO:'9 5',WRITES_TO:'3 4',COMPUTED_FROM:'2.5 5',
+  PRECEDES:'5 4',CONSTRAINS:'1.5 3',FALLS_BACK_TO:'9 5',LOOKS_UP:'2 4',RESOLVES_VIA:'1.5 4'};
+
+function path(e){
+  const A=ND[e.a],B=ND[e.b];
+  const dx=B.x-A.x, dy=B.y-A.y, L=Math.hypot(dx,dy)||1;
+  const ux=dx/L, uy=dy/L;
+  const ax=A.x+ux*A.r, ay=A.y+uy*A.r, bx=B.x-ux*B.r, by=B.y-uy*B.r;
+  let cx,cy;
+  if(e.k==='i1'||e.k==='i2'){
+    /* stays inside its own band: a C-arc bulging away from the column */
+    const amt=e._amt!==undefined?e._amt:Math.min(104,36+Math.abs(by-ay)*0.15);
+    cx=(ax+bx)/2-amt; cy=(ay+by)/2;
+  }else{
+    const bow=(e.k==='po')?0.05:((e.k==='ho'||e.k==='wt')?0.16:0.055);
+    cx=(ax+bx)/2 - uy*L*bow; cy=(ay+by)/2 + ux*L*bow;
+  }
+  const t=e._t!==undefined?e._t:((e.k==='ld'||e.k==='us')?0.80:0.5), u=1-t;
+  const qx=u*u*ax+2*u*t*cx+t*t*bx, qy=u*u*ay+2*u*t*cy+t*t*by;
+  const tx=2*(u*(cx-ax)+t*(bx-cx)), ty=2*(u*(cy-ay)+t*(by-cy));
+  return {d:`M${ax.toFixed(1)} ${ay.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`,
+          mx:qx, my:qy, ang:Math.atan2(ty,tx)*180/Math.PI};
+}
+const EP=[], EL=[], EG=[], FP=[];
+const PRI={ld:0,us:0,ho:0,wt:0,i1:1,i2:1,po:2,cf:3,gv:4,rd:5};
+/* stagger the label position of fan-out edges so they spread along the gap
+   instead of piling up at one midpoint                                     */
+(function stagger(){
+  const grp={};
+  E.forEach(e=>{if(e.k==='ld'||e.k==='us'||e.k==='po'||e.k==='i1'||e.k==='i2')return;
+    (grp[e.a+'|'+e.k]=grp[e.a+'|'+e.k]||[]).push(e);});
+  Object.values(grp).forEach(L=>{
+    if(L.length===1){L[0]._t=e_mid(L[0]);return;}
+    L.forEach((e,i)=>{e._t=0.26+(i/(L.length-1))*0.48;});});
+  function e_mid(){return 0.42;}
+})();
+/* nest the intra-layer arcs: short links hug the column, long links swing wider,
+   so nine of them read as nine arcs instead of one pink smear                  */
+['i1','i2'].forEach(k=>{
+  const L=E.filter(e=>e.k===k)
+    .map(e=>({e,d:Math.abs(ND[e.b].y-ND[e.a].y)}))
+    .sort((a,b)=>a.d-b.d);
+  L.forEach((o,i)=>{o.e._amt=Math.min(132, 28+i*9+o.d*0.055);});
+});
+E.forEach(e=>{
+  const g=path(e);
+  e.step=(e.k==='ld'||e.k==='us'||e.k==='ho'||e.k==='wt');
+  e.fl=edFlows(e);
+  const base=mk('path',{class:'ed',d:g.d,stroke:e.c,'stroke-width':e.w||1.05,opacity:.5});
+  if(DASH[e.type])base.setAttribute('stroke-dasharray',DASH[e.type]);
+  const tipTxt=`${txt(ND[e.a].t)} —[:${e.type}${e.steps?' '+e.steps.join('/'):''}]→ ${txt(ND[e.b].t)}${e.why?'\n'+txt(e.why):''}`;
+  const tip=mk('title',{}); tip.textContent=tipTxt; base.appendChild(tip);
+  eL.appendChild(base); EP.push(base);
+  /* one overlay per scenario that walks this edge — lets a shared line show
+     two or three colours interleaved instead of picking a winner            */
+  const ov={};
+  (e.k==='i1'||e.k==='i2'?[]:e.fl).forEach(f=>{const q=mk('path',{class:'fed',d:g.d,stroke:CVF[f],
+      'stroke-width':(e.w||1.05)*1.75,'stroke-linecap':'butt'});
+    const qt=mk('title',{}); qt.textContent=tipTxt; q.appendChild(qt);
+    eL.appendChild(q); ov[f]=q;});
+  FP.push(ov);
+  let ang=g.ang; if(ang>90||ang<-90)ang+=180;
+  const lab=e.steps&&e.steps.length?e.type+' · '+e.steps.join('/'):e.type;
+  const steep=Math.abs(ang)>50;
+  const t=mk('text',{class:'elab',x:steep?g.mx-6:g.mx,y:steep?g.my+2:g.my-3,
+    'text-anchor':steep?'end':'middle'});
+  if(!steep)t.setAttribute('transform',`rotate(${ang.toFixed(1)} ${g.mx.toFixed(1)} ${g.my.toFixed(1)})`);
+  t.textContent=lab; tL.appendChild(t); EL.push(t);
+  EG.push({mx:steep?g.mx-6-lab.length*2.03:g.mx, my:steep?g.my+2:g.my-3, w:lab.length*4.05, steep});
+});
+/* one representative edge per relationship type — the resting schema view */
+const REP=new Set();
+[...new Set(E.map(e=>e.type))].forEach(ty=>{
+  const list=E.filter(e=>e.type===ty);
+  const mx=list.reduce((s,e)=>s+EG[e.i].mx,0)/list.length;
+  const my=list.reduce((s,e)=>s+EG[e.i].my,0)/list.length;
+  let best=list[0], bd=1e9;
+  list.forEach(e=>{const d=Math.hypot(EG[e.i].mx-mx,EG[e.i].my-my); if(d<bd){bd=d;best=e;}});
+  REP.add(best.i);
+});
+
+const NG={};
+N.forEach(n=>{
+  const g=mk('g',{class:'nd','data-id':n.id});
+  const big=n.ring==='sc';
+  if(big){
+    g.appendChild(mk('circle',{class:'core',cx:n.x,cy:n.y,r:n.r+7,fill:'none',stroke:n.c,'stroke-width':1,opacity:.34}));
+    g.appendChild(mk('circle',{class:'core',cx:n.x,cy:n.y,r:n.r,fill:'rgba(14,19,28,.9)',stroke:n.c,'stroke-width':2.4}));
+    const num=mk('text',{class:'nlab',x:n.x,y:n.y+4.6,'text-anchor':'middle','font-size':13,fill:n.c,'font-weight':600});
+    num.textContent=FI[n.id].n; g.appendChild(num);
+  }else if(n.ring==='sec'){
+    g.appendChild(mk('circle',{class:'core',cx:n.x,cy:n.y,r:n.r,
+      fill:hex(n.c,.3),stroke:n.c,'stroke-width':1.2}));
+  }else{
+    g.appendChild(mk('circle',{class:'core',cx:n.x,cy:n.y,r:n.r,
+      fill:hex(n.c, n.dual ? .34 : .22),stroke:n.c,'stroke-width':1.5}));
+    if(n.dual)g.appendChild(mk('circle',{class:'core',cx:n.x,cy:n.y,r:n.r+4.5,fill:'none',stroke:n.c,'stroke-width':.9,opacity:.55,'stroke-dasharray':'2 3'}));
+    if(n.fl.size>=3)g.appendChild(mk('circle',{class:'core',cx:n.x,cy:n.y,r:n.r+3.2,fill:'none',stroke:n.c,'stroke-width':.8,opacity:.4}));
+  }
+  const lx=n.x+n.r+(n.ring==='sc'?13:8), ly=n.y+(n.ring==='sc'?-5:1.4);
+  const t1=mk('text',{class:'lb nlab'+(big?' big':'')+(n.ring==='sec'?' sm':''),x:lx,y:ly,'text-anchor':'start'});
+  t1.textContent=txt(n.t); g.appendChild(t1);
+  const t2=mk('text',{class:'lb nlab2',x:lx,y:ly+(big?13:9.6),'text-anchor':'start'});
+  t2.textContent=n.sub;
+  g.appendChild(t2);
+  if(n.tag){
+    const bw=23, bx=n.x-n.r-bw-7, by=n.y-5.8;
+    g.appendChild(mk('rect',{class:'lb tagbox',x:bx,y:by,width:bw,height:11.6,rx:3,
+      fill:n.tag==='INT'?'rgba(19,44,39,.94)':'rgba(14,19,28,.9)',
+      stroke:n.tag==='INT'?hex('#47B598',.65):'rgba(135,146,168,.6)','stroke-width':.9}));
+    const tt=mk('text',{class:'lb tagtxt',x:bx+bw/2,y:by+8.4,'text-anchor':'middle',
+      fill:n.tag==='INT'?'#8FD8C2':'#8792A8'});
+    tt.textContent=n.tag; g.appendChild(tt);
+  }
+  const rg=mk('g',{class:'mring',id:'rg_'+n.id}); g.appendChild(rg);
+  g.appendChild(mk('circle',{class:'hit',cx:n.x,cy:n.y,r:Math.max(n.r+9,15)}));
+  n.bx=n.x; n.by=n.y;
+  nL.appendChild(g); NG[n.id]=g;
+});
+function place(n){const dx=n.x-n.bx, dy=n.y-n.by;
+  NG[n.id].setAttribute('transform',dx||dy?`translate(${dx.toFixed(2)} ${dy.toFixed(2)})`:'');}
+function reflowEdges(set){
+  set.forEach(i=>{const e=E[i], g=path(e);
+    EP[i].setAttribute('d',g.d);
+    for(const f in FP[i])FP[i][f].setAttribute('d',g.d);
+    let ang=g.ang; if(ang>90||ang<-90)ang+=180;
+    const steep=Math.abs(ang)>50;
+    EL[i].setAttribute('x',steep?g.mx-6:g.mx); EL[i].setAttribute('y',steep?g.my+2:g.my-3);
+    if(steep)EL[i].removeAttribute('transform');
+    else EL[i].setAttribute('transform',`rotate(${ang.toFixed(1)} ${g.mx.toFixed(1)} ${g.my.toFixed(1)})`);
+    EG[i].mx=steep?g.mx-6-(EL[i].textContent.length*2.03):g.mx; EG[i].my=steep?g.my+2:g.my-3;});
+}
+/* column headers + shared-core band */
+(function heads(){
+  const hg=document.createElementNS(NS,'g');
+  const yTop=-52;
+  CH.forEach((h,i)=>{
+    const t=mk('text',{x:CX[i]-14,y:yTop,'text-anchor':'start',class:'chd'});
+    t.textContent=h; hg.appendChild(t);
+    hg.appendChild(mk('line',{x1:CX[i]-14,y1:yTop+11,x2:CX[i]+(i===3?230:200),y2:yTop+11,
+      stroke:'rgba(234,228,214,.13)','stroke-width':1}));
+  });
+  eL.parentNode.insertBefore(hg,eL);
+  hg.querySelectorAll('text').forEach(t=>{t.setAttribute('font-family','IBM Plex Mono,monospace');
+    t.setAttribute('font-size','10.5');t.setAttribute('letter-spacing','.19em');t.setAttribute('fill','#8792A8');});
+})();
+function hex(h,a){const v=h.replace('#','');const r=parseInt(v.slice(0,2),16),g=parseInt(v.slice(2,4),16),b=parseInt(v.slice(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;}
+
+/* ============================= selection ============================= */
+let SELF=new Set(), SELN=new Set(), hovNode=null, labMode='all', showIntra=true;
+const isIntra=e=>e.k==='i1'||e.k==='i2';
+const LABTXT={all:'EDGE LABELS · ALL',steps:'EDGE LABELS · STEPS',off:'EDGE LABELS · OFF'};
+
+function scenarioSet(f){
+  const nn=new Set([f]), ee=new Set();
+  E.forEach(e=>{ if(e.f===f && (e.k==='ld'||e.k==='us'||e.k==='ho'||e.k==='wt')){nn.add(e.a);nn.add(e.b);ee.add(e.i);} });
+  let grew=true, guard=0;
+  while(grew&&guard++<6){grew=false;
+    E.forEach(e=>{
+      if(ee.has(e.i))return;
+      if(!e.fl.includes(f))return;
+      if(isIntra(e)&&!showIntra)return;
+      if(nn.has(e.a)&&!nn.has(e.b)){nn.add(e.b);ee.add(e.i);grew=true;}
+      else if(nn.has(e.a)&&nn.has(e.b)){ee.add(e.i);grew=true;}
+    });
+  }
+  return {nn,ee};
+}
+let SCACHE={}; function rescope(){SCACHE={}; FLOW.forEach(f=>SCACHE[f.id]=scenarioSet(f.id));}
+rescope();
+
+function hoodSet(id){
+  const nn=new Set([id]), ee=new Set();
+  ADJ[id].forEach(i=>{const e=E[i];
+    if(isIntra(e)&&!showIntra)return;
+    if(SELF.size&&!e.fl.some(f=>SELF.has(f)))return;
+    nn.add(e.a);nn.add(e.b);ee.add(i);});
+  return {nn,ee};
+}
+function merge(list){const nn=new Set(),ee=new Set();
+  list.forEach(S=>{S.nn.forEach(x=>nn.add(x));S.ee.forEach(x=>ee.add(x));});return {nn,ee};}
+
+function currentSet(){
+  if(SELN.size)return Object.assign(merge([...SELN].map(hoodSet)),{kind:'node'});
+  if(SELF.size)return Object.assign(merge([...SELF].map(f=>SCACHE[f])),{kind:'flow'});
+  return null;
+}
+
+/* ---- per-node colour arcs: which of the picked scenarios use this node ---- */
+function arc(cx,cy,r,a0,a1){
+  const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
+  const x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${(a1-a0)>Math.PI?1:0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+}
+function rings(){
+  const picked=FLOW.map(f=>f.id).filter(f=>SELF.has(f));
+  N.forEach(n=>{
+    const g=$('rg_'+n.id);
+    const mine=picked.filter(f=>n.fl.has(f));
+    if(!mine.length||n.ring==='sc'){g.innerHTML='';return;}
+    const R=n.r+4.6, gap=mine.length>1?0.30:0, step=(2*Math.PI)/mine.length;
+    g.innerHTML=mine.map((f,i)=>{
+      const a0=-Math.PI/2+i*step+gap/2, a1=a0+step-gap;
+      return `<path d="${arc(n.x,n.y,R,a0,a1)}" fill="none" stroke="${CVF[f]}" stroke-width="2.1" stroke-linecap="round"/>`;
+    }).join('');
+  });
+}
+
+/* ---- edge painting: colour by scenario once a scenario is picked ---- */
+function paintEdges(S){
+  const picked=FLOW.map(f=>f.id).filter(f=>SELF.has(f));
+  const byFlow = picked.length>0 && SELN.size===0 ? picked
+               : (picked.length>0 ? picked : null);
+  E.forEach(e=>{
+    if(isIntra(e)&&!showIntra){EP[e.i].style.display='none';
+      for(const f in FP[e.i])FP[e.i][f].style.display='none';
+      EL[e.i].classList.remove('show'); return;}
+    const on=!S||S.ee.has(e.i);
+    const mine = (byFlow && !isIntra(e))? byFlow.filter(f=>e.fl.includes(f)) : [];
+    /* base path carries the relationship-type colour; hidden when a scenario owns the line */
+    const useFlow = on && mine.length>0;
+    EP[e.i].style.display = useFlow? 'none':'';
+    EP[e.i].classList.toggle('dim',!on);
+    EP[e.i].setAttribute('opacity', on ? (isIntra(e)? .95 : (S? .82 : .42)) : .05);
+    e.fl.forEach(f=>{const q=FP[e.i][f]; if(!q)return;
+      const show = useFlow && mine.includes(f);
+      q.style.display = show? 'block':'none';
+      if(!show)return;
+      const k=mine.length, j=mine.indexOf(f);
+      if(k===1)q.removeAttribute('stroke-dasharray');
+      else{const seg=k===2?7:6; q.setAttribute('stroke-dasharray',`${seg} ${seg*(k-1)}`);
+           q.setAttribute('stroke-dashoffset',-j*seg);}
+      q.setAttribute('opacity',.95);
+    });
+  });
+}
+
+/* ---- edge labels: greedy, so ALL mode stays readable ---- */
+function placeLabels(S){
+  if(labMode==='off'){EL.forEach(t=>t.classList.remove('show'));return;}
+  let want=E.filter(e=>{
+    if(isIntra(e)&&!showIntra)return false;
+    if(!S)return REP.has(e.i);
+    if(!S.ee.has(e.i))return false;
+    return labMode==='all'||e.step;
+  }).sort((a,b)=>PRI[a.k]-PRI[b.k]);
+  /* READS / GOVERNS repeat dozens of times — a handful reads as a type label,
+     thirty reads as noise. Step-carrying edges are never capped.            */
+  if(labMode==='all'){
+    const CAP={rd:6,gv:6,cf:3}, seen={};
+    want=want.filter(e=>{const c=CAP[e.k]; if(!c)return true;
+      seen[e.k]=(seen[e.k]||0)+1; return seen[e.k]<=c;});
+  }
+  const keep=new Set(), placed=[];
+  want.forEach(e=>{const g=EG[e.i];
+    const bx=g.mx-g.w/2, by=g.my-5.5, bw=g.w, bh=11;
+    const clash=placed.some(q=>Math.abs((q.x+q.w/2)-(bx+bw/2))*2 < (q.w+bw)+7
+                            && Math.abs((q.y+q.h/2)-(by+bh/2))*2 < (q.h+bh)+2);
+    if(clash)return;
+    placed.push({x:bx,y:by,w:bw,h:bh}); keep.add(e.i);});
+  EL.forEach((t,i)=>t.classList.toggle('show',keep.has(i)));
+  /* exact pass: rotated labels defeat the box estimate, so measure and trim */
+  const boxes=[];
+  N.forEach(n=>{const g=NG[n.id]; if(g.classList.contains('dim'))return;
+    g.querySelectorAll('.lb').forEach(t=>{const r=t.getBoundingClientRect();
+      if(r.width)boxes.push(r);});});
+  want.forEach(e=>{const t=EL[e.i]; if(!t.classList.contains('show'))return;
+    const r=t.getBoundingClientRect();
+    if(!r.width){t.classList.remove('show');return;}
+    const hit=boxes.some(q=>Math.min(q.right,r.right)-Math.max(q.left,r.left)>1
+                          && Math.min(q.bottom,r.bottom)-Math.max(q.top,r.top)>1);
+    if(hit){t.classList.remove('show'); keep.delete(e.i);} else boxes.push(r);});
+  return want.length-keep.size;
+}
+
+function apply(){
+  let S=currentSet();
+  if(hovNode&&!SELN.size){const H=hoodSet(hovNode);
+    if(S){S={nn:new Set([...S.nn,...H.nn]),ee:new Set([...S.ee,...H.ee]),kind:S.kind};} else S=H;}
+
+  N.forEach(n=>{const g=NG[n.id];
+    const on=!S||S.nn.has(n.id);
+    const isSel=SELN.has(n.id)||(SELF.has(n.id));
+    g.classList.toggle('dim',!on);
+    g.classList.toggle('near',!!S&&on&&!isSel&&SELN.size>0&&n.id!==hovNode);
+    g.classList.toggle('sel',isSel);});
+  paintEdges(S); rings();
+  reorderFor((SELN.size===0&&SELF.size===1)?[...SELF][0]:null);
+  const hid=placeLabels(S);
+  side();
+  const picked=FLOW.map(f=>f.id).filter(f=>SELF.has(f));
+  if(picked.length>1){
+    const both=N.filter(n=>n.ring!=='sc'&&picked.every(f=>n.fl.has(f))).length;
+    const any =N.filter(n=>n.ring!=='sc'&&picked.some(f=>n.fl.has(f))).length;
+    $('hint').innerHTML=`${picked.map(f=>`<i style="color:${CVF[f]};font-style:normal">${FI[f].t}</i>`).join(' + ')}`
+      +` &nbsp;·&nbsp; <b>${both}</b> of <b>${any}</b> nodes are used by every one of them`
+      +(hid?` &nbsp;·&nbsp; ${hid} labels hidden to avoid overlap`:'');
+  } else if(S){
+    const srt=(SELN.size===0&&SELF.size===1)?' · L1/L2 re-sorted into this scenario’s CP order':'';
+    $('hint').innerHTML=`<b>${S.nn.size}</b> nodes · <b>${S.ee.size}</b> relationships in view${srt}`
+      +(hid?` · ${hid} labels hidden`:'')+` &nbsp;·&nbsp; click empty space to release`;
+  } else {
+    $('hint').innerHTML=`PICK ONE OR MORE SCENARIOS — <b>a line used by two shows both colours interleaved</b> · DRAG ANY CIRCLE`;
+  }
+}
+
+function relBlocks(id){
+  const byT={};
+  ADJ[id].forEach(i=>{const e=E[i];
+    if(SELF.size&&!e.fl.some(f=>SELF.has(f)))return;
+    const dir=e.a===id?'→':'←', other=ND[e.a===id?e.b:e.a];
+    if(isIntra(e)&&!showIntra)return;
+    const key=e.type+'\u0000'+dir;
+    (byT[key]=byT[key]||[]).push({dir,t:txt(other.t),st:e.steps?e.steps.join('/'):'',why:e.why});});
+  return Object.entries(byT).map(([key,v])=>{
+    const t=key.split('\u0000')[0];
+    const col={LOADS:'#E9A83F',GOVERNS:'#FF8FC7',READS:'#47B598',PART_OF:'#C3B9F5',
+      USES_SECTION:'#E9A83F',COMPUTED_FROM:'#47B598',WRITES_TO:'#E28362',HANDS_OFF_TO:'#E28362',
+      PRECEDES:'#FF8FC7',CONSTRAINS:'#FF8FC7',FALLS_BACK_TO:'#FFB4D6',
+      SPECIALISED_BY:'#9D8FE8',FEEDS:'#9D8FE8',LOOKS_UP:'#9D8FE8',RESOLVES_VIA:'#9D8FE8'}[t]||'#8792A8';
+    const why=[...new Set(v.map(x=>x.why).filter(Boolean))];
+    return `<div class="rel"><i style="color:${col}">${v[0].dir==='→'?'-[:'+t+']->':'<-[:'+t+']-'} &nbsp;${v.length}</i>
+      <p>${v.map(x=>`<u>${x.t}</u>${x.st?` <span style="color:${col};font-family:IBM Plex Mono;font-size:8px">${x.st}</span>`:''}`).join(' · ')}</p>
+      ${why.map(w=>`<p style="color:var(--muted);font-size:9.6px;margin-top:3px">${w}</p>`).join('')}</div>`;
+  }).join('');
+}
+
+function nodeCard(n){
+  $('selT').textContent=txt(n.t);
+  $('selL').textContent=':'+n.lab; $('selL').style.color=n.c;
+  $('selF').textContent=n.file||'';
+  $('selD').innerHTML=n.det||'';
+  $('selK').innerHTML=[
+    `<span style="border-color:${hex(n.c,.5)};color:${n.c}">DEGREE ${ADJ[n.id].length}</span>`,
+    n.ring==='sc'?`<span>${CP.filter(c=>c.f===n.id).length} CP STEPS</span>`
+                 :`<span>${n.fl.size===3?'USED BY ALL 3':(n.fl.size===2?'USED BY 2':'1 SCENARIO ONLY')}</span>`
+  ].join('');
+  $('selR').innerHTML=relBlocks(n.id);
+}
+function chip(f){return `<span style="border-color:${hex(CVF[f],.55)};color:${CVF[f]}">${FI[f].t.toUpperCase()}</span>`;}
+function nameList(ids){return ids.map(i=>`<u>${txt(ND[i].t)}</u>`).join(' · ')||'<u style="color:var(--muted)">none</u>';}
+
+function compareCard(picked){
+  $('selT').textContent=picked.length+' scenarios overlaid';
+  $('selL').textContent=':Scenario × '+picked.length; $('selL').style.color='var(--paper)';
+  $('selF').textContent='';
+  const all=N.filter(n=>n.ring!=='sc'&&picked.some(f=>n.fl.has(f)));
+  const shared=all.filter(n=>picked.every(f=>n.fl.has(f)));
+  const pct=Math.round(shared.length/Math.max(1,all.length)*100);
+  $('selD').innerHTML=`<b style="font-size:15px">${shared.length} of ${all.length}</b> nodes in view (${pct}%) are used by <b>every</b> selected scenario — those lines carry all ${picked.length} colours.`;
+  $('selK').innerHTML=picked.map(chip).join('');
+  let h='';
+  ['l1','l2','sec','dt'].forEach(r=>{
+    const g=all.filter(n=>n.ring===r), sh=g.filter(n=>picked.every(f=>n.fl.has(f)));
+    if(!g.length)return;
+    const nm={l1:'L1Module',l2:'L2Node',sec:'Section',dt:'DataSource'}[r];
+    const col={l1:'#FF8FC7',l2:'#9D8FE8',sec:'#C3B9F5',dt:'#47B598'}[r];
+    h+=`<div class="rel"><i style="color:${col}">:${nm} &nbsp;${sh.length} / ${g.length} shared</i>
+        <p>${nameList(sh.map(n=>n.id))}</p></div>`;
+  });
+  picked.forEach(f=>{
+    const only=all.filter(n=>n.fl.has(f)&&picked.filter(x=>n.fl.has(x)).length===1);
+    if(!only.length)return;
+    h+=`<div class="rel"><i style="color:${CVF[f]}">ONLY IN ${FI[f].t.toUpperCase()} &nbsp;${only.length}</i>
+        <p>${nameList(only.map(n=>n.id))}</p></div>`;
+  });
+  $('selR').innerHTML=h;
+}
+function multiNodeCard(ids){
+  $('selT').textContent=ids.length+' nodes selected';
+  $('selL').textContent=':Node × '+ids.length; $('selL').style.color='var(--paper)';
+  $('selF').textContent='';
+  const S=merge(ids.map(hoodSet));
+  $('selD').innerHTML=`Union of their neighbourhoods — <b>${S.nn.size}</b> nodes, <b>${S.ee.size}</b> relationships.`;
+  $('selK').innerHTML=ids.map(i=>`<span style="border-color:${hex(ND[i].c,.5)};color:${ND[i].c}">${txt(ND[i].t)}</span>`).join('');
+  $('selR').innerHTML=ids.map(i=>`<div class="rel"><i style="color:${ND[i].c}">${txt(ND[i].t)}</i>${relBlocks(i)}</div>`).join('');
+}
+
+function side(){
+  const picked=FLOW.map(f=>f.id).filter(f=>SELF.has(f));
+  const nodes=[...SELN];
+  if(nodes.length===1)      nodeCard(ND[nodes[0]]);
+  else if(nodes.length>1)   multiNodeCard(nodes);
+  else if(picked.length===1)nodeCard(ND[picked[0]]);
+  else if(picked.length>1)  compareCard(picked);
+  else{
+    $('selT').textContent='Nothing selected';
+    $('selL').textContent=':Graph'; $('selL').style.color='var(--muted)';
+    $('selF').textContent=''; $('selK').innerHTML=''; $('selR').innerHTML='';
+    $('selD').innerHTML='Pick <b>one or more</b> scenario chips — each one paints its whole path in its own colour, and a node or line used by several shows every colour at once. Click any circle to add it to the selection.';
+  }
+  cypher(picked,nodes);
+}
+function cypher(picked,nodes){
+  const K=s=>`<k>${s}</k>`, V=s=>`<v>${s}</v>`, S=s=>`<s>${s}</s>`;
+  if(nodes.length===1){const n=ND[nodes[0]], lab=n.lab.split(':')[0];
+    $('cy').innerHTML=`${K('MATCH')} (n:${S(lab)} {name:'${txt(n.t)}'})
+${K('MATCH')} (n)-[r]-(x)
+${K('RETURN')} type(r), labels(x), x.name
+${K('// ')}degree ${ADJ[n.id].length}${n.ring!=='sc'?' · reused by '+n.fl.size+' of 3 scenarios':''}`;return;}
+  if(nodes.length>1){
+    $('cy').innerHTML=`${K('MATCH')} (n)-[r]-(x)
+${K('WHERE')} n.name ${K('IN')} [${nodes.map(i=>`'${txt(ND[i].t)}'`).join(', ')}]
+${K('RETURN')} n.name, type(r), x.name`;return;}
+  if(picked.length===1){const n=ND[picked[0]];
+    $('cy').innerHTML=`${K('MATCH')} path = (s:${S('Scenario')} {name:'${txt(n.t)}'})
+      -[l:${V('LOADS')}]->(:${S('L1Module')})
+      -[:${V('GOVERNS')}]->(:${S('L2Node')})
+      -[:${V('READS')}]->(:${S('DataSource')})
+${K('RETURN')} path, l.step
+${K('// ')}${CP.filter(c=>c.f===n.id).length} steps · ${N.filter(x=>x.ring==='l1'&&x.fl.has(n.id)).length} L1 · ${N.filter(x=>x.ring==='l2'&&x.fl.has(n.id)).length} L2`;return;}
+  if(picked.length>1){
+    $('cy').innerHTML=`${K('MATCH')} (s:${S('Scenario')})-[:${V('LOADS')}|${V('GOVERNS')}|${V('READS')}*1..3]->(m)
+${K('WHERE')} s.name ${K('IN')} [${picked.map(f=>`'${txt(FI[f].t)}'`).join(', ')}]
+${K('WITH')} m, ${K('collect')}(${K('DISTINCT')} s.name) ${K('AS')} used
+${K('RETURN')} labels(m), m.name, ${K('size')}(used)
+${K('ORDER BY')} ${K('size')}(used) ${K('DESC')}
+${K('// ')}size(used) = ${picked.length} means every selected scenario reuses it`;return;}
+  $('cy').innerHTML=`${K('MATCH')} (s:${S('Scenario')})-[l:${V('LOADS')}]->(m:${S('L1Module')})
+      -[:${V('GOVERNS')}]->(p:${S('L2Node')})
+      -[:${V('READS')}]->(d:${S('DataSource')})
+${K('RETURN')} s, l.step, m, p, d`;
+}
+
+/* ============================= meta schema ============================= */
+(function meta(){
+  const W=300,H=268;
+  const M=[{id:'sc',t:'Scenario', x:74, y:28, c:'#E9A83F'},
+           {id:'l1',t:'L1Module', x:216,y:56, c:'#FF8FC7'},
+           {id:'l2',t:'L2Node',   x:238,y:144,c:'#9D8FE8'},
+           {id:'se',t:'Section',  x:80, y:126,c:'#C3B9F5'},
+           {id:'dt',t:'DataSource',x:158,y:230,c:'#47B598'}];
+  const R={};M.forEach(m=>R[m.id]=m);
+  const ME=[['sc','l1','LOADS',.09],['l1','l2','GOVERNS',.10],['l2','dt','READS',.10],
+            ['se','l2','PART_OF',-.07],['sc','se','USES_SECTION',.14],
+            ['se','dt','COMPUTED_FROM',-.09]];
+  let s=`<svg viewBox="-46 -34 ${W+110} ${H+44}">`;
+  ME.forEach(([a,b,t,bw])=>{const A=R[a],B=R[b];
+    const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,r=13;
+    const ax=A.x+ux*r,ay=A.y+uy*r,bx=B.x-ux*r,by=B.y-uy*r;
+    const cx=(ax+bx)/2-uy*L*bw, cy=(ay+by)/2+ux*L*bw;
+    let ang=Math.atan2(by-ay,bx-ax)*180/Math.PI; if(ang>90||ang<-90)ang+=180;
+    const mx=(ax+2*cx+bx)/4,my=(ay+2*cy+by)/4;
+    s+=`<path d="M${ax} ${ay} Q${cx} ${cy} ${bx} ${by}" fill="none" stroke="rgba(234,228,214,.3)" stroke-width="1"${DASH[t]?` stroke-dasharray="${DASH[t]}"`:''}/>`;
+    const steep=Math.abs(ang)>52;
+    s+= steep
+      ? `<text x="${mx+7}" y="${my+2}" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="6.6" letter-spacing=".08em" fill="#8792A8" paint-order="stroke" stroke="#0E131C" stroke-width="3.2">${t}</text>`
+      : `<text x="${mx}" y="${my-2.5}" transform="rotate(${ang.toFixed(1)} ${mx} ${my})" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="6.6" letter-spacing=".08em" fill="#8792A8" paint-order="stroke" stroke="#0E131C" stroke-width="3.2">${t}</text>`;});
+  /* self-loops: the intra-layer relationships */
+  s+=`<path d="M228 44 C 262 22 292 50 272 68 C 260 79 240 72 226 64" fill="none" stroke="rgba(255,143,199,.6)" stroke-width="1" stroke-dasharray="5 4"/>`;
+  s+=`<text x="284" y="34" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="6.6" letter-spacing=".08em" fill="#FF8FC7" paint-order="stroke" stroke="#0E131C" stroke-width="3.2">×3</text>`;
+  s+=`<path d="M250 134 C 288 116 312 146 292 164 C 280 175 262 168 249 158" fill="none" stroke="rgba(157,143,232,.6)" stroke-width="1"/>`;
+  s+=`<text x="306" y="128" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="6.6" letter-spacing=".08em" fill="#9D8FE8" paint-order="stroke" stroke="#0E131C" stroke-width="3.2">×5</text>`;
+  /* self-loop on Scenario: HANDS_OFF_TO */
+  s+=`<path d="M63 18 C 44 -12 6 -4 8 22 C 10 42 40 44 62 38" fill="none" stroke="rgba(226,131,98,.65)" stroke-width="1" stroke-dasharray="9 5"/>`;
+  s+=`<text x="12" y="-14" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="6.6" letter-spacing=".08em" fill="#E28362" paint-order="stroke" stroke="#0E131C" stroke-width="3.2">HANDS_OFF_TO</text>`;
+  M.forEach(m=>{s+=`<circle cx="${m.x}" cy="${m.y}" r="13" fill="${hex(m.c,.22)}" stroke="${m.c}" stroke-width="1.5"/>
+    <text x="${m.x}" y="${m.y+25}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.6" letter-spacing=".11em" fill="${m.c}" paint-order="stroke" stroke="#0E131C" stroke-width="3">:${m.t.toUpperCase()}</text>`;});
+  $('metaSvg').innerHTML=s+'</svg>'+
+    `<div style="font-family:'IBM Plex Mono',monospace;font-size:7.6px;line-height:1.75;letter-spacing:.04em;color:#8792A8;margin-top:4px">
+       (:L1Module)-[:<span style="color:#FF8FC7">PRECEDES</span>|<span style="color:#FF8FC7">CONSTRAINS</span>|<span style="color:#FFB4D6">FALLS_BACK_TO</span>]-&gt;(:L1Module)<br>
+       (:L2Node)-[:<span style="color:#9D8FE8">SPECIALISED_BY</span>|<span style="color:#9D8FE8">FEEDS</span>|<span style="color:#9D8FE8">LOOKS_UP</span>|<span style="color:#9D8FE8">RESOLVES_VIA</span>|<span style="color:#B49BFF">FALLS_BACK_TO</span>]-&gt;(:L2Node)<br>
+       (:Scenario)-[:<span style="color:#E28362">WRITES_TO</span>]-&gt;(:DataSource)<br>
+       <span style="color:#6E7A8E">Buyer Assessment writes the rating into Credit Dashboard; Lead CP4.5 and Supplier CP1 read it back. That is the loop.</span></div>`;
+})();
+
+/* ============================= counts ============================= */
+$('cSc').textContent='· '+N.filter(n=>n.ring==='sc').length;
+$('cL1').textContent='· '+N.filter(n=>n.ring==='l1').length;
+$('cL2').textContent='· '+N.filter(n=>n.ring==='l2').length;
+$('cSe').textContent='· '+N.filter(n=>n.ring==='sec').length;
+$('cDt').textContent='· '+N.filter(n=>n.ring==='dt').length;
+
+/* ============================= view (pan / zoom) ============================= */
+const svg=$('g'), vp=$('vp');
+let VX=0,VY=0,VS=1;
+function bbox(){
+  let a=1e9,b=1e9,c=-1e9,d=-1e9;
+  N.forEach(n=>{a=Math.min(a,n.x-n.r-14);b=Math.min(b,n.y-n.r-8);
+                c=Math.max(c,n.x+n.r+188);d=Math.max(d,n.y+n.r+14);});
+  b=Math.min(b,-58);
+  return {x:a,y:b,w:c-a,h:d-b};
+}
+function fit(){
+  const bb=bbox(), W=svg.clientWidth, H=svg.clientHeight;
+  const padL=30, padR=(window.innerWidth>1400?352:300)+18, padT=150, padB=112;
+  const aw=W-padL-padR, ah=H-padT-padB;
+  VS=Math.min(aw/bb.w, ah/bb.h);
+  VX=padL+aw/2-(bb.x+bb.w/2)*VS; VY=padT+ah/2-(bb.y+bb.h/2)*VS;
+  push();
+}
+function push(){vp.setAttribute('transform',`translate(${VX.toFixed(2)} ${VY.toFixed(2)}) scale(${VS.toFixed(4)})`);}
+let dg=null;
+$('stage').addEventListener('pointerdown',e=>{dg={x:e.clientX,y:e.clientY,vx:VX,vy:VY,moved:0};$('stage').classList.add('drag');});
+window.addEventListener('pointermove',e=>{if(!dg)return;
+  const dx=e.clientX-dg.x, dy=e.clientY-dg.y; dg.moved=Math.max(dg.moved,Math.abs(dx)+Math.abs(dy));
+  VX=dg.vx+dx; VY=dg.vy+dy; push();});
+window.addEventListener('pointerup',()=>{if(dg&&dg.moved<4)clearSel();dg=null;$('stage').classList.remove('drag');});
+$('stage').addEventListener('wheel',e=>{e.preventDefault();
+  const k=Math.exp(-e.deltaY*0.0016), ns=Math.max(.28,Math.min(3.4,VS*k)), r=ns/VS;
+  VX=e.clientX-(e.clientX-VX)*r; VY=e.clientY-(e.clientY-VY)*r; VS=ns; push();},{passive:false});
+
+/* ============================= interaction ============================= */
+function clearSel(){if(!SELN.size&&!SELF.size)return; SELN.clear(); SELF.clear(); syncBtn(); apply();}
+function syncBtn(){
+  document.querySelectorAll('.btn[data-f]').forEach(b=>b.classList.toggle('on',SELF.has(b.dataset.f)));
+  $('bAll').classList.toggle('on',SELF.size===3);
+  $('bSec').classList.toggle('on',SELN.size===1&&SELN.has('k_perf'));
+}
+document.querySelectorAll('.btn[data-f]').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();
+  const f=b.dataset.f; if(SELF.has(f))SELF.delete(f); else SELF.add(f);
+  SELN.clear(); syncBtn(); apply();}));
+$('bAll').addEventListener('click',e=>{e.stopPropagation();
+  if(SELF.size===3)SELF.clear(); else FLOW.forEach(f=>SELF.add(f.id));
+  SELN.clear(); syncBtn(); apply();});
+$('bLab').addEventListener('click',e=>{e.stopPropagation();
+  labMode = labMode==='all'?'steps':(labMode==='steps'?'off':'all');
+  $('bLab').textContent=LABTXT[labMode];
+  $('bLab').classList.toggle('on',labMode!=='off'); apply();});
+$('bSec').addEventListener('click',e=>{e.stopPropagation();
+  if(SELN.size===1&&SELN.has('k_perf'))SELN.clear(); else {SELN.clear();SELN.add('k_perf');}
+  syncBtn(); apply();});
+$('bIntra').addEventListener('click',e=>{e.stopPropagation();
+  showIntra=!showIntra; $('bIntra').classList.toggle('on',showIntra);
+  $('bIntra').textContent=showIntra?'L1↔L1 · L2↔L2 ON':'L1↔L1 · L2↔L2 OFF';
+  rescope(); apply();});
+$('bFit').addEventListener('click',e=>{e.stopPropagation();fit();});
+/* single-scenario view: re-sort L1 / L2 into that flow's own CP order */
+let orderSig='', ANIM=null;
+function reorderFor(f){
+  const sig=f||'';
+  if(sig===orderSig)return; orderSig=sig;
+  const tg={}; N.forEach(n=>{tg[n.id]={x:n.bx,y:n.by};});
+  if(f){
+    [1,2].forEach(ci=>{
+      const inn=BUCK[ci].filter(n=>n.fl.has(f));
+      const slots=inn.map(n=>n.by).sort((a,b)=>a-b);
+      inn.slice().sort((a,b)=>((FSTEP[f][a.id]??99)-(FSTEP[f][b.id]??99))||(a.by-b.by))
+         .forEach((n,i)=>{tg[n.id]={x:n.bx,y:slots[i]};});
+    });
+    const dp=tg['k_perf'].y-ND['k_perf'].by;
+    SATS.forEach(sn=>{tg[sn.id]={x:sn.bx,y:sn.by+dp};});
+  }
+  animateTo(tg);
+}
+function animateTo(tg){
+  if(ANIM)cancelAnimationFrame(ANIM);
+  const moving=N.filter(n=>Math.abs(tg[n.id].x-n.x)>0.5||Math.abs(tg[n.id].y-n.y)>0.5);
+  if(!moving.length)return;
+  const from=moving.map(n=>({n,x:n.x,y:n.y}));
+  const t0=performance.now(), DUR=380, all=new Set(E.map(e=>e.i));
+  (function tick(now){
+    const t=Math.min(1,((now||performance.now())-t0)/DUR), e=1-Math.pow(1-t,3);
+    from.forEach(o=>{o.n.x=o.x+(tg[o.n.id].x-o.x)*e; o.n.y=o.y+(tg[o.n.id].y-o.y)*e; place(o.n);});
+    reflowEdges(all); rings();
+    if(t<1)ANIM=requestAnimationFrame(tick);
+    else {ANIM=null; placeLabels(currentSet());}
+  })(t0);
+}
+function toggleSelect(id){
+  if(ND[id].ring==='sc'){ if(SELF.has(id))SELF.delete(id); else SELF.add(id); SELN.clear(); }
+  else { if(SELN.has(id))SELN.delete(id); else SELN.add(id); }
+  syncBtn(); apply();
+}
+/* ---- drag a circle anywhere; its wires follow ---- */
+let DRAG=null;
+Object.entries(NG).forEach(([id,g])=>{
+  g.addEventListener('pointerdown',ev=>{ev.stopPropagation(); ev.preventDefault();
+    const n=ND[id];
+    DRAG={id,sx:ev.clientX,sy:ev.clientY,ox:n.x,oy:n.y,moved:0,
+      kids:(id===PARENT?SATS.map(k=>({k,ox:k.x,oy:k.y})):[])};
+    DRAG.edges=new Set(ADJ[id]);
+    DRAG.kids.forEach(o=>ADJ[o.k.id].forEach(i=>DRAG.edges.add(i)));
+    g.classList.add('dragging');
+    try{g.setPointerCapture(ev.pointerId);}catch(_){}
+  });
+  g.addEventListener('pointerenter',()=>{if(DRAG)return; hovNode=id;apply();});
+  g.addEventListener('pointerleave',()=>{if(hovNode===id){hovNode=null;apply();}});
+});
+window.addEventListener('pointermove',ev=>{
+  if(!DRAG)return;
+  const dx=(ev.clientX-DRAG.sx)/VS, dy=(ev.clientY-DRAG.sy)/VS;
+  DRAG.moved=Math.max(DRAG.moved,Math.abs(ev.clientX-DRAG.sx)+Math.abs(ev.clientY-DRAG.sy));
+  const n=ND[DRAG.id]; n.x=DRAG.ox+dx; n.y=DRAG.oy+dy; place(n);
+  DRAG.kids.forEach(o=>{o.k.x=o.ox+dx; o.k.y=o.oy+dy; place(o.k);});
+  reflowEdges(DRAG.edges);
+},{passive:true});
+window.addEventListener('pointerup',ev=>{
+  if(!DRAG)return;
+  const {id,moved}=DRAG; NG[id].classList.remove('dragging'); DRAG=null;
+  if(moved<4)toggleSelect(id); else apply();
+});
+$('bReset').addEventListener('click',e=>{e.stopPropagation();
+  orderSig=''; if(ANIM){cancelAnimationFrame(ANIM);ANIM=null;}
+  N.forEach(n=>{n.x=n.bx;n.y=n.by;place(n);});
+  reflowEdges(new Set(E.map(e=>e.i))); apply(); fit();});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')clearSel();});
+window.addEventListener('resize',fit);
+$('bLab').textContent=LABTXT[labMode];
+fit(); apply();
+</script>
+</body></html>
