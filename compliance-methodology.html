@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Air8 — Compliance Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --border: #E2E6ED;
+  --text: #111827;
+  --muted: #6B7280;
+  --dim: #9CA3AF;
+  --accent: #F97316;
+  --accent-light: #FFF3EB;
+  --teal: #0D9488;
+  --teal-light: #E6FAF8;
+  --violet: #7C3AED;
+  --violet-light: #F3F0FF;
+  --coral: #DC6B19;
+  --ok: #16A34A;
+  --ok-light: #F0FDF4;
+  --warn: #CA8A04;
+  --warn-light: #FEFCE8;
+  --error: #DC2626;
+  --error-light: #FEF2F2;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 0 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.hero-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero p {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── SECTION ── */
+.section {
+  margin-bottom: 52px;
+}
+.section-header {
+  margin-bottom: 24px;
+}
+.section-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.section-sub {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card.accent-border {
+  border-left: 4px solid var(--accent);
+}
+.card.teal-border {
+  border-left: 4px solid var(--teal);
+}
+.card.violet-border {
+  border-left: 4px solid var(--violet);
+}
+
+/* ── FLOW DIAGRAM ── */
+.flow-diagram {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 24px 0;
+  min-height: 180px;
+}
+.flow-box {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  min-width: 0;
+}
+.flow-box h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.flow-box p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.flow-box.example {
+  background: var(--accent-light);
+  border-color: rgba(249,115,22,0.25);
+}
+.flow-box.example h4 { color: var(--accent); }
+.flow-box .tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin: 3px 2px 0;
+}
+.tag.orange { background: var(--accent-light); color: var(--accent); }
+.tag.teal { background: var(--teal-light); color: var(--teal); }
+.tag.violet { background: var(--violet-light); color: var(--violet); }
+.tag.gray { background: #F3F4F6; color: var(--muted); }
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  flex-shrink: 0;
+  color: var(--dim);
+  font-size: 18px;
+}
+
+/* ── DIMENSION BLOCKS ── */
+.dim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.dim-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+}
+.dim-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.dim-card ul {
+  list-style: none;
+  padding: 0;
+}
+.dim-card ul li {
+  font-size: 12.5px;
+  color: var(--muted);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+}
+.dim-card ul li:last-child { border-bottom: none; }
+.dim-card ul li strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── DATA TABLE ── */
+.data-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.data-col h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+.data-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.data-item:last-child { border-bottom: none; }
+.data-item .badge {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+.badge.ok { background: var(--ok-light); color: var(--ok); }
+.badge.partial { background: var(--warn-light); color: var(--warn); }
+.badge.missing { background: var(--error-light); color: var(--error); }
+.data-item .info strong {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 1px;
+}
+.data-item .info span {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ── TIER LIST ── */
+.tier {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+.tier-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.tier-num.t2 { background: var(--teal); }
+.tier-num.t3 { background: var(--violet); }
+.tier-body {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.tier-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.tier-body .sources {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.tier-body .freq {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.tier-body .freq.t2-freq { background: var(--teal-light); color: var(--teal); }
+.tier-body .freq.t3-freq { background: var(--violet-light); color: var(--violet); }
+
+/* ── INSIGHT BOX ── */
+.insight-box {
+  background: var(--accent-light);
+  border: 1px solid rgba(249,115,22,0.2);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 20px 0;
+}
+.insight-box h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.insight-box p {
+  font-size: 13px;
+  color: #92400E;
+  line-height: 1.6;
+}
+.insight-box code {
+  background: rgba(249,115,22,0.12);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* ── STEPS ── */
+.step-list {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+}
+.step-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.step-item:last-child { border-bottom: none; }
+.step-num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.step-body h4 {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.step-body p {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.step-body p strong { color: var(--text); }
+
+/* ── GAP BLOCKS ── */
+.gap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.gap-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.gap-card.violet { border-top: 3px solid var(--violet); }
+.gap-card.coral { border-top: 3px solid var(--coral); }
+.gap-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.gap-card.violet h4 { color: var(--violet); }
+.gap-card.coral h4 { color: var(--coral); }
+.gap-card .desc {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.gap-card .fix {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.gap-card .fix strong { color: var(--text); }
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 32px;
+  margin-top: 48px;
+}
+.footer p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.7;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.footer p strong { color: var(--text); }
+
+/* ── MISC ── */
+.text-muted { color: var(--muted); font-size: 13px; }
+.mt8 { margin-top: 8px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ══════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-label">Air8 Compliance Intelligence</div>
+  <h1>Four questions. <em>Systematic answers.</em></h1>
+  <p>The same supplier — different product, different market, different buyer — faces an entirely different set of compliance obligations. We answer the four questions that determine whether a client is actually covered.</p>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 1: HOW WE DETERMINE WHICH RULES APPLY -->
+<!-- ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-title">How do we know which rules apply?</div>
+    <div class="section-sub">Three dimensions, overlaid. Each dimension narrows the applicable ruleset.</div>
+  </div>
+
+  <div class="dim-grid">
+    <div class="dim-card">
+      <h4>Dimension 1 — Product Type</h4>
+      <ul>
+        <li><strong>HS 9505</strong> — Christmas ornaments → REACH, GPSR</li>
+        <li><strong>HS 6204</strong> — Apparel → + PFAS limits, azo dye rules</li>
+        <li><strong>HS 9405</strong> — Electrical lighting → + CE marking, RoHS</li>
+        <li><strong>HS 9503</strong> — Toys → + EN 71, stricter phthalates</li>
+      </ul>
+    </div>
+    <div class="dim-card">
+      <h4>Dimension 2 — Target Market</h4>
+      <ul>
+        <li><strong>EU only</strong> → REACH + GPSR + PPWR</li>
+        <li><strong>US only</strong> → CPSC + Prop 65 + UFLPA</li>
+        <li><strong>Both</strong> → Dual stack. Test reports must cover EN + ASTM simultaneously.</li>
+      </ul>
+    </div>
+    <div class="dim-card">
+      <h4>Dimension 3 — Special Triggers</h4>
+      <ul>
+        <li><strong>China origin</strong> → UFLPA rebuttable presumption applies</li>
+        <li><strong>Non-EU factory</strong> → GPSR EU Authorized Representative mandatory</li>
+        <li><strong>Electrical parts</strong> → CE marking + RoHS required</li>
+        <li><strong>Children's use</strong> → Stricter phthalate thresholds</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Routing Flow Diagram -->
+  <div class="card teal-border">
+    <h4 style="font-size:13px;font-weight:700;margin-bottom:16px;color:var(--text);">The routing sequence</h4>
+    <div class="flow-diagram">
+      <div class="flow-box">
+        <h4>L1 · Scope Router</h4>
+        <p>Reads: product type + market + triggers</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">File: L1-compliance-scope.md</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <h4>L1 Output: Rule Addresses</h4>
+        <p>Exact L2 sections to load, e.g.:</p>
+        <div style="margin-top:8px">
+          <span class="tag orange">NODE §SVHC</span>
+          <span class="tag teal">NODE §GPSR</span>
+          <span class="tag violet">NODE §UFLPA</span>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <h4>L2 · Rule Book</h4>
+        <p>Reads only the sections addressed by L1</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Thresholds, dates, exemptions, enforcement cases</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box example">
+        <h4>Example: Yangzhou</h4>
+        <p>Christmas ornaments, China → EU + US</p>
+        <div style="margin-top:8px">
+          <span class="tag orange">REACH SVHC</span>
+          <span class="tag teal">GPSR EU AR</span>
+          <span class="tag violet">UFLPA</span>
+          <span class="tag gray">Prop 65</span>
+          <span class="tag gray">BJ's RSL</span>
+        </div>
+        <p style="margin-top:8px;font-size:11px;color:#92400E;">→ 6 frameworks · 4 missing</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h4>Why the distinction matters</h4>
+    <p>L1 is the <strong>index</strong> — it decides <em>which pages to read</em>. L2 is the <strong>rule book</strong> — it contains the facts. They are separate by design: updating a rule does not break the routing logic, and changing a route does not corrupt the rules.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 2: WHAT DATA WE HAVE -->
+<!-- ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-title">What data do we have — and what we don't</div>
+    <div class="section-sub">An honest map. Most compliance-critical data lives with the client. Knowing this is the starting point for any data collection strategy.</div>
+  </div>
+
+  <div class="data-section">
+    <div class="data-col">
+      <h3>Available internally</h3>
+      <div class="data-item">
+        <div class="badge ok">✓</div>
+        <div class="info">
+          <strong>Factory name + country</strong>
+          <span>From financing records. Confirms jurisdiction, UFLPA scope, GPSR EU AR trigger.</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge ok">✓</div>
+        <div class="info">
+          <strong>Financing amount + buyer names</strong>
+          <span>Size of exposure. Named buyers trigger buyer-specific RSL lookup.</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge ok">✓</div>
+        <div class="info">
+          <strong>Social audit reports</strong>
+          <span>BSCI / SMETA — if Air8 conducted the audit. Rating, date, CAPAR status.</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge partial">~</div>
+        <div class="info">
+          <strong>Bill of Materials (BOM)</strong>
+          <span>Partial — available for some clients via Air8 group trade records. Key for SVHC screening.</span>
+        </div>
+      </div>
+    </div>
+    <div class="data-col">
+      <h3>Must come from the client / factory</h3>
+      <div class="data-item">
+        <div class="badge missing">✕</div>
+        <div class="info">
+          <strong>SDS / Safety Data Sheets</strong>
+          <span>Chemical composition of raw materials. Required for SVHC presence check.</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge missing">✕</div>
+        <div class="info">
+          <strong>Third-party test reports</strong>
+          <span>SGS / Bureau Veritas / Intertek — the only valid proof of chemical compliance.</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge missing">✕</div>
+        <div class="info">
+          <strong>SVHC declaration</strong>
+          <span>Factory self-declaration of SVHC-free status. Must be current (post Feb 2026).</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge missing">✕</div>
+        <div class="info">
+          <strong>GPSR EU AR appointment letter</strong>
+          <span>Non-EU factory's EU Authorized Representative. Mandatory since Dec 2024.</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <div class="badge missing">✕</div>
+        <div class="info">
+          <strong>UFLPA Tier 2–3 traceability</strong>
+          <span>Sub-tier supply chain for cotton, polysilicon, other high-risk raw materials.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 3: HOW WE STAY CURRENT -->
+<!-- ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-title">How we stay current with regulatory changes</div>
+    <div class="section-sub">Three tiers of information. Each serves a different purpose. Most teams only run the first tier.</div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-num">1</div>
+    <div class="tier-body">
+      <h4>Law — Official primary sources</h4>
+      <div class="sources">ECHA candidate list · EUR-Lex Official Journal · DHS UFLPA entity list · CPSC.gov · OEHHA Prop 65 list</div>
+      <span class="freq">Check weekly</span>
+    </div>
+  </div>
+  <div class="tier">
+    <div class="tier-num t2">2</div>
+    <div class="tier-body">
+      <h4>Enforcement — Where most judgment lives</h4>
+      <div class="sources">EU Safety Gate alerts (weekly) · SGS Safeguards · CIRS Group · Eurofins · TÜV SÜD compliance briefs<br>
+      <em style="color:var(--muted);font-size:12px;">This is the layer most teams skip. It shows what is actually being stopped — not just what the law says is forbidden.</em></div>
+      <span class="freq t2-freq">On new alert</span>
+    </div>
+  </div>
+  <div class="tier">
+    <div class="tier-num t3">3</div>
+    <div class="tier-body">
+      <h4>Early warning — 6–12 months ahead</h4>
+      <div class="sources">ECHA SVHC Intention Registry · EU Commission consultation portal · AAFA / AHFA industry alerts</div>
+      <span class="freq t3-freq">Monitor continuously</span>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h4>The critical distinction most teams miss</h4>
+    <p><code>Enters into force</code> ≠ <code>Shall apply from</code></p>
+    <p style="margin-top:6px;">GPSR: entered into force June 2023 → applied from December 2024. An 18-month gap. Yangzhou has been non-compliant for 19 months — not because they missed the start date, but because they confused the two. Our system tracks both.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 4: HOW WE INTERPRET CORRECTLY -->
+<!-- ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-title">How we interpret rules correctly</div>
+    <div class="section-sub">The same regulation is routinely misread in the same ways. We correct for these.</div>
+  </div>
+
+  <div class="card violet-border">
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Classify the product accurately</h4>
+          <p>HS code is the gate. A decorative item with LED lights is <strong>not HS 9505</strong> — it is <strong>HS 9405</strong>. Wrong code triggers the wrong entire rule set (electrical safety, not general product safety).</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Distinguish process use from finished-article presence</h4>
+          <p>"Factory <strong>used</strong> n-Hexane" ≠ "Finished article <strong>contains</strong> n-Hexane." n-Hexane evaporates during coating. The obligation depends on <strong>residual content in the finished article</strong> — requiring a residual test, not a process declaration.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Apply the right threshold and check for exemptions</h4>
+          <p>The 0.1% SVHC threshold is calculated per <strong>total finished article weight</strong>, not per coating or component layer. Some PFAS have industrial-use exemptions that consumer products do not enjoy.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Identify the correct legal entity</h4>
+          <p>Under REACH, the <strong>EU importer</strong> — not the China factory — bears SCIP notification obligations. But if the factory does not provide the data, the EU importer's liability flows back as a cost claim against the factory.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mt16">
+    <div class="card" style="border-left:4px solid var(--warn);">
+      <h4 style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--warn);">Common misreadings we correct</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px;">
+        <div>
+          <div style="font-weight:600;color:var(--text);margin-bottom:2px;">"PFAS ban affects our decorative items"</div>
+          <div style="color:var(--muted);">PFAS ban applies to apparel / footwear. Decorative hardgoods are outside scope.</div>
+        </div>
+        <div>
+          <div style="font-weight:600;color:var(--text);margin-bottom:2px;">"We don't use n-Hexane — we're fine"</div>
+          <div style="color:var(--muted);">If factory uses it as solvent, a residual test is required to confirm the finished article is below 0.1%.</div>
+        </div>
+        <div>
+          <div style="font-weight:600;color:var(--text);margin-bottom:2px;">"EU AR costs too much to be practical"</div>
+          <div style="color:var(--muted);">EU AR services cost €300–800/year. Administrative overhead — not a compliance barrier.</div>
+        </div>
+        <div>
+          <div style="font-weight:600;color:var(--text);margin-bottom:2px;">"China origin = UFLPA blocks us automatically"</div>
+          <div style="color:var(--muted);">UFLPA creates a rebuttable presumption. Chain-of-custody evidence resolves it — China origin alone does not block shipment.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 5: HOW WE FIND AND FIX GAPS -->
+<!-- ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-title">How we find and fix our own gaps</div>
+    <div class="section-sub">Two types of gaps. Each has its own closing discipline.</div>
+  </div>
+
+  <div class="gap-grid">
+    <div class="gap-card violet">
+      <h4>✕ Knowledge Gap</h4>
+      <div class="desc">The rule is not in our KB. We do not know how to judge the situation.</div>
+      <div class="fix">
+        <strong>Fix:</strong> Identify authoritative source → draft the rule → expert review → back-fill old assessments → update routing tables if needed.
+      </div>
+      <div class="fix mt8">
+        <strong>Found by:</strong> Enforcement cases we can't classify, questions the agent ducks, override rate on agent outputs.
+      </div>
+    </div>
+    <div class="gap-card coral">
+      <h4>✕ Data Gap</h4>
+      <div class="desc">The rule is known, but we don't have the data to check it. The document or field is missing.</div>
+      <div class="fix">
+        <strong>Fix:</strong> Identify who holds the data → send data request → if not received: worst-case assumption + flag lower confidence → when received: re-score, re-run.
+      </div>
+      <div class="fix mt8">
+        <strong>Found by:</strong> Every assessment step where "cannot determine because..." appears.
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box mt16">
+    <h4>Both are found in today's run</h4>
+    <p><strong>Knowledge:</strong> PFAS ban — applies to clothing, not decorative hardgoods. Saved an unnecessary testing requirement. <strong>2 hours to confirm.</strong></p>
+    <p style="margin-top:4px;"><strong>Data:</strong> No BOM on file for Yangzhou. SVHC risk assessed at product-category level, not confirmed by material composition. <strong>Confidence: 72%.</strong></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ══════════════════════════════════════ -->
+<div class="footer">
+  <p><strong>Knowing the rule is the floor.</strong> Knowing whether it lands on your specific product, in your specific component, at your specific supplier — and whether your documents actually prove it — is where Air8's compliance intelligence operates.</p>
+</div>
+
+</div>
+</body>
+</html>
