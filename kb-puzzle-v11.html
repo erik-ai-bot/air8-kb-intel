@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Air8 KB · Modular Assembly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E131C; --paper:#EAE4D6; --muted:#8792A8; --hair:rgba(234,228,214,.13);
+  --f1:#E9A83F; --f2:#47B598; --f3:#6FA8FF;
+  --s2:#B49BFF; --s3:#FF8FC7;
+  --co:#E28362; --ok:#6FBF73; --vi:#9D8FE8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow-x:auto}
+*{scrollbar-width:thin;scrollbar-color:rgba(233,168,63,.6) rgba(255,255,255,.05)}
+::-webkit-scrollbar{width:14px;height:14px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(233,168,63,.8),rgba(180,155,255,.75));border-radius:10px;border:3px solid #0E131C;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#E9A83F,#B49BFF);border:2px solid #0E131C;background-clip:padding-box}
+::-webkit-scrollbar-corner{background:transparent}
+#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.34;mix-blend-mode:overlay}
+.aur{position:fixed;inset:-12%;z-index:0;pointer-events:none;
+  background:radial-gradient(24% 28% at 10% 14%,rgba(233,168,63,.13),transparent 70%),
+             radial-gradient(24% 28% at 52% 8%,rgba(71,181,152,.12),transparent 72%),
+             radial-gradient(24% 28% at 90% 22%,rgba(111,168,255,.12),transparent 72%),
+             radial-gradient(30% 32% at 56% 94%,rgba(180,155,255,.10),transparent 74%);
+  filter:blur(46px)}
+@keyframes aur{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(-2%,1.4%,0) scale(1.05)}}
+@media (prefers-reduced-motion:no-preference){.aur{animation:aur 28s ease-in-out infinite alternate}}
+.wrap{position:relative;z-index:2;max-width:1800px;min-width:1520px;margin:0 auto;padding:16px 24px 26px}
+
+/* ---------- head ---------- */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--f1);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,2.2vw,32px);line-height:1.06;letter-spacing:-.015em;margin-top:4px}
+h1 em{font-style:normal;color:var(--f1)}
+.sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.sub b{color:var(--paper);font-weight:500}
+.headrow{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.stats{display:flex;gap:6px;flex-wrap:wrap}
+.stat{border:1px solid var(--hair);border-radius:11px;padding:6px 10px;background:rgba(255,255,255,.028);min-width:78px}
+.stat i{display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.stat b{display:block;font-family:'Fraunces',serif;font-weight:600;font-size:20px;line-height:1.1;margin-top:1px}
+.stat s{display:block;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:var(--muted)}
+.stat.hero{border-color:rgba(255,143,199,.5);background:rgba(255,143,199,.07)}
+.stat.hero b{color:var(--s3)}
+
+/* ---------- controls ---------- */
+.ctl{display:flex;gap:5px;align-items:center;margin-top:9px;flex-wrap:wrap}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--hair);border-radius:15px;padding:6.5px 13px;cursor:pointer;background:transparent;transition:all .2s;white-space:nowrap}
+.btn:hover{border-color:var(--paper);color:var(--paper)}
+.btn.on{border-color:var(--f1);color:#1A1812;background:var(--f1)}
+.btn.b1.on{border-color:var(--f1);background:var(--f1);color:#1A1812}
+.btn.b2.on{border-color:var(--f2);background:var(--f2);color:#0F1A16}
+.btn.b3.on{border-color:var(--f3);background:var(--f3);color:#0B1420}
+.sep{width:1px;height:17px;background:var(--hair);margin:0 4px}
+.lgd{display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:6px}
+.lgd i{width:8px;height:8px;border-radius:2.5px;display:inline-block;margin:0 4px 0 8px}
+.hint{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--muted);margin-left:auto;text-transform:uppercase;max-width:48%;text-align:right;line-height:1.55}
+.hint b{color:var(--paper);font-weight:500}
+
+/* ---------- board ---------- */
+.board{position:relative;margin-top:10px}
+#wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+#wires path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:0;transition:opacity .4s}
+#wires path.on{opacity:.9}
+#wires path.sf{opacity:.1}
+#wires path.gh{opacity:.05;stroke:#EAE4D6}
+#wires circle{opacity:0;transition:opacity .4s}
+#wires circle.on{opacity:.95}
+@keyframes fl{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion:no-preference){#wires path.mv{stroke-dasharray:3.5 6.5;animation:fl 1.35s linear infinite}
+  #wires path.mvo{animation:fl 1.5s linear infinite}}
+
+.lanes{position:relative;z-index:2;display:grid;grid-template-columns:1.38fr 1.08fr 1.14fr .72fr;gap:48px}
+.lh{display:flex;align-items:baseline;gap:6px;padding-bottom:5px;margin-bottom:8px;border-bottom:1px solid var(--hair)}
+.lh i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.2em;color:var(--muted)}
+.lh b{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.lh s{text-decoration:none;font-size:9px;color:var(--muted);margin-left:auto;letter-spacing:.02em}
+.lane.cp .lh b{color:var(--co)} .lane.l1 .lh b{color:var(--f1)}
+.lane.l2 .lh b{color:var(--vi)} .lane.dt .lh b{color:var(--f2)}
+.col{display:flex;flex-direction:column;gap:7px}
+
+/* ---------- flow group in the CP lane ---------- */
+.fg{margin-bottom:9px;border:1px solid var(--hair);border-radius:13px;overflow:hidden;transition:all .3s}
+.fg.on1{border-color:rgba(233,168,63,.55);background:rgba(233,168,63,.045)}
+.fg.on2{border-color:rgba(71,181,152,.55);background:rgba(71,181,152,.045)}
+.fg.on3{border-color:rgba(111,168,255,.55);background:rgba(111,168,255,.045)}
+.fg.off{opacity:.32}
+.fgh{display:flex;align-items:center;gap:7px;padding:8px 11px;cursor:pointer;user-select:none}
+.fgh .cv{font-family:'IBM Plex Mono',monospace;font-size:8px;width:9px}
+.fgh .nm{font-family:'Fraunces',serif;font-weight:600;font-size:16px;line-height:1.1}
+.fgh .kk{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.fgh>span:nth-child(2){flex:1 1 auto;min-width:0}
+.fgh .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.fgh .mt{margin-left:auto;display:flex;gap:4px;flex:0 0 auto}
+.fgh .tog{flex:0 0 auto}
+.fgh .tog{display:inline-flex;align-items:center;gap:5px;margin-left:8px;border:1px solid var(--hair);border-radius:20px;
+  padding:4px 11px 4px 9px;background:rgba(255,255,255,.05);transition:all .2s;white-space:nowrap}
+.fgh .tog i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1}
+.fgh .tog b{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:rgba(234,228,214,.85)}
+.fgh:hover .tog{border-color:var(--paper);background:rgba(255,255,255,.12)}
+.fg.col2 .fgh .tog{border-color:var(--co);background:rgba(226,131,98,.18)}
+.fg.col2 .fgh .tog b,.fg.col2 .fgh .tog i{color:#F6C6B2}
+.pills em{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:2px}
+.fgh .mt span{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.06em;border:1px solid var(--hair);border-radius:11px;padding:2px 6px;color:var(--muted)}
+.fgq{padding:0 12px 9px;font-family:'IBM Plex Sans';font-size:10.5px;color:rgba(234,228,214,.6);line-height:1.5}
+.fgq b{color:var(--paper);font-weight:500}
+.fgb{padding:0 9px 9px}
+.fg.col2 .fgb{display:none}
+.fg.col2 .pills{display:flex}
+.pills{display:none;flex-wrap:wrap;gap:4px;padding:0 11px 10px}
+.pills span{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;border:1px solid var(--hair);border-radius:10px;padding:3px 7px;cursor:pointer;transition:all .2s;color:rgba(234,228,214,.72)}
+.pills span:hover{border-color:var(--paper);color:var(--paper)}
+.pills span.sel{background:var(--paper);color:#12161F;border-color:var(--paper)}
+
+/* ---------- CP card ---------- */
+.cp{position:relative;cursor:pointer;border:1px solid var(--hair);border-left-width:2.5px;border-radius:3px 10px 10px 3px;
+  padding:7px 12px 8px;background:rgba(255,255,255,.03);transition:all .25s;margin-bottom:5px}
+.cp .k{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;color:var(--muted)}
+.cp .n{font-family:'IBM Plex Sans';font-size:12.5px;font-weight:500;line-height:1.22}
+.cp .d{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);margin-top:3px;line-height:1.5;display:block}
+
+.cp .cnt{position:absolute;right:10px;top:8px;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.06em;color:var(--muted)}
+.cp .cnt b{font-weight:500}
+.cp.sel{box-shadow:0 0 20px -7px var(--ac);background:rgba(255,255,255,.09)}
+.cp.pin::after{content:'SCOPE';position:absolute;right:10px;bottom:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;
+  letter-spacing:.14em;color:#12161F;background:var(--co);border-radius:4px;padding:1px 5px}
+.cp.sel .n{color:#FFF6E6}
+.cp.dimmed{opacity:.3}
+.cp.soft{opacity:.34;filter:saturate(.35)}
+.cp.outstep{border-style:dashed;background:rgba(111,191,115,.06)}
+.cp.outstep .cnt,.cp.outstep .k{color:var(--ok)}
+
+/* ---------- puzzle piece ---------- */
+.pzc{--tab:10px;--acc:rgba(234,228,214,.14);--gl:transparent}
+.pz{position:relative;padding:1.4px;background:var(--acc);transition:background .35s,filter .35s,opacity .3s,transform .26s;cursor:pointer;
+  clip-path:polygon(var(--tab) 0,calc(100% - var(--tab)) 0,calc(100% - var(--tab)) 30%,100% 39%,100% 61%,calc(100% - var(--tab)) 70%,
+    calc(100% - var(--tab)) 100%,var(--tab) 100%,var(--tab) 70%,calc(var(--tab)*2) 61%,calc(var(--tab)*2) 39%,var(--tab) 30%)}
+.pz .in{position:relative;background:linear-gradient(158deg,#1A2233 0%,#141B29 72%);padding:8px 14px 8.5px 26px;
+  clip-path:polygon(var(--tab) 0,calc(100% - var(--tab)) 0,calc(100% - var(--tab)) 30%,100% 39%,100% 61%,calc(100% - var(--tab)) 70%,
+    calc(100% - var(--tab)) 100%,var(--tab) 100%,var(--tab) 70%,calc(var(--tab)*2) 61%,calc(var(--tab)*2) 39%,var(--tab) 30%)}
+.pz .row{display:flex;align-items:center;gap:5px}
+.pz .slt{display:none;gap:3px;flex:0 0 auto}
+.pz.foc .slt{display:inline-flex}
+.pz .slt b{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;width:17px;height:17px;border-radius:5px;
+  display:inline-flex;align-items:center;justify-content:center;background:var(--paper);color:#12161F;box-shadow:0 0 10px -2px rgba(234,228,214,.6)}
+.pz .t{font-family:'IBM Plex Sans';font-size:12.5px;font-weight:500;line-height:1.22;color:rgba(234,228,214,.82);transition:color .3s;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pz .row .tags{position:static;margin-left:auto;flex:0 0 auto;max-width:none;flex-wrap:nowrap}
+.pz .more{display:block;margin-top:4px}
+.pz.open .more{display:block}
+.pz.open .t{white-space:normal;overflow:visible}
+.pz.open .row{flex-wrap:wrap}
+body.detail .pz .row{flex-wrap:wrap}
+body.detail .pz .t{white-space:normal;overflow:visible}
+body:not(.detail) .pz .more{display:none}
+body:not(.detail) .pz.open .more{display:block}
+.pz .f{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(135,146,168,.9);letter-spacing:.01em}
+.pz .d{font-family:'IBM Plex Sans';font-size:9.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.pz .dsrc{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
+.pz .dsrc span{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.03em;border:1px solid rgba(71,181,152,.45);color:#A8DCC9;border-radius:10px;padding:2px 7px}
+.pz .tags{display:flex;gap:2.5px}
+.pz .tags span{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.03em;border-radius:4px;padding:1.5px 5px;white-space:nowrap}
+.pz.idle{opacity:.2}
+.pz.soft{opacity:.24;filter:saturate(.3) brightness(.88)!important}
+.pz.near{opacity:.62;filter:saturate(.72)!important}
+.pz.foc{transform:translateX(4px) scale(1.012);z-index:3}
+.pz.foc .in{box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.42)}
+.pz.foc{filter:drop-shadow(0 0 22px var(--gl))!important}
+.pz.foc .t{color:#fff}
+.pz.hovon .in{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.8)!important}
+.cp.hovon{box-shadow:0 0 0 1.5px rgba(255,255,255,.6) inset}
+.pills span.hovon{border-color:var(--paper);color:var(--paper)}
+.pz.act .t{color:#FFF6E6}
+.pz.act{filter:drop-shadow(0 0 13px var(--gl))}
+.pz .sh{display:none;flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.11em;color:#14101F;border-radius:4px;padding:1.5px 6px;white-space:nowrap}
+.pz.sh2 .sh,.pz.sh3 .sh{display:inline-block}
+.pz.sh2 .sh{background:var(--s2);box-shadow:0 0 11px -2px var(--s2)}
+.pz.sh3 .sh{background:var(--s3);box-shadow:0 0 11px -2px var(--s3)}
+.pz.sh2 .in{background:linear-gradient(158deg,#221E3A 0%,#181530 74%)}
+.pz.sh3 .in{background:linear-gradient(158deg,#33203A 0%,#26162C 74%)}
+.pz.sh2 .t,.pz.sh3 .t{color:#F6EEFF}
+.pz.pop{animation:pop .5s cubic-bezier(.2,1.45,.35,1)}
+@keyframes pop{0%{transform:translateX(-8px) scale(.975);opacity:.5}62%{transform:translateX(2px) scale(1.012)}100%{transform:none}}
+
+/* ---------- data chips ---------- */
+.dgl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin:0 0 4px}
+.dgl:not(:first-child){margin-top:8px}
+.dc{border:1px solid var(--hair);border-radius:9px;padding:6px 10px;background:rgba(255,255,255,.026);
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;transition:all .3s;margin-bottom:5px;line-height:1.35;color:rgba(234,228,214,.78)}
+.dc.idle{opacity:.19}
+.dc.act{border-color:rgba(71,181,152,.5);color:#EAF6F1;background:rgba(71,181,152,.07)}
+.dc.hot{border-color:var(--f2);color:#fff;background:rgba(71,181,152,.2);box-shadow:0 0 16px -6px #47B598}
+
+/* ---------- side cards ---------- */
+.notes{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.notes .side{margin-top:0}
+.side{margin-top:10px;border:1px solid var(--hair);border-radius:12px;padding:11px 13px 12px;background:rgba(18,24,37,.93)}
+.side .sh2{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.side .sd{font-family:'IBM Plex Sans';font-size:10px;line-height:1.6;color:rgba(234,228,214,.64)}
+.side .sd b{color:var(--paper);font-weight:500}
+.side.wy{border-color:rgba(157,143,232,.34);background:linear-gradient(160deg,rgba(35,30,60,.95),rgba(20,24,40,.95))} .side.wy .sh2{color:var(--vi)}
+.side.ex{border-color:rgba(111,191,115,.34);background:linear-gradient(160deg,rgba(23,42,30,.95),rgba(17,26,24,.95))} .side.ex .sh2{color:var(--ok)}
+.side .tri{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.side .tri span{font-family:'IBM Plex Mono',monospace;font-size:8.5px;border:1px solid rgba(111,191,115,.38);color:#CBEBCD;border-radius:12px;padding:2px 7px}
+
+/* ---------- output rail ---------- */
+.rail{position:relative;z-index:2;margin-top:11px;border:1px solid var(--hair);border-radius:14px;padding:9px 13px 10px;
+  background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.rail .rh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rail .rh b{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--co)}
+.rail .rh s{text-decoration:none;font-size:8px;color:var(--muted)}
+.rail .rh .ret{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.11em;color:var(--ok)}
+.rr{display:grid;grid-template-columns:268px 1fr auto;gap:11px;align-items:center;padding:5px 0;border-top:1px dashed rgba(234,228,214,.08)}
+.rr:first-of-type{border-top:none}
+.rr.idle{display:none}
+.rr .sn{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap}
+.rr .ot{font-family:'Fraunces',serif;font-weight:600;font-size:14px;line-height:1.2}
+.rr .pp{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.rr .pp span{font-family:'IBM Plex Mono',monospace;font-size:8.5px;border:1px solid var(--hair);border-radius:16px;padding:2.5px 8px;white-space:nowrap}
+.rr .pp span.per{border-color:rgba(226,131,98,.45);color:#F5CDBC}
+.rr .pp span.por{border-color:rgba(111,191,115,.45);color:#C7E8C9}
+.rr .pp i{font-style:normal;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:8px}
+.note{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--muted);margin-top:8px;text-align:center}
+.note b{color:var(--paper);font-weight:500}
+</style>
+</head>
+<body>
+<div class="aur"></div>
+<svg id="grain"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gr)" opacity=".2"/></svg>
+
+<div class="wrap">
+  <div class="headrow">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>AIR8 · KNOWLEDGE BASE · MODULAR ASSEMBLY</div>
+      <h1>Three scenarios, <em>one set of modules</em> — assembled differently</h1>
+      <div class="sub">SCENARIO → <b>CP STEPS</b> → L1 PROCESS MODULES → <b>L2 KNOWLEDGE NODES</b> → DATA → OUTPUT · PORTAL</div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="ctl">
+    <button class="btn b1 on" data-a="f1">① Lead Scoring</button>
+    <button class="btn b2 on" data-a="f2">② Supplier Score</button>
+    <button class="btn b3 on" data-a="f3">③ Buyer Assessment</button>
+    <span class="sep"></span>
+    <button class="btn on" data-a="detail">Detail on</button>
+    <button class="btn" data-a="shared">Shared only</button>
+    <button class="btn" data-a="collapse">Collapse all steps</button>
+    <button class="btn" data-a="play">▶ Assemble</button>
+    <span class="lgd"><i style="background:var(--f1)"></i>F1<i style="background:var(--f2)"></i>F2<i style="background:var(--f3)"></i>F3<i style="background:var(--s2)"></i>×2<i style="background:var(--s3)"></i>×3</span>
+    <span class="hint" id="hint">Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module to light its whole linkage — everything else stays readable</span>
+  </div>
+
+  <div class="board" id="board">
+    <svg id="wires"></svg>
+    <div class="lanes">
+      <div class="lane cp"><div class="lh"><i>01</i><b>Scenario → CP steps</b><s>what runs, in order</s></div><div id="cCP"></div></div>
+      <div class="lane l1"><div class="lh"><i>02</i><b>L1 · process modules</b><s>how we decide</s></div><div class="col" id="cL1"></div></div>
+      <div class="lane l2"><div class="lh"><i>03</i><b>L2 · knowledge nodes</b><s>what we know</s></div><div class="col" id="cL2"></div></div>
+      <div class="lane dt"><div class="lh"><i>04</i><b>Data</b><s>click an L2 node</s></div><div class="col" id="cDT"></div></div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="side wy"><div class="sh2">Why L1 is the asset · not a node on the map</div>
+      <div class="sd"><b>L1</b> is the reasoning — mapping rules, scoring method, gate order, evidence discipline, how severe an adverse hit is. Written once, walked by every flow.<br>
+      <b>L2</b> is the tables — weights, bands, thresholds, lookup and matrix rules. Change one and every flow picks it up on its next run.</div></div>
+    <div class="side ex"><div class="sh2">The base keeps evolving · not a node on the map</div>
+      <div class="tri"><span>QA tasks · Notion</span><span>Daily news push</span><span>Gaps found mid-run</span></div>
+      <div class="sd">AI drafts the update → expert approves on Telegram → written back into <b>L1</b> / <b>L2</b>. Nothing enters the base unreviewed.</div></div>
+  </div>
+
+  <div class="rail">
+    <div class="rh"><b>05 · Output → Persona → Portal</b><s>same base, a different answer per role</s>
+      <span class="ret">↺ Buyer Assessment writes the rating that Lead CP4.5 and Supplier CP1 both look up</span></div>
+    <div id="cRail"></div>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+
+<script>
+/* ============================== FLOWS ============================== */
+const FLOW=[
+ {id:'f1',n:1,cv:'#E9A83F',k:'FLOW 1',t:'Lead Scoring',s:'new supplier leads · CP0–CP5',
+  q:'A raw lead / target list lands — <b>who does BD call first?</b>',
+  per:'BD team',por:['Notion','WhatsApp'],out:'Call List / Bench / Pipeline + A/B/C/D rating'},
+ {id:'f2',n:2,cv:'#47B598',k:'FLOW 2',t:'Supplier Scoring',s:'performance · confirmed pair · CP0–CP5',
+  q:'A confirmed buyer–supplier pair needs a rating — <b>what limit, on what terms?</b>',
+  per:'Risk / Credit',por:['Credit Dashboard'],out:'Supplier Total Score → A/B/C/D + risk flags · pair terms'},
+ {id:'f3',n:3,cv:'#6FA8FF',k:'FLOW 3',t:'Buyer Assessment',s:'buyer rating · CP0–CP5',
+  q:'A buyer needs a rating — <b>full assessment, or web proxy?</b>',
+  per:'Credit analyst',por:['Credit Dashboard'],out:'Buyer rating + limit view → written back for reuse'}
+];
+
+/* ============================== CP STEPS ============================== */
+const CP=[
+ /* ---- FLOW 1 · Lead Scoring ---- */
+ {f:'f1',id:'a0',k:'CP0',  n:'Data Load',            d:'raw supplier data → standard indicator fields',
+  l1:['contract'], l2:['ind']},
+ {f:'f1',id:'a1',k:'CP1',  n:'Vertical Routing',     d:'HS chapter → Apparel / Hardgoods framework',
+  l1:['route'],    l2:['frame']},
+ {f:'f1',id:'a2',k:'CP2',  n:'Component Scoring',    d:'Pattern Score + Proxy B/S Scorecard Score',
+  l1:['method','appa','hard'], l2:['frame','bsp']},
+ {f:'f1',id:'a3',k:'CP3',  n:'Gate Checks',          d:'flow-stale · cny-domestic · kill-combo · furniture cap',
+  l1:['gates'],    l2:['frame']},
+ {f:'f1',id:'a4',k:'CP4',  n:'Sort + Call List',     d:'merge scores → A/B/C/D → Call List / Bench / Pipeline',
+  l1:['gates'],    l2:['frame','rate']},
+ {f:'f1',id:'a45',k:'CP4.5',n:'Top N Research + Buyer Lookup',
+  d:'Background check · financing need · contacts · trends · <b>map Credit Dashboard for buyer rating &amp; limit, else web proxy (no S&amp;P)</b>',
+  l1:['evid','trend','advm','blkp'], l2:['adv','fin','out','src','pt','mt','br','bprox']},
+ {f:'f1',id:'a5',k:'CP5',  n:'Output Assembly → Notion', d:'Assembly + template skill · no KB reasoning',
+  l1:[], l2:[], out:true},
+
+ /* ---- FLOW 2 · Supplier Performance Scoring ---- */
+ {f:'f2',id:'b0',k:'CP0',  n:'Data Load',            d:'confirmed-pair data + availability check',
+  l1:['contract'], l2:['ind']},
+ {f:'f2',id:'b1',k:'CP1',  n:'Coverage + Buyer Lookup',
+  d:'Coverage checked per system → full / proxy / missing · <b>map Credit Dashboard first; on miss, run the full Buyer Assessment</b>',
+  l1:['cov','blkp'], l2:['perf','br']},
+ {f:'f2',id:'b2',k:'CP2',  n:'Indicator Scoring',
+  d:'<b>SCORECARD 3 dims</b> (QAQC · Performance · B/S) and <b>TREND 2 dims</b> (Market · Product) scored separately + adverse news',
+  l1:['method','brm','trend','advm'], l2:['perf','br','pt','mt','adv']},
+ {f:'f2',id:'b3',k:'CP3',  n:'Score Assembly',       d:'Scorecard score + Trend score merged → Total Score → A/B/C/D',
+  l1:['gates'],    l2:['perf','rate']},
+ {f:'f2',id:'b4',k:'CP4',  n:'Limit &amp; Terms Decision',
+  d:'Score already set in CP3 — the pair matrix decides <b>limit · tenor · pricing · covenants</b>',
+  l1:['pair'],     l2:['pmx']},
+ {f:'f2',id:'b5',k:'CP5',  n:'Output Assembly → Dashboard', d:'Assembly + template skill · buyer file reused by Lead CP4.5',
+  l1:[], l2:[], out:true},
+
+ /* ---- FLOW 3 · Buyer Assessment ---- */
+ {f:'f3',id:'c0',k:'CP0',  n:'Buyer Resolution + Dashboard Lookup',
+  d:'Entity resolution → look up existing rating / limit in Credit Dashboard',
+  l1:['contract','blkp'], l2:['ind','br']},
+ {f:'f3',id:'c1',k:'CP1',  n:'Path Choice · full vs proxy',
+  d:'S&amp;P + financials available → full assessment; otherwise <b>web proxy (no S&amp;P)</b>',
+  l1:['cov','blkp'], l2:['br','bprox']},
+ {f:'f3',id:'c2',k:'CP2',  n:'Credit Rating',
+  d:'Financial analysis + market position → base credit rating',
+  l1:['method','brm'], l2:['br']},
+ {f:'f3',id:'c3',k:'CP3',  n:'Context Overlay',
+  d:'Buyer market trend + product trend + <b>adverse news (buyer rules &amp; severity)</b>',
+  l1:['trend','advm'], l2:['mt','pt','adv']},
+ {f:'f3',id:'c4',k:'CP4',  n:'Buyer Rating Output',  d:'Blend → A/B/C/D + limit view',
+  l1:['gates'],    l2:['rate','br']},
+ {f:'f3',id:'c5',k:'CP5',  n:'Output Assembly → Credit Dashboard',
+  d:'Assembly + template skill · reused by Lead CP4.5 and Supplier CP1',
+  l1:[], l2:[], out:true}
+];
+
+/* ============================== L1 ============================== */
+const L1M=[
+ {id:'contract',t:'Field Contract',          n:'L1-db-field-contract',    d:'Field mapping · multi-row dedupe · missing-field handling'},
+ {id:'route',   t:'Vertical Router',         n:'L1-vertical-routing',     d:'HS-chapter routing · borderline categories · Park conditions'},
+ {id:'method',  t:'Scoring Method',          n:'L1-scoring-method',       d:'Banded additive · missing → Enrichment · merge logic'},
+ {id:'appa',    t:'Apparel Scoring Logic',   n:'L1-scoring-apparel',      d:'Reasoning behind each Apparel indicator score'},
+ {id:'hard',    t:'Hardgoods Scoring Logic', n:'L1-scoring-hardgoods',    d:'Reasoning behind each Hardgoods indicator score'},
+ {id:'gates',   t:'Gate & Order Logic',      n:'L1-ordering-and-gates',   d:'Gate order · sorting · edge-case handling'},
+ {id:'evid',    t:'Evidence Discipline',     n:'L1-evidence-discipline',  d:'Evidence standard · source credibility · NOT FOUND · audit log'},
+ {id:'trend',   t:'Trend Judgement Method',  n:'L1-trend-method',         d:'How trend signals are assessed and qualified — supplier &amp; buyer'},
+ {id:'cov',     t:'Coverage & Proxy Rules',  n:'L1-performance-coverage', d:'full / proxy / missing decision and downgrade rules'},
+ {id:'brm',     t:'Buyer Rating Method',     n:'L1-buyer-rating-method',  d:'Financial analysis + market position weighting · downgrade conditions'},
+ {id:'blkp',    t:'Buyer Lookup & Fallback', n:'L1-buyer-lookup-fallback',d:'Credit Dashboard first; on miss → proxy (leads) / full assessment (pair)'},
+ {id:'advm',    t:'Adverse News Method',     n:'L1-adverse-news-method',  d:'Screening method · severity judgement · different rules for buyer vs supplier'},
+ {id:'pair',    t:'Limit &amp; Terms Method',    n:'L1-pair-terms-method',    d:'How a rating plus the pair situation is reasoned into an offer'}
+];
+
+/* ============================== L2 ============================== */
+const L2M=[
+ {id:'ind',  t:'Indicator Dictionary',   n:'NODE-indicator',             d:'Indicator column locations · field-name lookup',                       dt:['raw']},
+ {id:'frame',t:'Lead Scoring Framework', n:'NODE-scoring-framework',     d:'Weights · bands · tier cuts · Gates · TIEBREAK · ROUTED_FROM', dt:['cust']},
+ {id:'bsp',  t:'B/S Proxy Rules',        n:'NODE-bs-proxy',              d:'Proxy B/S from customs (1688) + the two basic-profile sources',       dt:['cust','ci','pulse']},
+ {id:'rate', t:'Rating Assembly',        n:'NODE-rating-assembly',       d:'Score-merge weights · A/B/C/D cut thresholds',                 dt:[]},
+ {id:'adv',  t:'Adverse Screen Rules',   n:'NODE-adverse-screen',        d:'§Supplier / §Buyer search rules and severity grading',   dt:['news','web']},
+ {id:'fin',  t:'Financing-Need Rules',   n:'NODE-financing-need',        d:'Rules for judging financing need',                               dt:['cust','web','a8']},
+ {id:'out',  t:'Outreach / Contact Rules',n:'NODE-outreach-profile',     d:'Contact-identification rules',                                 dt:['web','ci']},
+ {id:'src',  t:'Source Hierarchy',       n:'NODE-evidence-source',       d:'Source priority hierarchy',                                 dt:['web']},
+ {id:'pt',   t:'Product Trend Rules',    n:'NODE-product-trend',         d:'Product-category trend sources and interpretation',                      dt:['mtr','cust'],sys:'trend'},
+ {id:'mt',   t:'Market Trend Rules',     n:'NODE-market-trend',          d:'Buyer market-trend signal rules',                           dt:['mtr','news','cust'],sys:'trend'},
+ {id:'perf', t:'Supplier Scorecard',     n:'NODE-performance-scorecard', d:'3 dims: QAQC ← inspection · Performance ← trading doc · B/S ← company profile + PulseLink + customs', dt:['insp','tdoc','pulse','ci','cust'],sys:'card'},
+ {id:'br',   t:'Buyer Rating Framework', n:'NODE-buyer-rating',          d:'Credit rating from S&amp;P + financials + web · Dashboard lookup · proxy/full · dilution', dt:['sp','bfin','web','ci','pulse','cd'],sys:'card'},
+ {id:'bprox',t:'Buyer Proxy Rules',      n:'NODE-buyer-proxy',           d:'No S&amp;P — proxy rating from web + company profile + PulseLink + customs', dt:['web','ci','pulse','cust']},
+ {id:'pmx',  t:'Limit &amp; Terms Matrix',   n:'NODE-pair-terms-matrix',     d:'Limit bands · tenor · pricing · covenants, by pair situation',      dt:['cd','a8','pulse']}
+];
+
+/* which L2 nodes each L1 module governs (edge = CP.l2 ∩ GOV[l1]) */
+const GOV={
+ contract:['ind'], route:['frame'],
+ method:['frame','bsp','perf','br'],
+ appa:['frame'], hard:['frame'],
+ gates:['frame','rate','perf'],
+ evid:['adv','fin','out','src'],
+ trend:['pt','mt'],
+ cov:['perf','bprox'],
+ brm:['br'],
+ blkp:['br','bprox'],
+ advm:['adv'],
+ pair:['pmx']
+};
+
+/* ============================== DATA ============================== */
+const DT=[
+ {id:'raw', k:'i',n:'Potential leads list'},
+ {id:'pulse',k:'i',n:'PulseLink'},
+ {id:'insp',k:'i',n:'Inspection reports'},
+ {id:'tdoc',k:'i',n:'Trading documents'},
+ {id:'a8',  k:'i',n:'A8 financing data'},
+ {id:'cd',  k:'i',n:'Credit Dashboard'},
+ {id:'cust',k:'e',n:'Customs data (1688)'},
+ {id:'ci',  k:'e',n:'Company profile'},
+ {id:'news',k:'e',n:'News & signals'},
+ {id:'mtr', k:'e',n:'Market & product trends'},
+ {id:'sp',  k:'e',n:'S&P ratings'},
+ {id:'bfin',k:'e',n:'Buyer financial statements'},
+ {id:'web', k:'e',n:'Deep research / web'}
+];
+
+const CVF={f1:'#E9A83F',f2:'#47B598',f3:'#6FA8FF'}, S2='#B49BFF', S3='#FF8FC7';
+const $=id=>document.getElementById(id);
+
+/* ============================== derived ============================== */
+const uses={l1:{},l2:{}}, cpOf={};
+L1M.forEach(m=>{uses.l1[m.id]=new Set();cpOf['p_'+m.id]=[];});
+L2M.forEach(m=>{uses.l2[m.id]=new Set();cpOf['k_'+m.id]=[];});
+CP.forEach(c=>{
+  c.l1.forEach(x=>{if(uses.l1[x]){uses.l1[x].add(c.f);cpOf['p_'+x].push(c);}});
+  c.l2.forEach(x=>{if(uses.l2[x]){uses.l2[x].add(c.f);cpOf['k_'+x].push(c);}});
+});
+/* edges */
+const E12=[], EDIR=[];
+CP.forEach(c=>{
+  const covered=new Set();
+  c.l1.forEach(a=>{
+    (GOV[a]||[]).forEach(b=>{
+      if(c.l2.includes(b)){covered.add(b);
+        if(!E12.some(e=>e.f===c.f&&e.a===a&&e.b===b))E12.push({f:c.f,a:a,b:b});}
+    });
+  });
+  c.l2.forEach(b=>{ if(!covered.has(b))EDIR.push({f:c.f,cp:c.id,b:b}); });
+});
+
+/* ============================== state ============================== */
+let ON=new Set(['f1','f2','f3']), sharedOnly=false, detail=true, selCP=null, selMod=null, hovCP=null, hovMod=null, openPz=null, playing=false, pt=[];
+let collapsed=new Set();
+
+/* ============================== build ============================== */
+$('cCP').innerHTML=FLOW.map(f=>{
+  const mine=CP.filter(c=>c.f===f.id);
+  const l1n=[...new Set(mine.flatMap(c=>c.l1))].length, l2n=[...new Set(mine.flatMap(c=>c.l2))].length;
+  return `<div class="fg on${f.n}" id="fg_${f.id}" data-f="${f.id}">
+   <div class="fgh" data-h="${f.id}">
+     <span class="cv" style="color:${f.cv}">●</span>
+     <span><span class="kk">${f.k}</span><br><span class="nm">${f.t}</span></span>
+     <span class="mt"><span>${mine.length} CP</span><span>${l1n} L1</span><span>${l2n} L2</span></span>
+     <span class="tog" id="tg_${f.id}"><i>▾</i><b>Hide steps</b></span>
+   </div>
+   <div class="fgq">${f.q}</div>
+   <div class="pills"><em>Steps · click one</em>${mine.map(c=>`<span data-c="${c.id}">${c.k}</span>`).join('')}</div>
+   <div class="fgb">${mine.map(c=>`<div class="cp ${c.out?'outstep':''}" id="${c.id}" data-c="${c.id}" style="--ac:${f.cv};border-left-color:${c.out?'#6FBF73':f.cv}">
+      <div class="cnt">${c.out?'<b>OUTPUT</b>':`L1 <b>${c.l1.length}</b> · L2 <b>${c.l2.length}</b>`}</div>
+      <div class="k">${c.k}</div><div class="n">${c.n}</div><div class="d">${c.d}</div></div>`).join('')}</div>
+ </div>`;}).join('');
+
+function pzHTML(m,kind){
+  const pre=kind==='l1'?'p_':'k_';
+  const src=kind==='l2'&&m.dt.length?`<div class="dsrc">${m.dt.map(d=>`<span>${(DT.find(x=>x.id===d)||{n:d}).n}</span>`).join('')}</div>`:'';
+  return `<div class="pzc"><div class="pz" id="${pre}${m.id}" data-p="${pre}${m.id}"><div class="in">
+    <div class="row"><span class="slt" id="sl${pre}${m.id}"></span><div class="t">${m.t}${m.sys==='card'?' <u style="text-decoration:none;font-family:IBM Plex Mono;font-size:6px;letter-spacing:.12em;border:1px solid rgba(71,181,152,.45);background:rgba(71,181,152,.18);color:#8FD8C2;border-radius:3px;padding:1px 3px;margin-left:4px">SCORECARD</u>':''}${m.sys==='trend'?' <u style="text-decoration:none;font-family:IBM Plex Mono;font-size:6px;letter-spacing:.12em;border:1px solid rgba(157,143,232,.45);background:rgba(157,143,232,.18);color:#C3B9F5;border-radius:3px;padding:1px 3px;margin-left:4px">TREND</u>':''}
+    </div><div class="sh"></div><div class="tags" id="tg${pre}${m.id}"></div></div>
+    <div class="more"><div class="f">${m.n}</div><div class="d">${m.d}</div>${src}</div>
+    </div></div></div>`;
+}
+$('cL1').innerHTML=L1M.map(m=>pzHTML(m,'l1')).join('');
+$('cL2').innerHTML=L2M.map(m=>pzHTML(m,'l2')).join('');
+$('cDT').innerHTML=['i','e'].map(k=>`<div class="dgl">${k==='i'?'Internal':'External'}</div>`+
+  DT.filter(d=>d.k===k).map(d=>`<div class="dc" id="d_${d.id}">${d.n}</div>`).join('')).join('');
+$('cRail').innerHTML=FLOW.map(f=>`<div class="rr" id="r_${f.id}">
+   <div class="sn" style="color:${f.cv}">${f.k} · ${f.t}</div>
+   <div class="ot">${f.out}</div>
+   <div class="pp"><span class="per">${f.per}</span><i>→</i>${f.por.map(p=>`<span class="por">${p}</span>`).join('')}</div></div>`).join('');
+
+(function(){
+  const sh=k=>Object.values(uses[k]).filter(s=>s.size>1).length;
+  const core=k=>Object.values(uses[k]).filter(s=>s.size===3).length;
+  const f3L1=[...new Set(CP.filter(c=>c.f==='f3').flatMap(c=>c.l1))];
+  const f3L2=[...new Set(CP.filter(c=>c.f==='f3').flatMap(c=>c.l2))];
+  const total=L1M.length+L2M.length;
+  const shared=sh('l1')+sh('l2');
+  const f3need=f3L1.length+f3L2.length;
+  $('stats').innerHTML=`
+   <div class="stat"><i>L1 modules</i><b>${L1M.length}</b><s>${sh('l1')} shared</s></div>
+   <div class="stat"><i>L2 nodes</i><b>${L2M.length}</b><s>${sh('l2')} shared</s></div>
+   <div class="stat"><i>used by all 3</i><b>${core('l1')+core('l2')}</b><s>the shared core</s></div>
+   <div class="stat hero"><i>shared modules</i><b>${shared} / ${total}</b><s>used by 2+ flows</s></div>`;
+  $('note').innerHTML=`<b>${total}</b> KB modules in total · <b>${shared}</b> are used by more than one flow · <b>${core('l1')+core('l2')}</b> carry all three. Buyer Assessment runs on <b>${f3need}</b> modules, every one of them already shared with Lead Scoring or Supplier Scoring — <b>a new scenario is a new assembly, not a new system</b>.`;
+})();
+
+/* ============================== paint ============================== */
+function cpLive(c){ return !!c&&ON.has(c.f)&&(!selCP||c.id===selCP); }
+/* what is highlighted right now — driven by a CP step OR by a module */
+function focusSets(){
+  const F={on:false,cp:new Set(),l1:new Set(),l2:new Set(),n1:new Set(),n2:new Set(),scoped:false,out:false};
+  /* a pinned flow + step is the SCOPE — hovering or clicking a module can only
+     open links inside that scope, so the picture never spills into other flows */
+  const MOD  = hovMod || selMod;
+  const STEP = hovCP || selCP;
+  const inScope = c => ON.has(c.f) && (!STEP || c.id===STEP);
+  F.scoped = !!STEP;
+  if(MOD){
+    const kind=MOD.slice(0,2)==='p_'?'l1':'l2', id=MOD.slice(2);
+    const using=CP.filter(c=>inScope(c)&&(kind==='l1'?c.l1:c.l2).includes(id));
+    if(using.length){
+      F.on=true;
+      if(kind==='l1'){
+        F.l1.add(id);
+        using.forEach(c=>{F.cp.add(c.id);(GOV[id]||[]).forEach(b=>{if(c.l2.includes(b))F.l2.add(b);});});
+      }else{
+        F.l2.add(id);
+        using.forEach(c=>{F.cp.add(c.id);c.l1.forEach(a=>{if((GOV[a]||[]).includes(id))F.l1.add(a);});});
+      }
+    }else if(STEP){
+      /* the module is outside the pinned step — keep showing the step itself */
+      F.out=true;
+      const c=CP.find(x=>x.id===STEP);
+      if(c&&ON.has(c.f)){F.on=true;F.cp.add(c.id);c.l1.forEach(x=>F.l1.add(x));c.l2.forEach(x=>F.l2.add(x));}
+    }
+  }else if(STEP){
+    const c=CP.find(x=>x.id===STEP);
+    if(c&&ON.has(c.f)){F.on=true;F.cp.add(c.id);c.l1.forEach(x=>F.l1.add(x));c.l2.forEach(x=>F.l2.add(x));}
+  }
+  /* the other modules of the SAME steps stay findable — so you can hop to them */
+  if(F.on)F.cp.forEach(cid=>{
+    const c=CP.find(x=>x.id===cid); if(!c)return;
+    c.l1.forEach(x=>{if(!F.l1.has(x))F.n1.add(x);});
+    c.l2.forEach(x=>{if(!F.l2.has(x))F.n2.add(x);});
+  });
+  return F;
+}
+function modState(kind,id){
+  const set=uses[kind][id];
+  const flows=[...set].filter(f=>ON.has(f));
+  if(!flows.length)return {on:false,flows:[],n:set.size,foc:false,soft:false};
+  if(sharedOnly&&set.size<2)return {on:false,flows:[],n:set.size,foc:false,soft:false};
+  /* a selected CP step highlights its own modules — the rest stay readable,
+     so the whole relationship map is never lost */
+  const F=FOC;
+  const foc=F.on&&(kind==='l1'?F.l1:F.l2).has(id);
+  const near=F.on&&!foc&&(kind==='l1'?F.n1:F.n2).has(id);
+  return {on:true,flows,n:set.size,foc:foc,near:near,soft:F.on&&!foc&&!near};
+}
+let FOC={on:false,cp:new Set(),l1:new Set(),l2:new Set()};
+let SLOT={}, PAIR={};
+const LTR=['A','B','C','D','E','F'];
+const DASH={A:'16 5',B:'7 5',C:'2.5 4',D:'12 4 2.5 4',E:'20 6',F:'4 4 10 4'};
+function buildSlots(){
+  SLOT={}; PAIR={};
+  if(!FOC.on)return;
+  /* order the focused L1 modules the way they appear in the lane */
+  const order=L1M.map(m=>m.id).filter(id=>FOC.l1.has(id));
+  order.forEach((id,i)=>SLOT[id]=LTR[i%LTR.length]);
+  FOC.l2.forEach(b=>{
+    PAIR[b]=order.filter(a=>(GOV[a]||[]).includes(b)).map(a=>SLOT[a]);
+  });
+}
+function paint(pop){
+  FOC=focusSets(); buildSlots();
+  if(hovCP||hovMod){
+    let head='';
+    if(hovCP){const c=CP.find(x=>x.id===hovCP);
+      if(c)head=`<b>${FLOW.find(f=>f.id===c.f).t} · ${c.k} ${c.n}</b>`;}
+    else{const kind=hovMod.slice(0,2)==='p_'?'l1':'l2', mid=hovMod.slice(2);
+      const m=(kind==='l1'?L1M:L2M).find(x=>x.id===mid); if(m)head=`<b>${m.t}</b>`;}
+    const nd=new Set(); FOC.l2.forEach(id=>{const m=L2M.find(x=>x.id===id);if(m)m.dt.forEach(d=>nd.add(d));});
+    let sc='';
+    if(selCP){const c=CP.find(x=>x.id===selCP);
+      if(c)sc=` <em style="font-style:normal;color:var(--co)">· scoped to ${'F'+c.f.slice(1)}·${c.k}</em>`;}
+    $('hint').innerHTML = FOC.out
+      ? `${head} <em style="font-style:normal;color:var(--co)">is not used in the pinned step</em>${sc}`
+      : `${head} → ${FOC.cp.size} CP · ${FOC.l1.size} L1 · ${FOC.l2.size} L2 · ${nd.size} data${sc}`;
+  }
+  document.body.classList.toggle('detail',detail);
+  FLOW.forEach(f=>{
+    const on=ON.has(f.id), g=$('fg_'+f.id);
+    g.classList.toggle('off',!on);
+    g.classList.toggle('col2',collapsed.has(f.id));
+    const tg=$('tg_'+f.id);
+    if(tg){const cl=collapsed.has(f.id), n=CP.filter(c=>c.f===f.id).length;
+      tg.querySelector('i').textContent=cl?'▸':'▾';
+      tg.querySelector('b').textContent=cl?`Show ${n} steps`:'Hide steps';}
+    document.querySelector(`.btn.b${f.n}`).classList.toggle('on',on);
+    $('r_'+f.id).classList.toggle('idle',!on);
+  });
+  CP.forEach(c=>{
+    const el=$(c.id); if(!el)return;
+    el.classList.toggle('sel',c.id===selCP||(FOC.on&&!!(selMod||hovMod)&&FOC.cp.has(c.id)));
+    el.classList.toggle('pin',c.id===selCP);
+    el.classList.toggle('dimmed',!ON.has(c.f));
+    el.classList.toggle('soft',ON.has(c.f)&&FOC.on&&!FOC.cp.has(c.id));
+  });
+  document.querySelectorAll('.pills span').forEach(s=>s.classList.toggle('sel',s.dataset.c===selCP));
+
+  const liveDT=new Set();
+  [['l1',L1M,'p_'],['l2',L2M,'k_']].forEach(([kind,arr,pre])=>{
+    arr.forEach(m=>{
+      const st=modState(kind,m.id), el=$(pre+m.id), pc=el.parentElement;
+      const cols=st.flows.map(f=>CVF[f]);
+      const acc = !st.on ? 'rgba(234,228,214,.14)' : (st.n>=3?S3:(st.n===2?S2:cols[0]));
+      pc.style.setProperty('--acc',acc);
+      pc.style.setProperty('--gl',st.on?acc+'88':'transparent');
+      el.classList.toggle('act',st.on); el.classList.toggle('idle',!st.on);
+      el.classList.toggle('foc',!!st.foc); el.classList.toggle('near',!!st.near); el.classList.toggle('soft',!!st.soft);
+      el.classList.toggle('sh2',st.on&&st.n===2); el.classList.toggle('sh3',st.on&&st.n>=3);
+      const shEl=el.querySelector('.sh'); if(shEl)shEl.textContent=st.n>=3?'ALL 3 FLOWS':'×2 FLOWS';
+      el.classList.toggle('open',openPz===pre+m.id);
+      const tags=cpOf[pre+m.id].filter(c=>ON.has(c.f)&&(!selCP||c.id===selCP));
+      const uniq=[...new Set(tags.map(c=>c.f+'|'+c.k))];
+      const cap = (openPz===pre+m.id||detail) ? 99 : 4;
+      let html=uniq.slice(0,cap).map(s=>{const [f,k]=s.split('|');
+        return `<span style="background:${CVF[f]}26;color:${CVF[f]}">F${f.slice(1)}·${k}</span>`;}).join('');
+      if(uniq.length>cap)html+=`<span style="background:rgba(234,228,214,.1);color:var(--muted)">+${uniq.length-cap}</span>`;
+      $('tg'+pre+m.id).innerHTML=html;
+      const sl=$('sl'+pre+m.id);
+      if(sl){
+        if(st.foc){
+          const ls = kind==='l1' ? (SLOT[m.id]?[SLOT[m.id]]:[]) : (PAIR[m.id]||[]);
+          sl.innerHTML=ls.map(x=>`<b>${x}</b>`).join('');
+        }else sl.innerHTML='';
+      }
+      if(pop&&st.on&&!hovCP&&!hovMod){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}
+      if(kind==='l2'&&st.on)m.dt.forEach(d=>liveDT.add(d));
+    });
+  });
+  const hot=new Set();
+  if(FOC.on)FOC.l2.forEach(id=>{const m=L2M.find(x=>x.id===id);if(m)m.dt.forEach(d=>hot.add(d));});
+  DT.forEach(d=>{
+    const el=$('d_'+d.id), on=liveDT.has(d.id);
+    el.classList.toggle('act',on); el.classList.toggle('idle',!on);
+    el.classList.toggle('hot',hot.has(d.id));
+  });
+  requestAnimationFrame(draw);
+}
+
+/* ============================== wires ============================== */
+const svg=$('wires'), board=$('board');
+function bx(el){const b=el.getBoundingClientRect(),r=board.getBoundingClientRect();
+  return {l:b.left-r.left,r:b.right-r.left,t:b.top-r.top,b:b.bottom-r.top,cy:b.top-r.top+b.height/2};}
+function ortho(x1,y1,x2,y2,xr){
+  const dy=y2-y1,sg=dy>=0?1:-1,r=Math.min(8,Math.abs(dy)/2,Math.abs(xr-x1),Math.abs(x2-xr));
+  if(Math.abs(dy)<1.2)return `M${x1} ${y1} H${x2}`;
+  if(r<2)return `M${x1} ${y1} H${xr} V${y2} H${x2}`;
+  return `M${x1} ${y1} H${xr-r} Q${xr} ${y1} ${xr} ${y1+sg*r} V${y2-sg*r} Q${xr} ${y2} ${xr+r} ${y2} H${x2}`;
+}
+function anchor(c){ /* a collapsed group anchors on its pill row */
+  if(collapsed.has(c.f)){const p=document.querySelector(`.pills span[data-c="${c.id}"]`);return p?bx(p):bx($('fg_'+c.f));}
+  const el=$(c.id); return el?bx(el):bx($('fg_'+c.f));
+}
+function draw(){
+  const r=board.getBoundingClientRect();
+  svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);
+  const L=[...document.querySelectorAll('.lane')].map(l=>bx(l));
+  const act=FLOW.filter(f=>ON.has(f.id)).map(f=>f.id);
+  const rail=(gi,fid,off)=>{const a=L[gi].r,b=L[gi+1].l,i=Math.max(0,act.indexOf(fid)),n=Math.max(1,act.length);
+    return a+(b-a)*((i+1+(off||0)*.3)/(n+1));};
+  let out='',dots='';
+  const lvl=(inFlow,isSel)=> !inFlow ? 'gh' : (isSel ? 'on mv' : 'sf');
+  /* CP → L1 */
+  CP.forEach(c=>{
+    if(!$(c.id))return;
+    const inFlow=ON.has(c.f), cb=anchor(c);
+    c.l1.forEach(x=>{
+      const st=modState('l1',x); if(!$('p_'+x)||!st.on&&inFlow&&sharedOnly)return;
+      const isSel=!FOC.on||(FOC.cp.has(c.id)&&FOC.l1.has(x));
+      const p=bx($('p_'+x)), k=lvl(inFlow&&st.on,isSel);
+      out+=`<path class="${k}" stroke="${CVF[c.f]}" d="${ortho(cb.r,cb.cy,p.l+9,p.cy,rail(0,c.f))}"/>`;
+      if(k==='on mv')dots+=`<circle class="on" cx="${p.l+9}" cy="${p.cy}" r="2.6" fill="${CVF[c.f]}"/>`;
+    });
+  });
+  /* L1 → L2 */
+  E12.forEach(e=>{
+    if(!$('p_'+e.a)||!$('k_'+e.b))return;
+    const sa=modState('l1',e.a), sb=modState('l2',e.b);
+    const inFlow=ON.has(e.f)&&sa.on&&sb.on;
+    const isSel=!FOC.on||(FOC.l1.has(e.a)&&FOC.l2.has(e.b));
+    const p=bx($('p_'+e.a)), q=bx($('k_'+e.b));
+    let k=lvl(inFlow,isSel);
+    const sig=FOC.on&&isSel?SLOT[e.a]:null;
+    if(sig){
+      /* each L1 gets its own dash signature so you can tell whose line goes where */
+      const off=(LTR.indexOf(sig)-1.5)*7;
+      out+=`<path class="on mvo" stroke-dasharray="${DASH[sig]}" stroke-width="1.9" stroke="${CVF[e.f]}" d="${ortho(p.r-9,p.cy,q.l+9,q.cy,rail(1,e.f)+off)}"/>`;
+      dots+=`<circle class="on" cx="${q.l+9}" cy="${q.cy}" r="3" fill="${CVF[e.f]}"/>`;
+    }else{
+      out+=`<path class="${k}" stroke="${CVF[e.f]}" d="${ortho(p.r-9,p.cy,q.l+9,q.cy,rail(1,e.f))}"/>`;
+      if(k==='on mv')dots+=`<circle class="on" cx="${q.l+9}" cy="${q.cy}" r="2.6" fill="${CVF[e.f]}"/>`;
+    }
+  });
+  /* CP → L2 direct (no L1 governs it in that step) */
+  EDIR.forEach(e=>{
+    const c=CP.find(x=>x.id===e.cp); if(!c||!$(e.cp)||!$('k_'+e.b))return;
+    const inFlow=ON.has(c.f)&&modState('l2',e.b).on;
+    const isSel=!FOC.on||(FOC.cp.has(c.id)&&FOC.l2.has(e.b));
+    const cb=anchor(c), q=bx($('k_'+e.b));
+    out+=`<path class="${lvl(inFlow,isSel)}" stroke="${CVF[e.f]}" stroke-dasharray="2 4" d="${ortho(cb.r,cb.cy,q.l+9,q.cy,rail(0,e.f,1))}"/>`;
+  });
+  /* L2 → data */
+  const xm=(L[2].r+L[3].l)/2;
+  const focL2=FOC.on?[...FOC.l2].filter(id=>$('k_'+id)&&$('k_'+id).classList.contains('act')):[];
+  if(focL2.length){
+    focL2.forEach(id=>{
+      const m=L2M.find(x=>x.id===id), q=bx($('k_'+id));
+      m.dt.forEach(d=>{const c=$('d_'+d); if(!c)return; const y=bx(c);
+        out+=`<path class="on mv" stroke="#47B598" d="${ortho(q.r-9,q.cy,y.l,y.cy,xm)}"/>`;
+        dots+=`<circle class="on" cx="${y.l}" cy="${y.cy}" r="2.4" fill="#47B598"/>`;});
+    });
+  }else if(!hotL2()){
+    const lk=L2M.filter(m=>$('k_'+m.id).classList.contains('act')).map(m=>bx($('k_'+m.id)));
+    const ld=DT.filter(d=>$('d_'+d.id).classList.contains('act')).map(d=>bx($('d_'+d.id)));
+    if(lk.length&&ld.length){
+      const ys=[...lk.map(q=>q.cy),...ld.map(q=>q.cy)];
+      lk.forEach(q=>{out+=`<path class="on" stroke="rgba(71,181,152,.28)" d="M${q.r-9} ${q.cy} H${xm}"/>`;});
+      out+=`<path class="on mv" stroke="#47B598" d="M${xm} ${Math.min(...ys)} V${Math.max(...ys)}"/>`;
+      ld.forEach(q=>{out+=`<path class="on" stroke="rgba(71,181,152,.28)" d="M${xm} ${q.cy} H${q.l}"/>`;});
+    }
+  }else{
+    const id=hotL2(), m=L2M.find(x=>x.id===id), q=bx($('k_'+id));
+    m.dt.forEach(d=>{const c=$('d_'+d); if(!c)return; const y=bx(c);
+      out+=`<path class="on mv" stroke="#47B598" d="${ortho(q.r-9,q.cy,y.l,y.cy,xm)}"/>`;
+      dots+=`<circle class="on" cx="${y.l}" cy="${y.cy}" r="2.3" fill="#47B598"/>`;});
+  }
+  svg.innerHTML=out+dots;
+}
+function hotL2(){ return openPz&&openPz.startsWith('k_')?openPz.slice(2):null; }
+
+/* ============================== interaction ============================== */
+document.querySelectorAll('.fgh').forEach(el=>el.addEventListener('click',()=>{
+  stop(); const id=el.dataset.h;
+  if(collapsed.has(id))collapsed.delete(id); else collapsed.add(id);
+  paint(false);
+}));
+function pickCP(id){
+  stop(); const c=CP.find(x=>x.id===id); if(!c)return;
+  if(!ON.has(c.f))ON.add(c.f);
+  selMod=null; openPz=null;
+  selCP = selCP===id ? null : id;
+  const f=FLOW.find(x=>x.id===c.f);
+  $('hint').innerHTML=selCP
+    ? (c.out?`<b>${f.t} · ${c.k} ${c.n}</b> — pure output assembly + template skill, no L1 / L2 called`
+            :`<b>${f.t} · ${c.k} ${c.n}</b> → ${c.l1.length} L1 · ${c.l2.length} L2 highlighted (the rest stay visible) — click again to release`)
+    : 'Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module to light its whole linkage — everything else stays readable';
+  paint(true);
+}
+document.querySelectorAll('#cCP .cp').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();pickCP(el.dataset.c);}));
+document.querySelectorAll('.pills span').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();pickCP(el.dataset.c);}));
+function hoverOn(kind,id,el){
+  if(playing)return;
+  if(kind==='cp'){hovCP=id;hovMod=null;} else {hovMod=id;hovCP=null;}
+  document.querySelectorAll('.hovon').forEach(x=>x.classList.remove('hovon'));
+  if(el)el.classList.add('hovon');
+  paint(false);
+}
+function hoverOff(el){
+  if(!hovCP&&!hovMod)return;
+  hovCP=null;hovMod=null;
+  if(el)el.classList.remove('hovon');
+  paint(false);
+}
+document.querySelectorAll('.pz').forEach(el=>{
+  el.addEventListener('pointerenter',()=>hoverOn('mod',el.dataset.p,el));
+  el.addEventListener('pointerleave',()=>hoverOff(el));
+});
+document.querySelectorAll('#cCP .cp').forEach(el=>{
+  el.addEventListener('pointerenter',()=>hoverOn('cp',el.dataset.c,el));
+  el.addEventListener('pointerleave',()=>hoverOff(el));
+});
+document.querySelectorAll('.pills span').forEach(el=>{
+  el.addEventListener('pointerenter',()=>hoverOn('cp',el.dataset.c,el));
+  el.addEventListener('pointerleave',()=>hoverOff(el));
+});
+document.querySelectorAll('.pz').forEach(el=>el.addEventListener('click',e=>{
+  e.stopPropagation(); stop();
+  const id=el.dataset.p;
+  if(selMod===id){ selMod=null; openPz=null; }
+  else { selMod=id; openPz=id; }          /* selCP stays — it is the scope */
+  /* tell the user exactly what got lit */
+  if(selMod){
+    const kind=id.slice(0,2)==='p_'?'l1':'l2', mid=id.slice(2);
+    const m=(kind==='l1'?L1M:L2M).find(x=>x.id===mid);
+    FOC=focusSets(); buildSlots(); const F=FOC;
+    const steps=[...F.cp].map(cid=>{const c=CP.find(x=>x.id===cid);return 'F'+c.f.slice(1)+'·'+c.k;}).join(' · ');
+    const sc = selCP ? (()=>{const c=CP.find(x=>x.id===selCP);return c?` <em style="font-style:normal;color:var(--co)">· scoped to F${c.f.slice(1)}·${c.k}</em>`:'';})() : '';
+    $('hint').innerHTML = F.out
+      ? `<b>${m.t}</b> <em style="font-style:normal;color:var(--co)">is not used in the pinned step</em>${sc}`
+      : (kind==='l1'
+        ? `<b>${m.t}</b> — called by ${steps||'—'} · feeds <b>${F.l2.size}</b> L2 node${F.l2.size===1?'':'s'}${sc}`
+        : `<b>${m.t}</b> — consulted at ${steps||'—'} · fed by <b>${F.l1.size}</b> L1${sc}`);
+  }else{
+    $('hint').innerHTML='Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module — everything else stays readable';
+  }
+  paint(false);
+}));
+document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>{
+  const a=b.dataset.a;
+  if(a==='play'){ playing?stop():play(); return; }
+  stop();
+  if(a==='f1'||a==='f2'||a==='f3'){ selCP=null; selMod=null; openPz=null; if(ON.has(a)){if(ON.size>1)ON.delete(a);}else ON.add(a); }
+  if(a==='detail'){ detail=!detail; b.classList.toggle('on',detail); b.textContent=detail?'Detail on':'Detail off'; }
+  if(a==='shared'){ ON=new Set(['f1','f2','f3']); selCP=null; selMod=null; openPz=null; sharedOnly=!sharedOnly; b.classList.toggle('on',sharedOnly);
+    $('hint').innerHTML=sharedOnly?'Only modules used by <b>more than one flow</b> — pink = all three':'Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module to light its whole linkage'; }
+  if(a==='collapse'){ const all=collapsed.size===FLOW.length;
+    collapsed = all?new Set():new Set(FLOW.map(f=>f.id));
+    b.classList.toggle('on',!all); b.textContent=all?'Collapse all steps':'Expand all steps'; }
+  paint(true);
+}));
+
+/* ============================== assemble ============================== */
+const SEQ=[];
+FLOW.forEach((f,i)=>{
+  CP.filter(c=>c.f===f.id).forEach(c=>SEQ.push({on:FLOW.slice(0,i+1).map(x=>x.id),sel:c.id}));
+  SEQ.push({on:FLOW.slice(0,i+1).map(x=>x.id),sel:null,t:`<b>${f.t} complete</b>`});
+});
+SEQ.push({on:['f1','f2','f3'],sel:null,shared:true,t:'<b>The shared core</b> — pink pieces carry all three flows'});
+function play(){
+  playing=true; sharedOnly=false; openPz=null; selMod=null;
+  const b=document.querySelector('.btn[data-a="play"]'); b.textContent='■ Stop'; b.classList.add('on');
+  let i=0;
+  const tick=()=>{ if(!playing)return;
+    const s=SEQ[i%SEQ.length];
+    ON=new Set(s.on); selCP=s.sel||null; sharedOnly=!!s.shared;
+    if(s.t)$('hint').innerHTML=s.t;
+    else{const c=CP.find(x=>x.id===s.sel), f=FLOW.find(x=>x.id===c.f);
+      $('hint').innerHTML=`<b>${f.t} · ${c.k} ${c.n}</b> — ${c.l1.length} L1 · ${c.l2.length} L2`;}
+    paint(true); i++;
+    pt.push(setTimeout(tick,s.t?3000:2000)); };
+  tick();
+}
+function stop(){
+  if(!playing)return; playing=false; pt.forEach(clearTimeout); pt=[];
+  const b=document.querySelector('.btn[data-a="play"]'); b.textContent='▶ Assemble'; b.classList.remove('on');
+}
+
+/* ============================== fit ============================== */
+function fitPage(){ /* readability first — the page scrolls instead of shrinking */
+  const w=document.querySelector('.wrap'); if(w)w.style.zoom='';
+  draw();
+}
+let ft=null;
+window.addEventListener('resize',()=>{clearTimeout(ft);ft=setTimeout(fitPage,150);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout(()=>{paint(false);fitPage();},80));
+paint(false);
+setTimeout(()=>{paint(false);fitPage();},320);
+</script>
+</body>
+</html>
