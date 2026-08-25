@@ -1059,7 +1059,7 @@ function switchView(v){
   if(v==='schema'){
     overlay.style.display='block';
     document.body.style.overflow='hidden';
-    if(!_schemaReady){_schemaReady=true;requestAnimationFrame(function(){rescope();apply_sk();});}
+    if(!_schemaReady){_schemaReady=true;requestAnimationFrame(function(){rescope();apply_sk();setTimeout(function(){('bFit').click();},80);})}
   }else{
     overlay.style.display='none';
     document.body.style.overflow='';
@@ -1230,7 +1230,8 @@ stageEl.addEventListener('pointerup',e=>{if(draggingNode){const g=document.query
 stageEl.addEventListener('wheel',e=>{e.preventDefault();const dz=e.deltaY>0?0.88:1.14;const rect=stageEl.getBoundingClientRect();const mx=e.clientX-rect.left,my=e.clientY-rect.top;vx=mx-(mx-vx)*dz;vy=my-(my-vy)*dz;vz=Math.max(0.15,Math.min(5,vz*dz));vpEl.setAttribute('transform',`translate(${vx} ${vy}) scale(${vz})`);},{passive:false});
 
 /* ---- NODE INTERACTION ---- */
-N.forEach(n=>{const g=NG[n.id];g.addEventListener('pointerenter',()=>{hovNode=n.id;apply_sk();});g.addEventListener('pointerleave',()=>{hovNode=null;apply_sk();});g.addEventListener('click',e=>{e.stopPropagation();if(SELN.has(n.id))SELN.delete(n.id);else SELN.add(n.id);apply_sk();});});
+let _hoverRaf=null;function deferApply(){if(_hoverRaf)cancelAnimationFrame(_hoverRaf);_hoverRaf=requestAnimationFrame(()=>{_hoverRaf=null;apply_sk();});}
+N.forEach(n=>{const g=NG[n.id];g.addEventListener('pointerenter',()=>{hovNode=n.id;deferApply();});g.addEventListener('pointerleave',()=>{hovNode=null;deferApply();});g.addEventListener('click',e=>{e.stopPropagation();if(SELN.has(n.id))SELN.delete(n.id);else SELN.add(n.id);apply_sk();});});
 stageEl.addEventListener('click',e=>{if(!e.target.closest('.nd')){SELN.clear();apply_sk();}});
 $s('bFit').addEventListener('click',()=>{const xs=N.map(n=>n.x),ys=N.map(n=>n.y);const minX=Math.min(...xs)-50,maxX=Math.max(...xs)+200,minY=Math.min(...ys)-40,maxY=Math.max(...ys)+40;const rect=stageEl.getBoundingClientRect();const scaleX=rect.width/(maxX-minX),scaleY=rect.height/(maxY-minY);vz=Math.min(scaleX,scaleY,1.5);vx=-minX*vz+(rect.width-(maxX-minX)*vz)/2;vy=-minY*vz+(rect.height-(maxY-minY)*vz)/2;vpEl.setAttribute('transform',`translate(${vx} ${vy}) scale(${vz})`);});
 
