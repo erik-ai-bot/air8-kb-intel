@@ -1,0 +1,9 @@
+{
+  "path": "/Users/erikkwok/Projects/air8-kb-intel/shi-production-demo.html",
+  "mailto_enabled": true,
+  "prefilled_subject": true,
+  "uses_editable_recipient": true,
+  "uses_bd_collection": true,
+  "english_only": true,
+  "note": "This is mailto draft send flow; user manually sends from email client. No backend SMTP/API credentials used."
+}
