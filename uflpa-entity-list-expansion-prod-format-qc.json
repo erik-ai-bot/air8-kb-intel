@@ -1,0 +1,48 @@
+{
+  "run_id": "uflpa-entity-list-expansion-prod-20260826-stable-v2",
+  "stable_reference": "s301-fl301-cp5-v2.html visual/class structure",
+  "expected_cards": 113,
+  "actual_client_cards": 113,
+  "class_contract": {
+    "hero": true,
+    "hero-meta": true,
+    "hero-title": true,
+    "kpi-row": true,
+    "facts-grid": true,
+    "cards-section": true,
+    "sec-hdr": true,
+    "cards-grid": true,
+    "client-card": true,
+    "card-header": true,
+    "why-chain": true,
+    "chain-node": true,
+    "what-section": true,
+    "what-cols": true,
+    "strategic-section": true,
+    "appendix": true,
+    "report-footer": true
+  },
+  "content_contract": {
+    "facts_vs_assumptions": true,
+    "supplier_readiness_heatmap": true,
+    "strategic_insight": true,
+    "signal_competitive_pressure": true,
+    "signal_expand_conditional": true,
+    "full_traceability_phrase": true,
+    "capacity_risk_count": true,
+    "margin_risk_count": true,
+    "unknown_to_ask_provide": true,
+    "appendix_financing_once": true,
+    "kb_gap_summary": true
+  },
+  "banned_contract": {
+    "no_beneficiary_label": true,
+    "no_hurt_label": true,
+    "english_only_no_cjk": true,
+    "no_secret_words": true
+  },
+  "sha256": "c9d3990e590585c1dd6e2e9dd744dcdc13e272103b6ddf3f3f0fd10b4bb12f41",
+  "local_html": "/Users/erikkwok/Projects/k8-validation-agent/air8-insights/uflpa-entity-list-expansion-prod-20260826-stable-v2.html",
+  "stable_html": "/Users/erikkwok/Projects/air8-kb-intel/uflpa-entity-list-expansion-prod.html",
+  "passed": true
+}
