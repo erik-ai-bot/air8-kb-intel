@@ -135,13 +135,29 @@ h1 em{font-style:normal;color:var(--ev)}
 .pz .sh{display:none;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.11em;color:#14101F;border-radius:4px;padding:1.5px 6px;white-space:nowrap}
 .pz.n2 .sh,.pz.n3 .sh{display:inline-block}
 .pz.n2 .sh{background:var(--l2);box-shadow:0 0 11px -2px var(--l2);color:#14101F}
-.pz.n2 .in{background:linear-gradient(158deg,#221E3A 0%,#181530 74%)}
+.pz.n2{background:rgba(157,143,232,.22)}
+.pz.n2 .in{background:linear-gradient(158deg,#281F48 0%,#1B1538 74%)}
 .pz.n2 .t{color:#F6EEFF}
 .pz.idle{opacity:.18}
 .pz.dimmed{opacity:.2;filter:saturate(.3) brightness(.88)}
-.pz.foc{transform:translateX(3px) scale(1.01);filter:drop-shadow(0 0 18px var(--gl))!important}
-.pz.foc .in{box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.42)}
+.pz.foc{transform:translateX(3px) scale(1.01);filter:drop-shadow(0 0 26px var(--gl))!important}
+.pz.foc .in{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.58)}
 .pz.foc .t{color:#fff}
+/* L1 amber glow override */
+.pzc.is-l1{--gl:rgba(233,168,63,.8)}
+.pzc.is-l1 .pz{background:rgba(233,168,63,.14)}
+/* L2 reuse — same data, referenced from prior step */
+.pz.foc-reuse{opacity:.45;transform:translateX(1px);filter:drop-shadow(0 0 7px rgba(157,143,232,.3))}
+.pz.foc-reuse .in{box-shadow:inset 0 0 0 1px rgba(157,143,232,.28)!important}
+/* Reuse badge */
+.reuse-badge{display:none;font-family:'IBM Plex Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(157,143,232,.58);border:1px solid rgba(157,143,232,.22);border-radius:4px;padding:2px 7px;margin-top:5px;width:fit-content}
+.pz.foc-reuse .reuse-badge{display:block}
+/* Lane color bands */
+.lane.cp{border-top:2.5px solid rgba(226,131,98,.55);padding-top:5px}
+.lane.l1{border-top:2.5px solid rgba(233,168,63,.55);padding-top:5px}
+.lane.l2{border-top:2.5px solid rgba(157,143,232,.55);padding-top:5px}
+.lane.out{border-top:2.5px solid rgba(255,143,199,.55);padding-top:5px}
 .pz.hovon .in{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.8)!important}
 .cp.hovon{box-shadow:0 0 0 1.5px rgba(255,255,255,.6) inset}
 .pz .outtxt{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(234,228,214,.65);margin-top:5px;line-height:1.55;
@@ -205,7 +221,7 @@ h1 em{font-style:normal;color:var(--ev)}
     </div>
     <div class="ebd">
       <s>Effective</s> Jul 24, 2026<br>
-      <s>Source</s> CBP.gov / Fed Register<br>
+      <s>Source</s> USTR / CBP / Fed Register<br>
       <s>Scope</s> ~60 economies<br>
       <s>Risk</s> China · Vietnam · Bangladesh
     </div>
@@ -349,6 +365,10 @@ const RAIL=[
 ];
 
 /* ============================== STATE ============================== */
+/* L2 first-use map — which CP step first queries each L2 node */
+const L2FirstStep={};
+CP.forEach(c=>c.l2.forEach(id=>{if(!(id in L2FirstStep))L2FirstStep[id]=c.id;}));
+
 let sel=null;
 
 const $=id=>document.getElementById(id);
@@ -366,11 +386,14 @@ $('cCP').innerHTML = CP.map(c=>`
 function pzHTML(m,kind){
   const pre=kind==='l1'?'p_':'k_';
   const out=m.out?`<div class="outtxt"><b>&#8594; ${kind==='l1'?'L1 OUTPUT':'L2 DATA'}:</b> ${m.out}</div>`:'';
-  return `<div class="pzc"><div class="pz ${kind==='l2'?'n2':''}" id="${pre}${m.id}" data-p="${pre}${m.id}">
+  const reuseBadge=kind==='l2'?`<div class="reuse-badge">↩ data unchanged · referenced from prior step</div>`:'';
+  const l1cls=kind==='l1'?' is-l1':'';
+  return `<div class="pzc${l1cls}"><div class="pz ${kind==='l2'?'n2':''}" id="${pre}${m.id}" data-p="${pre}${m.id}">
     <div class="in">
       <div class="t">${m.n}</div>
       <div class="d">${m.d}</div>
       ${out}
+      ${reuseBadge}
     </div>
   </div></div>`;
 }
@@ -415,7 +438,7 @@ function setSel(id){
   if(!step)return;
 
   // dim all
-  document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','act');el.classList.add('dimmed');});
+  document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','foc-reuse','act');el.classList.add('dimmed');});
 
   // light up selected cp
   $(id).classList.remove('dimmed');$(id).classList.add('sel');
@@ -424,9 +447,12 @@ function setSel(id){
   step.l1.forEach(l1=>{
     const el=$('p_'+l1);if(el)el.classList.remove('dimmed');if(el)el.classList.add('foc');
   });
-  // light up its L2s
+  // light up its L2s — first-use: full focus; reuse: muted highlight + badge
+  const firstUsed=new Set(step.l2.filter(l=>L2FirstStep[l]===id));
   step.l2.forEach(l2=>{
-    const el=$('k_'+l2);if(el)el.classList.remove('dimmed');if(el)el.classList.add('foc');
+    const el=$('k_'+l2);if(!el)return;
+    el.classList.remove('dimmed');
+    el.classList.add(firstUsed.has(l2)?'foc':'foc-reuse');
   });
 
   // light output column
@@ -443,7 +469,8 @@ function setSel(id){
   }
 
   const l1n=step.l1.length,l2n=step.l2.length;
-  $('note').innerHTML=`Step <b>${step.k}</b> activates <b style="color:var(--l1)">${l1n} L1 module${l1n>1?'s':''}</b> and <b style="color:var(--l2)">${l2n} L2 node${l2n>1?'s':''}</b> — all other modules dim to keep context readable`;
+  const l2Reuse=l2n-firstUsed.size;
+  $('note').innerHTML=`Step <b>${step.k}</b> activates <b style="color:var(--l1)">${l1n} L1 module${l1n>1?'s':''}</b> · <b style="color:var(--l2)">${firstUsed.size} new L2 quer${firstUsed.size===1?'y':'ies'}</b>${l2Reuse>0?` · <span style="opacity:.55">${l2Reuse} ref'd from prior step${l2Reuse>1?'s':''} (data unchanged)</span>`:''} — all other modules dim`;
 }
 
 document.querySelectorAll('.cp').forEach(el=>{
@@ -452,14 +479,14 @@ document.querySelectorAll('.cp').forEach(el=>{
 
 document.querySelectorAll('[data-a]').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    if(btn.dataset.a==='reset'){sel=null;document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','act');});$('note').textContent='';}
+    if(btn.dataset.a==='reset'){sel=null;document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','foc-reuse','act');});$('note').textContent='';}
   });
 });
 
 document.addEventListener('click',e=>{
   if(!e.target.closest('.cp')&&!e.target.closest('.pz')&&sel){
     sel=null;
-    document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','act');});
+    document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','foc-reuse','act');});
     $('note').textContent='';
   }
 });
