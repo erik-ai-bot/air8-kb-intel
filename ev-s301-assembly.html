@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Air8 KB · Event Validation · S301 FL301 · Modular Assembly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E131C; --paper:#EAE4D6; --muted:#8792A8; --hair:rgba(234,228,214,.13);
+  --ev:#FF5C5C; --f1:#E9A83F; --f2:#47B598; --f3:#6FA8FF;
+  --s2:#B49BFF; --s3:#FF8FC7;
+  --vi:#9D8FE8; --ok:#6FBF73; --co:#E28362;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow-x:auto}
+*{scrollbar-width:thin;scrollbar-color:rgba(233,168,63,.6) rgba(255,255,255,.05)}
+::-webkit-scrollbar{width:14px;height:14px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(233,168,63,.8),rgba(180,155,255,.75));border-radius:10px;border:3px solid #0E131C;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#E9A83F,#B49BFF);border:2px solid #0E131C;background-clip:padding-box}
+::-webkit-scrollbar-corner{background:transparent}
+#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.34;mix-blend-mode:overlay}
+.aur{position:fixed;inset:-12%;z-index:0;pointer-events:none;
+  background:radial-gradient(24% 28% at 10% 14%,rgba(255,92,92,.13),transparent 70%),
+             radial-gradient(24% 28% at 52% 8%,rgba(233,168,63,.12),transparent 72%),
+             radial-gradient(24% 28% at 90% 22%,rgba(157,143,232,.12),transparent 72%),
+             radial-gradient(30% 32% at 56% 94%,rgba(180,155,255,.10),transparent 74%);
+  filter:blur(46px)}
+@keyframes aur{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(-2%,1.4%,0) scale(1.05)}}
+@media(prefers-reduced-motion:no-preference){.aur{animation:aur 28s ease-in-out infinite alternate}}
+.wrap{position:relative;z-index:2;max-width:1800px;min-width:1520px;margin:0 auto;padding:16px 24px 26px}
+
+/* ---------- head ---------- */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--ev);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ev);box-shadow:0 0 10px var(--ev)}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,2.2vw,32px);line-height:1.06;letter-spacing:-.015em;margin-top:4px}
+h1 em{font-style:normal;color:var(--ev)}
+.sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.sub b{color:var(--paper);font-weight:500}
+.headrow{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.stats{display:flex;gap:6px;flex-wrap:wrap}
+.stat{border:1px solid var(--hair);border-radius:11px;padding:6px 10px;background:rgba(255,255,255,.028);min-width:78px}
+.stat i{display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.stat b{display:block;font-family:'Fraunces',serif;font-weight:600;font-size:20px;line-height:1.1;margin-top:1px}
+.stat s{display:block;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:var(--muted)}
+.stat.ev{border-color:rgba(255,92,92,.5);background:rgba(255,92,92,.07)}
+.stat.ev b{color:var(--ev)}
+.stat.gap{border-color:rgba(233,168,63,.5);background:rgba(233,168,63,.07)}
+.stat.gap b{color:var(--f1)}
+
+/* ---------- controls ---------- */
+.ctl{display:flex;gap:5px;align-items:center;margin-top:9px;flex-wrap:wrap}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--hair);border-radius:15px;padding:6.5px 13px;cursor:pointer;background:transparent;transition:all .2s;white-space:nowrap}
+.btn:hover{border-color:var(--paper);color:var(--paper)}
+.btn.on{border-color:var(--f1);color:#1A1812;background:var(--f1)}
+.sep{width:1px;height:17px;background:var(--hair);margin:0 4px}
+.lgd{display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:6px}
+.lgd i{width:8px;height:8px;border-radius:2.5px;display:inline-block;margin:0 4px 0 8px}
+.hint{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--muted);margin-left:auto;text-transform:uppercase;max-width:48%;text-align:right;line-height:1.55}
+.hint b{color:var(--paper);font-weight:500}
+
+/* ---------- board ---------- */
+.board{position:relative;margin-top:10px}
+#wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+#wires path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:0;transition:opacity .4s}
+#wires path.on{opacity:.9}
+#wires path.sf{opacity:.1}
+#wires path.gh{opacity:.05;stroke:#EAE4D6}
+#wires circle{opacity:0;transition:opacity .4s}
+#wires circle.on{opacity:.95}
+@keyframes fl{to{stroke-dashoffset:-24}}
+@media(prefers-reduced-motion:no-preference){#wires path.mv{stroke-dasharray:3.5 6.5;animation:fl 1.35s linear infinite}
+  #wires path.mvo{animation:fl 1.5s linear infinite}}
+
+.lanes{position:relative;z-index:2;display:grid;grid-template-columns:1.38fr 1.08fr 1.14fr .72fr;gap:48px}
+.lh{display:flex;align-items:baseline;gap:6px;padding-bottom:5px;margin-bottom:8px;border-bottom:1px solid var(--hair)}
+.lh i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.2em;color:var(--muted)}
+.lh b{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.lh s{text-decoration:none;font-size:9px;color:var(--muted);margin-left:auto;letter-spacing:.02em}
+.lane.cp .lh b{color:var(--co)}.lane.l1 .lh b{color:var(--f1)}
+.lane.l2 .lh b{color:var(--vi)}.lane.dt .lh b{color:var(--f2)}
+.col{display:flex;flex-direction:column;gap:7px}
+
+/* ---------- flow group in the CP lane ---------- */
+.fg{margin-bottom:9px;border:1px solid rgba(255,92,92,.3);border-radius:13px;overflow:hidden;transition:all .3s}
+.fg.on1{border-color:rgba(255,92,92,.55);background:rgba(255,92,92,.045)}
+.fg.off{opacity:.32}
+.fgh{display:flex;align-items:center;gap:7px;padding:8px 11px;cursor:pointer;user-select:none}
+.fgh .cv{font-family:'IBM Plex Mono',monospace;font-size:8px;width:9px;color:var(--ev)}
+.fgh .nm{font-family:'Fraunces',serif;font-weight:600;font-size:16px;line-height:1.1}
+.fgh .kk{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.fgh>span:nth-child(2){flex:1 1 auto;min-width:0}
+.fgh .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.fgh .mt{margin-left:auto;display:flex;gap:4px;flex:0 0 auto}
+.fgh .tog{flex:0 0 auto}
+.fgh .tog{display:inline-flex;align-items:center;gap:5px;margin-left:8px;border:1px solid var(--hair);border-radius:20px;
+  padding:4px 11px 4px 9px;background:rgba(255,255,255,.05);transition:all .2s;white-space:nowrap}
+.fgh .tog i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1}
+.fgh .tog b{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:rgba(234,228,214,.85)}
+.fgh:hover .tog{border-color:var(--paper);background:rgba(255,255,255,.12)}
+.fgq{padding:0 12px 9px;font-family:'IBM Plex Sans';font-size:10.5px;color:rgba(234,228,214,.6);line-height:1.5}
+.fgq b{color:var(--paper);font-weight:500}
+.fgb{padding:0 9px 9px}
+.pills{display:none;flex-wrap:wrap;gap:4px;padding:0 11px 10px}
+.pills em{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:2px}
+.pills span{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;border:1px solid var(--hair);border-radius:10px;padding:3px 7px;cursor:pointer;transition:all .2s;color:rgba(234,228,214,.72)}
+.pills span:hover{border-color:var(--paper);color:var(--paper)}
+.pills span.sel{background:var(--paper);color:#12161F;border-color:var(--paper)}
+
+/* ---------- CP card ---------- */
+.cp{position:relative;cursor:pointer;border:1px solid var(--hair);border-left-width:2.5px;border-radius:3px 10px 10px 3px;
+  padding:7px 12px 8px;background:rgba(255,255,255,.03);transition:all .25s;margin-bottom:5px}
+.cp .k{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;color:var(--muted)}
+.cp .n{font-family:'IBM Plex Sans';font-size:12.5px;font-weight:500;line-height:1.22}
+.cp .d{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);margin-top:3px;line-height:1.5;display:block}
+.cp .cnt{position:absolute;right:10px;top:8px;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.06em;color:var(--muted)}
+.cp .cnt b{font-weight:500}
+.cp.sel{box-shadow:0 0 20px -7px var(--ev);background:rgba(255,92,92,.09)}
+.cp.pin::after{content:'SCOPE';position:absolute;right:10px;bottom:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;
+  letter-spacing:.14em;color:#1A1812;background:var(--co);border-radius:4px;padding:1px 5px}
+.cp.sel .n{color:#FFE8E8}
+.cp.dimmed{opacity:.3}
+.cp.soft{opacity:.34;filter:saturate(.35)}
+.cp.outstep{border-style:dashed;background:rgba(111,191,115,.06)}
+.cp.outstep .cnt,.cp.outstep .k{color:var(--ok)}
+.cp.s-active{border-left-color:var(--ev)}
+.cp.s-active .k{color:var(--ev)}
+
+/* ---------- puzzle piece ---------- */
+.pzc{--tab:10px;--acc:rgba(234,228,214,.14);--gl:transparent}
+.pz{position:relative;padding:1.4px;background:var(--acc);transition:background .35s,filter .35s,opacity .3s,transform .26s;cursor:pointer;
+  clip-path:polygon(var(--tab) 0,calc(100% - var(--tab)) 0,calc(100% - var(--tab)) 30%,100% 39%,100% 61%,calc(100% - var(--tab)) 70%,
+    calc(100% - var(--tab)) 100%,var(--tab) 100%,var(--tab) 70%,calc(var(--tab)*2) 61%,calc(var(--tab)*2) 39%,var(--tab) 30%)}
+.pz .in{position:relative;background:linear-gradient(158deg,#1A2233 0%,#141B29 72%);padding:8px 14px 8.5px 26px;
+  clip-path:polygon(var(--tab) 0,calc(100% - var(--tab)) 0,calc(100% - var(--tab)) 30%,100% 39%,100% 61%,calc(100% - var(--tab)) 70%,
+    calc(100% - var(--tab)) 100%,var(--tab) 100%,var(--tab) 70%,calc(var(--tab)*2) 61%,calc(var(--tab)*2) 39%,var(--tab) 30%)}
+.pz .row{display:flex;align-items:center;gap:5px}
+.pz .slt{display:none;gap:3px;flex:0 0 auto}
+.pz.foc .slt{display:inline-flex}
+.pz .slt b{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;width:17px;height:17px;border-radius:5px;
+  display:inline-flex;align-items:center;justify-content:center;background:var(--paper);color:#12161F;box-shadow:0 0 10px -2px rgba(234,228,214,.6)}
+.pz .t{font-family:'IBM Plex Sans';font-size:12.5px;font-weight:500;line-height:1.22;color:rgba(234,228,214,.82);transition:color .3s;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pz .row .tags{position:static;margin-left:auto;flex:0 0 auto;max-width:none;flex-wrap:nowrap}
+.pz .more{display:block;margin-top:4px}
+.pz.open .more{display:block}
+.pz.open .t{white-space:normal;overflow:visible}
+.pz.open .row{flex-wrap:wrap}
+body.detail .pz .row{flex-wrap:wrap}
+body.detail .pz .t{white-space:normal;overflow:visible}
+body:not(.detail) .pz .more{display:none}
+body:not(.detail) .pz.open .more{display:block}
+.pz .f{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(135,146,168,.9);letter-spacing:.01em}
+.pz .d{font-family:'IBM Plex Sans';font-size:9.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.pz .dsrc{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
+.pz .dsrc span{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.03em;border:1px solid rgba(71,181,152,.45);color:#A8DCC9;border-radius:10px;padding:2px 7px}
+.pz .tags{display:flex;gap:2.5px}
+.pz .tags span{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.03em;border-radius:4px;padding:1.5px 5px;white-space:nowrap}
+.pz.idle{opacity:.2}
+.pz.soft{opacity:.24;filter:saturate(.3) brightness(.88)!important}
+.pz.near{opacity:.62;filter:saturate(.72)!important}
+.pz.foc{transform:translateX(4px) scale(1.012);z-index:3}
+.pz.foc .in{box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.42)}
+.pz.foc{filter:drop-shadow(0 0 22px var(--gl))!important}
+.pz.foc .t{color:#fff}
+.pz.hovon .in{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.8)!important}
+.cp.hovon{box-shadow:0 0 0 1.5px rgba(255,255,255,.6) inset}
+.pills span.hovon{border-color:var(--paper);color:var(--paper)}
+.pz.act .t{color:#FFF6E6}
+.pz.act{filter:drop-shadow(0 0 13px var(--gl))}
+.pz .sh{display:none;flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.11em;color:#14101F;border-radius:4px;padding:1.5px 6px;white-space:nowrap}
+.pz.sh2 .sh,.pz.sh3 .sh{display:inline-block}
+.pz.sh2 .sh{background:var(--s2);box-shadow:0 0 11px -2px var(--s2)}
+.pz.sh3 .sh{background:var(--s3);box-shadow:0 0 11px -2px var(--s3)}
+.pz.sh2 .in{background:linear-gradient(158deg,#221E3A 0%,#181530 74%)}
+.pz.sh3 .in{background:linear-gradient(158deg,#33203A 0%,#26162C 74%)}
+.pz.sh2 .t,.pz.sh3 .t{color:#F6EEFF}
+.pz.pop{animation:pop .5s cubic-bezier(.2,1.45,.35,1)}
+@keyframes pop{0%{transform:translateX(-8px) scale(.975);opacity:.5}62%{transform:translateX(2px) scale(1.012)}100%{transform:none}}
+
+/* ---------- data chips ---------- */
+.dgl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin:0 0 4px}
+.dgl:not(:first-child){margin-top:8px}
+.dc{border:1px solid var(--hair);border-radius:9px;padding:6px 10px;background:rgba(255,255,255,.026);
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;transition:all .3s;margin-bottom:5px;line-height:1.35;color:rgba(234,228,214,.78)}
+.dc.idle{opacity:.19}
+.dc.act{border-color:rgba(71,181,152,.5);color:#EAF6F1;background:rgba(71,181,152,.07)}
+.dc.hot{border-color:var(--f2);color:#fff;background:rgba(71,181,152,.2);box-shadow:0 0 16px -6px #47B598}
+
+/* ---------- side cards ---------- */
+.notes{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.notes .side{margin-top:0}
+.side{margin-top:10px;border:1px solid var(--hair);border-radius:12px;padding:11px 13px 12px;background:rgba(18,24,37,.93)}
+.side .sh2{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.side .sd{font-family:'IBM Plex Sans';font-size:10px;line-height:1.6;color:rgba(234,228,214,.64)}
+.side .sd b{color:var(--paper);font-weight:500}
+.side.wy{border-color:rgba(157,143,232,.34);background:linear-gradient(160deg,rgba(35,30,60,.95),rgba(20,24,40,.95))}.side.wy .sh2{color:var(--vi)}
+.side.ex{border-color:rgba(111,191,115,.34);background:linear-gradient(160deg,rgba(23,42,30,.95),rgba(17,26,24,.95))}.side.ex .sh2{color:var(--ok)}
+.side .tri{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.side .tri span{font-family:'IBM Plex Mono',monospace;font-size:8.5px;border:1px solid rgba(111,191,115,.38);color:#CBEBCD;border-radius:12px;padding:2px 7px}
+
+/* ---------- output rail ---------- */
+.rail{position:relative;z-index:2;margin-top:11px;border:1px solid var(--hair);border-radius:14px;padding:9px 13px 10px;
+  background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.rail .rh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rail .rh b{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--co)}
+.rail .rh s{text-decoration:none;font-size:8px;color:var(--muted)}
+.rail .rh .ret{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.11em;color:var(--ok)}
+.rr{display:grid;grid-template-columns:268px 1fr auto;gap:11px;align-items:center;padding:5px 0;border-top:1px dashed rgba(234,228,214,.08)}
+.rr:first-of-type{border-top:none}
+.rr.idle{display:none}
+.rr .sn{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap}
+.rr .ot{font-family:'Fraunces',serif;font-weight:600;font-size:14px;line-height:1.2}
+.rr .pp{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.rr .pp span{font-family:'IBM Plex Mono',monospace;font-size:8.5px;border:1px solid var(--hair);border-radius:16px;padding:2.5px 8px;white-space:nowrap}
+.rr .pp span.per{border-color:rgba(226,131,98,.45);color:#F5CDBC}
+.rr .pp span.por{border-color:rgba(111,191,115,.45);color:#C7E8C9}
+.rr .pp i{font-style:normal;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:8px}
+.pz .dsrc span{transition:opacity .18s}
+.pz .dsrc span.nx{opacity:.2;border-color:rgba(135,146,168,.3);color:var(--muted)}
+.pz .dsrc span.nx::after{content:' · not at this stage';font-size:7px;opacity:.8}
+.note{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--muted);margin-top:8px;text-align:center}
+.note b{color:var(--paper);font-weight:500}
+
+/* ---------- combo rail cards ---------- */
+.combo-rail{display:none;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+.combo-rail.show{display:grid}
+.crd{border:1px solid var(--hair);border-radius:11px;padding:10px 12px}
+.crd.red{border-color:rgba(255,92,92,.4);background:linear-gradient(160deg,rgba(50,15,15,.5),rgba(25,10,10,.4))}
+.crd.green{border-color:rgba(111,191,115,.35);background:linear-gradient(160deg,rgba(20,40,25,.5),rgba(12,25,15,.4))}
+.crd.warn{border-color:rgba(157,143,232,.35);background:linear-gradient(160deg,rgba(30,25,60,.5),rgba(20,18,40,.4))}
+.crd .ch{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.crd.red .ch{color:var(--ev)}.crd.green .ch{color:var(--ok)}.crd.warn .ch{color:var(--vi)}
+.crd .ct{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);margin-bottom:6px}
+.crd .cs{font-family:'IBM Plex Mono',monospace;font-size:8.5px;border-radius:10px;padding:2.5px 8px;display:inline-block}
+.crd .cs.red{background:rgba(255,92,92,.12);color:#FF8080;border:1px solid rgba(255,92,92,.35)}
+.crd .cs.green{background:rgba(111,191,115,.10);color:#7FD4A0;border:1px solid rgba(111,191,115,.3)}
+.crd .cs.warn{background:rgba(157,143,232,.12);color:#B8AAEC;border:1px solid rgba(157,143,232,.35)}
+</style>
+</head>
+<body>
+<div class="aur"></div>
+<svg id="grain"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gr)" opacity=".2"/></svg>
+
+<div class="wrap">
+  <div class="headrow">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>AIR8 · KNOWLEDGE BASE · EVENT VALIDATION · FL301 SIMULATION</div>
+      <h1>S301 forced-labor tariff · <em>modular assembly</em></h1>
+      <div class="sub">CP STEPS → → L1 PROCESS MODULES → <b>L2 KNOWLEDGE NODES</b> → DATA → INSIGHT · S301 RUN-2026-001</div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="ctl">
+    <button class="btn on" data-a="detail">Detail on</button>
+    <button class="btn" data-a="collapse">Collapse all steps</button>
+    <button class="btn" data-a="play">▶ Assemble</button>
+    <span class="lgd"><i style="background:var(--f1)"></i>L1<i style="background:var(--vi)"></i>L2<i style="background:var(--f2)"></i>DATA</span>
+    <span class="hint" id="hint">Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module to light its whole linkage — everything else stays readable</span>
+  </div>
+
+  <div class="board" id="board">
+    <svg id="wires"></svg>
+    <div class="lanes">
+      <div class="lane cp"><div class="lh"><i>01</i><b>CP Steps</b><s>CP0 → CP5 event validation</s></div><div id="cCP"></div></div>
+      <div class="lane l1"><div class="lh"><i>02</i><b>L1 · process modules</b><s>how we decide</s></div><div class="col" id="cL1"></div></div>
+      <div class="lane l2"><div class="lh"><i>03</i><b>L2 · knowledge nodes</b><s>what we know</s></div><div class="col" id="cL2"></div></div>
+      <div class="lane dt"><div class="lh"><i>04</i><b>Data</b><s>click an L2 node</s></div><div class="col" id="cDT"></div></div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="side wy"><div class="sh2">Why L1 is the asset · not a node on the map</div>
+      <div class="sd"><b>L1</b> is the reasoning — mapping rules, scoring method, gate order, evidence discipline, how severe an adverse hit is. Written once, walked by every flow.<br>
+      <b>L2</b> is the tables — weights, bands, thresholds, lookup and matrix rules. Change one and every flow picks it up on its next run.</div></div>
+    <div class="side ex"><div class="sh2">The base keeps evolving · not a node on the map</div>
+      <div class="tri"><span>10 KB-GAPs found</span><span>4 HIGH → Expert Review</span><span>6 MEDIUM → KB Expand</span></div>
+      <div class="sd">AI drafts the update → expert approves on Telegram → written back into <b>L1</b> / <b>L2</b>. Nothing enters the base unreviewed.</div></div>
+  </div>
+
+  <div class="rail">
+    <div class="rh"><b>05 · Output → COMBO Groups → Client Action</b><s>47 US-market clients · RUN-2026-S301-001 · Aug 27 2026</s>
+      <span class="ret">↺ Every UNKNOWN drives a BD action — Rule F</span></div>
+    <div id="cRail"></div>
+    <div class="combo-rail show">
+      <div class="crd red">
+        <div class="ch">COMBO-CN-FOB-woven-US</div>
+        <div class="ct">38 clients · FOB CN → US</div>
+        <span class="cs red">🔴 COMPETITIVE PRESSURE RISK</span>
+      </div>
+      <div class="crd green">
+        <div class="ch">COMBO-BD-FOB-woven-US</div>
+        <div class="ct">8 clients · FOB BD → US</div>
+        <span class="cs green">🟢 EXPAND CANDIDATE (conditional)</span>
+      </div>
+      <div class="crd warn">
+        <div class="ch">COMBO-VN-FOB-woven-US</div>
+        <div class="ct">1 client · FOB VN → US</div>
+        <span class="cs warn">⚠️ CHECK</span>
+      </div>
+    </div>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+
+<script>
+/* ============================== FLOWS ============================== */
+const FLOW=[
+ {id:'ev1',n:1,cv:'#FF5C5C',k:'EVENT VALIDATION',t:'S301 / FL301 Run',s:'CP0–CP5 · Aug 27 2026',
+  q:'A live tariff event lands — <b>which clients are hit, how hard, and what does BD do next?</b>',
+  per:'BD team',por:['Telegram','Notion'],out:'3 COMBO groups · 47 clients · 10 KB-GAPs · Action tally'}
+];
+
+/* ============================== CP STEPS ============================== */
+const CP=[
+ {f:'ev1',id:'cp0',k:'CP0',  n:'Event Enrichment',    d:'Web-first · pre-KB signal collection',l1:['enrich','evid'],l2:['evttypes']},
+ {f:'ev1',id:'cp1',k:'CP1',  n:'Event Parse',         d:'Pure field extraction · no external source',l1:['parse'],l2:[]},
+ {f:'ev1',id:'cp2',k:'CP2',  n:'Family Activation',   d:'KB coverage check · EVT-TARIFF + EVT-REGULATION',l1:['famact','evid'],l2:['evttypes','evclusters','prins']},
+ {f:'ev1',id:'cp3',k:'CP3',  n:'Entity Fetch Plan',   d:'COMBO × principles ranked queue',l1:['efplan','evid'],l2:['prins','tariffdb','countrydb','combos']},
+ {f:'ev1',id:'cp35',k:'CP3.5',n:'Client Mapping',     d:'CLIENT-DB × COMBO filter · 320 clients',l1:['dimfilt'],l2:['clientdb','combos']},
+ {f:'ev1',id:'cp4',k:'CP4',  n:'Data Extract',        d:'8-step source sequence · proxy COMBO cards',l1:['extract','evid'],l2:['tariffdb','countrydb','combos','clientdb','commoditydb']},
+ {f:'ev1',id:'cp5',k:'CP5',  n:'Insight Assembly',    d:'Expert Rules A–F · SOLUTIONS.md · WHY chains',l1:['assemble'],l2:['solutions','reasoning']}
+];
+
+/* ============================== L1 ============================== */
+const L1M=[
+ {id:'enrich', t:'Event Enrichment',    n:'L1-EVT-ENRICH',     d:'Web-first signal collection + policy framing check. Builds enrichment block. Raises KB expansion flags for gaps found mid-run. Rule: always run before KB lookup.'},
+ {id:'parse',  t:'Event Parse',         n:'L1-EVT-PARSE',      d:'Pure text extraction from enrichment block. No external source. Extracts: supplier_country, buyer_geo, product_category, material, supplier_tier, company_type, event_mechanism. Rule: no inference at this stage.'},
+ {id:'famact', t:'Family Activation',   n:'L1-FAMILY-ACT',     d:'Maps event to KB event type + cluster. Fires rule packages (RP-EVT-*) per activated family. Loads principle weights from PRIN-COUNTRY-EXPOSURE, PRIN-PRODUCT-TARIFF, PRIN-COMPLIANCE-COST, PRIN-SUPPLIER-RESILIENCE.'},
+ {id:'efplan', t:'Entity Fetch Plan',   n:'L1-ENTITY-FETCH',   d:'Ranks the entity fetch queue by principle weight. COMBO persona files get HIGHer priority than raw data nodes when a buyer or supplier is involved. Proxies flagged explicitly — not hidden.'},
+ {id:'dimfilt',t:'Client DIM Filter',   n:'L1-CLIENT-DIM',     d:'CLIENT-DB (320 suppliers). Filters: DIM-1 (country), DIM-4 (product), DIM-5 (buyer market). Strict overlap ≥3 dims. Revenue bands from DIM-2. Rule: DIM-strict, no soft matching.'},
+ {id:'extract',t:'Data Extract',        n:'L1-DATA-EXTRACT',   d:'8-step source sequence: Client DB → Tariff DB → Country DB → Commodity DB → Web Search → KB Combo → KB Country → R1 queue. Stale indicators trigger live fetch. Proxy cards shown for MISS COMBOs.'},
+ {id:'evid',   t:'Evidence Discipline', n:'L1-EVIDENCE',       d:'Source attribution on every claim. ✅ confirmed · ⚠️ stale · ❌ miss/proxy · ⏳ pending BD call. Severity of adverse hits scored per severity table. Rule: no label without a source.'},
+ {id:'assemble',t:'Insight Assembly',   n:'L1-INSIGHT',        d:'Expert Rules A–F applied. Builds WHY chains (Capacity Risk + Margin Risk required per Rule D). UFLPA = independent gate. Signal flip conditions explicit. SOLUTIONS.md cross-check. Financing products in Appendix only.'}
+];
+
+/* ============================== L2 ============================== */
+const L2M=[
+ {id:'evttypes',   t:'EVENT-TYPES.md',         n:'NODE-evt-types',         d:'Tariff, regulation, ESG, demand-shift event taxonomy. FL301 subtype MISSING — KB-GAP raised. Source of rule packages (RP-EVT-*).',                               dt:['web','news'],sys:'card'},
+ {id:'evclusters', t:'EVENT-CLUSTERS.md',      n:'NODE-evt-clusters',      d:'US-DECOUPLING, EU-STRATEGIC, ESG-CIRCULAR. CLUSTER-US-DECOUPLING hit for S301 — CN tariff pressure + VN/BD diversification trend.',                         dt:['web','news']},
+ {id:'prins',      t:'PRINCIPLES.md',          n:'NODE-principles',        d:'PRIN-COUNTRY-EXPOSURE (wt 0.35) · PRIN-PRODUCT-TARIFF (0.30) · PRIN-COMPLIANCE-COST (0.20) · PRIN-SUPPLIER-RESILIENCE (0.20). Fired by family activation.',  dt:['web'],sys:'card'},
+ {id:'tariffdb',   t:'TARIFF-DB',              n:'NODE-tariff-db',         d:'MFN base rates + FL301 two-tier: CN/VN 12.5%, BD 10%, IN 10%. Aug 4 2026. Buyer landed cost delta: $24–$43 per $100 FOB CN vs BD/VN on HS 61–62 woven.',  dt:['web','trade']},
+ {id:'countrydb',  t:'COUNTRY-DB',             n:'NODE-country-db',        d:'CN — US-bound exports declining, S301+FL301 stacking confirmed. BD — record $8.2B (+11.7% YoY FY2026), near-peak capacity. VN — 100% buyer penetration signal.', dt:['web'],sys:'card'},
+ {id:'combos',     t:'KB COMBO Files',         n:'NODE-combo-personas',    d:'COMBO-CN-FOB-woven-US MISSING → KB-GAP (HIGH). COMBO-BD-FOB-woven-US MISSING → KB-GAP (HIGH). COMBO-VN-FOB-woven-US MISSING → KB-GAP (HIGH). Proxy pain point cards shown in lieu.', dt:['web']},
+ {id:'clientdb',   t:'CLIENT-DB (320 clients)',n:'NODE-client-db',         d:'320 suppliers across DIM-1 (country) · DIM-2 (revenue) · DIM-3 (certifications) · DIM-4 (product) · DIM-5 (buyer market). S301 match: 47 clients — 38 CN + 8 BD + 1 VN (DIM-strict, DIM-2 unknown for 36).', dt:[]},
+ {id:'commoditydb',t:'COMMODITY-DB',           n:'NODE-commodity-db',      d:'ICE Cotton No.2 — stale trigger at >85¢/lb. Aug 2026: 82.1 USc/lb (below threshold, confirmed fresh). Relevant to PP-CASH-GAP for CN woven suppliers pre-purchasing fabric.', dt:['web','trade']},
+ {id:'solutions',  t:'SOLUTIONS.md',           n:'NODE-solutions-map',     d:'EVT-TARIFF × CN-FOB-woven × PP-CASH-GAP → PROD-SOURCING-DIVERSIFICATION ✅ VALIDATED. EVT-TARIFF × BD-FOB-woven × PP-CAPACITY → PROD-SOURCING-DIVERSIFICATION ✅ VALIDATED. NOT PROD-TRADE-FINANCE — primary signal is sourcing, not working capital.', dt:['web']},
+ {id:'reasoning',  t:'REASONING-FLOW.md',      n:'NODE-reasoning-flow',    d:'WHY chain structure: (1) What happened, (2) Why it hits them, (3) Capacity Risk + Margin Risk required per Rule D, (4) Signal flip conditions, (5) UFLPA = independent gate per Rule C, (6) Every UNKNOWN → BD action per Rule F.', dt:[]}
+];
+
+/* ============================== GOV ============================== */
+const GOV={
+ enrich:['evttypes'],
+ evid:['tariffdb','countrydb','combos','clientdb','commoditydb'],
+ famact:['evttypes','evclusters','prins'],
+ efplan:['prins','tariffdb','countrydb','combos'],
+ dimfilt:['clientdb','combos'],
+ extract:['tariffdb','countrydb','combos','clientdb','commoditydb'],
+ assemble:['solutions','reasoning']
+};
+
+/* ============================== DATA ============================== */
+const DT=[
+ {id:'clientdb',k:'i',n:'CLIENT-DB (320)'},
+ {id:'tariffdb',k:'i',n:'TARIFF-DB'},
+ {id:'countrydb',k:'i',n:'COUNTRY-DB'},
+ {id:'commoditydb',k:'i',n:'COMMODITY-DB'},
+ {id:'combokb',k:'i',n:'KB COMBO files'},
+ {id:'solutions',k:'i',n:'SOLUTIONS.md'},
+ {id:'reasoning',k:'i',n:'REASONING-FLOW.md'},
+ {id:'web',k:'e',n:'Web search'},
+ {id:'news',k:'e',n:'News & signals'},
+ {id:'trade',k:'e',n:'Market trade data'}
+];
+
+const CVF={ev1:'#FF5C5C'}, S2='#B49BFF', S3='#FF8FC7';
+const $=id=>document.getElementById(id);
+
+/* ============================== derived ============================== */
+const uses={l1:{},l2:{}}, cpOf={};
+L1M.forEach(m=>{uses.l1[m.id]=new Set();cpOf['p_'+m.id]=[];});
+L2M.forEach(m=>{uses.l2[m.id]=new Set();cpOf['k_'+m.id]=[];});
+CP.forEach(c=>{
+  c.l1.forEach(x=>{if(uses.l1[x]){uses.l1[x].add(c.f);cpOf['p_'+x].push(c);}});
+  c.l2.forEach(x=>{if(uses.l2[x]){uses.l2[x].add(c.f);cpOf['k_'+x].push(c);}});
+});
+const E12=[], EDIR=[];
+CP.forEach(c=>{
+  const covered=new Set();
+  c.l1.forEach(a=>{
+    (GOV[a]||[]).forEach(b=>{
+      if(c.l2.includes(b)&&!E12.some(e=>e.f===c.f&&e.a===a&&e.b===b))E12.push({f:c.f,a:a,b:b});
+    });
+  });
+  c.l2.forEach(b=>{if(!covered.has(b))EDIR.push({f:c.f,cp:c.id,b:b});});
+});
+
+/* ============================== state ============================== */
+let ON=new Set(['ev1']), detail=true, selCP=null, selMod=null, hovCP=null, hovMod=null, openPz=null, playing=false, pt=[];
+let collapsed=new Set();
+
+/* ============================== build ============================== */
+$('cCP').innerHTML=FLOW.map(f=>{
+  const mine=CP.filter(c=>c.f===f.id);
+  const l1n=[...new Set(mine.flatMap(c=>c.l1))].length, l2n=[...new Set(mine.flatMap(c=>c.l2))].length;
+  return `<div class="fg on1" id="fg_${f.id}" data-f="${f.id}">
+   <div class="fgh" data-h="${f.id}">
+     <span class="cv">●</span>
+     <span><span class="kk">${f.k}</span><br><span class="nm">${f.t}</span></span>
+     <span class="mt"><span>${mine.length} CP</span><span>${l1n} L1</span><span>${l2n} L2</span></span>
+     <span class="tog" id="tg_${f.id}"><i>▾</i><b>Hide steps</b></span>
+   </div>
+   <div class="fgq">${f.q}</div>
+   <div class="pills"><em>Steps · click one</em>${mine.map(c=>`<span data-c="${c.id}">${c.k}</span>`).join('')}</div>
+   <div class="fgb">${mine.map(c=>`<div class="cp ${c.out?'outstep':''}" id="${c.id}" data-c="${c.id}" style="--ac:${f.cv};border-left-color:${c.out?'#6FBF73':f.cv}">
+      <div class="cnt">${c.out?'<b>OUTPUT</b>':`L1 <b>${c.l1.length}</b> · L2 <b>${c.l2.length}</b>`}</div>
+      <div class="k">${c.k}</div><div class="n">${c.n}</div><div class="d">${c.d}</div></div>`).join('')}</div>
+ </div>`;}).join('');
+
+function pzHTML(m,kind){
+  const pre=kind==='l1'?'p_':'k_';
+  const src=kind==='l2'&&m.dt.length?`<div class="dsrc">${m.dt.map(d=>`<span>${(DT.find(x=>x.id===d)||{n:d}).n}</span>`).join('')}</div>`:'';
+  return `<div class="pzc"><div class="pz" id="${pre}${m.id}" data-p="${pre}${m.id}"><div class="in">
+    <div class="row"><span class="slt" id="sl${pre}${m.id}"></span><div class="t">${m.t}${m.sys==='card'?' <u style="text-decoration:none;font-family:IBM Plex Mono;font-size:6px;letter-spacing:.12em;border:1px solid rgba(71,181,152,.45);background:rgba(71,181,152,.18);color:#8FD8C2;border-radius:3px;padding:1px 3px;margin-left:4px">KB NODE</u>':''}
+    </div><div class="sh"></div><div class="tags" id="tg${pre}${m.id}"></div></div>
+    <div class="more"><div class="f">${m.n}</div><div class="d">${m.d}</div>${src}</div>
+    </div></div></div>`;
+}
+$('cL1').innerHTML=L1M.map(m=>pzHTML(m,'l1')).join('');
+$('cL2').innerHTML=L2M.map(m=>pzHTML(m,'l2')).join('');
+$('cDT').innerHTML=['i','e'].map(k=>`<div class="dgl">${k==='i'?'Internal':'External'}</div>`+
+  DT.filter(d=>d.k===k).map(d=>`<div class="dc" id="d_${d.id}">${d.n}</div>`).join('')).join('');
+$('cRail').innerHTML=FLOW.map(f=>`<div class="rr" id="r_${f.id}">
+   <div class="sn" style="color:${f.cv}">${f.k} · ${f.t}</div>
+   <div class="ot">${f.out}</div>
+   <div class="pp"><span class="per">${f.per}</span><i>→</i>${f.por.map(p=>`<span class="por">${p}</span>`).join('')}</div></div>`).join('');
+
+(function(){
+  $('stats').innerHTML=`
+   <div class="stat"><i>CP Steps</i><b>${CP.length}</b><s>CP0 → CP5</s></div>
+   <div class="stat"><i>L1 modules</i><b>${L1M.length}</b><s>process reasoning</s></div>
+   <div class="stat"><i>L2 nodes</i><b>${L2M.length}</b><s>KB files + tables</s></div>
+   <div class="stat ev"><i>Clients hit</i><b>47</b><s>38 CN · 8 BD · 1 VN</s></div>
+   <div class="stat gap"><i>KB-GAPs</i><b>10</b><s>4 HIGH · 6 MEDIUM</s></div>`;
+  $('note').innerHTML=`${L1M.length} L1 process modules + ${L2M.length} L2 KB nodes = one event validation run. 47 US-market clients matched via DIM-strict overlap. 3 COMBO groups surfaced — CN 🔴 PRESSURE, BD 🟢 EXPAND (conditional), VN ⚠️ CHECK. Every <b>[UNKNOWN]</b> → <b>BD action</b> (Rule F). UFLPA = independent gate (Rule C). Financing in Appendix only (Rule D).`;
+})();
+
+/* ============================== paint ============================== */
+function focusSets(){
+  const F={on:false,cp:new Set(),l1:new Set(),l2:new Set(),n1:new Set(),n2:new Set(),scoped:false,out:false};
+  const MOD=hovMod||selMod, STEP=hovCP||selCP;
+  F.scoped=!!STEP;
+  if(MOD){
+    const kind=MOD.slice(0,2)==='p_'?'l1':'l2', id=MOD.slice(2);
+    const using=CP.filter(c=>ON.has(c.f)&&(kind==='l1'?c.l1:c.l2).includes(id));
+    if(using.length){
+      F.on=true;
+      if(kind==='l1'){
+        F.l1.add(id);
+        using.forEach(c=>{(GOV[id]||[]).forEach(b=>{if(c.l2.includes(b))F.l2.add(b);});});
+      }else{
+        F.l2.add(id);
+        using.forEach(c=>{c.l1.forEach(a=>{if((GOV[a]||[]).includes(id))F.l1.add(a);});});
+      }
+    }else if(STEP){
+      F.out=true;
+      const c=CP.find(x=>x.id===STEP);
+      if(c&&ON.has(c.f)){F.on=true;F.cp.add(c.id);c.l1.forEach(x=>F.l1.add(x));c.l2.forEach(x=>F.l2.add(x));}
+    }
+  }else if(STEP){
+    const c=CP.find(x=>x.id===STEP);
+    if(c&&ON.has(c.f)){F.on=true;F.cp.add(c.id);c.l1.forEach(x=>F.l1.add(x));c.l2.forEach(x=>F.l2.add(x));}
+  }
+  if(F.on)F.cp.forEach(cid=>{
+    const c=CP.find(x=>x.id===cid); if(!c)return;
+    c.l1.forEach(x=>{if(!F.l1.has(x))F.n1.add(x);});
+    c.l2.forEach(x=>{if(!F.l2.has(x))F.n2.add(x);});
+  });
+  return F;
+}
+function modState(kind,id){
+  const set=uses[kind][id];
+  const flows=[...set].filter(f=>ON.has(f));
+  if(!flows.length)return{on:false,flows:[],n:set.size,foc:false,soft:false};
+  const F=FOC;
+  const foc=F.on&&(kind==='l1'?F.l1:F.l2).has(id);
+  const near=F.on&&!foc&&(kind==='l1'?F.n1:F.n2).has(id);
+  return{on:true,flows,n:set.size,foc:foc,near:near,soft:F.on&&!foc&&!near};
+}
+let FOC={on:false,cp:new Set(),l1:new Set(),l2:new Set()};
+let SLOT={}, PAIR={};
+const LTR=['A','B','C','D','E','F'];
+const DASH={A:'16 5',B:'7 5',C:'2.5 4',D:'12 4 2.5 4',E:'20 6',F:'4 4 10 4'};
+function buildSlots(){
+  SLOT={}; PAIR={};
+  if(!FOC.on)return;
+  const order=L1M.map(m=>m.id).filter(id=>FOC.l1.has(id));
+  order.forEach((id,i)=>SLOT[id]=LTR[i%LTR.length]);
+  FOC.l2.forEach(b=>{PAIR[b]=order.filter(a=>(GOV[a]||[]).includes(b)).map(a=>SLOT[a]);});
+}
+function paint(pop){
+  FOC=focusSets(); buildSlots();
+  if(hovCP||hovMod){
+    let head='';
+    if(hovCP){const c=CP.find(x=>x.id===hovCP);if(c)head=`<b>${c.k} ${c.n}</b>`;}
+    else{const kind=hovMod.slice(0,2)==='p_'?'l1':'l2',mid=hovMod.slice(2);
+      const m=(kind==='l1'?L1M:L2M).find(x=>x.id===mid);if(m)head=`<b>${m.t}</b>`;}
+    const nd=new Set();FOC.l2.forEach(id=>{const m=L2M.find(x=>x.id===id);if(m)m.dt.forEach(d=>nd.add(d));});
+    let sc='';
+    if(selCP){const c=CP.find(x=>x.id===selCP);if(c)sc=` <em style="font-style:normal;color:var(--co)">· scoped to ${c.k} ${c.n}</em>`;}
+    $('hint').innerHTML=FOC.out
+      ?`${head} <em style="font-style:normal;color:var(--co)">is not used in the pinned step</em>${sc}`
+      :`${head} → ${FOC.cp.size} CP · ${FOC.l1.size} L1 · ${FOC.l2.size} L2 · ${nd.size} data${sc}`;
+  }
+  document.body.classList.toggle('detail',detail);
+  FLOW.forEach(f=>{
+    const on=ON.has(f.id),g=$('fg_'+f.id);
+    g.classList.toggle('off',!on);
+    g.classList.toggle('col2',collapsed.has(f.id));
+    const tg=$('tg_'+f.id);
+    if(tg){const cl=collapsed.has(f.id),n=CP.filter(c=>c.f===f.id).length;
+      tg.querySelector('i').textContent=cl?'▸':'▾';
+      tg.querySelector('b').textContent=cl?`Show ${n} steps`:'Hide steps';}
+    $('r_'+f.id).classList.toggle('idle',!on);
+  });
+  CP.forEach(c=>{
+    const el=$(c.id);if(!el)return;
+    el.classList.toggle('sel',c.id===selCP||(FOC.on&&!!(selMod||hovMod)&&FOC.cp.has(c.id)));
+    el.classList.toggle('pin',c.id===selCP);
+    el.classList.toggle('dimmed',!ON.has(c.f));
+    el.classList.toggle('soft',ON.has(c.f)&&FOC.on&&!FOC.cp.has(c.id));
+  });
+  document.querySelectorAll('.pills span').forEach(s=>s.classList.toggle('sel',s.dataset.c===selCP));
+  const liveDT=new Set();
+  [['l1',L1M,'p_'],['l2',L2M,'k_']].forEach(([kind,arr,pre])=>{
+    arr.forEach(m=>{
+      const st=modState(kind,m.id),el=$(pre+m.id),pc=el.parentElement;
+      const acc=!st.on?'rgba(234,228,214,.14)':CVF[st.flows[0]]||CVF.ev1;
+      pc.style.setProperty('--acc',acc);
+      pc.style.setProperty('--gl',st.on?acc+'88':'transparent');
+      el.classList.toggle('act',st.on);el.classList.toggle('idle',!st.on);
+      el.classList.toggle('foc',!!st.foc);el.classList.toggle('near',!!st.near);el.classList.toggle('soft',!!st.soft);
+      el.classList.toggle('sh2',st.on&&st.n===2);el.classList.toggle('sh3',st.on&&st.n>=3);
+      const shEl=el.querySelector('.sh');if(shEl)shEl.textContent=st.n>=3?'ALL EVENTS':'×2 EVENTS';
+      el.classList.toggle('open',openPz===pre+m.id);
+      const tags=cpOf[pre+m.id].filter(c=>ON.has(c.f)&&(!selCP||c.id===selCP));
+      const uniq=[...new Set(tags.map(c=>c.f+'|'+c.k))];
+      const cap=(openPz===pre+m.id||detail)?99:4;
+      let html=uniq.slice(0,cap).map(s=>{const[f,k]=s.split('|');
+        return`<span style="background:${CVF[f]||CVF.ev1}26;color:${CVF[f]||CVF.ev1}">${k}</span>`;}).join('');
+      if(uniq.length>cap)html+=`<span style="background:rgba(234,228,214,.1);color:var(--muted)">+${uniq.length-cap}</span>`;
+      $('tg'+pre+m.id).innerHTML=html;
+      const sl=$('sl'+pre+m.id);
+      if(sl){
+        if(st.foc){
+          const ls=kind==='l1'?(SLOT[m.id]?[SLOT[m.id]]:[]):(PAIR[m.id]||[]);
+          sl.innerHTML=ls.map(x=>`<b>${x}</b>`).join('');
+        }else sl.innerHTML='';
+      }
+      if(pop&&st.on&&!hovCP&&!hovMod){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}
+      if(kind==='l2'&&st.on)m.dt.forEach(d=>liveDT.add(d));
+    });
+  });
+  const hot=new Set();
+  if(FOC.on)FOC.l2.forEach(id=>{const m=L2M.find(x=>x.id===id);if(m)m.dt.forEach(d=>hot.add(d));});
+  DT.forEach(d=>{
+    const el=$('d_'+d.id),on=liveDT.has(d.id);
+    el.classList.toggle('act',on);el.classList.toggle('idle',!on);
+    el.classList.toggle('hot',hot.has(d.id));
+  });
+  requestAnimationFrame(draw);
+}
+
+/* ============================== wires ============================== */
+const svg=$('wires'),board=$('board');
+function bx(el){const b=el.getBoundingClientRect(),r=board.getBoundingClientRect();
+  return{l:b.left-r.left,r:b.right-r.left,t:b.top-r.top,b:b.bottom-r.top,cy:b.top-r.top+b.height/2};}
+function ortho(x1,y1,x2,y2,xr){
+  const dy=y2-y1,sg=dy>=0?1:-1,r=Math.min(8,Math.abs(dy)/2,Math.abs(xr-x1),Math.abs(x2-xr));
+  if(Math.abs(dy)<1.2)return`M${x1} ${y1} H${x2}`;
+  if(r<2)return`M${x1} ${y1} H${xr} V${y2} H${x2}`;
+  return`M${x1} ${y1} H${xr-r} Q${xr} ${y1} ${xr} ${y1+sg*r} V${y2-sg*r} Q${xr} ${y2} ${xr+r} ${y2} H${x2}`;
+}
+function anchor(c){
+  if(collapsed.has(c.f)){const p=document.querySelector(`.pills span[data-c="${c.id}"]`);return p?bx(p):bx($('fg_'+c.f));}
+  const el=$(c.id);return el?bx(el):bx($('fg_'+c.f));
+}
+function draw(){
+  const r=board.getBoundingClientRect();
+  svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);
+  const L=[...document.querySelectorAll('.lane')].map(l=>bx(l));
+  const act=FLOW.filter(f=>ON.has(f.id)).map(f=>f.id);
+  const rail=(gi,fid,off)=>{const a=L[gi].r,b=L[gi+1].l,i=Math.max(0,act.indexOf(fid)),n=Math.max(1,act.length);
+    return a+(b-a)*((i+1+(off||0)*.3)/(n+1));};
+  let out='',dots='';
+  const lvl=(inFlow,isSel)=>!inFlow?'gh':(isSel?'on mv':'sf');
+  CP.forEach(c=>{
+    if(!$(c.id))return;
+    const inFlow=ON.has(c.f),cb=anchor(c);
+    c.l1.forEach(x=>{
+      const st=modState('l1',x);if(!$('p_'+x)||!st.on&&inFlow)return;
+      const isSel=!FOC.on||(FOC.cp.has(c.id)&&FOC.l1.has(x));
+      const p=bx($('p_'+x)),k=lvl(inFlow&&st.on,isSel);
+      out+=`<path class="${k}" stroke="${CVF[c.f]||CVF.ev1}" d="${ortho(cb.r,cb.cy,p.l+9,p.cy,rail(0,c.f))}"/>`;
+      if(k==='on mv')dots+=`<circle class="on" cx="${p.l+9}" cy="${p.cy}" r="2.6" fill="${CVF[c.f]||CVF.ev1}"/>`;
+    });
+  });
+  E12.forEach(e=>{
+    if(!$('p_'+e.a)||!$('k_'+e.b))return;
+    const sa=modState('l1',e.a),sb=modState('l2',e.b);
+    const inFlow=ON.has(e.f)&&sa.on&&sb.on;
+    const isSel=!FOC.on||(FOC.l1.has(e.a)&&FOC.l2.has(e.b));
+    const p=bx($('p_'+e.a)),q=bx($('k_'+e.b));
+    const sig=FOC.on&&isSel?SLOT[e.a]:null;
+    if(sig){
+      const off=(LTR.indexOf(sig)-1.5)*7;
+      out+=`<path class="on mvo" stroke-dasharray="${DASH[sig]}" stroke-width="1.9" stroke="${CVF[e.f]||CVF.ev1}" d="${ortho(p.r-9,p.cy,q.l+9,q.cy,rail(1,e.f)+off)}"/>`;
+      dots+=`<circle class="on" cx="${q.l+9}" cy="${q.cy}" r="3" fill="${CVF[e.f]||CVF.ev1}"/>`;
+    }else{
+      out+=`<path class="${lvl(inFlow,isSel)}" stroke="${CVF[e.f]||CVF.ev1}" d="${ortho(p.r-9,p.cy,q.l+9,q.cy,rail(1,e.f))}"/>`;
+      if(lvl(inFlow,isSel)==='on mv')dots+=`<circle class="on" cx="${q.l+9}" cy="${q.cy}" r="2.6" fill="${CVF[e.f]||CVF.ev1}"/>`;
+    }
+  });
+  EDIR.forEach(e=>{
+    const c=CP.find(x=>x.id===e.cp);if(!c||!$(e.cp)||!$('k_'+e.b))return;
+    const inFlow=ON.has(c.f)&&modState('l2',e.b).on;
+    const isSel=!FOC.on||(FOC.cp.has(c.id)&&FOC.l2.has(e.b));
+    const cb=anchor(c),q=bx($('k_'+e.b));
+    out+=`<path class="${lvl(inFlow,isSel)}" stroke="${CVF[c.f]||CVF.ev1}" stroke-dasharray="2 4" d="${ortho(cb.r,cb.cy,q.l+9,q.cy,rail(0,e.f,1))}"/>`;
+  });
+  const xm=(L[2].r+L[3].l)/2;
+  const focL2=FOC.on?[...FOC.l2].filter(id=>$('k_'+id)&&$('k_'+id).classList.contains('act')):[];
+  if(focL2.length){
+    focL2.forEach(id=>{
+      const m=L2M.find(x=>x.id===id),q=bx($('k_'+id));
+      (m.dt||[]).forEach(d=>{const c=$('d_'+d);if(!c)return;const y=bx(c);
+        out+=`<path class="on mv" stroke="#47B598" d="${ortho(q.r-9,q.cy,y.l,y.cy,xm)}"/>`;
+        dots+=`<circle class="on" cx="${y.l}" cy="${y.cy}" r="2.4" fill="#47B598"/>`;});
+    });
+  }else{
+    const lk=L2M.filter(m=>$('k_'+m.id).classList.contains('act')).map(m=>bx($('k_'+m.id)));
+    const ld=DT.filter(d=>$('d_'+d.id).classList.contains('act')).map(d=>bx($('d_'+d.id)));
+    if(lk.length&&ld.length){
+      const ys=[...lk.map(q=>q.cy),...ld.map(q=>q.cy)];
+      lk.forEach(q=>{out+=`<path class="on" stroke="rgba(71,181,152,.28)" d="M${q.r-9} ${q.cy} H${xm}"/>`;});
+      out+=`<path class="on mv" stroke="#47B598" d="M${xm} ${Math.min(...ys)} V${Math.max(...ys)}"/>`;
+      ld.forEach(q=>{out+=`<path class="on" stroke="rgba(71,181,152,.28)" d="M${xm} ${q.cy} H${q.l}"/>`;});
+    }
+  }
+  svg.innerHTML=out+dots;
+}
+
+/* ============================== interaction ============================== */
+document.querySelectorAll('.fgh').forEach(el=>el.addEventListener('click',()=>{
+  stop();const id=el.dataset.h;
+  if(collapsed.has(id))collapsed.delete(id);else collapsed.add(id);
+  paint(false);
+}));
+function pickCP(id){
+  stop();const c=CP.find(x=>x.id===id);if(!c)return;
+  selMod=null;openPz=null;
+  selCP=selCP===id?null:id;
+  $('hint').innerHTML=selCP
+    ?`<b>${c.k} ${c.n}</b> → ${c.l1.length} L1 · ${c.l2.length} L2 highlighted — click again to release`
+    :'Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module to light its whole linkage';
+  paint(true);
+}
+document.querySelectorAll('#cCP .cp').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();pickCP(el.dataset.c);}));
+document.querySelectorAll('.pills span').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();pickCP(el.dataset.c);}));
+function hoverOn(kind,id,el){
+  if(playing)return;
+  if(kind==='cp'){hovCP=id;hovMod=null;}else{hovMod=id;hovCP=null;}
+  document.querySelectorAll('.hovon').forEach(x=>x.classList.remove('hovon'));
+  if(el)el.classList.add('hovon');
+  paint(false);
+}
+function hoverOff(el){
+  if(!hovCP&&!hovMod)return;
+  hovCP=null;hovMod=null;
+  if(el)el.classList.remove('hovon');
+  paint(false);
+}
+document.querySelectorAll('.pz').forEach(el=>{
+  el.addEventListener('pointerenter',()=>hoverOn('mod',el.dataset.p,el));
+  el.addEventListener('pointerleave',()=>hoverOff(el));
+});
+document.querySelectorAll('#cCP .cp').forEach(el=>{
+  el.addEventListener('pointerenter',()=>hoverOn('cp',el.dataset.c,el));
+  el.addEventListener('pointerleave',()=>hoverOff(el));
+});
+document.querySelectorAll('.pills span').forEach(el=>{
+  el.addEventListener('pointerenter',()=>hoverOn('cp',el.dataset.c,el));
+  el.addEventListener('pointerleave',()=>hoverOff(el));
+});
+document.querySelectorAll('.pz').forEach(el=>el.addEventListener('click',e=>{
+  e.stopPropagation();stop();
+  const id=el.dataset.p;
+  if(selMod===id){selMod=null;openPz=null;}
+  else{selMod=id;openPz=id;}
+  if(selMod){
+    const kind=id.slice(0,2)==='p_'?'l1':'l2',mid=id.slice(2);
+    const m=(kind==='l1'?L1M:L2M).find(x=>x.id===mid);
+    FOC=focusSets();buildSlots();const F=FOC;
+    const steps=[...F.cp].map(cid=>{const c=CP.find(x=>x.id===cid);return c.k+' '+c.n;}).join(' · ');
+    const sc=selCP?(()=>{const c=CP.find(x=>x.id===selCP);return c?` <em style="font-style:normal;color:var(--co)">· scoped to ${c.k} ${c.n}</em>`:'';})():'';
+    $('hint').innerHTML=F.out
+      ?`<b>${m.t}</b> <em style="font-style:normal;color:var(--co)">is not used in the pinned step</em>${sc}`
+      :(kind==='l1'
+        ?`<b>${m.t}</b> — called by ${steps||'—'} · feeds <b>${F.l2.size}</b> L2 node${F.l2.size===1?'':'s'}${sc}`
+        :`<b>${m.t}</b> — consulted at ${steps||'—'} · fed by <b>${F.l1.size}</b> L1${sc}`);
+  }else{
+    $('hint').innerHTML='Click a <b>CP step</b>, an <b>L1</b> or an <b>L2</b> module — everything else stays readable';
+  }
+  paint(false);
+}));
+document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>{
+  const a=b.dataset.a;
+  if(a==='play'){playing?stop():play();return;}
+  stop();
+  if(a==='detail'){detail=!detail;b.classList.toggle('on',detail);b.textContent=detail?'Detail on':'Detail off';}
+  if(a==='collapse'){const all=collapsed.size===FLOW.length;
+    collapsed=all?new Set():new Set(FLOW.map(f=>f.id));
+    b.classList.toggle('on',!all);b.textContent=all?'Collapse all steps':'Expand all steps';}
+  paint(true);
+}));
+
+/* ============================== assemble ============================== */
+const SEQ=[];
+CP.forEach(c=>SEQ.push({sel:c.id,t:`<b>${c.k} ${c.n}</b> — ${c.l1.length} L1 · ${c.l2.length} L2`}));
+SEQ.push({sel:null,t:'<b>S301 / FL301 · Event Validation complete</b> — 47 clients, 3 COMBO groups, 10 KB-GAPs'});
+function play(){
+  playing=true;openPz=null;selMod=null;
+  const b=document.querySelector('.btn[data-a="play"]');b.textContent='■ Stop';b.classList.add('on');
+  let i=0;
+  const tick=()=>{if(!playing)return;
+    const s=SEQ[i%SEQ.length];
+    selCP=s.sel||null;
+    if(s.t)$('hint').innerHTML=s.t;
+    paint(true);i++;
+    pt.push(setTimeout(tick,s.t?2800:2000));};
+  tick();
+}
+function stop(){
+  if(!playing)return;playing=false;pt.forEach(clearTimeout);pt=[];
+  const b=document.querySelector('.btn[data-a="play"]');b.textContent='▶ Assemble';b.classList.remove('on');
+}
+
+/* ============================== fit ============================== */
+function fitPage(){
+  const w=document.querySelector('.wrap');if(w)w.style.zoom='';
+  draw();
+}
+let ft=null;
+window.addEventListener('resize',()=>{clearTimeout(ft);ft=setTimeout(fitPage,150);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout(()=>{paint(false);fitPage();},80));
+paint(false);
+setTimeout(()=>{paint(false);fitPage();},320);
+</script>
+</body>
+</html>
