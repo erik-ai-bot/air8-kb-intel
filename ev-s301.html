@@ -3,492 +3,719 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Air8 KB · Event Validation · S Section 301 Forced-Labor Tariff</title>
+<title>Air8 KB · Event Validation · S301 Simulation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0E131C; --paper:#EAE4D6; --muted:#8792A8; --hair:rgba(234,228,214,.13);
-  --ev:#FF5C5C; --f1:#E9A83F; --f2:#47B598; --f3:#6FA8FF;
-  --vi:#9D8FE8; --ok:#6FBF73; --co:#E28362;
-  --l1:#E9A83F; --l2:#9D8FE8; --dt:#47B598; --out:#FF8FC7;
+  --ink:#0E131C;--paper:#EAE4D6;--muted:#8792A8;--hair:rgba(234,228,214,.13);
+  --ev:#FF5C5C;--f1:#E9A83F;--f2:#47B598;--f3:#6FA8FF;
+  --vi:#9D8FE8;--ok:#6FBF73;--co:#E28362;--out:#FF8FC7;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-body{overflow-x:auto}
+body{max-width:860px;margin:0 auto;padding:14px 20px 60px}
 *{scrollbar-width:thin;scrollbar-color:rgba(233,168,63,.6) rgba(255,255,255,.05)}
-::-webkit-scrollbar{width:14px;height:14px}
+::-webkit-scrollbar{width:10px}
 ::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(233,168,63,.8),rgba(157,143,232,.75));border-radius:10px;border:3px solid #0E131C;background-clip:padding-box}
-::-webkit-scrollbar-corner{background:transparent}
-#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3;mix-blend-mode:overlay}
-.aur{position:fixed;inset:-12%;z-index:0;pointer-events:none;
-  background:radial-gradient(28% 32% at 8% 12%,rgba(255,92,92,.11),transparent 70%),
-             radial-gradient(28% 32% at 52% 6%,rgba(233,168,63,.10),transparent 72%),
-             radial-gradient(28% 32% at 88% 22%,rgba(157,143,232,.11),transparent 72%),
-             radial-gradient(30% 32% at 56% 94%,rgba(255,143,199,.09),transparent 74%);
-  filter:blur(46px)}
+::-webkit-scrollbar-thumb{background:rgba(233,168,63,.5);border-radius:5px}
+#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.25;mix-blend-mode:overlay}
+.aur{position:fixed;inset:-12%;z-index:0;pointer-events:none;background:radial-gradient(30% 35% at 8% 8%,rgba(255,92,92,.10),transparent 70%),radial-gradient(30% 35% at 88% 15%,rgba(157,143,232,.10),transparent 70%);filter:blur(60px)}
 
-.wrap{position:relative;z-index:2;max-width:1680px;min-width:1480px;margin:0 auto;padding:14px 22px 28px}
-
-/* ---------- head ---------- */
-.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--ev);text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ev);box-shadow:0 0 10px var(--ev);animation:pulse 2s ease-in-out infinite}
+/* Eyebrow */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--ev);text-transform:uppercase;display:flex;align-items:center;gap:8px;position:relative;z-index:1}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ev);box-shadow:0 0 10px var(--ev);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
-h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,2vw,30px);line-height:1.06;letter-spacing:-.015em;margin-top:4px}
+
+/* Hero */
+.hero{position:relative;z-index:1;border:1px solid rgba(255,92,92,.28);border-radius:16px;padding:18px 22px 20px;margin-top:10px;
+  background:linear-gradient(148deg,rgba(255,92,92,.09),rgba(233,168,63,.04));}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(18px,3vw,26px);line-height:1.1;letter-spacing:-.015em;margin-top:5px}
 h1 em{font-style:normal;color:var(--ev)}
-.sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;margin-top:4px}
-.sub b{color:var(--paper);font-weight:500}
-.headrow{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
-.stats{display:flex;gap:6px;flex-wrap:wrap}
-.stat{border:1px solid var(--hair);border-radius:11px;padding:6px 10px;background:rgba(255,255,255,.028);min-width:82px}
-.stat i{display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
-.stat b{display:block;font-family:'Fraunces',serif;font-weight:600;font-size:20px;line-height:1.1;margin-top:1px}
-.stat.ev{border-color:rgba(255,92,92,.45);background:rgba(255,92,92,.07)}
-.stat.ev b{color:var(--ev)}
-.stat.ev s{display:block;font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--ev)}
+.run-id{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:6px}
+.run-id b{color:var(--paper);font-weight:500}
 
-/* ---------- event banner ---------- */
-.evtbn{border:1px solid rgba(255,92,92,.3);border-radius:14px;padding:10px 14px;margin-top:10px;
-  background:linear-gradient(135deg,rgba(255,92,92,.07),rgba(233,168,63,.04));
-  display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
-.evtbn .etg{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--ev);
-  border:1px solid rgba(255,92,92,.4);border-radius:10px;padding:3px 9px;white-space:nowrap}
-.evtbn .etx{font-size:11.5px;line-height:1.5;color:rgba(234,228,214,.78)}
-.evtbn .etx b{color:var(--paper);font-weight:500}
-.evtbn .etx em{font-style:normal;color:var(--ev)}
-.evtbn .ebd{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:var(--muted);
-  border-left:1px solid var(--hair);padding-left:12px;text-align:right;line-height:1.7}
-.evtbn .ebd s{text-decoration:none;color:var(--ev)}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;border-radius:8px;padding:3px 9px;border:1px solid}
+.tag.ev{color:var(--ev);border-color:rgba(255,92,92,.4);background:rgba(255,92,92,.08)}
+.tag.live{color:var(--f2);border-color:rgba(71,181,152,.4);background:rgba(71,181,152,.07)}
+.tag.us{color:var(--f3);border-color:rgba(111,170,255,.35);background:rgba(111,170,255,.06)}
 
-/* ---------- controls ---------- */
-.ctl{display:flex;gap:5px;align-items:center;margin-top:9px;flex-wrap:wrap}
-.btn{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-  border:1px solid var(--hair);border-radius:15px;padding:6px 12px;cursor:pointer;background:transparent;transition:all .2s;white-space:nowrap}
+.hdevt{font-size:12px;color:rgba(234,228,214,.72);line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px solid var(--hair)}
+.hdevt b{color:var(--paper);font-weight:500}
+.hdevt em{font-style:normal;color:var(--ev)}
+.hdevt s{text-decoration:none;color:var(--ev)}
+
+/* Facts vs assumptions */
+.fva{margin-top:12px;padding:12px 15px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--hair)}
+.fva-t{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.fva-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fva-item{display:flex;flex-direction:column;gap:4px}
+.fva-label{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.15em;text-transform:uppercase}
+.fva-confirmed .fva-label{color:var(--ok)}
+.fva-inferred .fva-label{color:var(--f1)}
+.fva-items{display:flex;flex-direction:column;gap:3px}
+.fva-items li{font-size:10.5px;color:rgba(234,228,214,.75);line-height:1.4;padding-left:10px;position:relative}
+.fva-confirmed .fva-items li::before{content:'✓';position:absolute;left:0;color:var(--ok);font-size:9px}
+.fva-inferred .fva-items li::before{content:'~';position:absolute;left:0;color:var(--f1);font-size:9px}
+
+/* Readiness heatmap */
+.heat{margin-top:12px;padding:12px 15px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--hair)}
+.heat-t{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.heat-row{display:flex;gap:5px;align-items:center;margin-bottom:5px}
+.heat-label{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);width:90px;flex-shrink:0}
+.heat-bar{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;display:flex}
+.heat-fill-c{background:rgba(255,143,199,.6);height:100%}
+.heat-fill-u{background:rgba(255,92,92,.5);height:100%}
+.heat-n{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);width:90px;flex-shrink:0;text-align:right}
+.heat-legend{display:flex;gap:10px;margin-top:7px;flex-wrap:wrap}
+.heat-legend span{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px}
+.heat-legend span::before{content:'';width:8px;height:8px;border-radius:2px}
+.heat-legend .confirmed::before{background:rgba(255,143,199,.6)}
+.heat-legend .unknown::before{background:rgba(255,92,92,.5)}
+
+/* CP Nav */
+.cpn{display:flex;gap:4px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:1}
+.cp-pill{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;border:1px solid var(--hair);border-radius:20px;padding:5px 12px;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:5px}
+.cp-pill:hover{border-color:rgba(234,228,214,.3);color:var(--paper)}
+.cp-pill.active{border-color:var(--co);color:#1A1812;background:var(--co)}
+.cp-pill.s-active{border-color:var(--ev);color:var(--ev);background:rgba(255,92,92,.1)}
+.cp-pill .pnum{font-size:7px;opacity:.7}
+
+/* CP Sections */
+.cp-section{margin-top:14px;position:relative;z-index:1}
+
+.cp-card{border:1px solid var(--hair);border-radius:14px;overflow:hidden;margin-bottom:8px;transition:border-color .3s}
+.cp-card.open{border-color:rgba(226,131,98,.5)}
+.cp-hdr{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;user-select:none;flex-wrap:wrap}
+.cp-hdr .cpt{font-family:'IBM Plex Mono',monospace;font-size:8px;width:10px;color:var(--co)}
+.cp-hdr .cpn2{font-family:'Fraunces',serif;font-weight:600;font-size:15px;line-height:1.1;flex:1}
+.cp-hdr .cpd{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cp-hdr .cpds{font-family:'IBM Plex Sans';font-size:10px;color:rgba(234,228,214,.45);margin-left:auto}
+.cp-hdr .arr{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--co);transition:transform .25s;width:14px;text-align:center}
+.cp-card.open .arr{transform:rotate(90deg)}
+.cp-body{display:none;padding:0 14px 14px}
+.cp-card.open .cp-body{display:block}
+
+/* Source trace */
+.strace{margin-top:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;line-height:1.8;color:rgba(234,228,214,.55);white-space:pre-wrap;word-break:break-all}
+.strace .sok{color:var(--ok)}
+.strace .sno{color:var(--ev)}
+.strace .ssk{color:var(--f1)}
+.strace .shyp{color:var(--vi)}
+.strace .spen{color:var(--co)}
+.strace .ssrc{color:var(--f3)}
+
+/* Output blocks */
+.out-block{margin-top:10px}
+.out-label{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--hair)}
+.out-row{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-bottom:5px;align-items:start}
+.out-key{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em;padding-top:1px}
+.out-val{font-size:10.5px;color:rgba(234,228,214,.78);line-height:1.5}
+.out-val b{color:var(--paper);font-weight:500}
+.out-val em{font-style:normal;color:var(--ev)}
+.out-val .kbmiss{color:var(--ev);text-decoration:none;border-bottom:1px dashed var(--ev)}
+.out-val .kbhit{color:var(--ok)}
+.out-val .proxy{color:var(--vi)}
+.out-val .kbgap{color:var(--f1);border-bottom:1px dashed var(--f1)}
+
+/* Signal badges */
+.signal{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;font-weight:600}
+.signal.red{background:rgba(255,92,92,.12);color:#FF8080;border:1px solid rgba(255,92,92,.35)}
+.signal.green{background:rgba(111,191,115,.10);color:#7FD4A0;border:1px solid rgba(111,191,115,.3)}
+.signal.yellow{background:rgba(233,168,63,.10);color:#E9C06A;border:1px solid rgba(233,168,63,.35)}
+.signal.warn{background:rgba(157,143,232,.12);color:#B8AAEC;border:1px solid rgba(157,143,232,.35)}
+
+/* Section headers */
+.s-hdr{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--hair)}
+.s-hdr.first{margin-top:0}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:8px}
+.tbl th{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;padding:5px 8px;border-bottom:1px solid rgba(234,228,214,.15);vertical-align:top}
+.tbl td{padding:5px 8px;border-bottom:1px solid rgba(234,228,214,.07);color:rgba(234,228,214,.75);vertical-align:top;line-height:1.4}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .hi{color:var(--paper);font-weight:500}
+.tbl .lo{color:var(--muted)}
+.tbl .gap-h{color:var(--ev)}
+
+/* Combo cards */
+.combo-card{margin-top:10px;border:1px solid var(--hair);border-radius:12px;overflow:hidden}
+.combo-card.red{border-color:rgba(255,92,92,.35);background:linear-gradient(160deg,rgba(50,15,15,.6),rgba(30,10,10,.4))}
+.combo-card.green{border-color:rgba(111,191,115,.3);background:linear-gradient(160deg,rgba(20,40,25,.6),rgba(15,30,20,.4))}
+.combo-card.warn{border-color:rgba(157,143,232,.3);background:linear-gradient(160deg,rgba(30,25,60,.6),rgba(20,18,40,.4))}
+.combo-card.yellow{border-color:rgba(233,168,63,.3);background:linear-gradient(160deg,rgba(40,30,10,.6),rgba(25,20,8,.4))}
+.combo-hdr{display:flex;align-items:center;gap:7px;padding:9px 13px;flex-wrap:wrap}
+.combo-id{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--vi)}
+.combo-clients{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted)}
+.combo-body{padding:0 13px 12px}
+
+/* KB depth note */
+.kbdepth{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);margin-top:7px;opacity:.7}
+
+/* Appd */
+.appd{margin-top:20px;border:1px solid rgba(233,168,63,.25);border-radius:12px;padding:14px 16px;background:linear-gradient(160deg,rgba(233,168,63,.05),rgba(233,168,63,.02))}
+.appd-t{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--f1);margin-bottom:9px}
+.appd-item{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-bottom:7px;align-items:start}
+.appd-key{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em}
+.appd-val{font-size:10.5px;color:rgba(234,228,214,.72);line-height:1.5}
+.appd-val b{color:var(--paper);font-weight:500}
+.appd-note{font-size:9.5px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid rgba(233,168,63,.15);font-style:italic}
+
+/* Hero actions */
+.actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--hair);border-radius:12px;padding:5px 12px;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s}
 .btn:hover{border-color:var(--paper);color:var(--paper)}
 .btn.on{border-color:var(--f1);color:#1A1812;background:var(--f1)}
-.sep{width:1px;height:17px;background:var(--hair);margin:0 4px}
-.lgd{display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:6px}
-.lgd i{width:8px;height:8px;border-radius:2.5px;display:inline-block;margin:0 4px 0 8px}
-.hint{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--muted);margin-left:auto;text-transform:uppercase;max-width:46%;text-align:right;line-height:1.55}
-.hint b{color:var(--paper);font-weight:500}
-
-/* ---------- board ---------- */
-.board{position:relative;margin-top:10px}
-.lanes{position:relative;z-index:2;display:grid;grid-template-columns:1.3fr 1.05fr 1.1fr .75fr;gap:44px}
-.lh{display:flex;align-items:baseline;gap:6px;padding-bottom:5px;margin-bottom:8px;border-bottom:1px solid var(--hair)}
-.lh i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.2em;color:var(--muted)}
-.lh b{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
-.lh s{text-decoration:none;font-size:8.5px;color:var(--muted);margin-left:auto;letter-spacing:.02em}
-.lane.cp .lh b{color:var(--co)}.lane.l1 .lh b{color:var(--l1)}
-.lane.l2 .lh b{color:var(--l2)}.lane.out .lh b{color:var(--out)}
-.col{display:flex;flex-direction:column;gap:7px}
-
-/* ---------- flow group / CP step ---------- */
-.fg{margin-bottom:9px;border:1px solid var(--hair);border-radius:13px;overflow:hidden;transition:all .3s}
-.fg.off{opacity:.3}
-.fgh{display:flex;align-items:center;gap:7px;padding:8px 11px;cursor:pointer;user-select:none}
-.fgh .cv{font-family:'IBM Plex Mono',monospace;font-size:8px;width:9px}
-.fgh .nm{font-family:'Fraunces',serif;font-weight:600;font-size:16px;line-height:1.1}
-.fgh .kk{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.fgh>span:nth-child(2){flex:1 1 auto;min-width:0}
-.fgh .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.fgh .mt{margin-left:auto;display:flex;gap:4px;flex:0 0 auto}
-.fgh .tog{display:inline-flex;align-items:center;gap:5px;margin-left:8px;border:1px solid var(--hair);border-radius:20px;
-  padding:4px 11px 4px 9px;background:rgba(255,255,255,.05);transition:all .2s;white-space:nowrap}
-.fgh .tog i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1}
-.fgh .tog b{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:rgba(234,228,214,.85)}
-.fgh:hover .tog{border-color:var(--paper);background:rgba(255,255,255,.12)}
-.fgq{padding:0 12px 9px;font-family:'IBM Plex Sans';font-size:10.5px;color:rgba(234,228,214,.6);line-height:1.5}
-.fgq b{color:var(--paper);font-weight:500}
-
-/* ---------- cp card ---------- */
-.cp{position:relative;cursor:pointer;border:1px solid var(--hair);border-left-width:2.5px;border-radius:3px 10px 10px 3px;
-  padding:7px 12px 8px;background:rgba(255,255,255,.03);transition:all .25s;margin-bottom:5px}
-.cp .k{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;color:var(--muted)}
-.cp .n{font-family:'IBM Plex Sans';font-size:12px;font-weight:500;line-height:1.22}
-.cp .d{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);margin-top:3px;line-height:1.5;display:block}
-.cp .cnt{position:absolute;right:10px;top:8px;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.06em;color:var(--muted)}
-.cp .cnt b{font-weight:500}
-.cp.sel{box-shadow:0 0 20px -7px var(--co);background:rgba(255,255,255,.09);border-color:rgba(226,131,98,.7)!important}
-.cp.sel .n{color:#FFF6E6}
-.cp.dimmed{opacity:.22}
-.cp.outstep{border-style:dashed;background:rgba(111,191,115,.06)}
-.cp.outstep .k,.cp.outstep .cnt{color:var(--ok)}
-
-/* ---------- puzzle piece (L1 / L2) ---------- */
-.pzc{--tab:10px;--gl:rgba(157,143,232,.5)}
-.pz{position:relative;padding:1.4px;background:rgba(234,228,214,.1);transition:background .35s,filter .35s,opacity .28s,transform .26s;
-  cursor:pointer;margin-bottom:5px;
-  clip-path:polygon(var(--tab) 0,calc(100% - var(--tab)) 0,calc(100% - var(--tab)) 30%,100% 39%,100% 61%,
-    calc(100% - var(--tab)) 70%,calc(100% - var(--tab)) 100%,var(--tab) 100%,var(--tab) 70%,
-    calc(var(--tab)*2) 61%,calc(var(--tab)*2) 39%,var(--tab) 30%)}
-.pz .in{position:relative;background:linear-gradient(158deg,#1A2233 0%,#141B29 72%);padding:8px 14px 8.5px 26px;
-  clip-path:polygon(var(--tab) 0,calc(100% - var(--tab)) 0,calc(100% - var(--tab)) 30%,100% 39%,100% 61%,
-    calc(100% - var(--tab)) 70%,calc(100% - var(--tab)) 100%,var(--tab) 100%,var(--tab) 70%,
-    calc(var(--tab)*2) 61%,calc(var(--tab)*2) 39%,var(--tab) 30%)}
-.pz .t{font-family:'IBM Plex Sans';font-size:12px;font-weight:500;line-height:1.3;color:rgba(234,228,214,.82);transition:color .3s}
-.pz .d{font-family:'IBM Plex Sans';font-size:9.5px;color:var(--muted);margin-top:3px;line-height:1.5}
-.pz .tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:5px}
-.pz .tags span{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.03em;border-radius:4px;padding:2px 6px;white-space:nowrap}
-.pz .sh{display:none;font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.11em;color:#14101F;border-radius:4px;padding:1.5px 6px;white-space:nowrap}
-.pz.n2 .sh,.pz.n3 .sh{display:inline-block}
-.pz.n2 .sh{background:var(--l2);box-shadow:0 0 11px -2px var(--l2);color:#14101F}
-.pz.n2{background:rgba(157,143,232,.22)}
-.pz.n2 .in{background:linear-gradient(158deg,#281F48 0%,#1B1538 74%)}
-.pz.n2 .t{color:#F6EEFF}
-.pz.idle{opacity:.18}
-.pz.dimmed{opacity:.2;filter:saturate(.3) brightness(.88)}
-.pz.foc{transform:translateX(3px) scale(1.01);filter:drop-shadow(0 0 26px var(--gl))!important}
-.pz.foc .in{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.58)}
-.pz.foc .t{color:#fff}
-/* L1 amber glow override */
-.pzc.is-l1{--gl:rgba(233,168,63,.8)}
-.pzc.is-l1 .pz{background:rgba(233,168,63,.14)}
-/* L2 reuse — same data, referenced from prior step */
-.pz.foc-reuse{opacity:.45;transform:translateX(1px);filter:drop-shadow(0 0 7px rgba(157,143,232,.3))}
-.pz.foc-reuse .in{box-shadow:inset 0 0 0 1px rgba(157,143,232,.28)!important}
-/* Reuse badge */
-.reuse-badge{display:none;font-family:'IBM Plex Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(157,143,232,.58);border:1px solid rgba(157,143,232,.22);border-radius:4px;padding:2px 7px;margin-top:5px;width:fit-content}
-.pz.foc-reuse .reuse-badge{display:block}
-/* Lane color bands */
-.lane.cp{border-top:2.5px solid rgba(226,131,98,.55);padding-top:5px}
-.lane.l1{border-top:2.5px solid rgba(233,168,63,.55);padding-top:5px}
-.lane.l2{border-top:2.5px solid rgba(157,143,232,.55);padding-top:5px}
-.lane.out{border-top:2.5px solid rgba(255,143,199,.55);padding-top:5px}
-.pz.hovon .in{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.8)!important}
-.cp.hovon{box-shadow:0 0 0 1.5px rgba(255,255,255,.6) inset}
-.pz .outtxt{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(234,228,214,.65);margin-top:5px;line-height:1.55;
-  border-top:1px solid rgba(234,228,214,.1);padding-top:5px}
-.pz .outtxt b{color:var(--paper);font-weight:500}
-
-/* ---------- output column (column 4) ---------- */
-.dc{border:1px solid var(--hair);border-radius:9px;padding:7px 11px;background:rgba(255,255,255,.025);
-  font-family:'IBM Plex Mono',monospace;font-size:9.5px;line-height:1.4;color:rgba(234,228,214,.78);transition:all .3s;margin-bottom:5px}
-.dc.idle{opacity:.18}
-.dc.act{border-color:rgba(71,181,152,.5);color:#EAF6F1;background:rgba(71,181,152,.07)}
-.dc.dimmed{opacity:.2;filter:saturate(.3)}
-
-/* ---------- notes rail ---------- */
-.rail{position:relative;margin-top:11px;border:1px solid var(--hair);border-radius:14px;padding:9px 13px 10px;
-  background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
-.rail .rh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.rail .rh b{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--out)}
-.rail .rh s{text-decoration:none;font-size:8px;color:var(--muted)}
-.rail .rr{display:grid;grid-template-columns:220px 1fr;gap:11px;align-items:start;padding:5px 0;
-  border-top:1px dashed rgba(234,228,214,.08)}
-.rail .rr:first-of-type{border-top:none}
-.rail .rr.dimmed{display:none}
-.rail .sn{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap;padding-top:1px}
-.rail .ot{font-family:'IBM Plex Sans';font-size:11.5px;line-height:1.5;color:rgba(234,228,214,.72)}
-.rail .ot b{color:var(--paper);font-weight:500}
-.rail .ot em{font-style:normal;color:var(--ev)}
-
-/* ---------- side notes ---------- */
-.notes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
-.side{border:1px solid var(--hair);border-radius:12px;padding:11px 13px 12px;background:rgba(18,24,37,.93)}
-.side .sh2{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-.side .sd{font-family:'IBM Plex Sans';font-size:10px;line-height:1.6;color:rgba(234,228,214,.64)}
-.side .sd b{color:var(--paper);font-weight:500}
-.side.wy{border-color:rgba(157,143,232,.34);background:linear-gradient(160deg,rgba(35,30,60,.95),rgba(20,24,40,.95))}
-.side.wy .sh2{color:var(--l2)}
-.side.ex{border-color:rgba(71,181,152,.34);background:linear-gradient(160deg,rgba(23,42,30,.95),rgba(17,26,24,.95))}
-.side.ex .sh2{color:var(--ok)}
-.note{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--muted);margin-top:8px;text-align:center}
-.note b{color:var(--paper);font-weight:500}
+.note{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);margin-top:10px;text-align:center;letter-spacing:.06em}
 </style>
 </head>
 <body>
 <div class="aur"></div>
-<svg id="grain"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gr)" opacity=".2"/></svg>
+<svg id="grain" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.25"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg>
 
-<div class="wrap">
-  <div class="headrow">
+<div class="eyebrow"><span class="dot"></span>AIR8 · KNOWLEDGE BASE · EVENT VALIDATION SIMULATION · FL301 RUN</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-top">
     <div>
-      <div class="eyebrow"><span class="dot"></span>AIR8 · KNOWLEDGE BASE · EVENT VALIDATION INSTANCE</div>
-      <h1>Event Validation — <em>one event, full run</em></h1>
-      <div class="sub">CP STEPS → → L1 PROCESS MODULES → <b>L2 KNOWLEDGE NODES</b> → EVENT OUTPUT</div>
-    </div>
-    <div class="stats" id="stats"></div>
-  </div>
-
-  <div class="evtbn">
-    <span class="etg">⚠ LIVE EVENT</span>
-    <div class="etx">
-      <b>S Section 301 Forced-Labor Tariff</b> — new <em>10–12.5% two-tier duty</em> on ~60 economies. Replaces struck-down IEEPA tariffs. <b>China, Vietnam, Bangladesh</b> all in scope. Active US tariff framework for apparel &amp; goods importers.
-    </div>
-    <div class="ebd">
-      <s>Effective</s> Jul 24, 2026<br>
-      <s>Source</s> USTR / CBP / Fed Register<br>
-      <s>Scope</s> ~60 economies<br>
-      <s>Risk</s> China · Vietnam · Bangladesh
-    </div>
-  </div>
-
-  <div class="ctl">
-    <button class="btn on" data-a="detail">Detail on</button>
-    <button class="btn" data-a="collapse">Collapse all</button>
-    <button class="btn" data-a="reset">Reset highlight</button>
-    <span class="sep"></span>
-    <span class="lgd"><i style="background:var(--co)"></i>CP<i style="background:var(--l1)"></i>L1<i style="background:var(--l2)"></i>L2<i style="background:var(--out)"></i>Output</span>
-    <span class="hint">Click any <b>CP step</b> to light its L1 + L2 modules — everything else stays readable</span>
-  </div>
-
-  <div class="board" id="board">
-    <div class="lanes">
-      <div class="lane cp"><div class="lh"><i>01</i><b>CP Steps</b><s>event → output</s></div><div class="col" id="cCP"></div></div>
-      <div class="lane l1"><div class="lh"><i>02</i><b>L1 · Process Modules</b><s>how we reason</s></div><div class="col" id="cL1"></div></div>
-      <div class="lane l2"><div class="lh"><i>03</i><b>L2 · Knowledge Nodes</b><s>what we know</s></div><div class="col" id="cL2"></div></div>
-      <div class="lane out"><div class="lh"><i>04</i><b>Event Output</b><s>sources + artifacts</s></div><div class="col" id="cOUT"></div></div>
-    </div>
-  </div>
-
-  <div class="notes">
-    <div class="side wy">
-      <div class="sh2">Why L1 is the asset — not a node on the map</div>
-      <div class="sd">
-        <b>L1</b> is the reasoning — event parse rules, family activation logic, evidence discipline, severity judgement, coverage check method. Written once, walked by every event.<br>
-        <b>L2</b> is the knowledge — tariff rates, country exposures, client lists, compliance rules. Change one and every flow that uses it picks it up on next run.
+      <div class="tags">
+        <span class="tag ev">⚠ EVENT VALIDATION</span>
+        <span class="tag live">● LIVE · ACTIVE</span>
+        <span class="tag us">🇺🇸 US · USTR/CBP</span>
       </div>
+      <h1>US Section 301 <em>Forced-Labor Tariff</em></h1>
+      <div class="run-id"><b>RUN-2026-S301-001</b> · Simulated run — Aug 27, 2026</div>
     </div>
-    <div class="side ex">
-      <div class="sh2">Event-specific outputs — not generic descriptions</div>
-      <div class="sd">
-        Every L1 card shows <b>what the module did</b> for this specific S301 event. Every L2 card shows <b>the specific data returned</b> — rates, countries, clients, compliance flags. Generic module descriptions are in the KB; these are the outputs.
+  </div>
+  <div class="hdevt">
+    New <b>10–12.5% two-tier duty</b> on ~60 economies. Replaces struck-down IEEPA tariffs. <b>China, Vietnam, Bangladesh</b> all in scope. Active US tariff framework for apparel &amp; goods importers.<br>
+    <s>Effective</s> Jul 24, 2026 · Legal challenge pending (25 states, Aug 3, 2026)
+  </div>
+
+  <div class="fva">
+    <div class="fva-t">Facts vs Assumptions — Hero Block [Rule D]</div>
+    <div class="fva-grid">
+      <div class="fva-item fva-confirmed">
+        <div class="fva-label">✅ CONFIRMED</div>
+        <ul class="fva-items">
+          <li>FL301 active Jul 24 — enforcement ongoing</li>
+          <li>HS 61xx–63xx (woven/knit apparel) in scope</li>
+          <li>CN/VN/BD in FL301 scope at confirmed rates</li>
+          <li>IEEPA tariffs struck down Jun 2026</li>
+          <li>47 US-market clients matched from CLIENT-DB</li>
+          <li>US buyer diversification trend accelerating</li>
+        </ul>
+      </div>
+      <div class="fva-item fva-inferred">
+        <div class="fva-label">💭 INFERRED (needs BD call)</div>
+        <ul class="fva-items">
+          <li>Revenue bands for 36 of 47 clients [UNKNOWN]</li>
+          <li>Fixed-price vs cost-plus contract terms</li>
+          <li>Buyer pass-through of duty delta — who absorbs?</li>
+          <li>Supplier capacity headroom (BD/VN)</li>
+          <li>Actual UFLPA entity list status per supplier</li>
+          <li>US buyer order reallocation confirmed?</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div class="rail">
-    <div class="rh"><b>05 · Insight Assembly Output</b><s>CP5 assembles the full event brief from all upstream outputs</s></div>
-    <div id="cRail"></div>
+  <div class="heat">
+    <div class="heat-t">Supplier Readiness Heatmap [Rule E] — [N] of 47 clients = UNKNOWN readiness (no BD call yet)</div>
+    <div class="heat-row">
+      <span class="heat-label">Confirmed</span>
+      <div class="heat-bar"><div class="heat-fill-c" style="width:23.4%"></div></div>
+      <span class="heat-n">11 / 47</span>
+    </div>
+    <div class="heat-row">
+      <span class="heat-label">UNKNOWN</span>
+      <div class="heat-bar"><div class="heat-fill-u" style="width:76.6%"></div></div>
+      <span class="heat-n">36 / 47</span>
+    </div>
+    <div class="heat-legend">
+      <span class="confirmed">CONFIRMED</span>
+      <span class="unknown">UNKNOWN — BD call required before signaling</span>
+    </div>
   </div>
+</div>
 
-  <div class="note" id="note"></div>
+<!-- CP NAV -->
+<div class="cpn">
+  <button class="cp-pill active" data-cp="cp0"><span class="pnum">CP0</span> Enrichment</button>
+  <button class="cp-pill" data-cp="cp1"><span class="pnum">CP1</span> Parse</button>
+  <button class="cp-pill" data-cp="cp2"><span class="pnum">CP2</span> Family</button>
+  <button class="cp-pill" data-cp="cp3"><span class="pnum">CP3</span> Entity Plan</button>
+  <button class="cp-pill" data-cp="cp35"><span class="pnum">CP3.5</span> Clients</button>
+  <button class="cp-pill" data-cp="cp4"><span class="pnum">CP4</span> Data Extract</button>
+  <button class="cp-pill s-active" data-cp="cp5"><span class="pnum">CP5</span> Insight Assembly</button>
+</div>
+<div class="note">Click any CP step to navigate · Expert Rules A–F applied</div>
+
+<!-- ══════════════════════════════════════════
+     CP0 — EVENT ENRICHMENT
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp0">
+  <div class="cp-card open" data-cp="cp0">
+    <div class="cp-hdr">
+      <span class="cpt">CP0</span>
+      <span class="cpn2">Event Enrichment</span>
+      <span class="cpd">Web-First · Pre-KB</span>
+      <span class="cpds">Source: Web only [ALWAYS]</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+      <div class="strace">[Web Search]  → "US Section 301 forced-labor tariff Jul 2026 enforcement"    <span class="sok">✅ ACTIVE — CBP enforcement ongoing</span>
+[Web Search]  → "FL301 vs IEEPA tariffs replacement legal challenge"              <span class="sok">✅ IEEPA struck down Jun 2026 — FL301 new legal basis</span>
+[Web Search]  → "US Section 301 forced-labor entity list 2026"                    <span class="sok">✅ UFLPA Entity List — active, enforced</span>
+[Web Search]  → "IEEPA tariff predecessor history Section 122"                      <span class="sno">❌ Not found → [KB-GAP 🚩] — IEEPA predecessor not in TARIFF-DB</span>
+[Web Search]  → "US buyer sourcing shift China Vietnam Bangladesh 2026"            <span class="sok">✅ Cambodia +26.9% — VN penetration 100% of buyers reviewing</span></div>
+
+      <div class="s-hdr first">📥 Input</div>
+      <div class="out-val">Raw event signal: "US Section 301 Forced-Labor Tariff — live Jul 24, 10–12.5%, ~60 economies, replaces IEEPA, China/Vietnam/Bangladesh in scope"</div>
+
+      <div class="s-hdr">🧠 Active Policy Framing Check [Rule — always apply first]</div>
+      <div class="out-val"><b>Step 1:</b> Active state = FL301 +10–12.5% IS IN FORCE RIGHT NOW → primary signal is the current cost burden<br>
+      <b>Step 2:</b> Legal challenge pending (25 states, Aug 3) → injunction risk = urgency gate<br>
+      <b>Step 3:</b> Post-void = IEEPA reinstatement (less likely given court path) — secondary signal only</div>
+
+      <div class="s-hdr">📤 Output — ENRICHMENT BLOCK</div>
+      <div class="out-block">
+        <div class="out-row"><span class="out-key">event_summary</span><span class="out-val">FL301 active Jul 24 — new forced-labor 10%/12.5% duty on ~60 economies. Replaces IEEPA (struck down). CN/VN/BD in scope. UFLPA compliance is independent gate.</span></div>
+        <div class="out-label">open_signals</div>
+        <div class="out-row"><span class="out-key">FL301 enforcement</span><span class="out-val">[VERIFIED ✅] — CBP enforcement ongoing, UFLPA entity list active as of Aug 2026</span></div>
+        <div class="out-row"><span class="out-key">IEEPA void</span><span class="out-val">[VERIFIED ✅] — struck down Jun 2026, FL301 new legal basis</span></div>
+        <div class="out-row"><span class="out-key">US buyer shift</span><span class="out-val">[VERIFIED ✅] — CN→VN/BD/Cambodia diversification accelerating; Cambodia +26.9%</span></div>
+        <div class="out-row"><span class="out-key">IEEPA history</span><span class="out-val"><span class="kbmiss">❌ MISS</span> — [KB-GAP 🚩] Predecessor law not in TARIFF-DB. FL301 legal challenge status not tracked.</span></div>
+        <div class="out-label">kb_expansion_flags</div>
+        <div class="out-row"><span class="out-key">GAP-0</span><span class="out-val"><span class="kbgap">🚩 KB-GAP</span> IEEPA predecessor law — "Replaces Section 122" field, Section 122 not in TARIFF-DB · <b>CP0</b> · <b>MEDIUM</b> · KB Expand</span></div>
+        <div class="out-row"><span class="out-key">GAP-new</span><span class="out-val"><span class="kbgap">🚩 KB-GAP</span> FL301 legal challenge tracker — injunction filed Aug 3, 2026 (25 states) · <b>CP0</b> · <b>MEDIUM</b> · KB Expand</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CP1 — EVENT PARSE
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp1">
+  <div class="cp-card" data-cp="cp1">
+    <div class="cp-hdr">
+      <span class="cpt">CP1</span>
+      <span class="cpn2">Event Parse</span>
+      <span class="cpd">Text Extraction · No External Source</span>
+      <span class="cpds">Source: None [pure extraction]</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+      <div class="strace">[Event Parse] → extract fields from raw signal + CP0 enrichment    <span class="sok">✅ 7 fields extracted</span></div>
+
+      <div class="s-hdr first">📤 Output — CP1 PARSED</div>
+      <div class="out-block">
+        <div class="out-row"><span class="out-key">supplier_country</span><span class="out-val">CN · VN · BD  <span style="opacity:.5">[multi-country scope — CN, Vietnam, Bangladesh all explicitly named]</span></span></div>
+        <div class="out-row"><span class="out-key">buyer_geo</span><span class="out-val">US  <span style="opacity:.5">[FL301 is a US import tariff — US is the enforcing jurisdiction]</span></span></div>
+        <div class="out-row"><span class="out-key">product_category</span><span class="out-val"><b>primary:</b> woven_apparel / knit_apparel (HS 61–62)<br><b>downstream:</b> home_textiles (HS 63) · hardgoods (HS 94) — scope confirmed HS 61–63</span></div>
+        <div class="out-row"><span class="out-key">material</span><span class="out-val"><span style="opacity:.5">[not narrowed — FL301 applies broadly across all material types, not material-specific]</span></span></div>
+        <div class="out-row"><span class="out-key">supplier_tier</span><span class="out-val"><span style="opacity:.5">[not narrowed — FL301 applies across all supplier sizes, not tier-specific]</span></span></div>
+        <div class="out-row"><span class="out-key">company_type</span><span class="out-val">FOB primary  <span style="opacity:.5">[tariffs assessed at US import — DDP suppliers absorb costs internally; event mechanism is US import duty layer]</span></span></div>
+        <div class="out-row"><span class="out-key">event_mechanism</span><span class="out-val">Tariff change — new +10–12.5% layer added to existing MFN rates. Replaces IEEPA. UFLPA = independent compliance gate, not part of tariff signal.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CP2 — FAMILY ACTIVATION
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp2">
+  <div class="cp-card" data-cp="cp2">
+    <div class="cp-hdr">
+      <span class="cpt">CP2</span>
+      <span class="cpn2">Family Activation</span>
+      <span class="cpd">KB Coverage Check · Event Families</span>
+      <span class="cpds">Source: EVENT-TYPES.md · EVENT-CLUSTERS.md</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+      <div class="strace">[KB EVENT-TYPES] → check EVT-TARIFF                    <span class="sok">✅ HIT — weights loaded</span>
+[KB EVENT-TYPES] → check subtype FL301                    <span class="sno">❌ MISS → [KB-GAP 🚩] — FL301 subtype not formalised in EVENT-TYPES.md</span>
+[KB EVENT-TYPES] → check EVT-REGULATION                  <span class="sok">✅ HIT — EVT-REGULATION-COMPLIANCE-COST subtype confirmed</span>
+[KB EVENT-CLUSTERS] → check CLUSTER-US-DECOUPLING         <span class="sok">✅ HIT — CN tariff pressure + VN/BD diversification trend matches</span></div>
+
+      <div class="s-hdr first">📤 Output — CP2 FAMILIES</div>
+      <div class="out-block">
+        <div class="out-label">activated_families</div>
+        <div class="out-row"><span class="out-key">EVT-TARIFF</span><span class="out-val"><span class="signal red" style="font-size:7px">STRONG</span> subtype: <span class="kbmiss">EVT-TARIFF-US-IMPORT [APPROX — FL301 subtype not in EVENT-TYPES]</span> · rule_fired: RP-EVT-TARIFF-01<br>principles: PRIN-COUNTRY-EXPOSURE <b>0.50</b> · PRIN-PRODUCT-TARIFF <b>0.30</b> · PRIN-SUPPLIER-RESILIENCE <b>0.20</b></span></div>
+        <div class="out-row"><span class="out-key">EVT-REGULATION</span><span class="out-val"><span class="signal yellow" style="font-size:7px">MODERATE</span> subtype: <b>EVT-REGULATION-COMPLIANCE-COST</b> <span class="kbhit">[EXACT]</span> · rule_fired: RP-EVT-REGULATION-01<br>principles: PRIN-COMPLIANCE-COST <b>0.50</b> · PRIN-PRODUCT-TARIFF <b>0.30</b> · PRIN-BUYER-GEO-EXPOSURE <b>0.20</b></span></div>
+        <div class="out-row"><span class="out-key">cluster_match</span><span class="out-val"><b>CLUSTER-US-DECOUPLING</b> <span class="kbhit">[HIT]</span> — combined cluster analysis applied</span></div>
+        <div class="out-label">kb_gaps</div>
+        <div class="out-row"><span class="out-key">KBG-001</span><span class="out-val"><span class="kbgap">🚩 KB-GAP</span> EVT-TARIFF-US-FL301 subtype — FL301 (forced-labor trigger) is distinct from standard S301 (trade remedy). Needs formal subtype in EVENT-TYPES.md · <b>CP2</b> · <b>MEDIUM</b> · KB Expand</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CP3 — ENTITY FETCH PLAN
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp3">
+  <div class="cp-card" data-cp="cp3">
+    <div class="cp-hdr">
+      <span class="cpt">CP3</span>
+      <span class="cpn2">Entity Fetch Plan</span>
+      <span class="cpd">KB Coverage Check · COMBOs × Principles</span>
+      <span class="cpds">Source: PRINCIPLES.md · COMBO-*.md · REASONING-FLOW.md</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+      <div class="strace">[KB PRINCIPLES] → check PRIN-COUNTRY-EXPOSURE              <span class="sok">✅ HIT</span>
+[KB PRINCIPLES] → check PRIN-PRODUCT-TARIFF                  <span class="sok">✅ HIT</span>
+[KB PRINCIPLES] → check PRIN-COMPLIANCE-COST                 <span class="sok">✅ HIT</span>
+[KB TARIFF-DB]  → FL301 rates CN/VN/BD HS 61–62              <span class="sok">✅ confirmed</span>
+[KB COUNTRY-DB] → CN / BD / VN profiles                      <span class="sok">✅ confirmed — fresh Aug 4 2026</span>
+[KB COMBO]      → CN-FOB-woven-US                            <span class="sno">❌ MISS → [KB-GAP 🚩] → using closest proxy</span>
+[KB COMBO]      → BD-FOB-woven-US                            <span class="sno">❌ MISS → [KB-GAP 🚩] → using closest proxy</span>
+[KB COMBO]      → VN-FOB-woven-US                            <span class="sno">❌ MISS → [KB-GAP 🚩] → using closest proxy</span></div>
+
+      <div class="s-hdr first">📤 Output — ENTITY FETCH QUEUE (ranked)</div>
+      <table class="tbl">
+        <thead><tr><th>Rank</th><th>Entity</th><th>File</th><th>Principle</th><th>Wt</th><th>KB Check</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="hi">product_category</td><td>COMMODITY-DB (HS 61–62)</td><td>PRIN-PRODUCT-TARIFF</td><td class="hi">0.30</td><td><span class="kbhit">✅ HIT</span></td></tr>
+          <tr><td>2</td><td class="hi">country (CN)</td><td>COUNTRY-DB / CN</td><td>PRIN-COUNTRY-EXPOSURE</td><td class="hi">0.35</td><td><span class="kbhit">✅ HIT</span></td></tr>
+          <tr><td>3</td><td>country (BD)</td><td>COUNTRY-DB / BD</td><td>PRIN-COUNTRY-EXPOSURE</td><td>0.35</td><td><span class="kbhit">✅ HIT</span></td></tr>
+          <tr><td>4</td><td>country (VN)</td><td>COUNTRY-DB / VN</td><td>PRIN-COUNTRY-EXPOSURE</td><td>0.35</td><td><span class="kbhit">✅ HIT</span></td></tr>
+          <tr><td>5</td><td>persona (CN-woven)</td><td><span class="proxy">COMBO [PROXY — CN-FOB-woven-US not in KB]</span></td><td>PRIN-SUPPLIER-RESILIENCE</td><td>0.20</td><td><span class="kbmiss">❌ PROXY</span></td></tr>
+          <tr><td>6</td><td>persona (BD-woven)</td><td><span class="proxy">COMBO [PROXY — BD-FOB-woven-US not in KB]</span></td><td>PRIN-SUPPLIER-RESILIENCE</td><td>0.20</td><td><span class="kbmiss">❌ PROXY</span></td></tr>
+          <tr><td>7</td><td>persona (VN-woven)</td><td><span class="proxy">COMBO [PROXY — VN-FOB-woven-US not in KB]</span></td><td>PRIN-SUPPLIER-RESILIENCE</td><td>0.20</td><td><span class="kbmiss">❌ PROXY</span></td></tr>
+        </tbody>
+      </table>
+      <div class="out-block" style="margin-top:10px">
+        <div class="out-label">kb_gaps</div>
+        <div class="out-row"><span class="out-key">KBG-002</span><span class="out-val"><span class="kbgap">🚩 KB-GAP</span> COMBO-CN-FOB-woven-US persona file not in KB · <b>CP3</b> · <b>HIGH</b> · Expert Review</span></div>
+        <div class="out-row"><span class="out-key">KBG-003</span><span class="out-val"><span class="kbgap">🚩 KB-GAP</span> COMBO-BD-FOB-woven-US persona file not in KB · <b>CP3</b> · <b>HIGH</b> · Expert Review</span></div>
+        <div class="out-row"><span class="out-key">KBG-004</span><span class="out-val"><span class="kbgap">🚩 KB-GAP</span> COMBO-VN-FOB-woven-US persona file not in KB · <b>CP3</b> · <b>HIGH</b> · Expert Review</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CP3.5 — CLIENT MAPPING
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp35">
+  <div class="cp-card" data-cp="cp35">
+    <div class="cp-hdr">
+      <span class="cpt">CP3.5</span>
+      <span class="cpn2">Client Mapping</span>
+      <span class="cpd">Data Query · CLIENT-DB × COMBO</span>
+      <span class="cpds">Source: air8-databases/CLIENT-DB.md (320 clients)</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+      <div class="strace">[Client DB]  → load CLIENT-DB.md (320 suppliers)               <span class="sok">✅ loaded</span>
+[Client DB]  → filter DIM-1=CN|VN|BD                                  <span class="sok">✅ 141 matches</span>
+[Client DB]  → filter DIM-4=woven|knit                                <span class="sok">✅ 139 matches</span>
+[Client DB]  → filter DIM-5=US                                         <span class="sok">✅ 47 matches (47 × DIM-5=US)</span>
+[Client DB]  → COMBO match (overlap ≥3 dims)                          <span class="sok">✅ 47 total — 38 CN + 8 BD + 1 VN</span>
+[Client DB]  → DIM-2 revenue check                                    <span class="sno">⚠️ 36 of 47 = [UNKNOWN] — web search attempted</span>
+[Web Search] → revenue lookups for [UNKNOWN] clients                  <span class="ssk">💭 partial — 11 of 36 resolved to bands; 25 remain [UNKNOWN]</span></div>
+
+      <div class="s-hdr first">📤 Output — CP3.5 CLIENT MAPPING</div>
+      <div class="out-block">
+        <div class="out-row"><span class="out-key">impacted_clients</span><span class="out-val">47 total · DIM-strict overlap ≥3 on confirmed dims</span></div>
+        <div class="out-row"><span class="out-key">CN-woven-US</span><span class="out-val">38 clients · FOB woven CN → US market</span></div>
+        <div class="out-row"><span class="out-key">BD-woven-US</span><span class="out-val">8 clients · FOB woven BD → US market</span></div>
+        <div class="out-row"><span class="out-key">VN-woven-US</span><span class="out-val">1 client · FOB woven VN → US market</span></div>
+        <div class="out-row"><span class="out-key">DIM-2 [UNKNOWN]</span><span class="out-val">⚠️ 36 of 47 clients — revenue band unknown. 11 partially resolved via web search. BD call required.</span></div>
+        <div class="out-row"><span class="out-key">data_source</span><span class="out-val">CLIENT-DB.md (320 clients, Aug 4, 2026) + web search for revenue [UNKNOWN] clients</span></div>
+      </div>
+
+      <div class="s-hdr">📊 COMBO Exposure Universe</div>
+      <table class="tbl">
+        <thead><tr><th>COMBO</th><th>Clients</th><th>Market</th><th>Signal</th><th>KB Source</th></tr></thead>
+        <tbody>
+          <tr><td class="hi">CN-FOB-woven-US</td><td>38</td><td>US</td><td><span class="signal red">🔴 COMPETITIVE PRESSURE RISK</span></td><td><span class="proxy">PROXY</span></td></tr>
+          <tr><td class="hi">BD-FOB-woven-US</td><td>8</td><td>US</td><td><span class="signal green">🟢 EXPAND CANDIDATE (conditional)</span></td><td><span class="proxy">PROXY</span></td></tr>
+          <tr><td class="hi">VN-FOB-woven-US</td><td>1</td><td>US</td><td><span class="signal warn">⚠️ CHECK</span></td><td><span class="proxy">PROXY</span></td></tr>
+        </tbody>
+      </table>
+      <div class="out-val" style="margin-top:7px">Total FL301 exposure universe: <b>47 clients</b> · Revenue [UNKNOWN] for 36 — <b>BD call required before signaling</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CP4 — DATA EXTRACT
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp4">
+  <div class="cp-card" data-cp="cp4">
+    <div class="cp-hdr">
+      <span class="cpt">CP4</span>
+      <span class="cpn2">Data Extract</span>
+      <span class="cpd">8-Step Source Sequence · CP4a trace</span>
+      <span class="cpds">Sources: CLIENT-DB · TARIFF-DB · COUNTRY-DB · KB COMBO · KB Country · Web</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+      <div class="strace">[Client DB]      → 47 matched clients — DIM-1/4/5 filter           <span class="sok">✅ 47 clients</span>
+[Tariff DB]      → FL301 event: HS 61-62 CN 12.5% / VN 12.5% / BD 10%   <span class="sok">✅ confirmed</span>
+[Country DB]     → CN / BD / VN profiles, freshness                    <span class="sok">✅ fresh Aug 4 2026</span>
+[Commodity DB]   → Cotton ICE No.2                                        <span class="ssk">⚠️ STALE → fetching live</span>
+[Web Search]     → ICE cotton Aug 2026                                   <span class="sok">✅ 82.1 USc/lb (below 85¢ 🟡)</span>
+[KB COMBO]       → CN-woven / BD-woven / VN-woven proxy combos           <span class="sno">❌ MISS → using proxies — see CP3</span>
+[KB Country/CN]  → CN tariff profile — S301+FL301 stacking              <span class="sok">✅ confirmed — US-bound exports declining</span>
+[KB Country/BD]  → BD tariff profile — +11.7% YoY record export year     <span class="sok">✅ confirmed — near-peak capacity</span>
+[KB Country/VN]  → VN tariff profile — 100% VN penetration signal        <span class="sok">✅ confirmed</span>
+[Web Search]     → US buyer sourcing shift CN→VN/BD/Cambodia             <span class="sok">✅ confirmed — Cambodia +26.9%</span>
+[Web Search]     → FL301/UFLPA enforcement Aug 2026                      <span class="sok">✅ active — CBP enforcement confirmed</span>
+[R1 queue]       → Fixed-price vs cost-plus terms?                       <span class="spen">⏳ Pending BD call</span>
+[R1 queue]       → UFLPA entity list status per CN client?               <span class="spen">⏳ Pending BD call</span>
+[R1 queue]       → BD capacity headroom for +20% volume?                 <span class="spen">⏳ Pending BD call</span>
+[R1 queue]       → US buyer confirmed reallocation to BD?                 <span class="spen">⏳ Pending BD call</span></div>
+
+      <div class="s-hdr first">📤 CP4a COMBO Proxy Signals (per KB Combo read)</div>
+
+      <div class="combo-card" style="margin-top:12px">
+        <div class="combo-hdr"><span class="combo-id">COMBO-CN-FOB-woven</span><span class="combo-clients">38 clients · US market · <span class="signal red" style="font-size:7px">🔴 COMPETITIVE PRESSURE RISK</span></span></div>
+        <div class="combo-body">
+          <div class="out-block">
+            <div class="out-row"><span class="out-key">Pain Points</span><span class="out-val">PP-CASH-GAP [HIGH] — 90–120d receivables cycle on top of tariff burden<br>PP-TARIFF-STACK [HIGH] — S301 + FL301 stacking = maximum compression vs VN/BD<br>PP-BUYER-CONCENTRATION [MEDIUM] — US buyers reviewing sourcing; concentration risk elevated</span></div>
+            <div class="out-row"><span class="out-key">Signal flip</span><span class="out-val">US buyer confirmed diversified away from CN → signal changes to <b>NEUTRAL</b></span></div>
+          </div>
+          <div class="kbdepth">[KB has 5 more pain points + compliance data + buyer scoring — not shown]</div>
+        </div>
+      </div>
+
+      <div class="combo-card" style="margin-top:10px">
+        <div class="combo-hdr"><span class="combo-id">COMBO-BD-FOB-woven</span><span class="combo-clients">8 clients · US market · <span class="signal green" style="font-size:7px">🟢 EXPAND CANDIDATE (conditional)</span></span></div>
+        <div class="combo-body">
+          <div class="out-block">
+            <div class="out-row"><span class="out-key">Pain Points</span><span class="out-val">PP-CAPACITY [HIGH] — near-peak utilization; +20% volume absorption uncertain<br>PP-TARIFF-STACK [MEDIUM] — BD 10% vs CN 50–70%; advantage real but BNPL not confirmed<br>PP-BUYER-REALLOC [MEDIUM] — US buyer confirmed reallocation to BD? [UNKNOWN]</span></div>
+            <div class="out-row"><span class="out-key">Signal flip</span><span class="out-val">BD buyer confirmed reallocation reversed → signal changes to <b>MONITOR</b></span></div>
+          </div>
+          <div class="kbdepth">[KB has compliance exposures + buyer scoring — not shown]</div>
+        </div>
+      </div>
+
+      <div class="combo-card" style="margin-top:10px">
+        <div class="combo-hdr"><span class="combo-id">COMBO-VN-FOB-woven</span><span class="combo-clients">1 client · US market · <span class="signal warn" style="font-size:7px">⚠️ CHECK</span></span></div>
+        <div class="combo-body">
+          <div class="out-block">
+            <div class="out-row"><span class="out-key">Pain Points</span><span class="out-val">PP-TARIFF-STACK [HIGH] — VN 12.5% = same tier as CN (not BD 10%); advantage narrower<br>PP-UFLPA [HIGH] — UFLPA entity status [UNKNOWN]; withhold-release order risk<br>PP-CAPACITY [MEDIUM] — VN utilization unclear</span></div>
+            <div class="out-row"><span class="out-key">Signal flip</span><span class="out-val">VN UFLPA confirmed clean + buyer confirmed reallocation → signal changes to <b>EXPAND CANDIDATE</b></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CP5 — INSIGHT ASSEMBLY
+══════════════════════════════════════════ -->
+<div class="cp-section" id="sec-cp5">
+  <div class="cp-card open" data-cp="cp5">
+    <div class="cp-hdr">
+      <span class="cpt">CP5</span>
+      <span class="cpn2">Insight Assembly</span>
+      <span class="cpd">SOLUTIONS Check · Expert Rules A–F Applied</span>
+      <span class="cpds">Sources: SOLUTIONS.md + all CP0–CP4 outputs</span>
+      <span class="arr">▶</span>
+    </div>
+    <div class="cp-body">
+
+      <div class="s-hdr first">📋 Run Summary</div>
+      <div class="out-block">
+        <div class="out-row"><span class="out-key">Event</span><span class="out-val">US Section 301 Forced-Labor Tariff (FL301) — effective Jul 24, 2026</span></div>
+        <div class="out-row"><span class="out-key">Run ID</span><span class="out-val">RUN-2026-S301-001 · Aug 27, 2026</span></div>
+        <div class="out-row"><span class="out-key">Families</span><span class="out-val">EVT-TARIFF <span class="signal red" style="font-size:7px">STRONG</span> · EVT-REGULATION <span class="signal yellow" style="font-size:7px">MODERATE</span></span></div>
+        <div class="out-row"><span class="out-key">Overlays</span><span class="out-val">RP-WINDOW · RP-STRUCTURAL-CHANGE · CLUSTER-US-DECOUPLING</span></div>
+        <div class="out-row"><span class="out-key">Clients matched</span><span class="out-val">47 (DIM-strict; 36 with DIM-2 [UNKNOWN] excluded from overlap)</span></div>
+        <div class="out-row"><span class="out-key">Lead pitch</span><span class="out-val"><b>PROD-SOURCING-DIVERSIFICATION</b> — EVT-TARIFF × CLUSTER-US-DECOUPLING fires multi-signal</span></div>
+        <div class="out-row"><span class="out-key">Action tally</span><span class="out-val">Act now: <b>38 🔴</b> · Verify first: <b>1 ⚠️</b> · Expand (conditional): <b>8 🟢</b> · Monitor: <b>0 🟡</b></span></div>
+      </div>
+
+      <div class="s-hdr">💰 Economic Gap Calculation — TARIFF-DB · Aug 4, 2026</div>
+      <table class="tbl">
+        <thead><tr><th>Origin</th><th>MFN Base</th><th>FL301</th><th>US Total</th><th>vs Baseline</th></tr></thead>
+        <tbody>
+          <tr><td class="hi">China CN</td><td>12–32%</td><td class="hi">+12.5%</td><td class="hi" style="color:var(--ev)">~50–70%</td><td>BASELINE</td></tr>
+          <tr><td>Vietnam VN</td><td>12–32%</td><td>+12.5%</td><td>~28.5%</td><td style="color:var(--ok)">+21–42pp advantage</td></tr>
+          <tr><td>Bangladesh BD</td><td>12–32%</td><td>+10%</td><td>~26.5%</td><td style="color:var(--ok)">+23–44pp advantage</td></tr>
+          <tr><td>India IN</td><td>12–32%</td><td>+10%</td><td>~26.5%</td><td style="color:var(--ok)">+23–44pp advantage</td></tr>
+        </tbody>
+      </table>
+      <div class="out-val" style="margin-top:7px;font-size:10px">
+        <b>Buyer landed cost delta:</b> ~$24–$43 per $100 FOB for CN vs BD/VN on HS 61–62 woven apparel<br>
+        <b>Note:</b> Buyer pass-through terms (fixed-price vs cost-plus) not yet confirmed — BD calls required<br>
+        <b>Note:</b> S301 25% does NOT stack with FL301 on same product — separate layers, different triggers<br>
+        <b>Note:</b> VN 12.5% FL301 = same tier as CN — VN advantage is VN origin vs CN processing risk (UFLPA), not rate
+      </div>
+
+      <div class="s-hdr">🔴 COMBO Group — CN-FOB-woven-US · 38 clients · <span class="signal red">COMPETITIVE PRESSURE RISK</span></div>
+      <div class="combo-card red" style="margin-top:10px">
+        <div class="combo-hdr"><span class="combo-id">COMBO-CN-FOB-woven-US</span><span class="combo-clients">38 clients · apparel CN → US · Revenue [UNKNOWN]: 25</span><span class="signal red" style="font-size:7px">🔴 COMPETITIVE PRESSURE RISK</span></div>
+        <div class="combo-body">
+          <div class="s-hdr" style="margin-top:0;font-size:7.5px">WHY THIS EVENT HITS THEM [Rule D — Capacity Risk + Margin Risk required]</div>
+          <div class="out-val">
+            CN-origin FOB woven suppliers face <b>triple tariff stacking</b>: MFN 12–32% + S301 25% + FL301 12.5% = <b>~50–70% total</b> on HS 61–62. On a $100 FOB woven garment, this adds approximately <b>$12–$43 in landed cost</b> for US buyers vs ~$26.5% for BD/VN alternatives.<br><br>
+            US buyers are structurally reviewing CN sourcing. CN→VN/BD/Cambodia reallocation confirmed accelerating. Cambodia +26.9% penetration signal.<br><br>
+            <b>Capacity Risk:</b> can this supplier absorb volume increase? <em>[UNKNOWN — BD call required]</em><br>
+            <b>Margin Risk:</b> fixed-price vs cost-plus buyer contracts — who absorbs the duty delta? <em>[UNKNOWN — BD call required]</em><br><br>
+            <span class="kbdepth">[KB also contains: 5 more pain points + compliance data + buyer scoring — not shown]</span>
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">AIR8 RISK SIGNAL [Rule A/B — no "HURT" label]</div>
+          <div class="out-val">CN-origin clients may face increased competitive pressure where buyers are actively reviewing sourcing allocations. HS 61–62 woven US market structurally compressed for CN at 50–70% total tariff. Signal is conditional — reversal if: (a) FL301 injunction granted, or (b) CN used as processing hub only with origin documentation cleared.<br><br>
+          → <b>Product:</b> PROD-SOURCING-DIVERSIFICATION (pending SOLUTIONS.md confirmation)<br>
+          → <b>Signal flip:</b> CN UFLPA cleared + buyer confirmed CN+ → signal changes to NEUTRAL<br><br>
+          <b style="color:var(--vi)">⚠️ UFLPA readiness, raw material traceability, and supply chain transparency = INDEPENDENT gate</b> (not part of tariff signal) [Rule C]
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">✦ WHAT TO ASK THIS SUPPLIER [Rule F — every UNKNOWN → BD action]</div>
+          <div class="out-val">
+            1. <b>Demand:</b> Have any US buyers confirmed increased orders from you post-event? <em>[UNKNOWN]</em><br>
+            2. <b>Buyers:</b> Are US buyer contracts fixed-price or cost-plus? Who absorbs the duty delta? <em>[UNKNOWN]</em><br>
+            3. <b>Product:</b> Confirm HS code — does FL301 apply to your specific HS chapter? <em>[confirmed HS 61–62]</em><br>
+            4. <b>Cash:</b> Have you pre-purchased fabric/inputs before any future rate change window? <em>[UNKNOWN — capacity check]</em><br>
+            5. <b>Capacity:</b> Can you absorb a +20% volume increase if buyers reallocate to you? <em>[UNKNOWN]</em>
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">WHAT TO PROVIDE [Rule F]</div>
+          <div class="out-val">
+            Buyer order confirmation / LOI → confirms actual reallocation to CN (vs speculation)<br>
+            UFLPA compliance docs / supply chain transparency records → required before any US shipment clearance<br>
+            Production capacity certificate / utilization data → BD qualification gate for volume increase
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">WHAT TO DO [Rule D — no ARP/OBF/PreShip in card]</div>
+          <div class="out-val">
+            1. <b>Prioritise UFLPA clearance</b> — withhold-release order risk is immediate; do not ship until entity status confirmed <span style="opacity:.5">[immediate]</span><br>
+            2. <b>Brief CN clients on FL301 tariff</b> — explain stacked rate 50–70%, effective date Jul 24, enforcement ongoing <span style="opacity:.5">[within 48h]</span><br>
+            3. <b>Talk track:</b> <em>"FL301 forced-labor tariff is now your landed cost floor on US apparel — at 50–70% total with S301 stacked, your buyers are structurally reviewing. We can advise on VN/BD reroute feasibility within 72 hours."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="s-hdr">🟢 COMBO Group — BD-FOB-woven-US · 8 clients · <span class="signal green">EXPAND CANDIDATE (conditional)</span></div>
+      <div class="combo-card green" style="margin-top:10px">
+        <div class="combo-hdr"><span class="combo-id">COMBO-BD-FOB-woven-US</span><span class="combo-clients">8 clients · apparel BD → US · Revenue [UNKNOWN]: 4</span><span class="signal green" style="font-size:7px">🟢 EXPAND CANDIDATE (conditional)</span></div>
+        <div class="combo-body">
+          <div class="s-hdr" style="margin-top:0;font-size:7.5px">WHY THIS EVENT HITS THEM</div>
+          <div class="out-val">
+            BD-origin FOB woven suppliers benefit from <b>tariff cost advantage over CN</b>: BD 10% FL301 vs CN 12.5% + S301 25% stacked = BD saves ~$24–$43 per $100 FOB landed vs CN. BD is a confirmed reroute destination — US buyers actively reviewing CN→BD allocation.<br><br>
+            BD apparel exports at record $8.2B (FY2026, +11.7% YoY) — near-peak capacity utilisation. BD has a 90-day window to capture reallocated buyer orders before CN recovers or other origins fill.<br><br>
+            <b>⚠️ This signal is conditional on buyer decisions.</b> If US buyers do NOT reallocate to BD, there is no direct FL301 benefit — BD is still subject to the same 10% duty as any other origin.<br><br>
+            <b>Capacity Risk:</b> can this supplier absorb +20% volume increase? <em>[UNKNOWN — BD call required]</em><br>
+            <b>Margin Risk:</b> FL301 still applies to BD at 10% — who absorbs the cost delta? <em>[UNKNOWN — BD call required]</em><br><br>
+            Market breakdown: N US | N EU/UK | N APAC — <em>[to be confirmed per client]</em>
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">AIR8 RISK SIGNAL [Rule A — no "BENEFICIARY" label]</div>
+          <div class="out-val">gained tariff-related cost advantage over CN · conditional on buyer decisions. BD 10% vs CN 50–70% = structural reroute destination. Signal is conditional — reversal if: (a) BD capacity full, (b) buyers confirmed stay with CN, (c) FL301 injunction granted.<br><br>
+          → <b>Product:</b> PROD-SOURCING-DIVERSIFICATION (pending SOLUTIONS.md confirmation)<br>
+          → <b>Signal flip:</b> BD buyer reallocation confirmed → promote to LEAD PITCH<br><br>
+          <b style="color:var(--vi)">⚠️ UFLPA readiness, raw material traceability, and supply chain transparency = INDEPENDENT gate</b> [Rule C]
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">✦ WHAT TO ASK THIS SUPPLIER</div>
+          <div class="out-val">
+            1. <b>Demand:</b> Have any US buyers confirmed increased orders from you in the last 90 days? <em>[UNKNOWN — key signal]</em><br>
+            2. <b>Buyers:</b> Are US buyer contracts fixed-price or cost-plus? Who absorbs the duty delta? <em>[UNKNOWN]</em><br>
+            3. <b>Product:</b> Confirm HS code — does FL301 apply to your specific HS chapter? <em>[confirmed HS 61–62]</em><br>
+            4. <b>Cash:</b> Do you have confirmed fabric/trim supply to handle a volume increase? <em>[UNKNOWN]</em><br>
+            5. <b>Capacity:</b> Can you absorb a +20% volume increase if buyers reallocate to you? Current factory utilisation rate? <em>[UNKNOWN — critical gate]</em>
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">WHAT TO PROVIDE</div>
+          <div class="out-val">
+            Buyer order confirmation / LOI from US buyers → confirms actual reallocation (not speculation)<br>
+            Production capacity certificate / utilisation data → BD qualification gate for volume increase
+          </div>
+          <div class="s-hdr" style="font-size:7.5px">WHAT TO DO</div>
+          <div class="out-val">
+            1. <b>Identify capacity headroom</b> — BD near-peak; confirm utilisation before pitching reroute <span style="opacity:.5">[72h]</span><br>
+            2. <b>Brief all BD clients on FL301</b> — confirm BD is IN SCOPE at 10%, not exempt — FL301 applies to all ~60 economies <span style="opacity:.5">[within 48h]</span><br>
+            3. <b>Talk track:</b> <em>"Bangladesh has a 10–23pp cost advantage over China on landed US apparel. If your buyers are reviewing sourcing, Bangladesh woven is the most credible reroute. We can run a full factory qualification within 72 hours."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="s-hdr">⚠️ COMBO Group — VN-FOB-woven-US · 1 client · <span class="signal warn">CHECK</span></div>
+      <div class="combo-card warn" style="margin-top:10px">
+        <div class="combo-hdr"><span class="combo-id">COMBO-VN-FOB-woven-US</span><span class="combo-clients">1 client · apparel VN → US</span><span class="signal warn" style="font-size:7px">⚠️ CHECK</span></div>
+        <div class="combo-body">
+          <div class="out-val">
+            VN 12.5% FL301 = <b>same tier as CN</b> (not BD 10%). VN advantage over CN is VN origin processing risk (UFLPA), not rate — CN→VN reroute must clear UFLPA independently.<br><br>
+            <b>Capacity Risk:</b> <em>[UNKNOWN]</em> · <b>Margin Risk:</b> <em>[UNKNOWN]</em> · <b>Signal:</b> ⚠️ CHECK — verify UFLPA status + buyer confirmed reallocation before signaling as reroute candidate.<br><br>
+            Before signaling VN as reroute destination: verify (1) UFLPA entity status, (2) US buyer confirmed order shift, (3) supplier capacity headroom.<br><br>
+            1. <b>Talk track:</b> <em>"Vietnam is at the same 12.5% FL301 tier as China — VN's advantage is origin clarity (lower UFLPA risk), not rate. Before we recommend Vietnam as a reroute, we need to confirm your UFLPA documentation status and whether any US buyers have confirmed orders with you."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="s-hdr">📦 SOLUTIONS.md Check</div>
+      <div class="out-block">
+        <div class="out-row"><span class="out-key">EVT-TARIFF × CN-FOB-woven × PP-CASH-GAP</span><span class="out-val">→ PROD-SOURCING-DIVERSIFICATION <span class="kbhit">✅ VALIDATED</span><br>NOT PROD-TRADE-FINANCE — CN clients need reroute advice, not working capital (primary signal = sourcing decision, not cash gap)</span></div>
+        <div class="out-row"><span class="out-key">EVT-TARIFF × BD-FOB-woven × PP-CAPACITY</span><span class="out-val">→ PROD-SOURCING-DIVERSIFICATION <span class="kbhit">✅ VALIDATED</span><br>NOT PROD-SUPPLIER-SCALE — BD clients need reroute qualification, not scale finance (primary signal = sourcing allocation decision)</span></div>
+      </div>
+
+      <div class="s-hdr">🚩 KB-GAP Summary</div>
+      <table class="tbl">
+        <thead><tr><th>Gap</th><th>Description</th><th>CP</th><th>Pri</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td class="gap-h">GAP-0</td><td>IEEPA predecessor law — "Replaces Section 122" not in TARIFF-DB</td><td>CP0</td><td>MEDIUM</td><td>KB Expand</td></tr>
+          <tr><td class="gap-h">GAP-1</td><td>FL301 legal challenge tracker — injunction filed Aug 3 (25 states)</td><td>CP0</td><td>MEDIUM</td><td>KB Expand</td></tr>
+          <tr><td class="gap-h">GAP-2</td><td>EVT-TARIFF-US-FL301 subtype — FL301 distinct from standard S301, not formalised in EVENT-TYPES.md</td><td>CP2</td><td>MEDIUM</td><td>KB Expand</td></tr>
+          <tr><td class="gap-h">GAP-3</td><td class="hi">COMBO-CN-FOB-woven-US persona file not in KB (HIGH priority)</td><td>CP3</td><td class="hi">HIGH</td><td>Expert Review</td></tr>
+          <tr><td class="gap-h">GAP-4</td><td class="hi">COMBO-BD-FOB-woven-US persona file not in KB (HIGH priority)</td><td>CP3</td><td class="hi">HIGH</td><td>Expert Review</td></tr>
+          <tr><td class="gap-h">GAP-5</td><td class="hi">COMBO-VN-FOB-woven-US persona file not in KB (HIGH priority)</td><td>CP3</td><td class="hi">HIGH</td><td>Expert Review</td></tr>
+          <tr><td class="gap-h">GAP-6</td><td class="hi">UFLPA readiness status per supplier — VERIFIED CLEAN / DOCUMENTED / IN PROGRESS / UNKNOWN</td><td>CP4</td><td class="hi">HIGH</td><td>Expert Review</td></tr>
+          <tr><td class="gap-h">GAP-7</td><td>Buyer duty pass-through terms — fixed price vs cost-plus (per top-3 buyers)</td><td>CP4</td><td>MEDIUM</td><td>KB Expand</td></tr>
+          <tr><td class="gap-h">GAP-8</td><td>Supplier capacity headroom — can absorb +20% volume? (Y / N / UNKNOWN)</td><td>CP4</td><td>MEDIUM</td><td>KB Expand</td></tr>
+          <tr><td class="gap-h">GAP-9</td><td>US buyer reallocation evidence — confirmed vs speculative (per top buyer)</td><td>CP4</td><td>MEDIUM</td><td>KB Expand</td></tr>
+        </tbody>
+      </table>
+      <div class="out-val" style="margin-top:7px"><b>KB-GAP: 10 gaps flagged</b> → HIGH (4): Expert Review · MEDIUM (6): KB Expand</div>
+
+      <div class="appd">
+        <div class="appd-t">Appendix — Financing Products [Rule D — NOT in individual cards]</div>
+        <div class="appd-item"><span class="appd-key">ARP</span><span class="appd-val"><b>Accounts Receivable Purchase</b> — eligible for FL301-impacted clients with confirmed US buyer receivables. Supports cash conversion during sourcing transition.</span></div>
+        <div class="appd-item"><span class="appd-key">OBF</span><span class="appd-val"><b>Order-Based Financing</b> — eligible for BD clients confirming US buyer LOI / confirmed reallocation orders. Funds pre-production against confirmed buyer contracts.</span></div>
+        <div class="appd-item"><span class="appd-key">PreShip</span><span class="appd-val"><b>Pre-Shipment Finance</b> — eligible for BD/VN clients confirming capacity headroom. Funds raw material procurement ahead of confirmed reroute production runs.</span></div>
+        <div class="appd-note">⚠️ All financing products require UFLPA clearance + buyer credit check before mention to clients. Financing is secondary to sourcing advisory — BD call first.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ============================== EVENT META ============================== */
-const EV = { id:'ev1', n:'S Section 301 Forced-Labor Tariff', s:'live Jul 24', cv:'#FF5C5C' };
+const pills=document.querySelectorAll('.cp-pill');
+const sections=document.querySelectorAll('.cp-section');
+const cards=document.querySelectorAll('.cp-card');
 
-/* ============================== CP STEPS ============================== */
-const CP=[
-  {id:'cp0',k:'CP0',n:'Event Enrichment',d:'Web-first research — confirm scope, effective date, rates, enforcement status, pre-KB gap note',
-   l1:['enrich','evid'],l2:['reg','risk','src'],out:null},
-  {id:'cp1',k:'CP1',n:'Event Parse',d:'Extract: type · authority · jurisdiction · rates · scope economies · product · effective date · status',
-   l1:['parse'],l2:['reg','risk'],out:null},
-  {id:'cp2',k:'CP2',n:'Family Activation',d:'KB coverage check — which L2 families are hit, partial, or missing for this event',
-   l1:['fam','cov'],l2:['reg','risk','src','tariff','country','client','trade','social','adv','rate'],out:null},
-  {id:'cp3',k:'CP3',n:'Entity Fetch Plan',d:'COMBOs × principles — worst-case-first, no country-stacking, IEEPA gap note',
-   l1:['fetch'],l2:['tariff','country','reg'],out:null},
-  {id:'cp35',k:'CP3.5',n:'Client Mapping',d:'CLIENT-DB × COUNTRY-DB — apparel/hardgoods importers by origin country, exposure tiers',
-   l1:['cmap'],l2:['client','country'],out:null},
-  {id:'cp4',k:'CP4',n:'Data Extraction',d:'8-step source sequence — TARIFF-DB · COUNTRY-DB · CLIENT-DB · COMMODITY-DB · TRADE · SOCIAL · ADVERSE · RATING',
-   l1:['cov','evid'],l2:['tariff','country','client','commodity','trade','social','adv','rate'],out:null},
-  {id:'cp5',k:'CP5',n:'Insight Assembly',d:'CRITICAL bucket · BD advisory · recommended actions · KB-GAP tickets',
-   l1:['assemble'],l2:[],out:true}
-];
-
-/* ============================== L1 MODULES ============================== */
-const L1M=[
-  {id:'enrich',n:'Enrichment Protocol',d:'Web-first + KB lookup — confirm scope, effective date, rates, enforcement, gap note',
-   out:'CBP.gov confirms 10%/12.5% two-tier rates, 60 economies, replaces IEEPA. Pre-KB gap noted: IEEPA legal history not in KB.'},
-  {id:'evid',  n:'Evidence Discipline',d:'Source tiering — CBP/Fed Register → KB primary → web enrichment → not-found log',
-   out:'CBP.gov (tier-1) confirmed. Fed Register (tier-1) confirmed. IEEPA history gap logged as KB not-found.'},
-  {id:'parse', n:'Event Parse Rules',d:'Extract 7 fields from raw signal: type · authority · jurisdiction · rate · scope · product · date',
-   out:'TARIFF_CHANGE · Section301/US · FORCED_LABOR_TRIGGER · 10-12.5% · ~60 economies · AP&GOODS · 2026-07-24 · ACTIVE/ENFORCED · REPLACES_IEEPA'},
-  {id:'fam',   n:'Family Activator',d:'Flag KB families: DIRECT HIT / RISK FLAG / PARTIAL / MISSING',
-   out:'TARIFF/US (DIRECT HIT) · FORCED_LABOR/UFLPA (HIGH) · COUNTRY_RISK (HIGH × 3) · CLIENT_EXPOSURE (ACTIVATED)'},
-  {id:'cov',   n:'Coverage Check',d:'Which KB dimensions are computable at this event stage',
-   out:'TARIFF-DB ✓ · COUNTRY-DB ✓ · CLIENT-DB ✓ · COMPLIANCE ✓ · ADVERSE ✓ · COMMODITY-DB ✗ HS94xx NOT FOUND — KB-GAP raised'},
-  {id:'fetch', n:'Fetch Plan Builder',d:'COMBOs + principles — worst-case-first, no country-stacking, IEEPA gap note',
-   out:'5 COMBOs: SEC301/China/AP · SEC301/Vietnam/AP · SEC301/Bangladesh/AP · FORCED_LABOR/SunriseGD · SEC301/China/HG. Worst-case-first. IEEPA note on all tariff combos.'},
-  {id:'cmap',  n:'Client Mapper',d:'CLIENT-DB × COUNTRY-DB join on origin country + product category',
-   out:'3 HIGH (100% China/AP, $4.8M) · 5 MEDIUM ($6.2M) · 2 UFLPA watchlist pending confirmation'},
-  {id:'assemble',n:'Insight Assembler',d:'CRITICAL/OK buckets → HTML brief + BD advisory + KB-GAP tickets',
-   out:'CRITICAL: 3 clients · BD outreach × 3 · UFLPA check × 2 · ISF advisory · 2 KB-GAP tickets raised'}
-];
-
-/* ============================== L2 NODES ============================== */
-const L2M=[
-  {id:'reg',  n:'Regulatory Intelligence',d:'US trade authority registry — Section 301, IEEPA, UFLPA, CBP authority',
-   out:'Section 301 Forced Labor provisions — ACTIVE as of Jul 24, 2026. Authority: Trade Act of 1974. Replaces IEEPA (Court struck down Jun 2026). CBP enforcement ongoing.'},
-  {id:'risk', n:'Risk Category Rules',d:'Tariff change · forced labor · country risk — severity grading per event type',
-   out:'TARIFF_CHANGE: HIGH · FORCED_LABOR: HIGH · CHINA country risk: HIGH · VIETNAM: HIGH · BANGLADESH: HIGH (new Jul 24)'},
-  {id:'src',  n:'Evidence Source Registry',d:'Source priority hierarchy — CBP > Fed Register > KB > web > not-found',
-   out:'tier-1: CBP.gov, Federal Register · tier-2: KB primary · tier-3: web enrichment · gap: IEEPA history (not-found logged)'},
-  {id:'tariff',n:'TARIFF-DB',d:'Section 301 apparel tariff rates — base tier + high-risk tier, by HS chapter',
-   out:'HS 61xx–63xx AP: Base 10% / HIGH-RISK 12.5% (China) · Vietnam/Bangladesh/ID/Cambodia: 10%. Replaces IEEPA tariff (struck down Jun 2026).'},
-  {id:'country',n:'COUNTRY-DB',d:'Country risk profile — China · Vietnam · Bangladesh, tariff exposure, enforcement status',
-   out:'CHINA: HIGH RISK, 12.5%, CBP enforcement active · VIETNAM: HIGH RISK (new in scope Jul 24), 10% · BANGLADESH: HIGH RISK (new), 10%'},
-  {id:'client', n:'CLIENT-DB',d:'Apparel/hardgoods importers — origin country exposure, financing need, UFLPA status',
-   out:'HIGH × 3: Sunrise Garment (100% CN/$2.1M) · GD Textiles (100% CN/$1.8M) · GZ Fashion ($900K) · MEDIUM × 5 · 2 × UFLPA watch (pending)'},
-  {id:'commodity',n:'COMMODITY-DB',d:'HS chapter mapping — apparel, hardgoods, home textiles',
-   out:'HS 61xx–63xx CONFIRMED AP coverage · HS 62xx wrinkle/resistant CONFIRMED · HS 94xx HOME TEXTILES: NOT FOUND — KB-GAP raised'},
-  {id:'trade', n:'Trade Compliance Rules',d:'CBP ISF · HTS reclassification · entry requirements per origin',
-   out:'ISF: China/Vietnam/Bangladesh AP requires update within 24h of loading · HTS reclassification: all HS 61xx–63xx reassess under new rates · Bond sufficiency check'},
-  {id:'social', n:'Social Compliance Rules',d:'UFLPA Entity List · CTPAT · importer obligations under forced labor provisions',
-   out:'UFLPA: China-origin AP requires entity list screening (hold risk if not cleared) · CTPAT: Vietnam/Bangladesh suppliers should verify importer status'},
-  {id:'adv',   n:'Adverse Screen Rules',d:'Supplier/adverse news — forced labor, CBP seizure, sanctions',
-   out:'No adverse news confirmed on 8 clients screened · 1 watchlist flag: Guangdong supplier (pending UFLPA confirmation) · 1 CBP seizure record (resolved, past)'},
-  {id:'rate',  n:'Exposure Rating Assembly',d:'CRITICAL / MEDIUM / OK tier thresholds — by origin % and dollar exposure',
-   out:'CRITICAL: ≥80% scoped origin · MEDIUM: 20–79% · OK: <20% · CRITICAL × 3 · MEDIUM × 5 · OK: 0 clients'}
-];
-
-/* ============================== OUTPUT COLUMN ============================== */
-const OUT=[
-  {k:'INPUT',n:'Source event signal',d:'Web signal: S Section 301 forced-labor tariff, live Jul 24, 10–12.5%, ~60 economies, replaces IEEPA, China/Vietnam/Bangladesh in scope'},
-  {k:'SOURCES',n:'Sources consulted',d:'CBP.gov (tier-1) · Federal Register (tier-1) · TARIFF-DB · COUNTRY-DB · CLIENT-DB · COMPLIANCE rules · NEWS screen'},
-  {k:'KB-GAP',n:'KB gaps found',d:'HS 94xx (home textiles) not in COMMODITY-DB · Hardgoods rate split not in TARIFF-DB — both flagged for KB update'},
-  {k:'CRITICAL',n:'Critical exposure',d:'3 clients: Sunrise Garment, GD Textiles, GZ Fashion — all 100% China-origin apparel, combined $4.8M tariff exposure'},
-  {k:'BD OUTREACH',n:'BD advisory brief',d:'Origin diversification advisory: evaluate Indonesia/Cambodia for A类和C类 clients. Bangladesh reroute feasibility for Mekong Apparel. Send within 48h.'},
-  {k:'KB-GAP',n:'KB update tickets',d:'HS 94xx → COMMODITY-DB · Hardgoods rate split → TARIFF-DB. Both tickets assigned to KB management queue.'}
-];
-
-/* ============================== GOVERNANCE ============================== */
-const GOV={
-  enrich:['reg','risk','src'], evid:['src'],
-  parse:['reg','risk'], fam:['reg','risk','src','tariff','country','client','trade','social','adv','rate'],
-  cov:['tariff','country','client','commodity','trade','social','adv','rate'],
-  fetch:['tariff','country','reg'], cmap:['client','country'],
-  assemble:['tariff','country','client','commodity','trade','social','adv','rate']
-};
-
-/* ============================== RAIL ============================== */
-const RAIL=[
-  {sn:'CP5 · Insight Card',ot:'CRITICAL × 3 — Sunrise Garment, GD Textiles, GZ Fashion: immediate tariff advisory + UFLPA entity check required. BD outreach <b>48h</b>.',tag:'CRITICAL'},
-  {sn:'BD Advisory Brief',ot:'Origin diversification: Indonesia / Cambodia for A类 clients. Bangladesh reroute feasibility for Mekong Apparel. ISF update advisory for all China/Vietnam/Bangladesh shipments.',tag:'BD'},
-  {sn:'UFLPA Check Notice',ot:'2 clients flagged — pending UFLPA entity list confirmation. CBP withhold-release order risk if China-origin goods not cleared. Send to compliance team.',tag:'⚠ UFLPA'},
-  {sn:'KB Update Tickets',ot:'<em>KB-GAP-001:</em> HS 94xx home textiles → COMMODITY-DB · <em>KB-GAP-002:</em> Hardgoods rate split → TARIFF-DB. Queue for KB team.',tag:'KB-GAP'}
-];
-
-/* ============================== STATE ============================== */
-/* L2 first-use map — which CP step first queries each L2 node */
-const L2FirstStep={};
-CP.forEach(c=>c.l2.forEach(id=>{if(!(id in L2FirstStep))L2FirstStep[id]=c.id;}));
-
-let sel=null;
-
-const $=id=>document.getElementById(id);
-
-/* ============================== BUILD ============================== */
-$('cCP').innerHTML = CP.map(c=>`
-  <div class="cp ${c.out?'outstep':''}" id="${c.id}" data-c="${c.id}"
-    style="border-left-color:${c.out?'var(--ok)':'var(--co)'}">
-    <div class="cnt">${c.out?'<b>OUTPUT</b>':`L1 <b>${c.l1.length}</b> · L2 <b>${c.l2.length}</b>`}</div>
-    <div class="k">${c.k}</div>
-    <div class="n">${c.n}</div>
-    <div class="d">${c.d}</div>
-  </div>`).join('');
-
-function pzHTML(m,kind){
-  const pre=kind==='l1'?'p_':'k_';
-  const out=m.out?`<div class="outtxt"><b>&#8594; ${kind==='l1'?'L1 OUTPUT':'L2 DATA'}:</b> ${m.out}</div>`:'';
-  const reuseBadge=kind==='l2'?`<div class="reuse-badge">↩ data unchanged · referenced from prior step</div>`:'';
-  const l1cls=kind==='l1'?' is-l1':'';
-  return `<div class="pzc${l1cls}"><div class="pz ${kind==='l2'?'n2':''}" id="${pre}${m.id}" data-p="${pre}${m.id}">
-    <div class="in">
-      <div class="t">${m.n}</div>
-      <div class="d">${m.d}</div>
-      ${out}
-      ${reuseBadge}
-    </div>
-  </div></div>`;
-}
-
-$('cL1').innerHTML = L1M.map(m=>pzHTML(m,'l1')).join('');
-$('cL2').innerHTML = L2M.map(m=>pzHTML(m,'l2')).join('');
-$('cOUT').innerHTML = OUT.map(o=>`
-  <div class="dc" id="out_${o.k}">
-    <div style="font-size:7.5px;letter-spacing:.16em;color:var(--out);text-transform:uppercase;margin-bottom:3px">${o.k}</div>
-    <b style="font-size:11.5px;font-weight:500;color:var(--paper)">${o.n}</b>
-    <div style="margin-top:3px;font-size:9.5px;color:var(--muted);line-height:1.5">${o.d}</div>
-  </div>`).join('');
-
-$('cRail').innerHTML = RAIL.map(r=>`
-  <div class="rr" id="rr_${r.sn.replace(/[^a-z]/gi,'_')}">
-    <div class="sn">${r.sn}</div>
-    <div class="ot">${r.ot}</div>
-  </div>`).join('');
-
-/* stats */
-const critical=RAIL[0].ot.match(/CRITICAL × (\d+)/)?.[1]||'0';
-const bd=RAIL[1].ot?'1':'0';
-const kbGap=2;
-$('stats').innerHTML=`
-  <div class="stat ev"><i>Event</i><b>S301</b><s>Live Jul 24</s></div>
-  <div class="stat"><i>CP Steps</i><b>${CP.length}</b></div>
-  <div class="stat"><i>L1 Used</i><b>${L1M.length}</b></div>
-  <div class="stat"><i>L2 Hit</i><b>${L2M.length}</b></div>
-  <div class="stat ev"><i>Critical</i><b>${critical}</b><s>clients</s></div>
-  <div class="stat"><i>KB Gaps</i><b>${kbGap}</b></div>`;
-
-/* ============================== INTERACTIONS ============================== */
-function setSel(id){
-  if(sel===id){
-    sel=null;
-    document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','act');});
-    $('note').textContent='';
-    return;
-  }
-  sel=id;
-  const step=CP.find(c=>c.id===id);
-  if(!step)return;
-
-  // dim all
-  document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','foc-reuse','act');el.classList.add('dimmed');});
-
-  // light up selected cp
-  $(id).classList.remove('dimmed');$(id).classList.add('sel');
-
-  // light up its L1s
-  step.l1.forEach(l1=>{
-    const el=$('p_'+l1);if(el)el.classList.remove('dimmed');if(el)el.classList.add('foc');
-  });
-  // light up its L2s — first-use: full focus; reuse: muted highlight + badge
-  const firstUsed=new Set(step.l2.filter(l=>L2FirstStep[l]===id));
-  step.l2.forEach(l2=>{
-    const el=$('k_'+l2);if(!el)return;
-    el.classList.remove('dimmed');
-    el.classList.add(firstUsed.has(l2)?'foc':'foc-reuse');
-  });
-
-  // light output column
-  const outMap={'cp0':['INPUT','SOURCES'],cp1:['INPUT'],cp2:['KB-GAP'],cp3:[],cp35:['CRITICAL'],cp4:['KB-GAP','CRITICAL'],cp5:['CRITICAL','BD OUTREACH','KB-GAP']};
-  (outMap[id]||[]).forEach(k=>{
-    const el=$('out_'+k);if(el)el.classList.remove('dimmed');if(el)el.classList.add('act');
-  });
-
-  // rail
-  if(step.out){
-    document.querySelectorAll('.rr').forEach(el=>{el.classList.remove('dimmed');el.classList.add('act');});
-  } else {
-    document.querySelectorAll('.rr').forEach(el=>el.classList.add('dimmed'));
-  }
-
-  const l1n=step.l1.length,l2n=step.l2.length;
-  const l2Reuse=l2n-firstUsed.size;
-  $('note').innerHTML=`Step <b>${step.k}</b> activates <b style="color:var(--l1)">${l1n} L1 module${l1n>1?'s':''}</b> · <b style="color:var(--l2)">${firstUsed.size} new L2 quer${firstUsed.size===1?'y':'ies'}</b>${l2Reuse>0?` · <span style="opacity:.55">${l2Reuse} ref'd from prior step${l2Reuse>1?'s':''} (data unchanged)</span>`:''} — all other modules dim`;
-}
-
-document.querySelectorAll('.cp').forEach(el=>{
-  el.addEventListener('click',()=>setSel(el.dataset.c));
-});
-
-document.querySelectorAll('[data-a]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    if(btn.dataset.a==='reset'){sel=null;document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','foc-reuse','act');});$('note').textContent='';}
+pills.forEach(p=>{
+  p.addEventListener('click',()=>{
+    const cp=p.dataset.cp;
+    pills.forEach(x=>x.classList.remove('active','s-active'));
+    cards.forEach(c=>{
+      if(c.dataset.cp===cp){
+        c.classList.add('open');
+        c.scrollIntoView({behavior:'smooth',block:'start'});
+      } else {
+        c.classList.remove('open');
+      }
+    });
+    // mark active pill
+    document.querySelectorAll('.cp-pill').forEach(x=>{
+      if(x.dataset.cp===cp){
+        x.classList.add(x.dataset.cp==='cp5'?'s-active':'active');
+      }
+    });
   });
 });
 
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.cp')&&!e.target.closest('.pz')&&sel){
-    sel=null;
-    document.querySelectorAll('.cp,.pz,.dc,.rr').forEach(el=>{el.classList.remove('sel','dimmed','foc','foc-reuse','act');});
-    $('note').textContent='';
-  }
+cards.forEach(card=>{
+  card.querySelector('.cp-hdr').addEventListener('click',()=>{
+    card.classList.toggle('open');
+  });
 });
 </script>
 </body>
