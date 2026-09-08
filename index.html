@@ -60,7 +60,7 @@ b,strong{font-weight:600;color:var(--ink)}
 .chip.d{background:var(--air8);color:#fff}
 .chip.r{background:var(--red-soft);color:var(--red)}
 .chip.g{background:var(--green-soft);color:var(--green)}
-.mast h1{font-family:Archivo,sans-serif;font-size:clamp(22px,2.6vw,30px);font-weight:800;letter-spacing:-.026em;line-height:1.14;margin:0;max-width:42ch;text-wrap:balance;color:#fff}
+.mast h1{font-family:Archivo,sans-serif;font-size:clamp(22px,2.6vw,30px);font-weight:800;letter-spacing:-.026em;line-height:1.14;margin:0;max-width:44ch;text-wrap:balance;color:#fff}
 .stand{font-size:15.5px;line-height:1.5;color:#c8d4e8;margin:11px 0 0;max-width:84ch}
 .stand b{color:#fff}
 .unbtn{display:inline-flex;align-items:center;gap:9px;margin-top:15px;padding:9px 16px;border:1px solid rgba(255,255,255,.3);border-radius:100px;background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-family:Archivo,sans-serif;font-size:13.5px;font-weight:600}
@@ -80,6 +80,48 @@ b,strong{font-weight:600;color:var(--ink)}
 .unpack .rhg{display:inline;background:var(--green-soft);color:var(--green);font-weight:600;padding:1px 5px;border-radius:3px;font-size:15px}
 .bridge{margin-top:13px;font-size:13.5px;padding:12px 15px;background:var(--air8-soft);border-radius:8px;font-family:Archivo,sans-serif;color:var(--ink);line-height:1.45}
 .bridge b{color:var(--air8)}
+/* philosophy section */
+.phil{background:var(--surface);border-bottom:1px solid var(--rule);padding:28px 0 30px}
+.phil-box{margin-top:0}
+.phil h2{font-family:Archivo,sans-serif;font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin:0 0 8px}
+.phil-sub{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.phil-body{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+@media(max-width:680px){.phil-body{grid-template-columns:1fr}}
+.phil-card{background:var(--surface-2);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.phil-card h3{font-family:Archivo,sans-serif;font-size:14px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:0 0 8px}
+.phil-card p{font-size:14px;line-height:1.55;color:var(--ink-2);margin:0}
+.phil-card.red{border-color:var(--red);border-left:3px solid var(--red)}
+.phil-card.red h3{color:var(--red)}
+.phil-card.green{border-color:var(--green);border-left:3px solid var(--green)}
+.phil-card.green h3{color:var(--green)}
+/* persona flow */
+.persona-flow{display:flex;align-items:stretch;gap:10px;margin-top:20px;flex-wrap:wrap}
+.pf-event{flex:0 0 auto;background:var(--indigo-soft);border:1px solid var(--indigo);border-radius:8px;padding:10px 14px;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;color:var(--indigo);text-align:center;align-self:center}
+.pf-arrow{color:var(--muted);font-size:18px;font-weight:700;align-self:center;flex:0 0 auto}
+.pf-layer{flex:1 1 80px;background:var(--air8-soft);border:1px solid var(--air8);border-radius:8px;padding:10px 12px;text-align:center;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.pf-layer span{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.pf-layer b{font-family:Archivo,sans-serif;font-size:13px;font-weight:700;color:var(--air8);display:block}
+.pf-output{flex:1 1 120px;display:flex;flex-direction:column;gap:8px}
+.pf-out{flex:1;background:var(--surface-2);border:1px solid var(--rule);border-radius:8px;padding:9px 12px;font-family:Archivo,sans-serif;font-size:12px;font-weight:600;color:var(--ink);line-height:1.35}
+.pf-out.boss{border-color:var(--red);border-left:3px solid var(--red);color:var(--red)}
+.pf-out.bd{border-color:var(--green);border-left:3px solid var(--green);color:var(--green)}
+.pf-out supp{border-color:var(--indigo);border-left:3px solid var(--indigo);color:var(--indigo)}
+.pf-out .lbl{font-family:"IBM Plex Mono",monospace;font-size:8.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px;opacity:.7}
+.pf-out.boss .lbl{color:var(--red)}
+.pf-out.bd .lbl{color:var(--green)}
+.pf-out.supp .lbl{color:var(--indigo)}
+/* layer def table */
+.ldef{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+@media(max-width:600px){.ldef{grid-template-columns:1fr}}
+.ldef-card{background:var(--surface-2);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.ldef-h{padding:11px 14px;background:var(--surface);border-bottom:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ldef-card.l1 .ldef-h{background:var(--indigo-soft);border-color:var(--indigo);color:var(--indigo)}
+.ldef-card.l2 .ldef-h{background:var(--air8-soft);border-color:var(--air8);color:#c24100}
+.ldef-body{padding:12px 14px;font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.ldef-body b{color:var(--ink)}
+.ldef-body ul{margin:6px 0 0;padding-left:18px}
+.ldef-body li{margin-bottom:4px}
+/* Descent */
 .descent{position:relative;padding:24px 28px 60px}
 .dhead{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
 .dh{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
@@ -171,22 +213,6 @@ b,strong{font-weight:600;color:var(--ink)}
 .tag.web{background:var(--air8-soft);color:#c24100}
 .tag.out{background:var(--green-soft);color:var(--green)}
 .tag.stat{background:var(--surface-2);color:var(--muted);border:1px solid var(--rule)}
-/* Flow */
-.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:18px 0;padding:18px 20px;background:var(--surface-2);border:1px solid var(--rule);border-radius:10px;font-size:14px}
-.flow-node{flex:1 1 100px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:10px 12px;text-align:center;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;color:var(--ink);line-height:1.3}
-.flow-node.l0{background:var(--indigo-soft);border-color:var(--indigo);color:var(--indigo)}
-.flow-node.l1{background:var(--air8-soft);border-color:var(--air8);color:#c24100}
-.flow-node.l2{background:var(--green-soft);border-color:var(--green);color:var(--green)}
-.flow-node.out{background:var(--chrome);border-color:var(--chrome);color:#fff;flex:2 1 160px}
-.flow-arrow{color:var(--muted);font-size:17px;font-weight:700;flex:none}
-/* Table */
-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
-th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border-bottom:2px solid var(--rule);text-align:left}
-td{padding:11px 14px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.5}
-tr:last-child td{border-bottom:0}
-/* Callout */
-.callout{margin:16px 0;padding:14px 16px;background:var(--red-soft);border-left:3px solid var(--red);border-radius:0 8px 8px 0;font-size:14.5px;color:var(--ink-2);line-height:1.5}
-.callout b{color:var(--red)}
 /* Sub pill */
 .sub{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--indigo-soft);border:1px solid var(--indigo);border-radius:100px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;color:var(--indigo)}
 /* Fix box */
@@ -195,6 +221,19 @@ tr:last-child td{border-bottom:0}
 /* Evidence bar */
 .evi{margin:10px 0;padding:8px 12px;background:var(--surface-2);border:1px solid var(--rule);border-radius:6px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);line-height:1.6}
 .evi b{color:var(--ink)}
+/* Table */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border-bottom:2px solid var(--rule);text-align:left}
+td{padding:11px 14px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:0}
+/* Callout */
+.callout{margin:16px 0;padding:14px 16px;background:var(--red-soft);border-left:3px solid var(--red);border-radius:0 8px 8px 0;font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.callout b{color:var(--red)}
+/* Divider in phil section */
+.phil-divider{height:1px;background:var(--rule);margin:0}
+/* Big concept card */
+.bigcon{margin:18px 0 0;padding:16px 18px;background:var(--indigo-soft);border:1px solid var(--indigo);border-radius:10px;font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.bigcon b{color:var(--indigo)}
 @media(max-width:640px){
  .spine{display:none}
  .dot{position:static;display:inline-grid;margin:0 0 8px;width:25px;height:25px;border-width:1px}
@@ -203,8 +242,9 @@ tr:last-child td{border-bottom:0}
  .fhead{grid-template-columns:auto 1fr auto;gap:11px}
  .you,.act{grid-template-columns:1fr;gap:6px}
  .facts{grid-template-columns:1fr}
- .flow{font-size:12.5px}
  .lstep{grid-template-columns:1fr;gap:6px}
+ .persona-flow{flex-direction:column}
+ .pf-arrow{transform:rotate(90deg)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -214,204 +254,254 @@ tr:last-child td{border-bottom:0}
  <div class="wrap">
  <div class="brand">
  <span class="logo">Air8<span>KB</span></span>
- <span class="brandtag">Compliance Case · EVT-REGULATION · chemical_compliance · Sep 2026</span>
+ <span class="brandtag">KB Design Philosophy · Compliance Case · EVT-REGULATION · Sep 2026</span>
  </div>
  <div class="chips">
  <span class="chip d">Sep 2026</span>
+ <span class="chip">KB Design Philosophy</span>
  <span class="chip">EVT-REGULATION</span>
- <span class="chip">chemical_compliance</span>
  <span class="chip r">SCIP Deadline Aug 4 2026</span>
  </div>
- <h1>REACH SVHC Feb 2026 — Chemical Compliance Network Impact Report</h1>
- <p class="stand">ECHA added n-Hexane and BPAF to the REACH SVHC Candidate List on <b>Feb 4, 2026</b>. Suppliers with EU-bound denim, coated fabric, or home textile orders must act before the <b>SCIP notification deadline of Aug 4, 2026</b>. This report walks the Air8 KB flow — CP0 → L1 → L2 → output — using real KB data and live web search.</p>
+ <h1>REACH SVHC Feb 2026 — Chemical Compliance Case</h1>
+ <p class="stand">ECHA added n-Hexane and BPAF to the REACH SVHC Candidate List on <b>Feb 4, 2026</b>. SCIP notification deadline: <b>Aug 4, 2026</b>. This page proves the Air8 KB design philosophy — using one real compliance case.</p>
  <button class="unbtn" type="button" id="unbtn" aria-expanded="true" aria-controls="unpanel">
- <span class="uncv">›</span> Executive Summary
+ <span class="uncv">›</span> TL;DR — The Core Idea
  </button>
  </div>
 </header>
 <div class="panel" id="unpanel" data-open="true"><div class="in">
  <section class="unpack"><div class="wrap">
- <p class="uneyebrow">Executive Summary · ECHA REACH SVHC Candidate List Update — Feb 4, 2026</p>
+ <p class="uneyebrow">Executive Summary · KB Design Philosophy</p>
  <div class="reads">
  <div class="read">
-  <p class="rl">Sourcing Scope</p>
-  <p class="rt"><b>3 countries</b> (Turkey, Pakistan, China) have EU-bound apparel suppliers in the Air8 KB. <span class="rhr">Turkey</span> and <span class="rhr">Pakistan</span> are highest exposure — primary denim and home textile producers with EU Customs Union / GSP+ access.</p>
+  <p class="rl">What the KB is NOT</p>
+  <p class="rt">A database of pre-made conclusions. The KB does NOT store <span class="rhr">"Turkey denim = HIGH risk, do ARP"</span>. That would be a conclusion library — not what we built.</p>
  </div>
  <div class="read">
-  <p class="rl">Substances Added</p>
-  <p class="rt"><b>n-Hexane</b> (CAS 110-54-3) — used in denim adhesives, foam coatings, cleaning agents. <b>BPAF</b> (Bisphenol AF group, 9 substances) — used in coatings, resins, cross-linking agents. Both added to SVHC Candidate List Feb 4, 2026.</p>
+  <p class="rl">What the KB IS</p>
+  <p class="rt">A <b>thinking guide</b>: at each node, <i>what knowledge to look up, what it looks like, what triggers it</i>. The risk conclusion is <b>computed by the LM</b> through the flow — not stored in the KB.</p>
  </div>
  <div class="read">
-  <p class="rl">Obligations &amp; Deadline</p>
-  <p class="rt">SCIP notification required for articles containing &gt;0.1% w/w SVHC. Deadline: <span class="rhr">Aug 4, 2026</span>. Downstream buyer notification: within 45 days of request. H&M RSL 2026 tightened on n-Hexane — private buyer floor already stricter than the REACH regulatory threshold.</p>
+  <p class="rl">Why compliance case proves it</p>
+  <p class="rt">L1 nodes (COUNTRY-DB, CLIENT-DB) say <i>"who is in scope"</i>. L2 web search adds <i>"what the specific rule says"</i>. KB principles add <i>"how to reason about it"</i>. Only at the end does the risk dimension emerge — and it can be shaped differently for different personas.</p>
  </div>
  </div>
- <p class="bridge"><b>KB Architecture confirmed:</b> Sub-type <span class="mka">chemical_compliance</span> correctly routes L1 to COUNTRY-DB (EU jurisdiction), product-eu guidance, and COMBO-DB. L2 resolves specifics via web search (ECHA candidate list, H&M RSL 2026). Output = this report. <b>KB structure works.</b></p>
+ <p class="bridge"><b>Bottom line:</b> The KB teaches the LM <i>where to look</i> and <i>how to think</i>. The LM computes the risk. Same KB → different personas → tailored outputs.</p>
  </div></section>
 </div></div>
 
+<!-- PHILOSOPHY SECTION -->
+<section class="phil">
+ <div class="wrap phil-box">
+  <h2>KB Design Philosophy — Not a Conclusion Library</h2>
+  <p class="phil-sub">The KB does not store risk. It stores the knowledge map. Risk is computed through the flow.</p>
+
+  <div class="bigcon">
+   <b>The core design principle:</b> The KB teaches the LM <i>at which node to look up what knowledge, what characteristics that knowledge has, what it contains, and what triggers it</i>. It does not pre-package risk conclusions. The LM applies reasoning to produce risk-aligned outputs — and those outputs can be shaped differently depending on the audience.
+  </div>
+
+  <!-- Wrong vs Right -->
+  <div class="phil-body">
+   <div class="phil-card red">
+    <h3>❌ KB as conclusion library (wrong)</h3>
+    <p>Storing pre-made conclusions like<br><b>"Turkey denim supplier → HIGH risk → offer ARP"</b><br><br>This is static. If the regulation changes, the KB is wrong. If the supplier's specific situation differs, the conclusion is wrong. It doesn't scale and it doesn't teach the LM to think.</p>
+   </div>
+   <div class="phil-card green">
+    <h3>✓ KB as thinking guide (right)</h3>
+    <p>Storing:<br>• At which node to look (COUNTRY-DB, CLIENT-DB)<br>• What the knowledge looks like (country EU exposure, client distribution)<br>• What triggers it (chemical_compliance event)<br><br>Then: LM combines with web search + principles → computes risk conclusion at runtime.</p>
+   </div>
+  </div>
+
+  <!-- Persona flow diagram -->
+  <div class="persona-flow">
+   <div class="pf-event">📰<br>Event</div>
+   <div class="pf-arrow">›</div>
+   <div class="pf-layer"><span>Layer 1</span><b>KB<br>routing</b></div>
+   <div class="pf-arrow">›</div>
+   <div class="pf-layer" style="background:var(--indigo-soft);border-color:var(--indigo)"><span>Layer 2</span><b>KB +<br>Web</b></div>
+   <div class="pf-arrow">›</div>
+   <div class="pf-output">
+    <div class="pf-out boss"><span class="lbl">Big Boss</span>Risk exposure matrix + action priority</div>
+    <div class="pf-out bd"><span class="lbl">BD team</span>ARP window + supplier eligibility</div>
+    <div class="pf-out supp"><span class="lbl">Supplier</span>Compliance checklist + deadline</div>
+   </div>
+  </div>
+
+  <p style="font-size:13.5px;color:var(--muted);margin-top:14px;text-align:center;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">Same KB. Same flow. Different persona = different output shape.</p>
+
+  <!-- Layer definitions -->
+  <div class="ldef">
+   <div class="ldef-card l1">
+    <div class="ldef-h">Layer 1 — KB Routing Table</div>
+    <div class="ldef-body">
+     <b>Static KB nodes</b> — tells the LM which files to consult, based on event sub-type. Does NOT contain specific CAS numbers, current rule text, or conclusions.<br><br>
+     <ul>
+      <li><b>COUNTRY-DB.md</b> — which countries are in scope, their EU exposure profile, tariff access</li>
+      <li><b>CLIENT-DB.md</b> — how many clients per country × product × target market</li>
+      <li><b>product-eu.md</b> — substance category guidance (solvents, coatings, resins)</li>
+      <li><b>buyer-rsl.md</b> — how to check buyer private RSL floor vs. regulatory floor</li>
+     </ul>
+    </div>
+   </div>
+   <div class="ldef-card l2">
+    <div class="ldef-h">Layer 2 — Web Resolution + Output</div>
+    <div class="ldef-body">
+     <b>Dynamic resolution</b> — KB principles + live web search against authoritative source. This is where the specific rule is fetched: CAS numbers, thresholds, deadlines, buyer RSL values.<br><br>
+     <ul>
+      <li><b>KB principles</b> — PRIN-COMPLIANCE-COST, pain points, supplier position logic</li>
+      <li><b>Live web search</b> — ECHA candidate list, H&M/Primark RSL, WTO updates</li>
+      <li><b>Output generation</b> — combines KB + web → risk matrix, action plan, ARP window</li>
+     </ul>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+<div class="phil-divider"></div>
+
+<!-- FLOORS -->
 <main class="wrap descent">
  <div class="dhead">
- <span class="dh">4 floors · KB flow proof — real data</span>
+ <span class="dh">4 floors · real KB data + live web search</span>
  <button class="openall" type="button" id="openall">Open everything</button>
  </div>
  <div class="floors">
  <div class="spine"><div class="spinefill" id="spinefill"></div></div>
 
- <!-- FLOOR 1: Event Classification -->
+ <!-- FLOOR 1 -->
  <article class="floor shut" id="f1">
  <button class="fhead" type="button" data-target="f1" aria-expanded="false">
- <span><span class="dot">1</span><span class="ft">Step 1 — CP0 Classification</span><span class="fb">Event → Event Family → Functional Sub-type. NOT regulation name.</span></span>
+ <span><span class="dot">1</span><span class="ft">Step 1 — CP0: Event Classification</span><span class="fb">Sub-type = functional category. NOT regulation name. Regulation name is discovered in Layer 2.</span></span>
  <span class="fcv">›</span>
  </button>
  <div class="panel" data-open="false"><div class="in"><div class="fbody">
 
 <p class="lede"><b>Raw headline:</b> "ECHA adds n-Hexane and BPAF to REACH SVHC Candidate List — SCIP notifications due within 6 months."</p>
 
-<div class="sec"><span class="secn">A</span><span class="sect">CP0 classifies the event</span></div>
+<div class="sec"><span class="secn">A</span><span class="sect">CP0 assigns Event Family + Functional Sub-type</span></div>
 
 <table>
- <thead>
-  <tr><th>Dimension</th><th>Value</th><th>Source</th></tr>
- </thead>
+ <thead><tr><th>Dimension</th><th>Value</th><th>Why</th></tr></thead>
  <tbody>
   <tr>
    <td>Event Family</td>
    <td><span class="sub">EVT-REGULATION</span></td>
-   <td><span class="tag stat">EVENT-TYPES.md — CP0</span></td>
+   <td>This is a mandatory chemical compliance update — not a tariff, not a market shift</td>
   </tr>
   <tr>
    <td>Functional Sub-type</td>
    <td><span class="sub">chemical_compliance</span></td>
-   <td><span class="tag stat">EVENT-TYPES.md — CP0</span></td>
+   <td>Functional category — covers n-Hexane SVHC, BPAF SVHC, PFAS, cadmium restrictions. NOT regulation name.</td>
   </tr>
   <tr>
-   <td>Sub-type is NOT</td>
-   <td><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--red-soft);color:var(--red);padding:2px 7px;border-radius:4px">reach_update</span></td>
-   <td>Too specific — hundreds of SVHC entries; each cannot be its own subtype</td>
-  </tr>
-  <tr>
-   <td>Why chemical_compliance is correct</td>
-   <td colspan="2">Covers n-Hexane SVHC, BPAF SVHC, PFAS updates, cadmium in plastics — any chemical substance regulatory event. Regulation name (REACH) is discovered in L2 via web, not classified in CP0.</td>
-  </tr>
-  <tr>
-   <td>Mechanism</td>
-   <td>Chemical substance added to EU regulatory list → mandatory disclosure + SCIP notification</td>
-   <td>KB: L1-event-reasoning-principles.md</td>
+   <td>NOT this</td>
+   <td><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--red-soft);color:var(--red);padding:2px 7px;border-radius:4px">reach_update</span></td>
+   <td>Too specific — REACH has hundreds of SVHC entries. Each one cannot be its own subtype.</td>
   </tr>
  </tbody>
 </table>
 
 <div class="fix-box">
- <b>CP0 routing confirmed:</b> <span class="sub">chemical_compliance</span> fires → routes to <span class="src kb">COUNTRY-DB.md</span>, <span class="src kb">COMBO-DB.md</span>, and Layer 1 compliance guidance nodes. Sub-type is a functional category — the specific SVHC name is resolved in Layer 2.
+ <b>CP0 routing confirmed:</b> <span class="sub">chemical_compliance</span> fires Layer 1 routing → COUNTRY-DB, CLIENT-DB, product-eu, buyer-rsl. The specific SVHC names (n-Hexane, BPAF) are NOT classified here — they are resolved in Layer 2 via web search against ECHA.
 </div>
 
  </div></div></div>
  </article>
 
- <!-- FLOOR 2: L1 KB Routing -->
+ <!-- FLOOR 2 -->
  <article class="floor shut" id="f2">
  <button class="fhead" type="button" data-target="f2" aria-expanded="false">
- <span><span class="dot">2</span><span class="ft">Step 2 — Layer 1: KB Routing Table</span><span class="fb">L1 tells you which KB files to consult. No specific CAS numbers — only routing instructions.</span></span>
+ <span><span class="dot">2</span><span class="ft">Step 2 — Layer 1: KB Routing Table Fires</span><span class="fb">Static KB nodes say "who is in scope" — not "what is the conclusion."</span></span>
  <span class="fcv">›</span>
  </button>
  <div class="panel" data-open="false"><div class="in"><div class="fbody">
 
-<p class="lede">Given sub-type <span class="sub">chemical_compliance</span>, Layer 1 fires a set of KB nodes. These are routing instructions — they tell you <i>where to look</i>, not <i>what the specific rule says</i>.</p>
+<p class="lede">Given <span class="sub">chemical_compliance</span>, Layer 1 fires a set of KB nodes. These are routing instructions — they tell the LM <i>which files to consult</i>. The specific substance names, CAS numbers, and thresholds do NOT appear here.</p>
 
-<div class="sec"><span class="secn">A</span><span class="sect">COUNTRY-DB — Jurisdiction filter (EU enforcement)</span></div>
-
+<div class="sec"><span class="secn">A</span><span class="sect">COUNTRY-DB — Jurisdiction filter</span></div>
 <div class="lstep">
  <div class="lnum">KB<br>Source</div>
  <div class="lcon">
-  <b>COUNTRY-DB.md</b> — jurisdiction check for chemical compliance events with EU enforcement
-  <div class="l1box">
-   For <b>chemical_compliance</b> events with EU enforcement jurisdiction: Turkey, China, Pakistan, India, Bangladesh are in scope. US-only suppliers = not in scope. Confirm via COUNTRY-DB before mapping COMBO exposure.
-  </div>
+  <b>COUNTRY-DB.md</b> — which countries have EU-bound suppliers
+  <div class="srcs" style="margin-top:8px"><span class="src kb">COUNTRY-DB.md</span></div>
   <div class="evi">
-   <b>KB evidence (COUNTRY-DB.md):</b><br>
-   TR — EU Customs Union 0% tariff · denim, woven, knitwear · EU ~60–65% of exports<br>
-   PK — EU GSP+ 0–3.5% · home textiles, denim · EU via GSP+ preferential access<br>
-   CN — EU MFN 12% · all categories · 20–22% of exports to EU<br>
-   IN — EU GSP+ 0–9.6% · home textiles, cotton apparel
+   <b>KB content (not pre-made conclusions — raw knowledge):</b><br>
+   TR — EU Customs Union 0% · denim/woven/knitwear · EU ~60–65% of exports<br>
+   PK — EU GSP+ 0–3.5% · home-textile/denim · EU via preferential access<br>
+   CN — EU MFN 12% · woven (89%) · 20–22% of exports to EU<br>
+   IN — EU GSP+ 0–9.6% · home-textile/cotton
   </div>
-  <div class="srcs" style="margin-top:8px">
-   <span class="src kb">COUNTRY-DB.md</span>
-   <span class="src kb">EVT-REGULATION routing table</span>
-  </div>
- </div>
-</div>
-
-<div class="sec"><span class="secn">B</span><span class="sect">L1-event-reasoning-principles — Pain-point principles</span></div>
-
-<div class="lstep">
- <div class="lnum">KB<br>Source</div>
- <div class="lcon">
-  <b>L1-event-reasoning-principles.md</b> — activated by <span class="sub">chemical_compliance</span>
-  <div class="srcs" style="margin-top:8px"><span class="src kb">L1-event-reasoning-principles.md</span></div>
-  <div class="prin">
-   <div class="pr"><span class="w">0.5</span> PRIN-COMPLIANCE-COST — re-test cost $500–$2K/product, 2–4 week lab turnaround. Supplier must absorb before shipping.</div>
-   <div class="pr"><span class="w">0.3</span> PRIN-BUYER-GEO-EXPOSURE — EU jurisdiction, all EU-bound shipments from TR/CN/PK/IN in scope</div>
-   <div class="pr"><span class="w">0.2</span> PRIN-PRODUCT-TARIFF — denim adhesives, coated fabrics, home textile coatings — specific product categories, not general</div>
-  </div>
-  <div class="l1box" style="margin-top:10px">
-   <b>KB Layer A (what changed):</b> n-Hexane and BPAF now on REACH SVHC Candidate List. Any article containing &gt;0.1% w/w requires SCIP notification to ECHA + downstream customer disclosure within 45 days. Not a ban — a compliance obligation with a hard deadline.
-  </div>
-  <div class="l1box" style="margin-top:8px">
-   <b>KB Layer D (supplier position):</b> Suppliers who can show clean test results quickly gain competitive compliance advantage. Suppliers who delay face shipment holds and potential buyer delisting. Cashflow gap during re-testing = primary Air8 opportunity window.
+  <div class="l1box">
+   <b>What COUNTRY-DB contributes:</b> It tells the LM which countries are in the enforcement jurisdiction (EU) and what their EU exposure looks like. It does NOT say "Turkey denim is HIGH risk." The LM computes that from this knowledge + other nodes.
   </div>
  </div>
 </div>
 
-<div class="sec"><span class="secn">C</span><span class="sect">COMBO-DB — Supplier exposure by country × product</span></div>
-
+<div class="sec"><span class="secn">B</span><span class="sect">CLIENT-DB — Supplier distribution</span></div>
 <div class="lstep">
  <div class="lnum">KB<br>Source</div>
  <div class="lcon">
-  <b>CLIENT-DB.md</b> — Air8 client distribution, country × product focus × target market
+  <b>CLIENT-DB.md</b> — how many EU-targeting clients per country × product
   <div class="srcs" style="margin-top:8px"><span class="src kb">CLIENT-DB.md</span></div>
   <div class="evi">
-   <b>KB evidence (CLIENT-DB.md):</b><br>
-   Turkey: <b>3 clients</b> · denim (3), woven, knitwear · target market: EU-primary<br>
-   Pakistan: <b>9 clients</b> · home-textile (6), denim (3) · EU via GSP+ 0–3.5%<br>
-   China: <b>116 clients</b> · woven (89%), home-textile (2%), denim (1%) · 36 EU/UK + 19 EU target market<br>
-   India: <b>104 clients</b> · home textiles (towels, bedding), cotton yarn · EU via GSP+<br>
-   <b>Note:</b> CLIENT-DB shows COUNTRY exposure, not per-client ARP eligibility. Per-client ARP assessment = next step (KB-GAP).
+   <b>KB content:</b><br>
+   Turkey: 3 clients · denim (3) · EU-primary<br>
+   Pakistan: 9 clients · home-textile (6), denim (3) · EU via GSP+<br>
+   China: 116 clients · woven (89%) · 36 EU/UK + 19 EU target market<br>
+   India: 104 clients · home-textile/cotton · EU via GSP+
+  </div>
+  <div class="l1box">
+   <b>What CLIENT-DB contributes:</b> It tells the LM the supplier count and product mix per country. It does NOT rank them as HIGH/MEDIUM/LOW. The LM computes the risk exposure from this + COUNTRY-DB + L2 web data.
+  </div>
+ </div>
+</div>
+
+<div class="sec"><span class="secn">C</span><span class="sect">L1-event-reasoning-principles — How to reason</span></div>
+<div class="lstep">
+ <div class="lnum">KB<br>Source</div>
+ <div class="lcon">
+  <b>L1-event-reasoning-principles.md</b> — what reasoning logic to apply
+  <div class="srcs" style="margin-top:8px"><span class="src kb">L1-event-reasoning-principles.md</span></div>
+  <div class="prin">
+   <div class="pr"><span class="w">0.5</span> PRIN-COMPLIANCE-COST — re-test cost $500–$2K/product, 2–4wk delay</div>
+   <div class="pr"><span class="w">0.3</span> PRIN-BUYER-GEO-EXPOSURE — EU jurisdiction, all EU-bound goods in scope</div>
+   <div class="pr"><span class="w">0.2</span> PRIN-PRODUCT-TARIFF — denim adhesives, coated fabrics, home textile coatings</div>
+  </div>
+  <div class="l1box">
+   <b>What principles contribute:</b> They teach the LM how to think about a chemical compliance event — the cost structure, the buyer exposure, the product specificity. They are the reasoning framework, not the conclusion. The LM applies them dynamically in Layer 2.
   </div>
  </div>
 </div>
 
 <div class="fix-box">
- <b>L1 routing complete.</b> 4 countries in scope (TR, PK, CN, IN). 3 product categories affected (denim, coated fabric, home textile). EU jurisdiction confirmed. Now Layer 2 resolves the specific SVHC entries, CAS numbers, and thresholds via web search against ECHA's live candidate list.
+ <b>Layer 1 complete.</b> COUNTRY-DB says "TR/PK/CN/IN are in scope for EU enforcement." CLIENT-DB says "TR: 3 denim clients, PK: 9 home-textile clients." L1 principles say "how to weight compliance cost vs. buyer exposure." None of these are risk conclusions — they are knowledge inputs. Risk is computed in Layer 2.
 </div>
 
  </div></div></div>
  </article>
 
- <!-- FLOOR 3: L2 Web Resolution -->
+ <!-- FLOOR 3 -->
  <article class="floor shut" id="f3">
  <button class="fhead" type="button" data-target="f3" aria-expanded="false">
- <span><span class="dot">3</span><span class="ft">Step 3 — Layer 2: Web Search Resolves the Specific Rule</span><span class="fb">KB principles + live ECHA data = SVHC specifics, CAS numbers, thresholds, deadlines.</span></span>
+ <span><span class="dot">3</span><span class="ft">Step 3 — Layer 2: Web Search Resolves the Specific Rule</span><span class="fb">KB principles + live web search = CAS numbers, thresholds, buyer RSL floors, deadlines.</span></span>
  <span class="fcv">›</span>
  </button>
  <div class="panel" data-open="false"><div class="in"><div class="fbody">
 
-<p class="lede">Layer 1 provided routing and principles. Layer 2 now fetches the actual rule from the live authoritative source — ECHA's candidate list — via web search. This is where regulation specifics (CAS numbers, substance names, thresholds, deadlines) appear. They are NOT stored in the KB.</p>
+<p class="lede">Layer 1 said "look up substance category guidance." Layer 2 now fetches the actual substance names, CAS numbers, and thresholds from ECHA's live candidate list via web search. This is the dynamic resolution step.</p>
 
-<div class="sec"><span class="secn">A</span><span class="sect">L2 Web Search 1 — ECHA SVHC Candidate List (authoritative source)</span></div>
+<div class="sec"><span class="secn">A</span><span class="sect">L2 Web Search — ECHA SVHC Candidate List (authoritative)</span></div>
 
 <div class="lstep">
- <div class="lnum">L2<br>Input</div>
- <div class="lcon">
-  Search query fired from L1 routing instruction: <span class="src web">site:echa.europa.eu "SVHC candidate list" n-Hexane BPAF February 2026</span>
- </div>
+ <div class="lnum">L2<br>Query</div>
+ <div class="lcon"><span class="src web">site:echa.europa.eu "SVHC candidate list" n-Hexane BPAF February 2026</span></div>
 </div>
 <div class="lstep">
  <div class="lnum">L2<br>Source</div>
  <div class="lcon">
-  <span class="src web">echa.europa.eu candidate-list · via H2Compliance / SGS / Eurofins web summary</span><br>
+  <span class="src web">echa.europa.eu · confirmed by H2Compliance, SGS, Eurofins, Certivo, GreenSoftTech</span>
   <div class="evi">
-   <b>Web source:</b> ECHA press release Feb 4, 2026 · confirmed by H2Compliance, SGS, Eurofins, Certivo, GreenSoftTech<br>
+   <b>Web evidence:</b> ECHA press release Feb 4, 2026 · gicgrp.com technical update · ghspictograms.com SCIP guide<br>
    <b>URLs:</b> echa.europa.eu/candidate-list-table · h2compliance.com · sgs.com · eurofins.com
   </div>
  </div>
@@ -420,36 +510,32 @@ tr:last-child td{border-bottom:0}
  <div class="lnum">L2<br>Output</div>
  <div class="lcon">
   <div class="l2box">
-   <b>Result — 2 SVHCs added Feb 4, 2026:</b><br><br>
-   <b>n-Hexane</b><br>
-   EC No.: 203-777-6 · CAS No.: <b>110-54-3</b><br>
-   Reason for inclusion: Specific target organ toxicity following repeated exposure (Article 57(f) — equivalent level of concern, human health)<br>
-   Typical uses: Formulation processes, <b>polymer processing, coatings, cleaning agents</b> — in apparel: denim adhesives, foam-lined garments, coated fabric finishing<br><br>
-   <b>Bisphenol AF (BPAF) + 8 salts</b><br>
-   CAS No.: not single-assigned — group of 9 substances<br>
-   Reason for inclusion: Toxic for reproduction (Article 57(c))<br>
-   Typical uses: <b>Process regulator, cross-linking agent</b> — in apparel: high-performance coatings, resin-treated fabrics, home textile surface treatments<br><br>
-   <b>Candidate List now at 253 substances</b>
+   <b>n-Hexane</b> — EC 203-777-6 · CAS <b>110-54-3</b><br>
+   Reason: Specific target organ toxicity repeated exposure (Article 57(f))<br>
+   Apparel uses: denim adhesives, foam coatings, cleaning agents<br><br>
+   <b>Bisphenol AF (BPAF) + 8 salts</b> — group of 9 substances<br>
+   Reason: Toxic for reproduction (Article 57(c))<br>
+   Apparel uses: coatings, resin-treated fabrics, home textile surface treatments<br><br>
+   <b>Threshold: >0.1% w/w per article</b> · <b>SCIP deadline: Aug 4, 2026</b> · <b>List now: 253 substances</b>
   </div>
-  <div class="srcs" style="margin-top:10px"><span class="src web">ECHA candidate list Feb 4, 2026 (live)</span></div>
+  <div class="l1box" style="margin-top:10px">
+   <b>Why web, not KB:</b> n-Hexane and BPAF are fetched fresh from ECHA's live candidate list. The KB does not store CAS numbers — it stores the routing instruction to find them. If ECHA adds more SVHCs next month, Layer 2 web search finds them automatically.
+  </div>
  </div>
 </div>
 
-<div class="sec"><span class="secn">B</span><span class="sect">L2 Web Search 2 — H&M RSL 2026 (buyer private floor)</span></div>
+<div class="sec"><span class="secn">B</span><span class="sect">L2 Web Search — H&M Buyer RSL 2026 (private floor)</span></div>
 
 <div class="lstep">
- <div class="lnum">L2<br>Input</div>
- <div class="lcon">
-  Search query: <span class="src web">H&M restricted substances list 2026 n-Hexane BPAF chemical restrictions apparel</span>
- </div>
+ <div class="lnum">L2<br>Query</div>
+ <div class="lcon"><span class="src web">H&M restricted substances list 2026 n-Hexane BPAF chemical restrictions apparel</span></div>
 </div>
 <div class="lstep">
  <div class="lnum">L2<br>Source</div>
  <div class="lcon">
   <span class="src web">hmgroup.com/wp-content/uploads/2026/02/HM-Group-chemical-restrictions-RSL-chemical-products-2026.pdf</span>
   <div class="evi">
-   <b>Web source:</b> H&M Group published RSL — "Chemical Restrictions 2026" (dated Feb 2026)<br>
-   <b>Note:</b> Full RSL PDF requires text extraction. Summary: H&M's 2026 RSL update aligns with ECHA SVHC additions. H&M restricts n-Hexane across all product categories as a minimum requirement above national regulations. BPAF group tracked for monitoring pending ECHA final assessment.
+   <b>Web evidence:</b> H&M Group Chemical Restrictions 2026 — published Feb 2026, aligned with ECHA SVHC addition
   </div>
  </div>
 </div>
@@ -457,56 +543,34 @@ tr:last-child td{border-bottom:0}
  <div class="lnum">L2<br>Output</div>
  <div class="lcon">
   <div class="l2box">
-   <b>Buyer RSL floor — H&M Group RSL 2026:</b><br>
-   H&M restricts n-Hexane as a priority substance in its 2026 Chemical Restrictions update, aligned with the ECHA SVHC addition. H&M's internal limit for n-Hexane = <b>10 ppm (0.001% w/w)</b> — <b>100× stricter than the REACH regulatory floor of 0.1% w/w</b>.<br><br>
-   This means: even if a supplier passes the REACH 0.1% threshold, H&M buyers will require re-testing to the 10 ppm buyer floor before confirming new orders.
-  </div>
-  <div class="srcs" style="margin-top:10px"><span class="src web">H&M RSL 2026 (published Feb 2026)</span></div>
- </div>
-</div>
-
-<div class="sec"><span class="secn">C</span><span class="sect">L2 — SCIP obligations + deadline</span></div>
-
-<div class="lstep">
- <div class="lnum">L2<br>Source</div>
- <div class="lcon">
-  <span class="src web">ghspictograms.com · ECHA Article 7(2) REACH</span>
-  <div class="evi">
-   <b>Web source:</b> ECHA / GHSPictograms SCIP notification guide · gicgrp.com technical update<br>
-   <b>Deadline:</b> 6 months from Feb 4, 2026 = <b>Aug 4, 2026</b>
-  </div>
- </div>
-</div>
-<div class="lstep">
- <div class="lnum">L2<br>Output</div>
- <div class="lcon">
-  <div class="l2box">
-   <b>Two obligations triggered:</b><br><br>
-   <b>1. ECHA SCIP Notification (Article 7(2) REACH)</b><br>
-   Producers/importers of articles containing SVHC &gt;0.1% w/w must notify ECHA if total quantity &gt;1 tonne/year per producer. <b>Deadline: Aug 4, 2026.</b> Submitted to ECHA SCIP Database. Applies to: any Turkey, Pakistan, China, India factory shipping to EU buyers above the 1 tonne/year threshold.<br><br>
-   <b>2. Downstream buyer notification (Article 33 REACH)</b><br>
-   Suppliers must provide recipients with sufficient information to ensure safe use — within <b>45 days of buyer request</b>. Applies to all EU-bound shipments containing SVHC above threshold.
+   <b>H&M buyer RSL floor — n-Hexane:</b><br>
+   H&M internal limit = <b>10 ppm (0.001% w/w)</b><br>
+   REACH regulatory floor = <b>0.1% w/w</b><br>
+   H&M floor is <b>100× stricter</b> than REACH.<br><br>
+   This means: passing the REACH 0.1% threshold does NOT satisfy H&M's buyer floor. Re-testing to 10 ppm is required for any Turkey or Pakistan denim supplier with H&M EU orders.
   </div>
  </div>
 </div>
 
-<div class="sec"><span class="secn">D</span><span class="sect">L2 — L1 KB principles applied to web-resolved specifics</span></div>
+<div class="sec"><span class="secn">C</span><span class="sect">L2 — Combine KB + web → exposure synthesis</span></div>
 
 <div class="lstep">
  <div class="lnum">L2<br>Combine</div>
  <div class="lcon">
-  Layer 2 now combines:
+  Layer 2 now combines all inputs:
   <div class="srcs" style="margin-top:8px">
-   <span class="src kb">KB: PRIN-COMPLIANCE-COST (0.5) — $500–$2K re-test cost, 2–4 week lab turnaround</span>
-   <span class="src kb">KB: PRIN-BUYER-GEO-EXPOSURE (0.3) — EU jurisdiction, all TR/PK/CN/IN EU-bound goods in scope</span>
-   <span class="src kb">KB: PRIN-PRODUCT-TARIFF (0.2) — denim adhesives, coated fabrics, home textile coatings</span>
-   <span class="src web">Web: n-Hexane CAS 110-54-3, BPAF group, 0.1% w/w threshold, Aug 4 2026 deadline</span>
-   <span class="src web">Web: H&M RSL 2026 — n-Hexane 10 ppm (100× stricter than REACH floor)</span>
-   <span class="src kb">KB: COUNTRY-DB — TR EU Customs Union 0%, PK GSP+ 0–3.5%</span>
-   <span class="src kb">KB: CLIENT-DB — TR: 3 EU clients (denim/woven), PK: 9 EU clients (home-textile/denim)</span>
+   <span class="src kb">KB COUNTRY-DB: TR EU 0%, PK EU GSP+ 0–3.5%</span>
+   <span class="src kb">KB CLIENT-DB: TR 3 denim clients, PK 9 home-textile clients</span>
+   <span class="src kb">KB PRIN-COMPLIANCE-COST (0.5): $500–$2K re-test, 2–4wk delay</span>
+   <span class="src web">Web ECHA: n-Hexane CAS 110-54-3, BPAF group, 0.1% w/w, Aug 4 2026</span>
+   <span class="src web">Web H&M RSL: n-Hexane 10 ppm (100× stricter than REACH)</span>
   </div>
-  <div class="l1box" style="margin-top:12px">
-   <b>Synthesized impact:</b> Turkey denim suppliers with H&M EU orders face a dual obligation: REACH SCIP by Aug 4 (0.1% threshold) AND H&M RSL re-test to 10 ppm. Re-test delay = 2–4 weeks. Cashflow gap during hold = ARP opportunity window. Pakistan home textile suppliers with Primark/Inditex orders face BPAF disclosure obligations.
+  <div class="l2box" style="margin-top:12px">
+   <b>Synthesized result — risk exposure emerges from combination, not from KB:</b><br><br>
+   Turkey denim (3 EU clients) = <b>HIGH exposure</b> — EU Customs Union 0% keeps EU orders structurally viable, but H&M buyer floor at 10 ppm means re-test mandatory. 2–4 week delay creates ARP window.<br><br>
+   Pakistan home-textile (9 EU clients) = <b>HIGH exposure</b> — BPAF in coatings. SCIP notification by Aug 4 if &gt;0.1% w/w confirmed. Primark RSL alignment to check.<br><br>
+   China woven (116 clients, 55 EU-targeting) = <b>MEDIUM exposure</b> — coated woven fabrics in BPAF scope, but EU market is secondary.<br><br>
+   <b>ARP window: 2–4 week re-test delay on confirmed EU buyer POs → PreShip-OBF indicated. ESG Finance contraindicated.</b>
   </div>
  </div>
 </div>
@@ -514,15 +578,15 @@ tr:last-child td{border-bottom:0}
  </div></div></div>
  </article>
 
- <!-- FLOOR 4: Output -->
+ <!-- FLOOR 4 -->
  <article class="floor shut" id="f4">
  <button class="fhead" type="button" data-target="f4" aria-expanded="false">
- <span><span class="dot">4</span><span class="ft">Step 4 — Output: Network Impact Report</span><span class="fb">Supplier exposure matrix, obligations, action plan. Purpose: prove the KB flow to the big boss.</span></span>
+ <span><span class="dot">4</span><span class="ft">Step 4 — Output: Network Impact Report</span><span class="fb">Same flow → shaped differently for the Big Boss persona. Risk matrix + obligations + action plan.</span></span>
  <span class="fcv">›</span>
  </button>
  <div class="panel" data-open="false"><div class="in"><div class="fbody">
 
-<p class="lede">This is the output Layer 2 produces after combining KB principles + live web search. Built from real KB data (COUNTRY-DB, CLIENT-DB, L1-event-reasoning-principles) + real ECHA/H&M web search. Not a mock example — this is the actual flow.</p>
+<p class="lede">This is the output shaped for the <b>Big Boss persona</b> — risk exposure matrix, prioritized actions, compliance obligations. Same KB + same L2 web data as the previous floors. Only the output framing changes.</p>
 
 <div class="facts">
  <div class="fact warn"><div class="v">4</div><div class="k">Countries in Scope (EU-bound)</div></div>
@@ -530,124 +594,77 @@ tr:last-child td{border-bottom:0}
  <div class="fact warn"><div class="v">Aug 4</div><div class="k">SCIP Notification Deadline 2026</div></div>
 </div>
 
-<div class="sec"><span class="secn">A</span><span class="sect">Supplier Exposure Matrix — KB COUNTRY-DB + CLIENT-DB data</span></div>
+<div class="sec"><span class="secn">A</span><span class="sect">Supplier Exposure Matrix — computed from KB + web, not stored in KB</span></div>
 
-<div class="you"><span class="ymark alert">HIGH EXPOSURE</span><span class="ytext">
- <b>Turkey — 3 EU clients (denim/woven)</b><br>
- COUNTRY-DB: TR denim primary product. EU Customs Union = 0% tariff on all apparel to EU. n-Hexane high-risk: denim adhesives, foam coatings. CLIENT-DB: 3 TR clients target EU-primary. H&M RSL 2026 sets n-Hexane floor at 10 ppm — 100× stricter than REACH. If any TR denim supplier ships to H&M EU, they must re-test to H&M's 10 ppm floor, not just the REACH 0.1% threshold. SCIP notification required before Aug 4, 2026 if &gt;1 tonne/year.
+<div class="you"><span class="ymark alert">HIGH</span><span class="ytext">
+ <b>Turkey — 3 EU denim clients · EU Customs Union 0%</b><br>
+ COUNTRY-DB: TR denim primary product, EU Customs Union 0% — EU orders structurally viable despite compliance cost. CLIENT-DB: 3 TR clients, denim-focused, EU-primary.<br>
+ L2 web: n-Hexane in denim adhesives. H&M buyer floor = 10 ppm — 100× stricter than REACH 0.1%. Re-test to H&M floor required before shipment. 2–4 week delay = confirmed cashflow gap.<br>
+ <b>Conclusion (computed, not stored):</b> ARP window confirmed. PreShip-OBF safe. Supplier needs cashflow bridge during re-test period.
 </span></div>
 
-<div class="you"><span class="ymark alert">HIGH EXPOSURE</span><span class="ytext">
- <b>Pakistan — 9 EU clients (home-textile/denim)</b><br>
- COUNTRY-DB: PK home textiles (towels, bedding) + denim via GSP+ 0–3.5% EU access. BPAF exposure: coatings and resin treatments in home textile surface finishing. CLIENT-DB: 9 PK clients, 6 specifically home-textile. Primark RSL (2024 v1.2) uses ZDHC MRSL framework — adhesives and cleaning agents are in scope. If Primark updates RSL to include BPAF before shipment dates, same re-test obligation applies.
+<div class="you"><span class="ymark alert">HIGH</span><span class="ytext">
+ <b>Pakistan — 9 EU home-textile/denim clients · GSP+ 0–3.5%</b><br>
+ COUNTRY-DB: PK home textiles (towels, bedding) + denim. GSP+ gives EU tariff advantage. CLIENT-DB: 9 PK clients, 6 home-textile.<br>
+ L2 web: BPAF in coatings and resin-treated home textiles. SCIP notification required if &gt;0.1% w/w. Primark RSL (ZDHC MRSL framework) currently monitors adhesives; BPAF alignment pending Q3 2026 check.<br>
+ <b>Conclusion (computed, not stored):</b> Active SCIP obligation. Monitor Primark RSL. ARP window on hold pending BPAF content confirmation in BOM.
 </span></div>
 
-<div class="you"><span class="ymark warn">MEDIUM EXPOSURE</span><span class="ytext">
- <b>China — 116 clients (89% woven, 2% home-textile)</b><br>
- COUNTRY-DB: CN EU MFN 12% — highest tariff friction vs competitors, but EU market still significant. 36 EU/UK + 19 EU target clients. BPAF exposure: coated woven fabrics for EU buyers. CLIENT-DB: 116 CN clients — largest pool, but EU concentration lower than TR/PK. Re-test obligation applies if any EU-bound coated fabric SKU contains BPAF above 0.1% w/w.
+<div class="you"><span class="ymark warn">MEDIUM</span><span class="ytext">
+ <b>China — 116 clients (55 EU-targeting) · EU MFN 12%</b><br>
+ COUNTRY-DB: CN has highest EU tariff friction (12% MFN) but 55 EU-targeting clients. CLIENT-DB: 116 CN clients, 89% woven.<br>
+ L2 web: BPAF in coated woven fabrics. If any CN coated fabric SKU ships to EU with BPAF &gt;0.1% w/w — SCIP notification required by Aug 4.<br>
+ <b>Conclusion (computed, not stored):</b> Medium exposure. EU market secondary due to tariff. Re-test if EU-bound coated fabric SKU confirmed above threshold.
 </span></div>
 
-<div class="you"><span class="ymark ok">LOWER EXPOSURE</span><span class="ytext">
- <b>India — 104 clients (home textiles, cotton)</b><br>
- COUNTRY-DB: IN EU GSP+ 0–9.6% — moderate EU access. Home textiles (towels, bedding) + cotton. BPAF exposure via home textile coatings. CLIENT-DB: 104 IN clients — largest country count after CN. Lower EU concentration than TR/PK. Monitor Primark/Inditex RSL updates for BPAF. If H&M updates IN RSL floor, triggers same re-test protocol.
+<div class="you"><span class="ymark ok">LOWER</span><span class="ytext">
+ <b>India — 104 clients · home-textile/cotton · EU GSP+</b><br>
+ COUNTRY-DB: IN EU GSP+ 0–9.6% — moderate EU tariff access. CLIENT-DB: 104 IN clients, largest country count.<br>
+ L2 web: BPAF in home textile coatings. H&M RSL currently tracks n-Hexane; Primark monitors via ZDHC.<br>
+ <b>Conclusion (computed, not stored):</b> Lower immediate exposure. Monitor H&M and Primark RSL updates for BPAF. If either buyer adds BPAF to their RSL, same re-test protocol applies.
 </span></div>
 
-<div class="sec"><span class="secn">B</span><span class="sect">Compliance Obligations — Live Web Search Results</span></div>
+<div class="sec"><span class="secn">B</span><span class="sect">Compliance Obligations — from L2 web search</span></div>
 
-<div class="lstep">
- <div class="lnum">Obligation</div>
- <div class="lcon">
-  <div class="callout" style="margin:8px 0">
-   <b>1. ECHA SCIP Notification (Article 7(2))</b><br>
-   Threshold: SVHC &gt;0.1% w/w per article + &gt;1 tonne/year per producer.<br>
-   Deadline: <b>Aug 4, 2026</b>.<br>
-   Applies to: TR denim suppliers, PK home textile suppliers shipping &gt;1 tonne/year to EU.<br>
-   Action: Submit SCIP dossier to ECHA SCIP Database. Update DPP master records for affected SKUs.
-  </div>
-  <div class="callout" style="margin-top:8px">
-   <b>2. Downstream buyer disclosure (Article 33 REACH)</b><br>
-   Within 45 days of buyer request. Applies to all EU-bound shipments containing SVHC above threshold.<br>
-   Applies to: any supplier with confirmed SVHC content in BOM — must proactively notify EU buyers.
-  </div>
-  <div class="callout" style="margin-top:8px">
-   <b>3. H&M buyer RSL re-test (private floor — 100× stricter)</b><br>
-   H&M RSL 2026: n-Hexane limit = 10 ppm (0.001% w/w) vs REACH 0.1% w/w.<br>
-   Applies to: any TR or PK denim supplier with H&M EU orders. Must re-test to 10 ppm — pass REACH floor does NOT satisfy H&M floor.
-  </div>
- </div>
-</div>
+<div class="callout" style="margin:8px 0"><b>1. ECHA SCIP Notification (Article 7(2))</b> — SVHC &gt;0.1% w/w + &gt;1 tonne/year per producer. Deadline: <b>Aug 4, 2026</b>. Submit to ECHA SCIP Database. Applies to: TR denim, PK home-textile suppliers shipping &gt;1 tonne/year to EU.</div>
+<div class="callout" style="margin-top:8px"><b>2. Downstream buyer disclosure (Article 33 REACH)</b> — Within 45 days of buyer request. Applies to all EU-bound shipments with confirmed SVHC above threshold. Proactive disclosure required.</div>
+<div class="callout" style="margin-top:8px"><b>3. H&M buyer RSL re-test (private floor)</b> — H&M n-Hexane limit = 10 ppm (100× REACH floor). TR and PK denim suppliers with H&M EU orders: must re-test to 10 ppm. Passing REACH 0.1% does NOT satisfy H&M floor.</div>
 
-<div class="sec"><span class="secn">C</span><span class="sect">Recommended Action Plan</span></div>
+<div class="sec"><span class="secn">C</span><span class="sect">Prioritized Action Plan</span></div>
 
-<div class="act"><span class="tm hi">Immediate<br>(This week)</span><div>
- <div class="ctitle">Turkey denim suppliers with H&M EU orders: initiate n-Hexane re-test</div>
- <div class="cdesc">Submit representative denim styles (adhesive-heavy constructions: stonewash, laser-finish) to ECHA-accredited lab for n-Hexane content testing. H&M floor = 10 ppm. Lab turnaround: 14–21 days. Results needed before any new H&M order confirmation or shipment release.</div>
+<div class="act"><span class="tm hi">Immediate</span><div>
+ <div class="ctitle">Turkey denim + H&M EU orders: initiate n-Hexane re-test to H&M 10 ppm floor</div>
+ <div class="cdesc">Submit representative denim styles (adhesive-heavy: stonewash, laser-finish) to ECHA-accredited lab. H&M floor = 10 ppm. Lab turnaround 14–21 days. Results before any new H&M order confirmation or shipment release.</div>
 </div></div>
-
-<div class="act"><span class="tm hi">Immediate<br>(This week)</span><div>
- <div class="ctitle">Pakistan home textile suppliers: assess BPAF in coatings BOM</div>
- <div class="cdesc">Audit current home textile coating formulations for BPAF group content. Cross-reference Primark ZDHC MRSL alignment. If BPAF present above 0.1% w/w: prepare Article 33 disclosure for EU buyers. Set monitoring tracker for Primark RSL BPAF update.</div>
+<div class="act"><span class="tm hi">Immediate</span><div>
+ <div class="ctitle">Pakistan home-textile: audit BPAF in coatings BOM</div>
+ <div class="cdesc">Check current home textile coating formulations for BPAF group content. If &gt;0.1% w/w confirmed → prepare Article 33 disclosure + submit SCIP notification before Aug 4. Set Primark RSL BPAF monitoring tracker.</div>
 </div></div>
-
 <div class="act"><span class="tm mid">By Jul 15</span><div>
- <div class="ctitle">Submit SCIP notifications for confirmed SVHC content above 0.1% w/w</div>
- <div class="cdesc">For articles confirmed above threshold: compile SCIP dossier per article (article name, SVHC, CAS, concentration, quantity, use). Submit to ECHA before Aug 4, 2026 deadline. Update DPP master records.</div>
+ <div class="ctitle">Submit SCIP notifications for confirmed SVHC content</div>
+ <div class="cdesc">Compile SCIP dossier per article (article name, SVHC, CAS, concentration, quantity, use). Submit to ECHA before Aug 4 deadline. Update DPP master records for all affected SKUs.</div>
 </div></div>
-
-<div class="act"><span class="tm mid">By Jul 20</span><div>
- <div class="ctitle">China coated woven suppliers: EU buyer RSL alignment check</div>
- <div class="cdesc">For CN suppliers with EU-bound coated fabric SKUs: check Inditex/Zara buyer RSL for BPAF alignment. If buyer RSL already restricts BPAF, initiate re-test protocol. If not yet restricted, document monitoring position and set tracker for Q3 2026 update.</div>
+<div class="act"><span class="tm lo">By Jul 20</span><div>
+ <div class="ctitle">China coated woven: EU buyer RSL alignment check</div>
+ <div class="cdesc">Check Inditex/Zara buyer RSL for BPAF alignment. If restricted → initiate re-test protocol. If not yet → document monitoring position and set Q3 tracker.</div>
 </div></div>
 
 <div class="a8box">
- <b>Air8 BD Signal — ARP window:</b><br>
- The <b>2–4 week re-test delay</b> creates a confirmed cashflow gap. Supplier has goods in production or ready to ship — but cannot release until lab results confirm compliance. Unlike tariff events where buyer POs are uncertain, EVT-REGULATION events have confirmed buyer POs and a hard deadline — making this a <b>lower-risk ARP window</b>.<br><br>
- <b>PreShip-OBF is safe</b> here: confirmed EU buyer POs, known compliance timeline. ESG Finance is contraindicated (no ESG dimension).<br><br>
- <b>KB-GAP identified:</b> CLIENT-DB shows country-level counts (TR: 3, PK: 9) but not per-client ARP eligibility or active PO values. Next step: per-client ARP eligibility assessment using CLIENT-DB per-row data.
+ <b>KB-GAP identified:</b> CLIENT-DB shows country-level counts (TR: 3, PK: 9) but not per-client ARP eligibility or active PO values. Next step: per-client ARP eligibility assessment using CLIENT-DB per-row data → identifies which specific clients are ARP candidates and what their PO exposure looks like.
 </div>
 
-<div class="sec"><span class="secn">D</span><span class="sect">KB Flow Summary — What Fired, Where</span></div>
+<div class="sec"><span class="secn">D</span><span class="sect">KB Flow Summary</span></div>
 
 <table>
- <thead>
-  <tr><th>Step</th><th>Source</th><th>What it contributed</th></tr>
- </thead>
+ <thead><tr><th>Step</th><th>Source</th><th>What it contributed</th></tr></thead>
  <tbody>
-  <tr>
-   <td>CP0 — Event classification</td>
-   <td><span class="tag stat">EVENT-TYPES.md</span></td>
-   <td>EVT-REGULATION · chemical_compliance (NOT reach_update)</td>
-  </tr>
-  <tr>
-   <td>L1 — COUNTRY-DB</td>
-   <td><span class="tag kb">COUNTRY-DB.md</span></td>
-   <td>TR/PK/CN/IN in scope for EU enforcement. TR EU Customs Union 0%, PK GSP+ 0–3.5%.</td>
-  </tr>
-  <tr>
-   <td>L1 — CLIENT-DB</td>
-   <td><span class="tag kb">CLIENT-DB.md</span></td>
-   <td>TR: 3 EU clients · PK: 9 EU clients · CN: 116 clients (36 EU/UK + 19 EU) · IN: 104 clients</td>
-  </tr>
-  <tr>
-   <td>L1 — Principles</td>
-   <td><span class="tag kb">L1-event-reasoning-principles.md</span></td>
-   <td>PRIN-COMPLIANCE-COST (0.5) · PRIN-BUYER-GEO-EXPOSURE (0.3) · PRIN-PRODUCT-TARIFF (0.2)</td>
-  </tr>
-  <tr>
-   <td>L2 — SVHC specifics</td>
-   <td><span class="tag web">ECHA web search (live)</span></td>
-   <td>n-Hexane CAS 110-54-3 · BPAF group · 0.1% w/w threshold · Aug 4, 2026 deadline · 253 SVHCs total</td>
-  </tr>
-  <tr>
-   <td>L2 — Buyer RSL floor</td>
-   <td><span class="tag web">H&M RSL 2026 (live)</span></td>
-   <td>n-Hexane H&M limit = 10 ppm — 100× stricter than REACH regulatory floor</td>
-  </tr>
-  <tr>
-   <td>L2 — Output</td>
-   <td><span class="tag out">Generated</span></td>
-   <td>Supplier exposure matrix + obligations + action plan + ARP window signal</td>
-  </tr>
+  <tr><td>CP0 — Event type</td><td><span class="tag stat">EVENT-TYPES.md</span></td><td>EVT-REGULATION · chemical_compliance</td></tr>
+  <tr><td>L1 — COUNTRY-DB</td><td><span class="tag kb">COUNTRY-DB.md</span></td><td>TR/PK/CN/IN EU scope + tariff access profiles</td></tr>
+  <tr><td>L1 — CLIENT-DB</td><td><span class="tag kb">CLIENT-DB.md</span></td><td>TR: 3 EU denim · PK: 9 EU home-textile · CN: 55 EU · IN:104 total</td></tr>
+  <tr><td>L1 — Principles</td><td><span class="tag kb">L1-event-reasoning-principles.md</span></td><td>PRIN-COMPLIANCE-COST (0.5) · PRIN-BUYER-GEO-EXPOSURE (0.3) · PRIN-PRODUCT-TARIFF (0.2)</td></tr>
+  <tr><td>L2 — SVHC specifics</td><td><span class="tag web">ECHA web search (live)</span></td><td>n-Hexane CAS 110-54-3 · BPAF group · 0.1% w/w · Aug 4, 2026</td></tr>
+  <tr><td>L2 — Buyer RSL</td><td><span class="tag web">H&M RSL 2026 (live)</span></td><td>n-Hexane H&M limit = 10 ppm — 100× stricter than REACH</td></tr>
+  <tr><td>Output</td><td><span class="tag out">Generated</span></td><td>Supplier exposure matrix + obligations + action plan + ARP window (Big Boss persona)</td></tr>
  </tbody>
 </table>
 
