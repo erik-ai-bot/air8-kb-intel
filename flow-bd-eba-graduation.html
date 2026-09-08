@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air8 Event Processing Flow — BD EBA Graduation</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-hover: #21253a;
+    --border: #2a2d3a;
+    --accent: #f97316;
+    --accent-dim: #7c3a10;
+    --accent2: #38bdf8;
+    --accent2-dim: #0c3a52;
+    --green: #22c55e;
+    --green-dim: #14532d;
+    --yellow: #eab308;
+    --text: #e2e4e9;
+    --text-muted: #8b8fa3;
+    --text-dim: #5a5d6e;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; padding: 40px 20px; }
+
+  .container { max-width: 860px; margin: 0 auto; }
+
+  .page-header { text-align: center; margin-bottom: 48px; }
+  .page-header .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 12px; }
+  .page-header h1 { font-size: 26px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 12px; }
+  .page-header .subtitle { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+  .case-badge { display: inline-block; background: var(--accent-dim); color: var(--accent); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.5px; margin-top: 12px; border: 1px solid var(--accent-dim); }
+
+  .intro-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 40px; }
+  .intro-box p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+  .intro-box strong { color: var(--text); }
+
+  /* Steps */
+  .step { margin-bottom: 32px; }
+  .step-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 12px; }
+  .step-num { 
+    width: 36px; height: 36px; border-radius: 50%; 
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-num.n2 { background: #3b82f6; }
+  .step-num.n3 { background: var(--accent2); }
+  .step-num.n4 { background: #a855f7; }
+  .step-num.n5 { background: var(--green); }
+  .step-meta { flex: 1; }
+  .step-name { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .step-kb-ref { font-size: 11px; color: var(--accent); font-family: 'Courier New', monospace; }
+  .step-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .step-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+
+  .case-tag { display: flex; align-items: center; gap: 6px; padding: 10px 16px; background: rgba(249,115,22,0.06); border-bottom: 1px solid var(--accent-dim); font-size: 12px; color: var(--text-muted); }
+  .case-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .case-tag strong { color: var(--accent); font-weight: 600; }
+
+  .case-content { padding: 16px 20px; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .info-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+  .info-chip .key { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; }
+  .info-chip .val { font-size: 14px; font-weight: 600; color: #fff; }
+  .info-chip .val.highlight { color: var(--accent); }
+  .info-chip .val.green { color: var(--green); }
+  .info-chip .val.blue { color: var(--accent2); }
+
+  .mapping-row { background: var(--bg); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .mapping-row:last-child { margin-bottom: 0; }
+  .map-label { font-size: 11px; color: var(--text-dim); width: 110px; flex-shrink: 0; }
+  .map-value { font-size: 13px; color: #fff; font-weight: 600; flex: 1; }
+  .map-tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
+  .tag-evt { background: var(--accent-dim); color: var(--accent); }
+  .tag-mod { background: var(--accent2-dim); color: var(--accent2); }
+  .tag-weak { background: #27272a; color: var(--text-dim); }
+
+  .principle-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg); border-radius: 8px; margin-bottom: 8px; }
+  .principle-row:last-child { margin-bottom: 0; }
+  .weight-badge { 
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .w-50 { background: #7c2d12; color: var(--accent); }
+  .w-30 { background: #1e3a5f; color: var(--accent2); }
+  .w-20 { background: #3b0764; color: #c084fc; }
+  .pr-name { font-size: 13px; font-weight: 600; color: #fff; flex: 1; }
+  .pr-find { font-size: 12px; color: var(--text-muted); }
+
+  .kb-node { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; background: var(--bg); border-radius: 8px; margin-bottom: 8px; }
+  .kb-node:last-child { margin-bottom: 0; }
+  .kb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+  .kb-node2 .kb-dot { background: var(--accent2); }
+  .kb-node3 .kb-dot { background: #a855f7; }
+  .kb-node4 .kb-dot { background: var(--green); }
+  .kb-info { flex: 1; }
+  .kb-node-label { font-size: 11px; color: var(--text-dim); margin-bottom: 3px; font-family: 'Courier New', monospace; }
+  .kb-node-content { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .kb-node-content strong { color: var(--accent); }
+
+  .l2-reasoning { margin-top: 10px; }
+  .reasoning-item { display: flex; gap: 10px; padding: 10px 14px; background: var(--bg); border-radius: 8px; margin-bottom: 8px; }
+  .reasoning-item:last-child { margin-bottom: 0; }
+  .layer-tag { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+  .tag-a { background: #7c2d12; color: var(--accent); }
+  .tag-b { background: #1e3a5f; color: var(--accent2); }
+  .tag-c { background: #3b0764; color: #c084fc; }
+  .tag-d { background: #14532d; color: var(--green); }
+  .reasoning-text { font-size: 13px; color: var(--text); line-height: 1.5; flex: 1; }
+  .reasoning-text strong { color: var(--accent); }
+
+  .client-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg); border-radius: 8px; margin-bottom: 8px; }
+  .client-row:last-child { margin-bottom: 0; }
+  .client-id { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-dim); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; }
+  .client-text { font-size: 13px; color: var(--text); }
+
+  .output-type { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg); border-radius: 8px; }
+  .output-icon { font-size: 24px; flex-shrink: 0; }
+  .output-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .output-text strong { color: #fff; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  .flow-summary { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 40px; }
+  .flow-summary h3 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; color: var(--text-dim); }
+  .summary-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .summary-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .summary-n { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .summary-label { font-size: 13px; color: var(--text-muted); flex: 1; }
+  .summary-ref { font-size: 11px; color: var(--accent); font-family: 'Courier New', monospace; }
+  .summary-result { font-size: 12px; color: var(--text); font-weight: 600; }
+
+  .footer-note { text-align: center; color: var(--text-dim); font-size: 11px; margin-top: 32px; line-height: 1.6; }
+
+  @media (max-width: 600px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .mapping-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="label">Air8 Event Processing Flow</div>
+    <h1>How the Air8 Engine Reads a Trade Event</h1>
+    <p class="subtitle">Step-by-step trace of which KB nodes activate and why — for a business head to understand the decision logic, not the news output.</p>
+    <span class="case-badge">📋 WORKED EXAMPLE: Bangladesh — EU EBA Graduation</span>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <p>This page shows <strong>how the Air8 event engine processes any trade/policy event</strong>. For each step, it shows: <strong>what the system does</strong>, <strong>which KB node is consulted</strong>, and <strong>what was found in this specific case</strong>. Read this to understand how a raw headline becomes an actionable supplier insight.</p>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div class="step-meta">
+        <div class="step-name">Event Intake — Raw Input</div>
+        <div class="step-kb-ref">No KB consulted yet</div>
+        <div class="step-sub">The engine receives a raw headline or news item. No KB activation yet.</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="case-tag"><div class="dot"></div>Case trace — <strong>BD EU EBA Graduation</strong></div>
+      <div class="case-content">
+        <div class="info-grid">
+          <div class="info-chip">
+            <div class="key">Raw Headline</div>
+            <div class="val">Bangladesh crosses LDC income threshold — EU EBA graduation clock officially starts</div>
+          </div>
+          <div class="info-chip">
+            <div class="key">Source</div>
+            <div class="val">BGMEA press release + EU Commission Trade Policy Update, 2026</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">The system receives this as unstructured text. No KB lookup yet — this is purely data ingestion. The headline will be passed to CP0 for classification.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num n2">2</div>
+      <div class="step-meta">
+        <div class="step-name">CP0 — Event Classification</div>
+        <div class="step-kb-ref">KB: EVENT-TYPES.md — Phase B Event Family Association Scoring</div>
+        <div class="step-sub">Maps the raw headline to event type families, assigns subtype, extracts key fields. Activates the right KB layer.</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="case-tag"><div class="dot"></div>Case trace — <strong>BD EU EBA Graduation</strong></div>
+      <div class="case-content">
+        <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Phase A — Extracted Fields</p>
+        <div class="info-grid">
+          <div class="info-chip">
+            <div class="key">Supplier Country</div>
+            <div class="val highlight">Bangladesh (BD)</div>
+          </div>
+          <div class="info-chip">
+            <div class="key">Buyer Market</div>
+            <div class="val highlight">EU</div>
+          </div>
+          <div class="info-chip">
+            <div class="key">Products</div>
+            <div class="val">HS 61/62 (knit + woven apparel)</div>
+          </div>
+          <div class="info-chip">
+            <div class="key">Event Mechanism</div>
+            <div class="val">Tariff preference expiry — 0% EBA → 12% MFN</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin:14px 0 10px;text-transform:uppercase;letter-spacing:1px;">Phase B — Event Family Scoring</p>
+        <div class="mapping-row">
+          <div class="map-label">EVT-TARIFF</div>
+          <div class="map-value">Tariff / Duty Change — GSP preference expiry</div>
+          <div class="map-tag tag-evt">STRONG — activated</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">EVT-MARKET-SHIFT</div>
+          <div class="map-value">Buyer sourcing reallocation triggered by cost gap</div>
+          <div class="map-tag tag-mod">MODERATE — activated</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">EVT-REGULATION</div>
+          <div class="map-value">No compliance requirement triggered</div>
+          <div class="map-tag tag-weak">excluded</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">EVT-CURRENCY</div>
+          <div class="map-value">No FX mechanism</div>
+          <div class="map-tag tag-weak">excluded</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">EVT-SUPPLY-DISRUPTION</div>
+          <div class="map-value">No physical disruption</div>
+          <div class="map-tag tag-weak">excluded</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">EVT-ESG-CERT</div>
+          <div class="map-value">No ESG dimension</div>
+          <div class="map-tag tag-weak">excluded</div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;">Subtype Mapping</p>
+        <div class="mapping-row">
+          <div class="map-label">Subtype</div>
+          <div class="map-value">gsp_graduation — Country graduates out of GSP/EBA preference scheme</div>
+          <div class="map-tag tag-evt">EVT-TARIFF</div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;line-height:1.6;"><strong style="color:#fff;">KB Reference:</strong> EVENT-TYPES.md · EVT-TARIFF · <code style="color:var(--accent);">subtype: gsp_graduation</code> — existing subtype covers this case. Example in KB: "Bangladesh scheduled to graduate from EU EBA in 2026."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num n3">3</div>
+      <div class="step-meta">
+        <div class="step-name">L1 — Reference Data Lookup</div>
+        <div class="step-kb-ref">KB: TARIFF-DB.md + COUNTRY-DB.md</div>
+        <div class="step-sub">Hard facts: actual tariff rates, country risk levels, confirmed rules. These fire automatically once event type is identified.</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="case-tag"><div class="dot" style="background:var(--accent2)"></div>Case trace — <strong>BD EU EBA Graduation</strong></div>
+      <div class="case-content">
+        <div class="kb-node">
+          <div class="kb-dot"></div>
+          <div class="kb-info">
+            <div class="kb-node-label">L1 · TARIFF-DB.md — Rule Fired</div>
+            <div class="kb-node-content">EU apparel MFN vs preferential rate — <strong>BD EBA = 0%</strong> current preferential rate. <strong>EU MFN for HS 61/62 = 12%</strong>. This is the exact gap.</div>
+          </div>
+        </div>
+        <div class="kb-node">
+          <div class="kb-dot"></div>
+          <div class="kb-info">
+            <div class="kb-node-label">L1 · TARIFF-DB.md — KB Citation</div>
+            <div class="kb-node-content">"BD: MFN 12% · EBA 0% · ⚠️ At risk post-LDC graduation (2027+)"</div>
+          </div>
+        </div>
+        <div class="kb-node" style="margin-top:8px;">
+          <div class="kb-dot" style="background:var(--accent2)"></div>
+          <div class="kb-info">
+            <div class="kb-node-label">L1 · COUNTRY-DB.md — Rule Fired</div>
+            <div class="kb-node-content">BD country risk — <strong>EBA exposure = HIGH</strong>. EU is BD's largest market: ~67% of BD apparel exports go to EU. Post-graduation, all EU-bound shipments face the 12% duty cliff.</div>
+          </div>
+        </div>
+        <div class="kb-node">
+          <div class="kb-dot" style="background:var(--accent2)"></div>
+          <div class="kb-info">
+            <div class="kb-node-label">L1 · COUNTRY-DB.md — KB Citation</div>
+            <div class="kb-node-content">BD HIGH risk: EBA-dependent economy — EU market share 67% of apparel exports</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;line-height:1.6;"><strong style="color:#fff;">What L1 confirmed:</strong> This is a <strong style="color:var(--accent);">12-percentage-point duty cliff</strong>, not a gradual increase. Effective date <strong style="color:#fff;">2029</strong>. BD factories lose their EU cost advantage against Vietnam (MFN 9.6%) and Cambodia (8.9%) immediately.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num n4">4</div>
+      <div class="step-meta">
+        <div class="step-name">L2 — Reasoning Principles + Buyer Response</div>
+        <div class="step-kb-ref">KB: L1-event-reasoning-principles.md + L2-buyer-cost-response.md</div>
+        <div class="step-sub">Weighting, impact sequencing, buyer decision logic. These determine what the event means for suppliers and what Air8 should do.</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="case-tag"><div class="dot" style="background:#a855f7"></div>Case trace — <strong>BD EU EBA Graduation</strong></div>
+      <div class="case-content">
+        <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Principles Activated — EVT-TARIFF Weights</p>
+
+        <div class="principle-row">
+          <div class="weight-badge w-50">0.5</div>
+          <div class="pr-name">PRIN-COUNTRY-EXPOSURE</div>
+          <div class="pr-find">BD HIGH exposure — EU is 67% of BD apparel exports</div>
+        </div>
+        <div class="principle-row">
+          <div class="weight-badge w-30">0.3</div>
+          <div class="pr-name">PRIN-PRODUCT-TARIFF</div>
+          <div class="pr-find">HS 61/62 — BD's core export category, highest MFN gap</div>
+        </div>
+        <div class="principle-row">
+          <div class="weight-badge w-20">0.2</div>
+          <div class="pr-name">PRIN-SUPPLIER-RESILIENCE</div>
+          <div class="pr-find">Small/medium BD factories have thinnest margins — least buffer</div>
+        </div>
+
+        <p style="font-size:12px;color:var(--text-dim);margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;">L1 Layer A–D Reasoning Chain</p>
+        <div class="l2-reasoning">
+          <div class="reasoning-item">
+            <div class="layer-tag tag-a">Layer A</div>
+            <div class="reasoning-text"><strong>What changed:</strong> EU tariff on BD knit/woven apparel — <strong>0% → 12%</strong> (12pp cliff). Effective <strong>Nov 2029</strong>. Scope: all HS 61/62 shipped from BD to EU. Not a product-specific tariff — affects all BD apparel exporters equally.</div>
+          </div>
+          <div class="reasoning-item">
+            <div class="layer-tag tag-b">Layer B</div>
+            <div class="reasoning-text"><strong>First-order cost impact:</strong> Landed cost increase of ~12% for BD-sourced EU orders. For a basic woven jacket FOB $10 → landed $11.20. In a commodity basics category where margins are 8–12%, this can flip a profitable order into a loss.</div>
+          </div>
+          <div class="reasoning-item">
+            <div class="layer-tag tag-c">Layer C</div>
+            <div class="reasoning-text"><strong>Buyer response factors:</strong> Apparel = <strong>medium complexity</strong> (qualification 1–2 seasons). Gap is large enough to trigger sourcing review. Near-term: <strong>price squeeze on BD suppliers</strong> + <strong>RFQ to Vietnam/Cambodia alternatives</strong>. Long-term: order shift begins if BD stays above LDC threshold.</div>
+          </div>
+          <div class="reasoning-item">
+            <div class="layer-tag tag-d">Layer D</div>
+            <div class="reasoning-text"><strong>Supplier position:</strong> BD factories lose EU cost edge. Vietnam (9.6% MFN) and Cambodia (8.9%) now <strong>cheaper than BD on EU-bound goods</strong>. BD factories face buyer pressure to reduce price to offset the 12% duty — or lose orders.</div>
+          </div>
+        </div>
+
+        <p style="font-size:12px;color:var(--text-dim);margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;">L2 — Buyer Cost Response Factors</p>
+        <div class="kb-node" style="margin-bottom:8px;">
+          <div class="kb-dot" style="background:#a855f7"></div>
+          <div class="kb-info">
+            <div class="kb-node-label">KB: L2-buyer-cost-response.md</div>
+            <div class="kb-node-content">Qualification timeline for knit/woven apparel = <strong>1–2 seasons</strong>. Gap (12pp) is large relative to product margins. Both factors point to <strong>price squeeze + RFQ to alternatives</strong> as near-term buyer response. Long-term: sourcing shift to Vietnam/Cambodia.</div>
+          </div>
+        </div>
+        <div class="kb-node">
+          <div class="kb-dot" style="background:#a855f7"></div>
+          <div class="kb-info">
+            <div class="kb-node-label">KB: L2-buyer-cost-response.md — Buyer Response Typing</div>
+            <div class="kb-node-content"><strong>Buyer response:</strong> Squeeze (use gap as leverage on existing BD supplier) + RFQ to already-approved alternatives. BD factories NOT being disqualified — but they must absorb or match the gap to retain EU orders.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num n5">5</div>
+      <div class="step-meta">
+        <div class="step-name">Client Mapping + Solution Fit</div>
+        <div class="step-kb-ref">KB: CLIENT-DB + SOLUTIONS.md</div>
+        <div class="step-sub">Finds which Air8 clients are affected and maps the event to the right Air8 product playbook.</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="case-tag"><div class="dot" style="background:var(--green)"></div>Case trace — <strong>BD EU EBA Graduation</strong></div>
+      <div class="case-content">
+        <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Client Mapping</p>
+        <div class="client-row">
+          <div class="client-id">COMBO-001</div>
+          <div class="client-text">South Asian Knit — Bangladesh knit apparel factories — HS 61 — HIGH exposure to EU EBA</div>
+        </div>
+        <div class="client-row">
+          <div class="client-id">COMBO-002</div>
+          <div class="client-text">South Asian Woven — Bangladesh woven apparel factories — HS 62 — HIGH exposure to EU EBA</div>
+        </div>
+
+        <p style="font-size:12px;color:var(--text-dim);margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;">Solution Mapping — SOLUTIONS.md</p>
+        <div class="mapping-row">
+          <div class="map-label">EVT-TARIFF</div>
+          <div class="map-value">ARP (Accounts Receivable Purchase) — cashflow bridge during buyer PO review period</div>
+          <div class="map-tag tag-evt">HIGH urgency</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">EVT-MARKET-SHIFT</div>
+          <div class="map-value">RT2C — pre-shipment advance for production during buyer negotiation period</div>
+          <div class="map-tag tag-mod">MEDIUM urgency</div>
+        </div>
+        <div class="mapping-row">
+          <div class="map-label">Both signals</div>
+          <div class="map-value">PayGuard — buyer credit protection during sourcing transition uncertainty</div>
+          <div class="map-tag tag-evt">MEDIUM urgency</div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;line-height:1.6;"><strong style="color:#fff;">KB Reference:</strong> SOLUTIONS.md · Playbook 1 · <code style="color:var(--accent);">COMBO-001, 002, 009 — EVT-TARIFF GSP/EBA graduation</code> — ARP HIGH, RT2C MEDIUM, PayGuard MEDIUM. Universal tariff rule: <em>engage within 30 days before suppliers panic-discount to retain POs.</em></p>
+
+        <p style="font-size:12px;color:var(--text-dim);margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;">Output Format Decision</p>
+        <div class="output-type">
+          <div class="output-icon">📄</div>
+          <div class="output-text"><strong>News Article for Factory Owner</strong> — The CP0–L1–L2–L3 trace is internal logic. The <strong>external output</strong> is a plain-English article written for the factory owner: what changed, who is affected, what it means for them, what to do. This is what gets pushed to the factory owner channel. The process trace above is for Air8 BD team and business heads — not the factory owner.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <hr class="divider">
+  <div class="flow-summary">
+    <h3>Flow Summary — BD EBA Graduation Case</h3>
+    <div class="summary-row">
+      <div class="summary-n" style="background:var(--bg);color:var(--text-muted);border:1px solid var(--border);font-size:11px;">1</div>
+      <div class="summary-label">Raw Event</div>
+      <div class="summary-ref">—</div>
+      <div class="summary-result">BD LDC threshold crossed; EU EBA graduation clock starts</div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-n" style="background:#3b82f6;color:#fff;font-size:11px;">2</div>
+      <div class="summary-label">Event Classification</div>
+      <div class="summary-ref">EVENT-TYPES.md</div>
+      <div class="summary-result">EVT-TARIFF · gsp_graduation + EVT-MARKET-SHIFT (moderate)</div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-n" style="background:var(--accent2);color:#000;font-size:11px;">3</div>
+      <div class="summary-label">L1 Reference Data</div>
+      <div class="summary-ref">TARIFF-DB + COUNTRY-DB</div>
+      <div class="summary-result">EBA 0% → MFN 12% · BD EU exposure 67% · 2029 effective</div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-n" style="background:#a855f7;color:#fff;font-size:11px;">4</div>
+      <div class="summary-label">L2 Reasoning</div>
+      <div class="summary-ref">L1-princ.+ L2-buyer-cost</div>
+      <div class="summary-result">12pp cliff confirmed · Buyer squeeze + RFQ · BD loses EU edge</div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-n" style="background:var(--green);color:#000;font-size:11px;">5</div>
+      <div class="summary-label">Client + Solution</div>
+      <div class="summary-ref">CLIENT-DB + SOLUTIONS.md</div>
+      <div class="summary-result">COMBO-001/002 · ARP HIGH + RT2C/PayGuard MEDIUM</div>
+    </div>
+  </div>
+
+  <p class="footer-note">
+    Air8 Event Processing Flow · Bangladesh EU EBA Graduation Case Trace<br>
+    KB nodes: EVENT-TYPES.md · TARIFF-DB.md · COUNTRY-DB.md · L1-event-reasoning-principles.md · L2-buyer-cost-response.md · SOLUTIONS.md · CLIENT-DB<br>
+    Last updated: 2026-09-08
+  </p>
+
+</div>
+</body>
+</html>
