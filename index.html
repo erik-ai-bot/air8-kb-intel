@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>REACH Compliance — Step-by-Step KB Flow · Air8KB</title>
+<title>REACH Compliance — Correct KB Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
@@ -46,623 +46,620 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
 b,strong{font-weight:600;color:var(--ink)}
-a{color:var(--indigo);text-decoration:underline;text-underline-offset:3px}
-a:hover{color:var(--air8)}
-.wrap{max-width:1060px;margin:0 auto;padding:0 28px}
-.mast{background:var(--chrome);color:#fff;padding:22px 0 20px;border-bottom:3px solid var(--air8)}
-.brand{display:flex;align-items:center;gap:11px;margin-bottom:12px}
-.logo{font-family:Archivo,sans-serif;font-weight:800;font-size:14px;letter-spacing:-.01em;color:#fff}
+.wrap{max-width:1100px;margin:0 auto;padding:0 32px}
+.mast{background:var(--chrome);color:#fff;padding:20px 0 18px;border-bottom:3px solid var(--air8)}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.logo{font-family:Archivo,sans-serif;font-weight:800;font-size:14px;color:#fff}
 .logo span{color:var(--air8)}
 .brandtag{font-family:"IBM Plex Mono",monospace;font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--chrome-ink);padding-left:11px;border-left:1px solid rgba(255,255,255,.18)}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{font-family:"IBM Plex Mono",monospace;font-size:8px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;padding:3px 7px;border-radius:3px;background:rgba(255,255,255,.08);color:var(--chrome-ink)}
 .chip.d{background:var(--air8);color:#fff}
-.chip.r{background:var(--red-soft);color:var(--red)}
 .chip.kb{background:var(--indigo-soft);color:var(--indigo)}
-.chip.gap{background:var(--amber-soft);color:var(--amber)}
-.mast h1{font-family:Archivo,sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.026em;line-height:1.14;margin:0;max-width:46ch;text-wrap:balance;color:#fff}
-.stand{font-size:14px;line-height:1.5;color:#c8d4e8;margin:9px 0 0;max-width:88ch}
-.stand b{color:#fff}
-.steps{background:var(--surface);border-bottom:1px solid var(--rule);padding:20px 0}
-.step{position:relative;padding:0 0 26px;margin:0 28px}
-.step:last-child{padding-bottom:0}
-.step:last-child .sl-line{display:none}
-.sl{position:absolute;left:-18px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--air8);display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;color:#fff;z-index:1;flex-shrink:0}
-.sl-line{position:absolute;left:-4px;top:34px;bottom:0;width:2px;background:var(--rule)}
-.sh{font-family:Archivo,sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.015em;color:var(--ink);margin:0 0 4px;padding-left:22px}
-.sk{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;padding-left:22px}
-.sb{font-size:14.5px;line-height:1.6;color:var(--ink-2);padding-left:22px}
+.chip.r{background:var(--red-soft);color:var(--red)}
+.mast h1{font-family:Archivo,sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.026em;line-height:1.14;margin:0;color:#fff}
+.stand{font-size:14px;line-height:1.5;color:#c8d4e8;margin:8px 0 0}
+.flow{background:var(--surface);border-bottom:1px solid var(--rule);padding:28px 0}
+.flow-inner{display:grid;grid-template-columns:48px 1fr;gap:0 20px;align-items:start}
+.flow-line-col{position:relative;display:flex;flex-direction:column;align-items:center}
+.flow-dot{width:20px;height:20px;border-radius:50%;background:var(--air8);border:3px solid var(--surface);box-shadow:0 0 0 2px var(--air8);flex-shrink:0;margin-top:6px;z-index:1}
+.flow-line{width:2px;background:var(--rule);flex:1;min-height:20px}
+.flow-content{min-width:0}
 
-/* --- cards and tables --- */
-.src{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500;padding:3px 9px;border-radius:5px;background:var(--surface-2);border:1px solid var(--rule);color:var(--ink-2);display:inline-block;text-decoration:none}
-.src:hover{background:var(--indigo-soft);border-color:var(--indigo);color:var(--indigo)}
-.src.kb{background:var(--indigo-soft);border-color:var(--indigo);color:var(--indigo)}
-.src.kb:hover{background:#c4d3f0}
-.src.web{background:var(--air8-soft);border-color:var(--air8);color:#c24100}
-.src.web:hover{background:#fee8ce}
-.src.gap{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
-.srcs{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
-.steptable{width:100%;border-collapse:collapse;margin:9px 0;font-size:13.5px;table-layout:fixed}
-.steptable th{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:7px 12px;border-bottom:2px solid var(--rule);text-align:left}
-.steptable td{padding:8px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.5}
-.steptable tr:last-child td{border-bottom:0}
-.ccard{margin:8px 0;padding:12px 15px;border:1px solid var(--rule);border-radius:8px;background:var(--surface-2)}
-.ccard.hi{border-color:var(--red);border-left:3px solid var(--red)}
-.ccard.mid{border-color:var(--amber);border-left:3px solid var(--amber)}
-.ccard.lo{border-color:var(--green);border-left:3px solid var(--green)}
-.ccard.gap{border-color:var(--amber);border-left:3px solid var(--amber);background:var(--amber-soft)}
-.ch{font-family:Archivo,sans-serif;font-size:13.5px;font-weight:700;color:var(--ink);margin:0 0 5px}
-.cb{font-size:13.5px;color:var(--ink-2);line-height:1.55}
-.callout{margin:9px 0;padding:11px 14px;background:var(--red-soft);border-left:3px solid var(--red);border-radius:0 7px 7px 0;font-size:13.5px;color:var(--ink-2);line-height:1.55}
-.callout b{color:var(--red)}
-.infobox{margin:9px 0;padding:11px 14px;background:var(--indigo-soft);border-left:3px solid var(--indigo);border-radius:0 7px 7px 0;font-size:13.5px;color:var(--ink-2);line-height:1.55}
-.infobox b{color:var(--indigo)}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
-@media(max-width:600px){.split{grid-template-columns:1fr}}
-.split-col{padding:12px 14px;border-radius:8px;font-size:13.5px;line-height:1.55}
-.split-col.kb{background:var(--indigo-soft);border:1px solid var(--indigo)}
-.split-col.kb b{color:var(--indigo)}
-.split-col.web{background:var(--air8-soft);border:1px solid var(--air8)}
-.split-col.web b{color:#c24100}
-.split-col.gap{background:var(--amber-soft);border:1px solid var(--amber)}
-.split-col.gap b{color:var(--amber)}
-
-/* --- pain chain --- */
-.pchain{margin:9px 0;padding:11px 15px;background:var(--surface-2);border:1px solid var(--rule);border-radius:8px}
-.pchain-h{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.peach{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:start;padding:7px 0;border-top:1px solid var(--rule-soft);font-size:13.5px;color:var(--ink-2)}
-.peach:first-of-type{border-top:0}
-.peach:first-of-type .parrow{display:none}
-.parrow{font-size:16px;color:var(--muted);text-align:center;line-height:1.3}
-.pid{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;margin-top:1px}
-.ptext{line-height:1.5}
-.pweight{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;color:var(--air8);white-space:nowrap;margin-top:2px}
-.tag{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-block}
-.tag.stat{background:var(--surface-2);color:var(--muted);border:1px solid var(--rule)}
-.tag.red{background:var(--red-soft);color:var(--red)}
-.tag.amber{background:var(--amber-soft);color:var(--amber)}
-.tag.green{background:var(--green-soft);color:var(--green)}
+/* Step card */
+.s-card{margin-bottom:16px;background:var(--surface-2);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.s-head{background:var(--chrome);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px}
+.s-num{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;background:var(--air8);color:#fff;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.s-title{font-family:Archivo,sans-serif;font-size:14px;font-weight:700;letter-spacing:-.01em;color:#fff}
+.s-layers{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.12);color:var(--chrome-ink)}
+.s-body{padding:13px 14px}
+.s-row{display:grid;grid-template-columns:100px 1fr;gap:6px 12px;padding:5px 0;border-bottom:1px solid var(--rule-soft);font-size:13.5px;line-height:1.5}
+.s-row:last-child{border-bottom:0}
+.s-row-label{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding-top:3px;white-space:nowrap}
+.s-row-content{color:var(--ink-2);min-width:0}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-block;white-space:nowrap}
 .tag.indigo{background:var(--indigo-soft);color:var(--indigo)}
+.tag.air8{background:var(--air8-soft);color:#c24100}
+.tag.green{background:var(--green-soft);color:var(--green)}
+.tag.amber{background:var(--amber-soft);color:var(--amber)}
+.tag.red{background:var(--red-soft);color:var(--red)}
+.tag.mono{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--rule)}
 
-/* --- WIP grid --- */
-.wip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
-.wip-s{padding:10px 12px;background:var(--surface-2);border:1px solid var(--rule);border-radius:7px;font-size:12.5px}
-.wip-s.h{background:var(--red-soft);border-color:var(--red)}
-.wip-s.m{background:var(--amber-soft);border-color:var(--amber)}
-.wip-s.l{background:var(--green-soft);border-color:var(--green)}
-.wip-s.c{background:var(--indigo-soft);border-color:var(--indigo)}
-.wip-n{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
-.wip-t{font-family:Archivo,sans-serif;font-size:13px;font-weight:700;color:var(--ink);display:block;margin-bottom:3px}
-.wip-d{font-size:12px;color:var(--ink-2);line-height:1.4}
+/* section divider */
+.section-h{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:16px 0 6px;display:flex;align-items:center;gap:10px}
+.section-h::after{content:'';flex:1;height:1px;background:var(--rule)}
 
-/* --- principle table --- */
-.principle-row{display:grid;grid-template-columns:160px 60px 1fr 140px;gap:8px;padding:8px 0;border-bottom:1px solid var(--rule-soft);font-size:13.5px;align-items:start}
-.principle-row:last-child{border-bottom:0}
-.pri-id{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;color:var(--indigo)}
-.pri-w{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;color:var(--air8)}
-.pri-desc{color:var(--ink-2);line-height:1.5}
-.pri-kb{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted)}
+/* table */
+.tbl{width:100%;border-collapse:collapse;margin:6px 0;font-size:13px}
+.tbl th{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:7px 10px;border-bottom:2px solid var(--rule);text-align:left}
+.tbl td{padding:7px 10px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:0}
 
-/* --- remarks box --- */
-.remark{margin-top:10px;padding:10px 13px;background:#fffbea;border:1px solid #f0d060;border-radius:7px;font-size:13px;color:#5a4800;line-height:1.55}
-.remark b{color:#8C5905}
-.remark a{color:var(--indigo)}
+/* combo highlight row */
+.hi{background:var(--red-soft)}
+.mid{background:var(--amber-soft)}
 
-/* --- link row --- */
-.link-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--rule-soft)}
-
-/* --- GAP flag --- */
-.gap-flag{display:inline-flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:700;padding:2px 8px;background:var(--amber-soft);border:1px solid var(--amber);border-radius:100px;color:var(--amber)}
+/* footer */
+.foot{background:var(--surface-2);border-top:1px solid var(--rule);padding:14px 32px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);display:flex;gap:20px}
+.foot span{color:var(--ink-2)}
 </style>
 </head>
 <body>
 <header class="mast">
  <div class="wrap">
  <div class="brand">
- <span class="logo">Air8<span>KB</span></span>
- <span class="brandtag">Step-by-Step Flow · REACH Compliance Case · Sep 2026</span>
+  <span class="logo">Air8<span>KB</span></span>
+  <span class="brandtag">Correct Flow · REACH Compliance Case · Sep 2026</span>
  </div>
  <div class="chips">
- <span class="chip d">Sep 2026</span>
- <span class="chip">chemical_compliance</span>
- <span class="chip kb">Step-by-Step</span>
- <span class="chip.r">ECHA Feb 2026</span>
+  <span class="chip d">Sep 2026</span>
+  <span class="chip kb">L1 + L2 Flow</span>
+  <span class="chip.r">ECHA Feb 2026</span>
  </div>
- <h1>REACH SVHC Feb 2026 — 每步骤 KB 流向</h1>
- <p class="stand">每步做什么、用哪个 KB 文件、KB 内容 vs 网上数据怎么分客群 map → WIP节点 → 不同 persona 输出 — 全部逐行展开。</p>
+ <h1>REACH SVHC Feb 2026 — KB Flow（正确版）</h1>
  </div>
 </header>
 
-<div class="steps">
- <div class="wrap">
+<div class="flow">
+<div class="wrap">
 
-<!-- ════════════════════════════════════════
-     STEP 1 — INPUT
-════════════════════════════════════════ -->
-<div class="step" id="s1">
- <div class="sl">1</div>
- <div class="sl-line"></div>
- <div class="sh">输入：事件 headline</div>
- <div class="sk">Source: EVENT-TYPES.md (CP0)</div>
- <div class="sb">
-  <div class="ccard">
-   <div class="ch">Raw headline</div>
-   <div class="cb">"ECHA adds n-Hexane and BPAF to REACH SVHC Candidate List — SCIP notifications due within 6 months."</div>
-  </div>
-  <div class="link-row">
-   <a class="src" href="#s2">CP0 skill</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/EVENT-TYPES.md" target="_blank">EVENT-TYPES.md</a>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> CP0 只读 headline，不分析。任务是把文字归类到 Event Family + Functional Sub-type。Sub-type 名称 = 功能性描述，不是 regulation 名字。
+<!-- ══════════════════════════════════
+     STEP 1
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:320px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">1</span>
+    <span class="s-title">输入：事件 headline → CP0 分类</span>
+    <span class="s-layers">CP0</span>
+   </div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">Headline</div>
+     <div class="s-row-content">"ECHA adds n-Hexane and BPAF to REACH SVHC Candidate List — SCIP notifications due within 6 months."</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">CP0 做什么</div>
+     <div class="s-row-content">读 headline → 判断 Event Family → 判断 Functional Sub-type。不是分析内容，只是分类。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 用了什么</div>
+     <div class="s-row-content">
+      <span class="tag indigo">EVENT-TYPES.md</span> — 里面有所有 event family 和 sub-type 列表
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">输出</div>
+     <div class="s-row-content">
+      Family = <span class="tag indigo">EVT-REGULATION</span> &nbsp;|&nbsp;
+      Sub-type = <span class="tag indigo">chemical_compliance</span><br>
+      <span style="font-size:12px;color:var(--muted)">Sub-type 是功能描述，不是 regulation 名字。"chemical_compliance" = 所有化学合规事件的通用桶</span>
+     </div>
+    </div>
+   </div>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 2 — CP0 CLASSIFICATION
-════════════════════════════════════════ -->
-<div class="step" id="s2">
- <div class="sl">2</div>
- <div class="sl-line"></div>
- <div class="sh">CP0 分类：Event Family + Functional Sub-type</div>
- <div class="sk">KB: EVENT-TYPES.md · EVENT-CLUSTERS.md</div>
- <div class="sb">
-  <table class="steptable">
-   <thead><tr><th>Field</th><th>Value</th><th>Remark</th></tr></thead>
-   <tbody>
-   <tr>
-    <td style="font-weight:600">Event Family</td>
-    <td><span class="tag indigo">EVT-REGULATION</span></td>
-    <td style="font-size:13px;color:var(--muted)">Regulation = law / compliance rule change</td>
-   </tr>
-   <tr>
-    <td style="font-weight:600">Functional Sub-type</td>
-    <td><span class="tag indigo">chemical_compliance</span></td>
-    <td style="font-size:13px;color:var(--muted)">功能描述，不是 "reach_update" / CAS号 / 物质名</td>
-   </tr>
-   <tr>
-    <td style="font-weight:600">Why NOT reach_update</td>
-    <td colspan="2" style="font-size:13px;color:var(--muted)">SVHC 有 253 种，每种都单独命名不可能。Sub-type = 功能桶（化学合规），regulation 名字在 Step 5 从网上发现。</td>
-   </tr>
-   <tr>
-    <td style="font-weight:600">Routing after CP0</td>
-    <td colspan="2" style="font-size:13px;color:var(--muted)">chemical_compliance → routes to REG-REACH.md + COUNTRY-DB + CLIENT-DB + COMBO personas + L1 principles</td>
-   </tr>
-   </tbody>
-  </table>
-  <div class="link-row">
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/EVENT-TYPES.md" target="_blank">EVENT-TYPES.md</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/EVENT-CLUSTERS.md" target="_blank">EVENT-CLUSTERS.md</a>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> Sub-type 是功能桶，不是 regulation 名。Regulation 名字（REACH）→ 在 Step 5 从网上搜索结果里 discovery，不是 CP0 预先知道。
+<!-- ══════════════════════════════════
+     STEP 2
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:240px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">2</span>
+    <span class="s-title">L1 路由：知道去哪几个 KB 文件拿数据</span>
+    <span class="s-layers">L1</span>
+   </div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L1 做什么</div>
+     <div class="s-row-content">CP0 给了 chemical_compliance，L1 知道要去哪些 KB 文件拿数据——但 L1 本身不拿具体数值。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 文件 ①</div>
+     <div class="s-row-content">
+      <span class="tag indigo">layer-2-entities/countries/*.md</span>
+      — 知道 Turkey / Pakistan / China / India 的 EU market access 各是多少
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 文件 ②</div>
+     <div class="s-row-content">
+      <span class="tag indigo">layer-2-entities/personas/COMBO-00X.md</span>
+      — 知道每个 COMBO 的 compliance_exposure 字段是否包含 REG-REACH
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 文件 ③</div>
+     <div class="s-row-content">
+      <span class="tag indigo">CLIENT-DB.md</span>
+      — 知道每个国家 × 产品类有多少客户
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">L1 输出</div>
+     <div class="s-row-content">
+      路由表：EU 市场相关国家 → COMBO-005(Turkey) / COMBO-009(Pakistan) / COMBO-004(China) / COMBO-003(India)
+     </div>
+    </div>
+   </div>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 3 — COUNTRY FETCH
-════════════════════════════════════════ -->
-<div class="step" id="s3">
- <div class="sl">3</div>
- <div class="sl-line"></div>
- <div class="sh">Fetch 国家数据：EU jurisdiction + tariff access</div>
- <div class="sk">KB: layer-2-entities/countries/*.md</div>
- <div class="sb">
-  <p style="margin:0 0 10px">chemical_compliance → EU enforcement → filter countries that serve EU market → pull tariff + regulatory exposure from each country file.</p>
-  <table class="steptable">
-   <thead><tr><th>Country</th><th>KB File</th><th>EU Market Access</th><th>Key Data from KB</th><th>Remark</th></tr></thead>
-   <tbody>
-   <tr>
-    <td><b>Turkey (TR)</b></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/countries/Turkey.md" target="_blank">Turkey.md</a></td>
-    <td><span class="tag green">EU Customs Union — 0%</span></td>
-    <td>REACH compliance baseline already in place; EU proximity 2–3 day shipping; Zara/H&M revenue concentration; TRY bank credit contraction</td>
-    <td style="font-size:12.5px;color:var(--muted)">EU tariff = 0% → EU buyer volume highest</td>
-   </tr>
-   <tr>
-    <td><b>Pakistan (PK)</b></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/countries/Pakistan.md" target="_blank">Pakistan.md</a></td>
-    <td><span class="tag indigo">EU GSP+ — 0–3.5%</span></td>
-    <td>Fire retardant compliance for home textiles; ELS cotton advantage; PK energy crisis structural cost adder; UFLPA advantage for US</td>
-    <td style="font-size:12.5px;color:var(--muted)">GSP+ needs active维持; energy crisis = baseline cost pressure</td>
-   </tr>
-   <tr>
-    <td><b>China (CN)</b></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/countries/China.md" target="_blank">China.md</a></td>
-    <td><span class="tag amber">EU MFN — 12%</span></td>
-    <td>BPAF in coated fabric; UFLPA flagged; US tariff compression pushing CN as processing hub; 116 clients in CLIENT-DB</td>
-    <td style="font-size:12.5px;color:var(--muted)">EU tariff 12% → secondary market; primary = US</td>
-   </tr>
-   <tr>
-    <td><b>India (IN)</b></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/countries/India.md" target="_blank">India.md</a></td>
-    <td><span class="tag indigo">EU GSP+ — 0–9.6%</span></td>
-    <td>Monitor Primark/H&M RSL updates; EU-India FTA stalled; large vertical integrator structure; 104 clients</td>
-    <td style="font-size:12.5px;color:var(--muted)">FTA stalled → GSP+ still applies; lower EU exposure</td>
-   </tr>
-   </tbody>
-  </table>
-  <div class="link-row">
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/tree/main/layer-2-entities/countries" target="_blank">layer-2-entities/countries/</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/COUNTRY-DB.md" target="_blank">COUNTRY-DB.md (summary view)</a>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> 这些是国家层级的 exposure 数据 — 来自 KB，不是网上搜的。EU market access 税率决定买家会不会买、买多少。Country 文件里有真实的事实，不是预制结论。
+<!-- ══════════════════════════════════
+     STEP 3
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:240px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">3</span>
+    <span class="s-title">Fetch 国家数据：EU jurisdiction + tariff access</span>
+    <span class="s-layers">L2 · KB 数据</span>
+   </div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L2 做什么</div>
+     <div class="s-row-content">根据 L1 路由，具体 fetch 每个 country KB 文件里的 EU market 数据。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">Turkey</div>
+     <div class="s-row-content">
+      EU Customs Union → <span class="tag green">0% tariff</span> · Zara/H&M 直接关系 · REACH 合规已有 baseline
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">Pakistan</div>
+     <div class="s-row-content">
+      EU GSP+ → <span class="tag indigo">0–3.5% tariff</span> · fire retardant 合规 · 能源危机结构性成本
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">China</div>
+     <div class="s-row-content">
+      EU MFN → <span class="tag amber">12% tariff</span> · BPAF coated fabric · EU secondary market
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">India</div>
+     <div class="s-row-content">
+      EU GSP+ → <span class="tag indigo">0–9.6% tariff</span> · monitor only · 无直接 REG-REACH flag
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 来源</div>
+     <div class="s-row-content">
+      <span class="tag indigo">Turkey.md</span> · <span class="tag indigo">Pakistan.md</span> · <span class="tag indigo">China.md</span> · <span class="tag indigo">India.md</span>
+     </div>
+    </div>
+   </div>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 4 — CLIENT MAP
-════════════════════════════════════════ -->
-<div class="step" id="s4">
- <div class="sl">4</div>
- <div class="sl-line"></div>
- <div class="sh">Fetch 客群 map：哪些 COMBO 在 scope</div>
- <div class="sk">KB: COMBO personas + CLIENT-DB.md (client count)</div>
- <div class="sb">
-  <p style="margin:0 0 10px">chemical_compliance + EU enforcement → find all COMBO personas where compliance exposure includes REG-REACH AND country has EU market access.</p>
-  <table class="steptable">
-   <thead><tr><th>COMBO</th><th>KB File</th><th>Country</th><th>Product</th><th>EU Buyer Exposure</th><th>REACH Exposure in KB</th><th>KB Remark</th></tr></thead>
-   <tbody>
-   <tr>
-    <td><span class="tag indigo">COMBO-005</span></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/personas/COMBO-005-turkey-denim-specialist.md" target="_blank">COMBO-005...</a></td>
-    <td>Turkey</td>
-    <td>Denim / Woven</td>
-    <td><span class="tag red">HIGH — Zara/H&M direct</span></td>
-    <td>"highest exposure — denim chemicals" (REG-REACH listed in compliance_exposure)</td>
-    <td style="font-size:12.5px;color:var(--muted)">buyer_concentration field: Zara + H&M → PP-003 fires</td>
-   </tr>
-   <tr>
-    <td><span class="tag indigo">COMBO-009</span></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/personas/COMBO-009-pakistan-home-textile.md" target="_blank">COMBO-009...</a></td>
-    <td>Pakistan</td>
-    <td>Home Textile</td>
-    <td><span class="tag amber">MEDIUM-HIGH</span></td>
-    <td>"fire retardants in home textiles" (REG-REACH listed)</td>
-    <td style="font-size:12.5px;color:var(--muted)">PP-PK-001 energy crisis = structural cost baseline</td>
-   </tr>
-   <tr>
-    <td><span class="tag indigo">COMBO-004</span></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/personas/COMBO-004-china-medium-woven.md" target="_blank">COMBO-004...</a></td>
-    <td>China</td>
-    <td>Woven / Coated Fabric</td>
-    <td><span class="tag amber">MEDIUM — EU secondary</span></td>
-    <td>BPAF in coated fabric noted</td>
-    <td style="font-size:12.5px;color:var(--muted)">EU 12% tariff → lower priority buyer; primary = US</td>
-   </tr>
-   <tr>
-    <td><span class="tag indigo">COMBO-003</span></td>
-    <td><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/personas/COMBO-003-india-large-vertical-integrator.md" target="_blank">COMBO-003...</a></td>
-    <td>India</td>
-    <td>Home Textile / Cotton</td>
-    <td><span class="tag green">LOWER — monitor only</span></td>
-    <td>Monitor Primark/H&M RSL updates</td>
-    <td style="font-size:12.5px;color:var(--muted)">No direct REG-REACH flag; lower priority</td>
-   </tr>
-   </tbody>
-  </table>
-  <div class="link-row">
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/tree/main/layer-2-entities/personas" target="_blank">layer-2-entities/personas/</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/CLIENT-DB.md" target="_blank">CLIENT-DB.md (client count per country)</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/regulations/REG-REACH.md" target="_blank">REG-REACH.md (regulation file)</a>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> COMBO 里的 compliance_exposure 字段直接说明了这个 supplier 对哪种 regulation exposed。不是 LM 自己猜的，是 KB 里有记录。"highest exposure — denim chemicals" 是 KB 写的，LM 只是 fetch 这条记录。
+<!-- ══════════════════════════════════
+     STEP 4
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:240px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">4</span>
+    <span class="s-title">Fetch COMBO 数据：哪些在 REACH scope 里</span>
+    <span class="s-layers">L2 · KB 数据</span>
+   </div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L2 做什么</div>
+     <div class="s-row-content">L1 路由到了 COMBO 文件，L2 fetch 每个文件的 compliance_exposure 字段 + pain_points 数组。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">COMBO-005</div>
+     <div class="s-row-content">
+      Turkey · Denim · <span class="tag red">highest exposure — denim chemicals</span> (REG-REACH)
+      · pain_points: PP-001 / PP-003 / PP-TR-002
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">COMBO-009</div>
+     <div class="s-row-content">
+      Pakistan · Home Textile · <span class="tag amber">fire retardants in home textiles</span> (REG-REACH)
+      · pain_points: PP-001 / PP-PK-001
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">COMBO-004</div>
+     <div class="s-row-content">
+      China · Woven/Coated Fabric · <span class="tag amber">BPAF in coated fabric</span> noted
+      · pain_points: PP-001
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">COMBO-003</div>
+     <div class="s-row-content">
+      India · Home Textile · monitor Primark/H&M RSL updates only · no direct REG-REACH flag
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 来源</div>
+     <div class="s-row-content">
+      <span class="tag indigo">COMBO-005-turkey-denim-specialist.md</span> — compliance_exposure 字段
+      · <span class="tag indigo">COMBO-009-pakistan-home-textile.md</span> — 同上
+    </div>
+    </div>
+   </div>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 5 — PAIN POINT CHAIN
-════════════════════════════════════════ -->
-<div class="step" id="s5">
- <div class="sl">5</div>
- <div class="sl-line"></div>
- <div class="sh">触发 Pain Point Chain：KB 里有什么 pain points</div>
- <div class="sk">KB: COMBO pain_points + PP-REG-REACH-001 + universal pain points</div>
- <div class="sb">
-  <p style="margin:0 0 10px">KB 里有两套 pain points：通用的（PP-001 现金缺口、PP-003 买家集中度）和 compliance 专用的（PP-REG-REACH-001）。LM 把这个 event 对应的 pain points chain 起来。</p>
-  <div class="pchain">
-   <div class="pchain-h">Pain Point Chain — chemical_compliance + EU buyers</div>
-   <div class="peach">
-    <div class="parrow">↓</div>
-    <div class="pid">PP-REG-REACH-001<br><span style="color:var(--indigo);font-size:9px">compliance / REG-REACH</span></div>
-    <div class="ptext"><b>EU-bound shipment contains SVHC &gt;0.1% w/w → customs detention → buyer rejects goods → invoice disputed → dilution</b></div>
-    <div class="pweight">severity: HIGH</div>
+<!-- ══════════════════════════════════
+     STEP 5
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:280px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">5</span>
+    <span class="s-title">触发 Pain Point Chain：KB 里有对应的 pain points</span>
+    <span class="s-layers">L2 · KB 数据</span>
    </div>
-   <div class="peach">
-    <div class="parrow">→</div>
-    <div class="pid">PP-001<br><span style="color:var(--indigo);font-size:9px">universal / cashflow-gap</span></div>
-    <div class="ptext"><b>Cash flow gap on OA terms to EU buyers</b> — goods in production, buyer payment not due until after delivery, but supplier must fund re-test cost + production delay.</div>
-    <div class="pweight">weight: 1.0</div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L2 做什么</div>
+     <div class="s-row-content">KB 里有 pain points 库，COMBO 文件引用了它们。chemical_compliance 触发 PP-REG-REACH-001，再 cascade 到 universal pain points。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PP-REG-REACH-001</div>
+     <div class="s-row-content">
+      EU shipment contains SVHC &gt;0.1% w/w → customs detention → buyer rejects → invoice disputed → re-process cost → <b>DDP = Air8 importer liability</b> → delisting risk
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PP-001 · w:1.0</div>
+     <div class="s-row-content">Cash flow gap on OA terms to EU buyers — goods in production, buyer pays after delivery; supplier must absorb re-test cost + delay</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PP-003 · w:0.8</div>
+     <div class="s-row-content">Buyer concentration — COMBO-005: Zara + H&M direct. If they pause, supplier loses majority revenue during test window</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PP-TR-002 · w:1.0</div>
+     <div class="s-row-content">TRY bank credit contraction — TRY-denominated lines reduced; cannot self-finance via local banks</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PP-PK-001 · w:1.0</div>
+     <div class="s-row-content">PK energy crisis — structural 10–20% production cost adder, on top of re-test cost (COMBO-009 only)</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 来源</div>
+     <div class="s-row-content">
+      <span class="tag indigo">PP-REG-REACH-001.md</span> · <span class="tag indigo">PP-001-cashflow-gap.md</span> · <span class="tag indigo">PP-003-buyer-concentration.md</span> · <span class="tag indigo">PP-TR-002-bank-credit-contraction.md</span> · <span class="tag indigo">PP-PK-001-energy-crisis.md</span>
+     </div>
+    </div>
    </div>
-   <div class="peach">
-    <div class="parrow">→</div>
-    <div class="pid">PP-003<br><span style="color:var(--indigo);font-size:9px">universal / buyer-concentration</span></div>
-    <div class="ptext"><b>Revenue concentrated with top buyers</b> — COMBO-005: Zara + H&M direct relationship. If they pause orders pending test results, supplier loses majority of revenue immediately.</div>
-    <div class="pweight">weight: 0.8</div>
-   </div>
-   <div class="peach">
-    <div class="parrow">→</div>
-    <div class="pid">PP-TR-002<br><span style="color:var(--indigo);font-size:9px">country / Turkey</span></div>
-    <div class="ptext"><b>TRY bank credit contraction</b> — TRY-denominated bank lines reduced; local factoring is TRY-denominated (FX risk for EUR exporters). Supplier cannot self-finance re-test delay via banks.</div>
-    <div class="pweight">weight: 1.0</div>
-   </div>
-   <div class="peach">
-    <div class="parrow">→</div>
-    <div class="pid">PP-PK-001<br><span style="color:var(--indigo);font-size:9px">country / Pakistan</span></div>
-    <div class="ptext"><b>PK energy crisis</b> — structural 10–20% production cost adder on top of re-test cost. COMBO-009 only.</div>
-    <div class="pweight">weight: 1.0</div>
-   </div>
-  </div>
-  <div class="link-row">
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/pain-points/compliance/PP-REG-REACH-001.md" target="_blank">PP-REG-REACH-001.md (impact chain)</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/pain-points/universal/PP-001-cashflow-gap.md" target="_blank">PP-001-cashflow-gap.md</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/pain-points/universal/PP-003-buyer-concentration.md" target="_blank">PP-003-buyer-concentration.md</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/personas/COMBO-005-turkey-denim-specialist.md" target="_blank">COMBO-005 pain_points list</a>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> 注意 PP-COMP-001 / PP-COMP-002 这些是我之前版本里自己编的 ID。真实 KB 里的 compliance pain point 是 <b>PP-REG-REACH-001</b>，它的 impact chain 已经在 KB 里写好：shipment stopped → buyer rejects → invoice disputed → re-process cost → (DDP = Air8 liability) → delisting risk。
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 6 — REGULATION DETAIL (KB vs WEB)
-════════════════════════════════════════ -->
-<div class="step" id="s6">
- <div class="sl">6</div>
- <div class="sl-line"></div>
- <div class="sh">拿具体规则数据：KB 说去哪里找 → 网上找具体值</div>
- <div class="sk">KB: REG-REACH.md (where to look) · Web: ECHA + buyer RSL (what it says)</div>
- <div class="sb">
-  <p style="margin:0 0 10px">KB 负责给方向（去哪里找、找什么类型的信息），网上给具体值（SVHC 名字、CAS号、limit 数字、deadline）。两者分开。</p>
-  <div class="split">
-   <div class="split-col kb">
-    <b>Our KB — 告诉 LM 去哪里找</b><br><br>
-    <b><a href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-2-entities/regulations/REG-REACH.md" target="_blank">REG-REACH.md</a></b>（真实存在）<br>
-    Scope: EU-bound products not &gt;0.1% w/w SVHC.<br>
-    ECHA updates twice/year (Jan + Jul).<br>
-    Testing cost: <b>$2,000–10,000 per substance per factory</b>（KB 里的真实数据）<br>
-    Highest risk products: denim, children's apparel, home textiles with fire retardant finishes.<br><br>
-    <b>KB 没有的东西 → 需要建：</b><br>
-    <span class="gap-flag">⚠ KB-GAP</span> product-eu.md — substance category guidance per product type（不存在）<br>
-    <span class="gap-flag">⚠ KB-GAP</span> buyer-rsl.md — RSL floor methodology（不存在）<br>
-    <span class="gap-flag">⚠ KB-GAP</span> COMPLIANCE-DB.md — penalty case precedents（不存在）
+<!-- ══════════════════════════════════
+     STEP 6
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:200px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">6</span>
+    <span class="s-title">拿具体规则：KB 告诉去哪里找 → 网上找具体数值</span>
+    <span class="s-layers">L2 · KB guidance + Web search</span>
    </div>
-   <div class="split-col web">
-    <b>Web — 具体数值（live data）</b><br><br>
-    <b>Search: site:echa.europa.eu n-Hexane BPAF Feb 2026</b><br>
-    → n-Hexane CAS 110-54-3<br>
-    → BPAF group (9 substances) CAS 1478-61-1<br>
-    → Threshold: &gt;0.1% w/w<br>
-    → Added: Feb 2026 · Deadline: Aug 4, 2026<br>
-    → Total SVHCs: 253<br><br>
-    <b>Search: H&M Group RSL 2026 chemical restrictions</b><br>
-    → H&M n-Hexane limit = <b>10 ppm</b> (0.001% w/w)<br>
-    → <b>100× stricter than REACH 0.1% regulatory floor</b><br><br>
-    <b>Search: Primark ZDHC MRSL alignment BPAF</b><br>
-    → Primark tracks via ZDHC MRSL — adhesives in scope, BPAF monitoring pending.
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L2 做什么</div>
+     <div class="s-row-content">KB 说去 ECHA 找 regulation 细节，去 buyer RSL 页找 limit。L2 web search 拿具体数值。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 告诉去哪里</div>
+     <div class="s-row-content">
+      <span class="tag indigo">REG-REACH.md</span> — scope、SVHC threshold (0.1% w/w)、ECHA update cadence (Jan + Jul)、testing cost ($2,000–10,000/substance)、highest risk products (denim / children's apparel / home textile FR)
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">网上找具体值</div>
+     <div class="s-row-content">
+      ECHA: n-Hexane <span class="tag air8">CAS 110-54-3</span> · BPAF <span class="tag air8">CAS 1478-61-1 (group)</span> · threshold <span class="tag air8">&gt;0.1% w/w</span> · added Feb 2026 · SCIP deadline <span class="tag red">Aug 4 2026</span> · total SVHCs: 253<br>
+      H&M RSL 2026: n-Hexane limit = <span class="tag red">10 ppm</span> — 100× stricter than REACH regulatory floor
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">关键发现</div>
+     <div class="s-row-content">
+      H&M buyer floor 10 ppm ≠ REACH 0.1% regulatory floor。Buyer RSL 通常比 REACH 严格得多。这个 gap = 供应商必须在 H&M floor 之下才能继续出货。
+     </div>
+    </div>
    </div>
-  </div>
-  <div class="remark">
-   <b>Remark — KB vs Web 的分工：</b><br>
-   • <b style="color:var(--indigo)">KB 拥有</b>：regulation 结构、scope、最高风险产品分类、测试成本范围、执行逻辑、pain point impact chain<br>
-   • <b style="color:var(--air8)">Web 拥有</b>：具体 SVHC 名字、CAS号、RSL limit 数字、deadline 日期、buyer-specific floor<br>
-   • <b style="color:var(--amber)">KB-GAP</b>：product-eu.md、buyer-rsl.md、COMPLIANCE-DB.md — 这些 KB 文件还不存在，需要建
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 7 — PRINCIPLE WEIGHTS
-════════════════════════════════════════ -->
-<div class="step" id="s7">
- <div class="sl">7</div>
-  <div class="sl-line"></div>
- <div class="sh">Apply 权重原则：KB 里有哪些 principles，权重多少</div>
- <div class="sk">KB: PRINCIPLES.md + RP-EVT-ENVCOMP-01</div>
- <div class="sb">
-  <p style="margin:0 0 10px">KB 里的 PRINCIPLES.md 列出所有 reasoning principles 及权重。对 chemical_compliance event，以下 principles 被激活：</p>
-  <div class="principle-row">
-   <div class="pri-id">PRIN-COMPLIANCE-COST</div>
-   <div class="pri-w">0.5</div>
-   <div class="pri-desc">Regulatory compliance is the primary cost driver for this event type. Re-test cost ($2,000–10,000/substance) vs supplier size → severity scales with product specificity.</div>
-   <div class="pri-kb"><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/PRINCIPLES.md" target="_blank">PRINCIPLES.md</a></div>
-  </div>
-  <div class="principle-row">
-   <div class="pri-id">PRIN-BUYER-GEO-EXPOSURE</div>
-   <div class="pri-w">0.2</div>
-   <div class="pri-desc">Regulation jurisdiction is buyer-geography driven. EU-bound products trigger this at full weight. US-only suppliers = not in scope.</div>
-   <div class="pri-kb"><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/PRINCIPLES.md" target="_blank">PRINCIPLES.md</a></div>
-  </div>
-  <div class="principle-row">
-   <div class="pri-id">PRIN-PRODUCT-TARIFF</div>
-   <div class="pri-w">0.3</div>
-   <div class="pri-desc">Regulation scope is product-category and material-specific. Denim (stonewash chemicals) = highest risk. Home textiles (fire retardants) = medium. General woven = lower.</div>
-   <div class="pri-kb"><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/PRINCIPLES.md" target="_blank">PRINCIPLES.md</a></div>
-  </div>
-  <div class="principle-row">
-   <div class="pri-id">RP-EVT-ENVCOMP-01</div>
-   <div class="pri-w">overlay</div>
-   <div class="pri-desc">Environmental compliance → scope/timeline check. Confirms if event is active enforcement (new SVHC added to candidate list) vs pending legislation. Confirmed active: SCIP deadline Aug 4 2026.</div>
-   <div class="pri-kb"><a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/PRINCIPLES.md" target="_blank">PRINCIPLES.md §RP</a></div>
-  </div>
-  <div class="link-row">
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/PRINCIPLES.md" target="_blank">PRINCIPLES.md (all principles + weights)</a>
-   <a class="src kb" href="https://github.com/erik-ai-bot/air8-kb-intel/blob/main/layer-1-reasoning/EVENT-PRINCIPLES.md" target="_blank">EVENT-PRINCIPLES.md (event→principle mapping)</a>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> PRIN-COMPLIANCE-COST weight 0.5 是 PRINCIPLES.md 里白纸黑字写的，从 KB 里来。PP-001 weight 1.0 和 PP-003 weight 0.8 也是 KB 里 COMBO-005 pain_points 数组里定义的 — 不是 LM 自己编的。
+<!-- ══════════════════════════════════
+     STEP 7
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:240px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">7</span>
+    <span class="s-title">Apply 权重原则：KB 里有哪些 principles，权重多少</span>
+    <span class="s-layers">L1 · KB Principles</span>
+   </div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L1 做什么</div>
+     <div class="s-row-content">KB 里的 PRINCIPLES.md 列出所有 reasoning principles 及权重。对 chemical_compliance + EU buyers，以下 principles 被激活。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PRIN-COMPLIANCE-COST</div>
+     <div class="s-row-content">
+      <span class="tag amber">weight: 0.5</span> — Regulatory compliance is the primary cost driver. Re-test cost vs supplier size → severity scales with product specificity.
+    </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PRIN-BUYER-GEO-EXPOSURE</div>
+     <div class="s-row-content">
+      <span class="tag amber">weight: 0.2</span> — Regulation jurisdiction is buyer-geography driven. EU-bound products trigger at full weight. US-only suppliers = not in scope.
+    </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">PRIN-PRODUCT-TARIFF</div>
+     <div class="s-row-content">
+      <span class="tag amber">weight: 0.3</span> — Regulation scope is product-category and material-specific. Denim (stonewash chemicals) = highest. Home textile (FR) = medium. General woven = lower.
+    </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">RP-EVT-ENVCOMP-01</div>
+     <div class="s-row-content">
+      <span class="tag indigo">overlay</span> — Environmental compliance → confirms active enforcement (new SVHC added = confirmed active). Not weight-based; qualifies/timeslices the signal.
+    </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">KB 来源</div>
+     <div class="s-row-content">
+      <span class="tag indigo">PRINCIPLES.md</span> — 里面每条 principle 有 activated_by 字段，chemical_compliance 属于 EVT-REGULATION，所以这三个 principle 同时激活
+     </div>
+    </div>
+   </div>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 8 — EXPOSURE SCORE
-════════════════════════════════════════ -->
-<div class="step" id="s8">
- <div class="sl">8</div>
-  <div class="sl-line"></div>
- <div class="sh">Exposure 计算：权重叠加 → COMBO 高低</div>
- <div class="sk">KB: pain point weights + principle weights → computed score</div>
- <div class="sb">
-  <p style="margin:0 0 10px">KB principle weights + COMBO pain point weights → sum = exposure level. H&M buyer floor (web) modifies the final read.</p>
-  <div class="ccard hi" style="margin-bottom:8px">
-   <div class="ch">COMBO-005 — Turkey Denim — <span class="tag red">HIGH</span></div>
-   <div class="cb">
-    PP-REG-REACH-001 (HIGH) + PP-001 w:1.0 + PP-003 w:0.8 (Zara/H&M concentration) + PP-TR-002 w:1.0 (TRY credit contraction) + PRIN-COMPLIANCE-COST 0.5 (denim = highest-risk product) + PRIN-BUYER-GEO-EXPOSURE 0.2 (EU Customs Union 0%) + PRIN-PRODUCT-TARIFF 0.3<br>
-    <b>Score: 1.0 + 1.0 + 0.8 + 1.0 + 0.5 + 0.2 + 0.3 = 4.8 → HIGH</b><br>
-    <span style="font-size:12.5px;color:var(--muted)">H&M buyer floor 10 ppm = 100× stricter than REACH → re-test cost unavoidable for this buyer</span>
+<!-- ══════════════════════════════════
+     STEP 8
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:280px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">8</span>
+    <span class="s-title">Exposure 计算：权重相加 → COMBO 高低</span>
+    <span class="s-layers">L1 · 权重计算</span>
    </div>
-  </div>
-  <div class="ccard hi" style="margin-bottom:8px">
-   <div class="ch">COMBO-009 — Pakistan Home Textile — <span class="tag red">HIGH</span></div>
-   <div class="cb">
-    PP-REG-REACH-001 (HIGH) + PP-001 w:1.0 + PP-PK-001 w:1.0 (energy crisis +10–20% cost) + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO-EXPOSURE 0.2 (GSP+ 0–3.5%) + PRIN-PRODUCT-TARIFF 0.3<br>
-    <b>Score: 1.0 + 1.0 + 1.0 + 0.5 + 0.2 + 0.3 = 3.0 → HIGH</b><br>
-    <span style="font-size:12.5px;color:var(--muted)">BPAF in coatings — Primark RSL monitoring pending; fire retardant testing required if >0.1% w/w in BOM</span>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L1 做什么</div>
+     <div class="s-row-content">Pain point weights (来自 COMBO KB) + principle weights (来自 PRINCIPLES.md) = exposure score。H&M buyer floor (web) 修改最终读数。</div>
+    </div>
    </div>
-  </div>
-  <div class="ccard mid" style="margin-bottom:8px">
-   <div class="ch">COMBO-004 — China Woven — <span class="tag amber">MEDIUM</span></div>
-   <div class="cb">
-    PP-REG-REACH-001 (HIGH) + PP-001 w:1.0 + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO-EXPOSURE 0.2 (EU MFN 12% — secondary market) + PRIN-PRODUCT-TARIFF 0.3<br>
-    <b>Score: 1.0 + 1.0 + 0.5 + 0.2 + 0.3 = 3.0 → MEDIUM</b><br>
-    <span style="font-size:12.5px;color:var(--muted)">EU tariff 12% → lower EU buyer volume; primary risk = US buyer compliance; BPAF coatings secondary</span>
+   <table class="tbl">
+    <thead>
+     <tr>
+      <th>COMBO</th>
+      <th>加什么权重</th>
+      <th>总分</th>
+      <th>结果</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr class="hi">
+      <td><b>COMBO-005<br>Turkey Denim</b></td>
+      <td>PP-REG-REACH-001 (HIGH) + PP-001 w:1.0 + PP-003 w:0.8 + PP-TR-002 w:1.0 + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO 0.2 + PRIN-PRODUCT 0.3</td>
+      <td><b>4.8</b></td>
+      <td><span class="tag red">HIGH</span></td>
+     </tr>
+     <tr class="hi">
+      <td><b>COMBO-009<br>Pakistan Home Textile</b></td>
+      <td>PP-REG-REACH-001 (HIGH) + PP-001 w:1.0 + PP-PK-001 w:1.0 + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO 0.2 + PRIN-PRODUCT 0.3</td>
+      <td><b>3.0</b></td>
+      <td><span class="tag red">HIGH</span></td>
+     </tr>
+     <tr class="mid">
+      <td><b>COMBO-004<br>China Woven</b></td>
+      <td>PP-REG-REACH-001 (HIGH) + PP-001 w:1.0 + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO 0.2 + PRIN-PRODUCT 0.3</td>
+      <td><b>2.0</b></td>
+      <td><span class="tag amber">MEDIUM</span></td>
+     </tr>
+     <tr>
+      <td><b>COMBO-003<br>India Home Textile</b></td>
+      <td>PP-REG-REACH-001 not flagged + PP-001 w:1.0 + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO 0.2 + PRIN-PRODUCT 0.3</td>
+      <td><b>2.0</b></td>
+      <td><span class="tag green">LOWER</span></td>
+     </tr>
+    </tbody>
+   </table>
+   <div class="s-body" style="padding-top:10px">
+    <div class="s-row">
+     <div class="s-row-label">关键修正</div>
+     <div class="s-row-content">H&M buyer floor 10 ppm ≠ REACH 0.1% → COMBO-005 的 re-test cost 是必须的，不能跳过。</div>
+    </div>
    </div>
-  </div>
-  <div class="ccard lo">
-   <div class="ch">COMBO-003 — India Home Textile — <span class="tag green">LOWER</span></div>
-   <div class="cb">
-    PP-REG-REACH-001 not directly flagged + PP-001 w:1.0 + PRIN-COMPLIANCE-COST 0.5 + PRIN-BUYER-GEO-EXPOSURE 0.2 (GSP+ 0–9.6%) + PRIN-PRODUCT-TARIFF 0.3<br>
-    <b>Score: 1.0 + 0.5 + 0.2 + 0.3 = 2.0 → LOWER</b><br>
-    <span style="font-size:12.5px;color:var(--muted)">Monitor Primark/H&M RSL updates only; no direct REG-REACH exposure flag in KB</span>
-   </div>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> 这里的 weight 加法不是 KB 里预存的结论，是 LM 根据 PRINCIPLES.md 里的权重 + COMBO pain_points 数组里的 weight 字段，计算出来的。每一次 event 来都会重新算。
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 9 — WIP NODE LINK
-════════════════════════════════════════ -->
-<div class="step" id="s9">
- <div class="sl">9</div>
-  <div class="sl-line"></div>
- <div class="sh">Link 到 WIP 节点：Production Stage × Compliance Action</div>
- <div class="sk">KB: COMBO product type → WIP stage × action mapping（需新建 KB）</div>
- <div class="sb">
-  <p style="margin:0 0 10px">每个 COMBO 的产品类型对应一个生产阶段。在这个阶段，有一个具体的 compliance action 要执行。这个 mapping 目前 KB 里还没有 → 是 KB-GAP。</p>
-  <div class="wip">
-   <div class="wip-s h">
-    <span class="wip-n">WIP Stage 1</span>
-    <span class="wip-t">Sewing / Assembly</span>
-    <span class="wip-d">Audit BOM for n-Hexane (denim adhesives) and BPAF (home textile coatings). Confirm which substances are in use before production continues.</span>
+<!-- ══════════════════════════════════
+     STEP 9
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:200px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">9</span>
+    <span class="s-title">Link 到 WIP 节点：Production Stage × Compliance Action</span>
+    <span class="s-layers">L2 · KB → WIP</span>
    </div>
-   <div class="wip-s h">
-    <span class="wip-n">WIP Stage 2</span>
-    <span class="wip-t">Finishing / Wash</span>
-    <span class="wip-d">Stonewash/laser uses n-Hexane solvent. If &gt;0.1% w/w SVHC in BOM → hold finishing, submit lab test first. 14–21 day production hold starts here.</span>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">L2 做什么</div>
+     <div class="s-row-content">COMBO 产品类型 → 对应 production stage → 该 stage 的 compliance action。Denim 和 Home Textile 各在不同 stage 最危险。</div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">WIP Stage 1</div>
+     <div class="s-row-content">
+      <b>Sewing / Assembly</b> — Audit BOM: denim 用什么 adhesive (n-Hexane)? home textile 用什么 coating (BPAF)? 确认有哪些物质在用，production 才能继续。
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">WIP Stage 2</div>
+     <div class="s-row-content">
+      <b>Finishing / Wash</b> — Stonewash/laser 用 n-Hexane solvent。如果 BOM 显示 &gt;0.1% w/w → <span class="tag red">停住，等 lab 结果</span>。这里开始 14–21 天 production hold。
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">WIP Stage 3</div>
+     <div class="s-row-content">
+      <b>QC / Pre-Ship</b> — Lab 结果回来了。PASS → release。FAIL → <span class="tag red">不能出货</span>，进 Article 33 notification 流程。
+     </div>
+    </div>
+    <div class="s-row">
+     <div class="s-row-label">WIP Stage 4</div>
+     <div class="s-row-content">
+      <b>SCIP Submission</b> — 如果 &gt;0.1% w/w 已确认 → 向 ECHA 提交 SCIP，deadline <span class="tag red">Aug 4 2026</span>。DDP = Air8 作为进口商承担这个义务。
+     </div>
+    </div>
    </div>
-   <div class="wip-s m">
-    <span class="wip-n">WIP Stage 3</span>
-    <span class="wip-t">QC / Pre-Ship</span>
-    <span class="wip-d">Lab results expected (14–21 days from submission). PASS → release. FAIL → cannot ship, escalate to Article 33 notification.</span>
-   </div>
-   <div class="wip-s c">
-    <span class="wip-n">WIP Stage 4</span>
-    <span class="wip-t">SCIP Submission</span>
-    <span class="wip-d">If &gt;0.1% w/w confirmed → submit SCIP to ECHA before goods arrive at EU port. Deadline: Aug 4 2026. DDP = Air8 as importer bears this obligation.</span>
-   </div>
-  </div>
-  <div class="gap-flag" style="margin:10px 0 0">⚠ KB-GAP — WIP × SVHC risk map file does not exist yet</div>
-  <div class="remark">
-   <b>Remark:</b> WIP stage × compliance action 这个 mapping 在 KB 里还没有。是 Step 9 执行过程中发现需要、但 KB 里没有的东西 → 记录为 KB-GAP，下一个 iteration 要建。
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 10 — OUTPUT PER PERSONA
-════════════════════════════════════════ -->
-<div class="step" id="s10">
- <div class="sl">10</div>
-  <div class="sl-line"></div>
- <div class="sh">Output — 不同 Persona 看到什么</div>
- <div class="sk">KB: same data → shaped differently per audience</div>
- <div class="sb">
-  <p style="margin:0 0 10px">同一套 KB + 同一套 web 数据，通过 flow 组合，给不同的 persona 看不同的维度。</p>
-  <table class="steptable">
-   <thead><tr><th>Persona</th><th>What they see</th><th>KB nodes used</th></tr></thead>
-   <tbody>
-   <tr>
-    <td><b>Big Boss</b></td>
-    <td>Exposure matrix: COMBO-005 HIGH / COMBO-009 HIGH / COMBO-004 MEDIUM / COMBO-003 LOWER. Action priority: Turkey denim → Pakistan home-textile → China woven. SCIP deadline Aug 4.</td>
-    <td style="font-size:12.5px">Steps 3–9 all → exposure score → ranked list</td>
-   </tr>
-   <tr>
-    <td><b>BD Team</b></td>
-    <td>ARP window: 14–21 day re-test delay on confirmed EU buyer POs → cashflow gap → ARP indicated for COMBO-005 (TRY credit contraction = high need, EUR-denominated ARP = natural hedge). PreShip-OBF safe. ESG Finance contraindicated.</td>
-    <td style="font-size:12.5px">PP-001, PP-TR-002, PROD-ARP from COMBO-005, PP-REG-REACH-001</td>
-   </tr>
-   <tr>
-    <td><b>Supplier — COMBO-005</b></td>
-    <td>Compliance checklist: (1) Audit denim adhesive BOM for n-Hexane CAS 110-54-3. (2) Submit to ECHA-accredited lab — H&M buyer floor 10 ppm (100× stricter than REACH). (3) SCIP if &gt;0.1% w/w. (4) Notify Zara/H&M within 45 days of confirmation.</td>
-    <td style="font-size:12.5px">PP-REG-REACH-001, REG-REACH.md, H&M RSL (web), COMBO-005 pain_points</td>
-   </tr>
-   <tr>
-    <td><b>Supplier — COMBO-009</b></td>
-    <td>Compliance checklist: (1) Audit home textile coating BOM for BPAF CAS 1478-61-1. (2) If &gt;0.1% w/w → prepare Article 33 disclosure + SCIP by Aug 4. (3) Set Primark/ZDHC BPAF monitoring tracker.</td>
-    <td style="font-size:12.5px">PP-REG-REACH-001, PP-PK-001, REG-REACH.md, Primark RSL (web)</td>
-   </tr>
-   </tbody>
-  </table>
-  <div class="remark">
-   <b>Remark:</b> 同一套 KB data，Big Boss 看到风险排序，BD 看到 ARP window，Supplier 看到执行清单 — LM 把同样的 knowledge 根据 audience 需要重新组织。KB 本身不存「Turkey denim = HIGH」，KB 只存事实和逻辑，HIGH 是 flow 算出来的。
+<!-- ══════════════════════════════════
+     STEP 10
+══════════════════════════════════════ -->
+<div class="flow-inner">
+ <div class="flow-line-col">
+  <div class="flow-dot"></div>
+  <div class="flow-line" style="min-height:20px"></div>
+ </div>
+ <div class="flow-content">
+  <div class="s-card">
+   <div class="s-head">
+    <span class="s-num">10</span>
+    <span class="s-title">Output：同一套 KB → 不同 Persona 看到什么</span>
+    <span class="s-layers">Output</span>
+   </div>
+   <div class="s-body">
+    <div class="s-row">
+     <div class="s-row-label">同一套 KB</div>
+     <div class="s-row-content">Steps 1–9 的数据是同一套。Flow 根据 audience 不同，重新组织输出维度。</div>
+    </div>
+   </div>
+   <table class="tbl">
+    <thead>
+     <tr><th>Persona</th><th>看到什么</th><th>核心 KB 数据</th></tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td><b>Big Boss</b></td>
+      <td>Exposure matrix: COMBO-005 HIGH / COMBO-009 HIGH / COMBO-004 MEDIUM。行动优先级：Turkey denim → Pakistan home-textile → China woven。SCIP deadline Aug 4。</td>
+      <td>Steps 3–8 的 exposure score</td>
+     </tr>
+     <tr>
+      <td><b>BD Team</b></td>
+      <td>ARP window：14–21 天 re-test delay on confirmed EU buyer POs → 现金缺口 → ARP indicated for COMBO-005（TRY credit contraction = 高需求，EUR-denominated ARP = 自然对冲）。PreShip-OBF safe。ESG Finance contraindicated。</td>
+      <td>PP-001, PP-TR-002, PROD-ARP from COMBO-005</td>
+     </tr>
+     <tr>
+      <td><b>Supplier — COMBO-005</b></td>
+      <td>合规清单：① 查 denim adhesive BOM n-Hexane CAS 110-54-3 → ② 送 ECHA 认证 lab（H&M floor 10 ppm）→ ③ 若 &gt;0.1% w/w 立刻 SCIP → ④ 45天内通知 Zara/H&M</td>
+      <td>PP-REG-REACH-001, REG-REACH.md, H&M RSL (web), COMBO-005 pain_points</td>
+     </tr>
+     <tr>
+      <td><b>Supplier — COMBO-009</b></td>
+      <td>合规清单：① 查 home textile coating BOM BPAF CAS 1478-61-1 → ② 若 &gt;0.1% w/w 准备 Article 33 disclosure + SCIP deadline Aug 4 → ③ 设 Primark/ZDHC BPAF monitoring tracker</td>
+      <td>PP-REG-REACH-001, PP-PK-001, REG-REACH.md, Primark RSL (web)</td>
+     </tr>
+    </tbody>
+   </table>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     STEP 11 — KB-GAP SUMMARY
-════════════════════════════════════════ -->
-<div class="step" id="s11">
- <div class="sl">11</div>
-  <div class="sl-line"></div>
- <div class="sh">KB-GAP 记录：Flow 里发现 KB 还缺的 4 个文件</div>
- <div class="sk">Identified during flow execution</div>
- <div class="sb">
-  <p style="margin:0 0 10px">这些文件在 flow 过程中被发现需要，但 KB 里还不存在。不是今天的 task，是下一个 iteration 的 building blocks。</p>
-  <div class="ccard gap" style="margin-bottom:8px">
-   <div class="ch">KB-GAP 1: product-eu.md — Substance category guidance per product type</div>
-   <div class="cb">在 Step 6 被发现需要：KB 说「去查 ECHA」，但没有具体说明每个产品类型（denim / home textile / coated fabric）应该查哪类化学物质（solvent / resin / fire retardant）。这个文件需要在 REG-REACH.md 下面新建。</div>
-  </div>
-  <div class="ccard gap" style="margin-bottom:8px">
-   <div class="ch">KB-GAP 2: buyer-rsl.md — Buyer RSL floor methodology</div>
-   <div class="cb">Step 6 发现：KB 知道要查 buyer RSL，但没有 buyer-specific RSL floor 数据库。这个文件应该存 buyers（H&M / Zara / Primark / Target）各自的 chemical restriction limit，供 LM 对比 REACH regulatory floor 使用。</div>
-  </div>
-  <div class="ccard gap" style="margin-bottom:8px">
-   <div class="ch">KB-GAP 3: WIP stage × SVHC risk map（无正式文件名）</div>
-   <div class="cb">Step 9 发现：COMBO 产品类型 → 生产阶段（sewing / finishing / QC / SCIP）→ 具体的 compliance action，这个 mapping 还没有 KB 文件。需要在 COMBO 文件下面新建，或作为独立文件。</div>
-  </div>
-  <div class="ccard gap" style="margin-bottom:8px">
-   <div class="ch">KB-GAP 4: COMPLIANCE-DB.md — Penalty case precedents</div>
-   <div class="cb">Big Boss 输出需要：EU customs holds、Article 33 fines、buyer delisting precedents。这是最难建的一个（需要真实法律案例数据），但对「风险落地」最有说服力。</div>
-  </div>
-  <div class="remark">
-   <b>Remark:</b> 这些 KB-GAP 是在 flow 执行过程中自然发现的，不是预先列好的 to-do list。这说明 KB 是 living system — 每次跑新的 event 类型，都会发现新的 gap。
-  </div>
- </div>
+</div>
 </div>
 
- </div>
-</div>
+<footer class="foot">
+ <span>KB: layer-1-reasoning/PRINCIPLES.md</span>
+ <span>KB: layer-2-entities/personas/COMBO-00X.md</span>
+ <span>KB: layer-1-reasoning/pain-points/*/PP-*.md</span>
+ <span>KB: layer-2-entities/regulations/REG-REACH.md</span>
+</footer>
 </body>
 </html>
