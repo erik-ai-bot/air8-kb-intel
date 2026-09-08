@@ -1,646 +1,807 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Air8 Event Processing Flow — Two Event Types Compared</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Air8 Event Processing Flow — Two Layers, Not Two Copies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
-  :root {
-    --bg: #0f1117;
-    --card: #1a1d27;
-    --card-hover: #21253a;
-    --border: #2a2d3a;
-    --accent: #f97316;
-    --accent-dim: rgba(249,115,22,0.08);
-    --accent2: #38bdf8;
-    --accent2-dim: rgba(56,189,248,0.08);
-    --green: #22c55e;
-    --text: #e2e4e9;
-    --text-muted: #8b8fa3;
-    --text-dim: #5a5d6e;
-    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; padding: 40px 20px; }
-
-  .container { max-width: 900px; margin: 0 auto; }
-
-  /* HEADER */
-  .page-header { text-align: center; margin-bottom: 40px; }
-  .page-header .eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
-  .page-header h1 { font-size: 24px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 12px; }
-  .page-header .subtitle { color: var(--text-muted); font-size: 14px; line-height: 1.6; max-width: 600px; margin: 0 auto; }
-
-  /* INTRO */
-  .intro { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 36px; }
-  .intro p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
-  .intro strong { color: #fff; }
-
-  /* TABS */
-  .tabs { display: flex; gap: 4px; margin-bottom: 32px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 6px; }
-  .tab { flex: 1; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; border: none; background: transparent; color: var(--text-muted); transition: all 0.15s; }
-  .tab:hover { color: #fff; }
-  .tab.active-a { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(249,115,22,0.3); }
-  .tab.active-b { background: var(--accent2-dim); color: var(--accent2); border: 1px solid rgba(56,189,248,0.3); }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  /* STEP CARDS */
-  .step { margin-bottom: 20px; }
-  .step-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 8px; }
-  .step-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; color: #fff; }
-  .n1 { background: var(--accent); }
-  .n2 { background: #3b82f6; }
-  .n3 { background: #38bdf8; }
-  .n4 { background: #a855f7; }
-  .n5 { background: #22c55e; }
-  .step-meta { flex: 1; }
-  .step-name { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 2px; }
-  .step-kb { font-size: 10px; color: var(--accent); font-family: 'Courier New', monospace; }
-  .step-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-  .step-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  .case-stripe { padding: 8px 16px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .stripe-a { background: var(--accent-dim); color: var(--accent); border-bottom: 1px solid rgba(249,115,22,0.2); }
-  .stripe-b { background: var(--accent2-dim); color: var(--accent2); border-bottom: 1px solid rgba(56,189,248,0.2); }
-  .stripe-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .stripe-a .stripe-dot { background: var(--accent); }
-  .stripe-b .stripe-dot { background: var(--accent2); }
-
-  .step-body { padding: 14px 16px; }
-
-  /* INFO GRID */
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .info-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-  .info-key { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; }
-  .info-val { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.4; }
-  .info-val.highlight { color: var(--accent); }
-  .info-val.blue { color: var(--accent2); }
-  .info-val.green { color: var(--green); }
-
-  /* MAPPING ROWS */
-  .mapping-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 7px; margin-bottom: 7px; }
-  .mapping-row:last-child { margin-bottom: 0; }
-  .map-lbl { font-size: 10px; color: var(--text-dim); width: 120px; flex-shrink: 0; font-family: 'Courier New', monospace; }
-  .map-val { font-size: 13px; color: #fff; flex: 1; font-weight: 600; }
-  .map-tag { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; flex-shrink: 0; letter-spacing: 0.5px; }
-  .tag-strong { background: rgba(249,115,22,0.15); color: var(--accent); }
-  .tag-mod { background: rgba(56,189,248,0.15); color: var(--accent2); }
-  .tag-weak { background: rgba(90,93,110,0.3); color: var(--text-dim); }
-  .tag-excl { background: rgba(90,93,110,0.15); color: var(--text-dim); text-decoration: line-through; }
-
-  /* PRINCIPLES */
-  .principle-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 7px; margin-bottom: 7px; }
-  .principle-row:last-child { margin-bottom: 0; }
-  .wbadge { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
-  .w50 { background: rgba(249,115,22,0.15); color: var(--accent); }
-  .w30 { background: rgba(56,189,248,0.15); color: var(--accent2); }
-  .w20 { background: rgba(168,85,247,0.15); color: #c084fc; }
-  .pr-name { font-size: 13px; font-weight: 600; color: #fff; flex: 1; }
-  .pr-find { font-size: 12px; color: var(--text-muted); }
-
-  /* KB NODE */
-  .kb-node { display: flex; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 7px; margin-bottom: 7px; }
-  .kb-node:last-child { margin-bottom: 0; }
-  .kb-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-  .dot-a { background: var(--accent); }
-  .dot-b { background: var(--accent2); }
-  .kb-lbl { font-size: 10px; color: var(--text-dim); margin-bottom: 3px; font-family: 'Courier New', monospace; }
-  .kb-content { font-size: 13px; color: var(--text); line-height: 1.5; }
-  .kb-content strong { color: var(--accent); }
-  .kb-content em { color: var(--accent2); font-style: normal; }
-
-  /* REASONING LAYERS */
-  .layer-item { display: flex; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 7px; margin-bottom: 7px; }
-  .layer-item:last-child { margin-bottom: 0; }
-  .layer-tag { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
-  .tag-A { background: rgba(249,115,22,0.15); color: var(--accent); }
-  .tag-B { background: rgba(56,189,248,0.15); color: var(--accent2); }
-  .tag-C { background: rgba(168,85,247,0.15); color: #c084fc; }
-  .tag-D { background: rgba(34,197,94,0.15); color: var(--green); }
-  .layer-text { font-size: 13px; color: var(--text); line-height: 1.5; flex: 1; }
-  .layer-text strong { color: var(--accent); }
-
-  /* CLIENT ROWS */
-  .client-row { display: flex; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 7px; margin-bottom: 7px; }
-  .client-row:last-child { margin-bottom: 0; }
-  .combo-id { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; flex-shrink: 0; }
-  .combo-a { background: rgba(249,115,22,0.15); color: var(--accent); }
-  .combo-b { background: rgba(56,189,248,0.15); color: var(--accent2); }
-  .combo-text { font-size: 13px; color: var(--text); }
-
-  /* SOLUTION ROW */
-  .sol-row { display: flex; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 7px; margin-bottom: 7px; }
-  .sol-row:last-child { margin-bottom: 0; }
-  .sol-lbl { font-size: 10px; color: var(--text-dim); width: 110px; flex-shrink: 0; font-family: 'Courier New', monospace; }
-  .sol-val { font-size: 13px; color: #fff; font-weight: 600; flex: 1; }
-  .urg { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; flex-shrink: 0; }
-  .urg-h { background: rgba(249,115,22,0.15); color: var(--accent); }
-  .urg-m { background: rgba(56,189,248,0.15); color: var(--accent2); }
-
-  /* OUTPUT */
-  .output-row { display: flex; gap: 12px; padding: 12px 14px; background: var(--bg); border-radius: 7px; align-items: flex-start; }
-  .output-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-  .output-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-  .output-text strong { color: #fff; }
-
-  /* DIVIDER */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
-
-  /* COMPARISON TABLE */
-  .compare-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; font-weight: 700; }
-  .compare-table { width: 100%; border-collapse: collapse; }
-  .compare-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600; }
-  .compare-table td { padding: 11px 12px; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid rgba(42,45,58,0.5); vertical-align: top; line-height: 1.5; }
-  .compare-table tr:last-child td { border-bottom: none; }
-  .compare-table .th-a { color: var(--accent); }
-  .compare-table .th-b { color: var(--accent2); }
-  .compare-table .td-a { color: var(--accent); font-weight: 600; font-family: 'Courier New', monospace; font-size: 11px; }
-  .compare-table .td-b { color: var(--accent2); font-weight: 600; font-family: 'Courier New', monospace; font-size: 11px; }
-  .compare-table .kb-ref { color: var(--text); font-family: 'Courier New', monospace; font-size: 11px; }
-  .compare-table .step-col { color: var(--text); font-weight: 600; font-size: 12px; width: 140px; }
-
-  /* GENERIC FLOW BAR */
-  .flow-bar { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; }
-  .flow-bar-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; font-weight: 700; }
-  .flow-steps { display: flex; align-items: center; gap: 0; }
-  .flow-step { flex: 1; text-align: center; padding: 10px 6px; }
-  .flow-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; margin: 0 auto 6px; }
-  .flow-label { font-size: 11px; font-weight: 600; color: #fff; line-height: 1.3; margin-bottom: 2px; }
-  .flow-kb { font-size: 9px; color: var(--text-dim); line-height: 1.3; }
-  .flow-arrow { color: var(--border); font-size: 16px; flex-shrink: 0; padding: 0 4px; }
-
-  /* COMPLIANCE CALLOUT */
-  .compliance-note { background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 10px; font-size: 12px; color: var(--text-muted); }
-  .compliance-note strong { color: var(--accent2); }
-  .compliance-note code { background: rgba(56,189,248,0.1); color: var(--accent2); padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: 'Courier New', monospace; }
-
-  .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin: 14px 0 8px; font-weight: 700; }
-
-  .footer { text-align: center; color: var(--text-dim); font-size: 11px; margin-top: 40px; line-height: 1.8; }
-
-  @media (max-width: 640px) {
-    .info-grid { grid-template-columns: 1fr; }
-    .flow-steps { flex-wrap: wrap; gap: 8px; }
-    .flow-arrow { display: none; }
-    .compare-table { font-size: 11px; }
-  }
+:root{
+ --paper:#EDF0F5; --surface:#FFFFFF; --surface-2:#F5F7FB;
+ --chrome:#0f1923; --chrome-2:#1a2433; --chrome-ink:#8fa3bd;
+ --ink:#11151C; --ink-2:#3C4557; --muted:#6A7387;
+ --rule:#D5DAE4; --rule-soft:#E6E9F0;
+ --air8:#f97316; --air8-soft:#fdedd3;
+ --indigo:#2C4B8B; --indigo-soft:#E2E9F7;
+ --amber:#8C5905; --amber-soft:#F7EAD2;
+ --red:#9C2B1A; --red-soft:#F7E0DB;
+ --green:#1F5E43; --green-soft:#D9EAE1;
+ --shadow:0 1px 2px rgba(17,21,28,.05), 0 16px 40px -30px rgba(17,21,28,.5);
+}
+@media (prefers-color-scheme: dark){
+ :root:not([data-theme="light"]){
+ --paper:#080c12; --surface:#141922; --surface-2:#1A202B;
+ --chrome:#0a1019; --chrome-2:#111827; --chrome-ink:#7e8fa8;
+ --ink:#e8ebf2; --ink-2:#b5bdcc; --muted:#8791a4;
+ --rule:#2A3140; --rule-soft:#222937;
+ --air8:#fb923c; --air8-soft:#2a1a0a;
+ --indigo:#8cabec; --indigo-soft:#1a2440;
+ --amber:#e0a84f; --amber-soft:#32270e;
+ --red:#e68d79; --red-soft:#351a14;
+ --green:#6dc59b; --green-soft:#0e2920;
+ --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -30px rgba(0,0,0,.95);
+ }
+}
+:root[data-theme="dark"]{
+ --paper:#080c12; --surface:#141922; --surface-2:#1A202B;
+ --chrome:#0a1019; --chrome-2:#111827; --chrome-ink:#7e8fa8;
+ --ink:#e8ebf2; --ink-2:#b5bdcc; --muted:#8791a4;
+ --rule:#2A3140; --rule-soft:#222937;
+ --air8:#fb923c; --air8-soft:#2a1a0a;
+ --indigo:#8cabec; --indigo-soft:#1a2440;
+ --amber:#e0a84f; --amber-soft:#32270e;
+ --red:#e68d79; --red-soft:#351a14;
+ --green:#6dc59b; --green-soft:#0e2920;
+ --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -30px rgba(0,0,0,.95);
+}
+*{box-sizing:border-box}
+body{
+ margin:0; background:var(--paper); color:var(--ink);
+ font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+ font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+b,strong{font-weight:600; color:var(--ink)}
+.wrap{max-width:1080px; margin:0 auto; padding:0 28px}
+.mast{background:var(--chrome); color:#fff; padding:26px 0 24px; border-bottom:3px solid var(--air8)}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.logo{font-family:Archivo,sans-serif;font-weight:800;font-size:15px;letter-spacing:-.01em;color:#fff}
+.logo span{color:var(--air8)}
+.brandtag{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;letter-spacing:.14em;
+ text-transform:uppercase;color:var(--chrome-ink);padding-left:11px;
+ border-left:1px solid rgba(255,255,255,.18)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:8.5px;font-weight:600;letter-spacing:.11em;
+ text-transform:uppercase;padding:4px 8px;border-radius:3px;
+ background:rgba(255,255,255,.08);color:var(--chrome-ink)}
+.chip.d{background:var(--air8);color:#fff}
+.chip.r{background:var(--red-soft);color:var(--red)}
+.chip.g{background:var(--green-soft);color:var(--green)}
+.mast h1{font-family:Archivo,sans-serif;font-size:clamp(22px,2.6vw,30px);font-weight:800;
+ letter-spacing:-.026em;line-height:1.14;margin:0;max-width:40ch;text-wrap:balance;color:#fff}
+.stand{font-size:15.5px;line-height:1.5;color:#c8d4e8;margin:11px 0 0;max-width:84ch}
+.stand b{color:#fff}
+.unbtn{display:inline-flex;align-items:center;gap:9px;margin-top:15px;padding:9px 16px;
+ border:1px solid rgba(255,255,255,.3);border-radius:100px;background:rgba(255,255,255,.05);
+ color:#fff;cursor:pointer;font-family:Archivo,sans-serif;font-size:13.5px;font-weight:600}
+.unbtn:hover{background:var(--air8);border-color:var(--air8);color:#fff}
+.unbtn:focus-visible{outline:2px solid var(--air8);outline-offset:3px}
+.uncv{font-size:15px;line-height:1;transition:transform .3s ease}
+.unbtn[aria-expanded="true"] .uncv{transform:rotate(90deg)}
+.unpack{background:var(--surface);border-bottom:1px solid var(--rule);padding:18px 0 20px}
+.uneyebrow{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;letter-spacing:.14em;
+ text-transform:uppercase;color:var(--muted);margin:0 0 11px}
+.reads{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--rule-soft);
+ border-bottom:1px solid var(--rule-soft)}
+.unpack .read{padding:13px 16px;border-bottom:1px solid var(--rule-soft)}
+.unpack .read:last-child{border-bottom:0}
+.unpack .rl{font-size:12.5px;margin-bottom:5px;color:var(--muted);font-family:"IBM Plex Mono",monospace;
+ letter-spacing:.06em;text-transform:uppercase}
+.unpack .rt{font-size:15px;line-height:1.5;color:var(--ink-2)}
+.unpack .rh{display:inline;background:var(--air8-soft);color:var(--air8);font-weight:600;
+ padding:1px 5px;border-radius:3px;font-size:15px}
+.unpack .rhr{display:inline;background:var(--red-soft);color:var(--red);font-weight:600;
+ padding:1px 5px;border-radius:3px;font-size:15px}
+.unpack .rhw{display:inline;background:var(--amber-soft);color:var(--amber);font-weight:600;
+ padding:1px 5px;border-radius:3px;font-size:15px}
+.unpack .rhg{display:inline;background:var(--green-soft);color:var(--green);font-weight:600;
+ padding:1px 5px;border-radius:3px;font-size:15px}
+.bridge{margin-top:13px;font-size:13.5px;padding:12px 15px;background:var(--air8-soft);
+ border-radius:8px;font-family:Archivo,sans-serif;color:var(--ink);line-height:1.45}
+.bridge b{color:var(--air8)}
+.descent{position:relative;padding:24px 28px 60px}
+.dhead{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;
+ margin-bottom:16px}
+.dh{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.14em;
+ text-transform:uppercase;color:var(--muted)}
+.openall{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;padding:8px 15px;
+ border:1px solid var(--air8);border-radius:100px;background:var(--surface);
+ color:var(--air8);cursor:pointer}
+.openall:hover{background:var(--air8);color:#fff}
+.openall:focus-visible{outline:2px solid var(--air8);outline-offset:2px}
+.floors{position:relative}
+.spine{position:absolute;left:-1px;top:16px;bottom:16px;width:2px;background:var(--rule);z-index:0}
+.spinefill{position:absolute;left:0;top:0;width:2px;height:0;background:var(--air8);
+ transition:height .5s cubic-bezier(.32,.72,0,1)}
+.floor{position:relative;z-index:1;background:var(--surface);border:1px solid var(--rule);
+ border-radius:12px;margin-bottom:11px;box-shadow:var(--shadow)}
+.floor:last-child{margin-bottom:0}
+.floor.shut{background:var(--surface-2);box-shadow:none;border-style:dashed}
+.dot{position:absolute;left:-15px;top:15px;width:30px;height:30px;border-radius:50%;
+ display:grid;place-items:center;background:var(--surface);border:2px solid var(--rule);
+ font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--muted);
+ transition:background .2s ease,border-color .2s ease,color .2s ease;z-index:2}
+.floor:not(.shut) .dot{background:var(--air8);border-color:var(--air8);color:#fff}
+.fhead{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;width:100%;
+ text-align:left;padding:14px 20px 14px 30px;border:0;background:none;font:inherit;color:inherit;
+ cursor:pointer}
+.fhead:hover .ft{color:var(--air8)}
+.fhead:focus-visible{outline:2px solid var(--air8);outline-offset:-3px;border-radius:12px}
+.ft{font-family:Archivo,sans-serif;font-size:17.5px;font-weight:700;letter-spacing:-.019em;
+ line-height:1.25;display:block;transition:color .16s ease}
+.fb{font-family:Archivo,sans-serif;font-size:12.5px;color:var(--muted);margin-top:3px;display:block}
+.fcv{width:28px;height:28px;border-radius:50%;border:1px solid var(--rule);display:grid;
+ place-items:center;color:var(--muted);font-size:14px;line-height:1;
+ transition:transform .3s ease,color .2s ease,border-color .2s ease}
+.floor:not(.shut) .fcv{transform:rotate(90deg);color:var(--air8);border-color:var(--air8)}
+.panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .42s cubic-bezier(.32,.72,0,1)}
+.panel[data-open="true"]{grid-template-rows:1fr}
+.panel>.in{overflow:hidden;min-height:0}
+.fbody{padding:2px 0 22px;border-top:1px solid var(--rule-soft);margin:0 20px 0 30px}
+.floor:not(.shut) .fbody>*{animation:drop .42s cubic-bezier(.32,.72,0,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:none}}
+.lede{font-size:16.5px;line-height:1.55;color:var(--ink-2);margin:16px 0 0}
+.lede b{color:var(--ink)}
+.sec{display:flex;align-items:center;gap:10px;margin:26px 0 5px;padding-bottom:8px;
+ border-bottom:2px solid var(--air8)}
+.sec:first-child{margin-top:16px}
+.sec+.act{border-top:0}
+.secn{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;width:22px;height:22px;
+ border-radius:4px;display:grid;place-items:center;background:var(--air8);color:#fff;flex:none}
+.sect{font-family:Archivo,sans-serif;font-size:15.5px;font-weight:700;letter-spacing:-.016em;color:var(--air8)}
+.secnote{font-size:15.5px;line-height:1.55;color:var(--ink-2);margin:13px 0 0}
+.mka{background:var(--air8-soft);color:var(--air8);font-weight:600;padding:1px 5px;border-radius:3px;
+ box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.mki{background:var(--indigo-soft);color:var(--indigo);font-weight:600;padding:1px 5px;border-radius:3px;
+ box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.mkw{background:var(--amber-soft);color:var(--amber);font-weight:600;padding:1px 5px;border-radius:3px;
+ box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.mkr{background:var(--red-soft);color:var(--red);font-weight:600;padding:1px 5px;border-radius:3px;
+ box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.mk{background:var(--green-soft);color:var(--green);font-weight:600;padding:1px 5px;border-radius:3px;
+ box-decoration-break:clone;-webkit-box-decoration-break:clone}
+/* Flow diagram */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:18px 0;padding:18px 20px;
+ background:var(--surface-2);border:1px solid var(--rule);border-radius:10px;font-size:14.5px}
+.flow-node{flex:1 1 120px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;
+ padding:10px 13px;text-align:center;font-family:Archivo,sans-serif;font-size:13.5px;font-weight:600;
+ color:var(--ink);line-height:1.3}
+.flow-node.l0{background:var(--indigo-soft);border-color:var(--indigo);color:var(--indigo)}
+.flow-node.l1{background:var(--air8-soft);border-color:var(--air8);color:#c24100}
+.flow-node.l2{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.flow-node.out{background:var(--chrome);border-color:var(--chrome);color:#fff;flex:2 1 180px}
+.flow-arrow{color:var(--muted);font-size:18px;font-weight:700;flex:none}
+/* Comparison table */
+.ctable{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
+.ctable th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;
+ text-transform:uppercase;color:var(--muted);padding:8px 14px;border-bottom:2px solid var(--rule);
+ text-align:left}
+.ctable td{padding:11px 14px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.5}
+.ctable tr:last-child td{border-bottom:0}
+.ctable .bad td{background:rgba(156,43,26,.05)}
+.ctable .good td{background:rgba(31,94,67,.05)}
+.ctable .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:3px 8px;
+ border-radius:4px;display:inline-block}
+.ctable .tag.wrong{background:var(--red-soft);color:var(--red)}
+.ctable .tag.right{background:var(--green-soft);color:var(--green)}
+/* Tag pill */
+.tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:3px 9px;
+ border-radius:100px;display:inline-block}
+.tag.kb{background:var(--indigo-soft);color:var(--indigo)}
+.tag.web{background:var(--air8-soft);color:#c24100}
+.tag.out{background:var(--green-soft);color:var(--green)}
+.tag.stat{background:var(--surface-2);color:var(--muted);border:1px solid var(--rule)}
+/* Layer step rows */
+.lstep{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start;padding:14px 0;
+ border-top:1px solid var(--rule-soft)}
+.lstep:first-of-type{border-top:0}
+.lnum{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;
+ text-transform:uppercase;color:var(--muted);padding-top:3px;line-height:1.4}
+.lcon{font-size:15px;line-height:1.55;color:var(--ink-2)}
+.lcon b{color:var(--ink)}
+/* Subtype pills */
+.sub{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--surface-2);
+ border:1px solid var(--rule);border-radius:100px;font-family:"IBM Plex Mono",monospace;
+ font-size:11.5px;font-weight:600;color:var(--ink)}
+.sub.wide{background:var(--indigo-soft);border-color:var(--indigo);color:var(--indigo)}
+.sub .arrow{color:var(--muted);font-size:13px}
+/* Source list */
+.srcs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.src{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;padding:4px 10px;
+ border-radius:6px;background:var(--surface-2);border:1px solid var(--rule);color:var(--ink-2)}
+/* Facts grid */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);
+ border:1px solid var(--rule);border-radius:9px;overflow:hidden;margin:18px 0}
+.fact{background:var(--surface);padding:13px 15px}
+.fact .v{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:600;letter-spacing:-.03em;
+ line-height:1.1;font-variant-numeric:tabular-nums}
+.fact .k{font-family:Archivo,sans-serif;font-size:11px;color:var(--muted);margin-top:5px;line-height:1.3}
+.fact.bad .v{color:var(--red)}
+.fact.warn .v{color:var(--amber)}
+.fact.good .v{color:var(--green)}
+/* you rows */
+.you{display:grid;grid-template-columns:110px 1fr;gap:15px;align-items:start;padding:12px 0;
+ border-top:1px solid var(--rule-soft)}
+.you:first-of-type{border-top:0}
+.ymark{font-family:"IBM Plex Mono",monospace;font-size:8.5px;font-weight:600;letter-spacing:.08em;
+ text-transform:uppercase;padding:5px 0;border-radius:4px;text-align:center;align-self:start;
+ margin-top:2px;background:var(--surface-2);border:1px solid var(--rule-soft);color:var(--muted)}
+.ymark.alert{background:var(--red-soft);color:var(--red);border-color:transparent}
+.ymark.warn{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+.ymark.ok{background:var(--green-soft);color:var(--green);border-color:transparent}
+.ytext{font-size:15.5px;line-height:1.5;color:var(--ink-2)}
+/* Action rows */
+.act{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:start;padding:14px 0;
+ border-top:1px solid var(--rule-soft)}
+.act:first-of-type{border-top:0}
+.tm{font-family:"IBM Plex Mono",monospace;font-size:8.5px;font-weight:600;letter-spacing:.09em;
+ text-transform:uppercase;border:1px solid var(--rule);border-radius:100px;padding:5px 0;
+ text-align:center;color:var(--muted);align-self:start;margin-top:3px}
+.tm.hi{color:var(--red);border-color:var(--red);background:var(--red-soft)}
+.tm.mid{color:var(--amber);border-color:var(--amber);background:var(--amber-soft)}
+.tm.lo{color:var(--green);border-color:var(--green);background:var(--green-soft)}
+.ctitle{font-family:Archivo,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.016em;
+ line-height:1.28;margin-bottom:5px}
+.cdesc{font-size:15.5px;line-height:1.55;color:var(--ink-2)}
+.say{margin-top:11px;padding:12px 14px;background:var(--surface-2);border-left:3px solid var(--air8);
+ border-radius:0 7px 7px 0;font-size:15px;font-style:italic;color:var(--ink-2);line-height:1.45}
+.a8box{margin-top:18px;padding:14px 16px;background:var(--air8-soft);border-radius:9px;
+ font-family:Archivo,sans-serif;font-size:13.5px;line-height:1.5;color:var(--ink)}
+.a8box b{color:var(--air8)}
+/* Alert callout */
+.callout{margin:16px 0;padding:14px 16px;background:var(--red-soft);border-left:3px solid var(--red);
+ border-radius:0 8px 8px 0;font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.callout b{color:var(--red)}
+/* Principle pills */
+.prin{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.pr{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:var(--surface-2);
+ border:1px solid var(--rule);border-radius:8px;font-size:13px;color:var(--ink-2)}
+.pr .w{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;color:var(--muted)}
+/* Quote box for Layer 1 */
+.l1box{margin:12px 0;padding:13px 15px;background:var(--indigo-soft);border-radius:8px;
+ border-left:3px solid var(--indigo);font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.l1box b{color:var(--indigo)}
+.l1box .src{background:rgba(255,255,255,.6);border-color:transparent}
+/* Web search box for Layer 2 */
+.l2box{margin:12px 0;padding:13px 15px;background:var(--air8-soft);border-radius:8px;
+ border-left:3px solid var(--air8);font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.l2box b{color:#c24100}
+.l2box .src{background:rgba(255,255,255,.6);border-color:transparent}
+/* Subtype correction callout */
+.fix-box{margin:16px 0;padding:16px 18px;background:var(--green-soft);border-radius:9px;
+ border:1px solid var(--green);font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.fix-box b{color:var(--green)}
+/* Mobile */
+@media(max-width:640px){
+ .spine{display:none}
+ .dot{position:static;display:inline-grid;margin:0 0 8px;width:25px;height:25px;border-width:1px}
+ .fhead{padding:13px 16px}
+ .fbody{margin:0 16px}
+ .fhead{grid-template-columns:auto 1fr auto;gap:11px}
+ .you,.act{grid-template-columns:1fr;gap:6px}
+ .ymark,.tm{justify-self:start;padding:5px 11px}
+ .facts{grid-template-columns:1fr}
+ .flow{font-size:13px}
+ .ctable{font-size:13.5px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="container">
+<header class="mast">
+ <div class="wrap">
+ <div class="brand">
+ <span class="logo">Air8<span>KB</span></span>
+ <span class="brandtag">Event Processing Architecture · Internal BD Reference</span>
+ </div>
+ <div class="chips">
+ <span class="chip d">Sep 2026</span>
+ <span class="chip">Two-Layer Architecture</span>
+ <span class="chip">Sub-type Taxonomy</span>
+ <span class="chip r">KB + Web Search</span>
+ </div>
+ <h1>Event Sub-Types &amp; Two-Layer KB Architecture</h1>
+ <p class="stand">CP0 classifies events into <b>Event Families</b> (e.g., EVT-REGULATION) and <b>Functional Sub-Types</b> (e.g., <span class="mka">chemical_compliance</span>). Sub-types are functional categories — not regulation names. The specific rule lives in Layer 2, fetched via web search against the KB routing that Layer 1 provides.</p>
+ <button class="unbtn" type="button" id="unbtn" aria-expanded="true" aria-controls="unpanel">
+ <span class="uncv">›</span> TL;DR — The Three Fixes
+ </button>
+ </div>
+</header>
+<div class="panel" id="unpanel" data-open="true"><div class="in">
+ <section class="unpack"><div class="wrap">
+ <p class="uneyebrow">Executive Summary · Three architecture decisions</p>
+ <div class="reads">
+ <div class="read">
+ <p class="rl">Fix 1 — Sub-type vocabulary</p>
+ <p class="rt">Sub-types must be <b>functional categories</b>, not regulation names. Use <span class="rhg">chemical_compliance</span> instead of <span class="rhr">reach_update</span>. Regulation names are discovered in Layer 2, not classified in CP0.</p>
+ </div>
+ <div class="read">
+ <p class="rl">Fix 2 — Layer 1 is routing, not data</p>
+ <p class="rt">Layer 1 tells you <b>where to look</b>: which KB files to consult, which search queries to run. It does NOT contain specific CAS numbers, SVHC names, or current rule text.</p>
+ </div>
+ <div class="read">
+ <p class="rl">Fix 3 — Layer 2 is KB principles + live web search</p>
+ <p class="rt">Layer 2 combines KB pain-point principles with <b>web search against the live regulatory source</b> (ECHA, EU Commission, WTO). This produces the DPP-style network impact output.</p>
+ </div>
+ </div>
+ <p class="bridge"><b>Bottom line:</b> The old page showed <span class="mkr">reach_update</span> as a subtype with CAS numbers in Layer 1. The fix: <span class="mk">chemical_compliance</span> as subtype, CAS numbers fetched in Layer 2 via web, output = DPP network report.</p>
+ </div></section>
+</div></div>
 
-<!-- HEADER -->
-<div class="page-header">
-  <div class="eyebrow">Air8 Event Processing Flow</div>
-  <h1>Two Event Types — Two KB Paths</h1>
-  <p class="subtitle">How the engine routes different events through different KB nodes. Case A = Tariff event (BD EBA Graduation). Case B = Compliance event (ECHA REACH SVHC Update). Read both to understand how the same 5-step process finds different data depending on the event type.</p>
-</div>
+<main class="wrap descent">
+ <div class="dhead">
+ <span class="dh">Three floors · open only what you want</span>
+ <button class="openall" type="button" id="openall">Open everything</button>
+ </div>
+ <div class="floors">
+ <div class="spine"><div class="spinefill" id="spinefill"></div></div>
 
-<!-- INTRO -->
-<div class="intro">
-  <p>The Air8 engine always follows the same <strong>5-step process</strong> — but <strong>which KB nodes fire</strong> depends on the event type. Tariff events and compliance events use completely different data sources. This page shows both, using real cases as worked examples.</p>
-</div>
+ <!-- FLOOR 1: Sub-type taxonomy -->
+ <article class="floor shut" id="f1">
+ <button class="fhead" type="button" data-target="f1" aria-expanded="false">
+ <span><span class="dot">1</span><span class="ft">Event Family Sub-Types — Correct Vocabulary</span><span class="fb">Sub-types are functional categories. Regulation names belong in Layer 2, not CP0.</span></span>
+ <span class="fcv">›</span>
+ </button>
+ <div class="panel" data-open="false"><div class="in"><div class="fbody">
 
-<!-- GENERIC FLOW BAR -->
-<div class="flow-bar">
-  <div class="flow-bar-title">The 5-Step Process (Same for All Events)</div>
-  <div class="flow-steps">
-    <div class="flow-step">
-      <div class="flow-num" style="background:var(--accent);">1</div>
-      <div class="flow-label">Event Intake</div>
-      <div class="flow-kb">Raw headline</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="flow-num" style="background:#3b82f6;">2</div>
-      <div class="flow-label">CP0 — Classify</div>
-      <div class="flow-kb">EVENT-TYPES.md</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="flow-num" style="background:#38bdf8;">3</div>
-      <div class="flow-label">L1 — Facts</div>
-      <div class="flow-kb">varies</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="flow-num" style="background:#a855f7;">4</div>
-      <div class="flow-label">L2 — Reasoning</div>
-      <div class="flow-kb">varies</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="flow-num" style="background:#22c55e;">5</div>
-      <div class="flow-label">Client + Solution</div>
-      <div class="flow-kb">CLIENT-DB + SOLUTIONS</div>
-    </div>
-  </div>
-</div>
+<p class="lede">CP0 assigns an Event Family and a functional sub-type. The sub-type drives Layer 1 routing. The specific regulation is resolved in Layer 2 via web search — it should never be a CP0 classification label.</p>
 
-<!-- TABS -->
-<div class="tabs">
-  <button class="tab tab-a active-a" onclick="showTab('a')">Case A — Tariff (BD EBA Graduation)</button>
-  <button class="tab tab-b" onclick="showTab('b')">Case B — Compliance (REACH SVHC Update)</button>
-</div>
-
-<!-- =============================================
-     CASE A — EVT-TARIFF: BD EBA GRADUATION
-     ============================================= -->
-<div id="tab-a" class="tab-content active">
-
-  <!-- STEP 1 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n1">1</div>
-      <div class="step-meta">
-        <div class="step-name">Event Intake — Raw Input</div>
-        <div class="step-kb">No KB consulted</div>
-        <div class="step-sub">Engine receives a raw headline. No lookup yet.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-a"><div class="stripe-dot"></div>Case A — <strong>Bangladesh EU EBA Graduation</strong></div>
-      <div class="step-body">
-        <div class="info-grid">
-          <div class="info-chip">
-            <div class="info-key">Raw Headline</div>
-            <div class="info-val">Bangladesh crosses LDC income threshold — EU EBA graduation clock officially starts</div>
-          </div>
-          <div class="info-chip">
-            <div class="info-key">Source</div>
-            <div class="info-val">BGMEA press release + EU Commission Trade Policy Update, 2026</div>
-          </div>
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.5;">Pure ingestion. Passed to CP0 for classification. No KB consulted.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 2 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n2">2</div>
-      <div class="step-meta">
-        <div class="step-name">CP0 — Event Classification</div>
-        <div class="step-kb">EVENT-TYPES.md — Phase B scoring</div>
-        <div class="step-sub">Maps to event family. Scores all 6 types: STRONG / MODERATE / WEAK / NONE.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-a"><div class="stripe-dot"></div>Case A — <strong>Bangladesh EU EBA Graduation</strong></div>
-      <div class="step-body">
-        <div class="section-label">Phase A — Extracted Fields</div>
-        <div class="info-grid">
-          <div class="info-chip"><div class="info-key">Supplier Country</div><div class="info-val highlight">Bangladesh (BD)</div></div>
-          <div class="info-chip"><div class="info-key">Buyer Market</div><div class="info-val highlight">EU</div></div>
-          <div class="info-chip"><div class="info-key">Products</div><div class="info-val">HS 61/62 (knit + woven apparel)</div></div>
-          <div class="info-chip"><div class="info-key">Mechanism</div><div class="info-val">Tariff preference expiry: 0% EBA → 12% MFN</div></div>
-        </div>
-        <div class="section-label">Phase B — All 6 Event Families Scored</div>
-        <div class="mapping-row"><div class="map-lbl">EVT-TARIFF</div><div class="map-val">Tariff / Duty Change — GSP preference expiry</div><div class="map-tag tag-strong">STRONG ✓</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-MARKET-SHIFT</div><div class="map-val">Buyer sourcing reallocation from cost gap</div><div class="map-tag tag-mod">MODERATE ✓</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-REGULATION</div><div class="map-val">No compliance requirement triggered</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-CURRENCY</div><div class="map-val">No FX mechanism</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-SUPPLY-DISRUPTION</div><div class="map-val">No physical disruption</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-ESG-CERT</div><div class="map-val">No ESG dimension</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="section-label">Subtype</div>
-        <div class="mapping-row"><div class="map-lbl">Subtype</div><div class="map-val">gsp_graduation — Country graduates out of GSP/EBA preference</div><div class="map-tag tag-strong">EVT-TARIFF</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 3 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n3">3</div>
-      <div class="step-meta">
-        <div class="step-name">L1 — Reference Data (Tariff + Country)</div>
-        <div class="step-kb">TARIFF-DB.md + COUNTRY-DB.md</div>
-        <div class="step-sub">Hard facts: actual rates, risk levels, effective dates. These fire because event type = EVT-TARIFF.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-a"><div class="stripe-dot"></div>Case A — <strong>Bangladesh EU EBA Graduation</strong></div>
-      <div class="step-body">
-        <div class="kb-node">
-          <div class="kb-dot dot-a"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · TARIFF-DB.md — Rule Fired</div>Fired because: EVT-TARIFF routes to TARIFF-DB as primary L1 node. EU apparel MFN vs preferential rate: <strong>BD EBA = 0%</strong> current rate. <strong>EU MFN for HS 61/62 = 12%</strong>. The exact gap.</div>
-        </div>
-        <div class="kb-node">
-          <div class="kb-dot dot-a"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · TARIFF-DB.md — Citation</div>"BD: MFN 12% · EBA 0% · ⚠️ At risk post-LDC graduation (2027+)"</div>
-        </div>
-        <div class="kb-node">
-          <div class="kb-dot dot-a"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · COUNTRY-DB.md — Rule Fired</div>BD country risk — <strong>EBA exposure = HIGH</strong>. EU is BD's largest market: ~67% of BD apparel exports go to EU. Post-graduation = 12% duty on everything.</div>
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.5;"><strong style="color:#fff;">L1 confirmed:</strong> A <strong style="color:var(--accent);">12-percentage-point duty cliff</strong>, effective <strong style="color:#fff;">2029</strong>. BD factories lose EU cost advantage against Vietnam (9.6% MFN) and Cambodia (8.9% MFN) immediately.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 4 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n4">4</div>
-      <div class="step-meta">
-        <div class="step-name">L2 — Reasoning Principles + Buyer Response</div>
-        <div class="step-kb">L1-event-reasoning-principles.md + L2-buyer-cost-response.md</div>
-        <div class="step-sub">Weighting + impact sequencing + buyer decision logic. Fired because event type = EVT-TARIFF.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-a"><div class="stripe-dot"></div>Case A — <strong>Bangladesh EU EBA Graduation</strong></div>
-      <div class="step-body">
-        <div class="section-label">EVT-TARIFF Principles</div>
-        <div class="principle-row"><div class="wbadge w50">0.5</div><div class="pr-name">PRIN-COUNTRY-EXPOSURE</div><div class="pr-find">BD HIGH — EU is 67% of BD apparel exports</div></div>
-        <div class="principle-row"><div class="wbadge w30">0.3</div><div class="pr-name">PRIN-PRODUCT-TARIFF</div><div class="pr-find">HS 61/62 — BD's core export, highest MFN gap</div></div>
-        <div class="principle-row"><div class="wbadge w20">0.2</div><div class="pr-name">PRIN-SUPPLIER-RESILIENCE</div><div class="pr-find">Small/medium BD factories have thinnest margins</div></div>
-        <div class="section-label">Layer A–D Reasoning Chain</div>
-        <div class="layer-item"><div class="layer-tag tag-A">A</div><div class="layer-text"><strong>What changed:</strong> EU tariff on BD knit/woven apparel — <strong>0% → 12%</strong> (12pp cliff). Effective <strong>Nov 2029</strong>. All HS 61/62 shipped BD→EU. Not product-specific.</div></div>
-        <div class="layer-item"><div class="layer-tag tag-B">B</div><div class="layer-text"><strong>First-order cost:</strong> Landed cost +12% for EU orders. Basic woven jacket FOB $10 → landed $11.20. In a commodity basics category (8–12% margins), this flips profitable orders into losses.</div></div>
-        <div class="layer-item"><div class="layer-tag tag-C">C</div><div class="layer-text"><strong>Buyer response:</strong> Apparel = <strong>medium complexity</strong> (1–2 season qualification). Gap is large. Near-term: <strong>price squeeze + RFQ to Vietnam/Cambodia</strong>. Long-term: sourcing shift.</div></div>
-        <div class="layer-item"><div class="layer-tag tag-D">D</div><div class="layer-text"><strong>Supplier position:</strong> BD loses EU cost edge. Vietnam (9.6%) and Cambodia (8.9%) now cheaper than BD on EU-bound goods. BD factories must absorb or match the gap — or lose orders.</div></div>
-        <div class="section-label">L2 Buyer Cost Response</div>
-        <p style="font-size:12px;color:var(--text-muted);line-height:1.6;">Qualification timeline: 1–2 seasons. Gap (12pp) large vs margins. Both → <strong>price squeeze + RFQ to alternatives</strong> as near-term buyer response. Long-term: sourcing shift to Vietnam/Cambodia. BD factories NOT disqualified — but must offset the duty to retain EU POs.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 5 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n5">5</div>
-      <div class="step-meta">
-        <div class="step-name">Client Mapping + Solution Fit</div>
-        <div class="step-kb">CLIENT-DB + SOLUTIONS.md</div>
-        <div class="step-sub">Which Air8 clients are affected and which products to recommend.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-a"><div class="stripe-dot"></div>Case A — <strong>Bangladesh EU EBA Graduation</strong></div>
-      <div class="step-body">
-        <div class="section-label">Client Mapping — Query: country=BD × product=HS 61/62</div>
-        <div class="client-row"><div class="combo-id combo-a">COMBO-001</div><div class="combo-text">South Asian Knit — Bangladesh knit apparel — HS 61 — HIGH EU exposure</div></div>
-        <div class="client-row"><div class="combo-id combo-a">COMBO-002</div><div class="combo-text">South Asian Woven — Bangladesh woven apparel — HS 62 — HIGH EU exposure</div></div>
-        <div class="section-label">Solution Mapping — SOLUTIONS.md Playbook 1</div>
-        <div class="sol-row"><div class="sol-lbl">EVT-TARIFF</div><div class="sol-val">ARP — cashflow bridge during buyer PO review period</div><div class="urg urg-h">HIGH</div></div>
-        <div class="sol-row"><div class="sol-lbl">EVT-MARKET-SHIFT</div><div class="sol-val">RT2C — pre-shipment for production during buyer negotiation</div><div class="urg urg-m">MEDIUM</div></div>
-        <div class="sol-row"><div class="sol-lbl">Both signals</div><div class="sol-val">PayGuard — buyer credit protection during sourcing transition</div><div class="urg urg-m">MEDIUM</div></div>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:8px;">SOLUTIONS.md: COMBO-001/002/009 · GSP/EBA graduation · ARP HIGH, RT2C MEDIUM, PayGuard MEDIUM</p>
-        <div class="section-label">Output</div>
-        <div class="output-row">
-          <div class="output-icon">📄</div>
-          <div class="output-text"><strong>News Article for Factory Owner</strong> — What changed, who is affected, what it means for their factory, what to do. The CP0–L1–L2 trace above is internal logic for Air8 BD team. The article is the external deliverable.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- end tab-a -->
-
-<!-- =============================================
-     CASE B — EVT-REGULATION: REACH SVHC UPDATE
-     ============================================= -->
-<div id="tab-b" class="tab-content">
-
-  <!-- STEP 1 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n1">1</div>
-      <div class="step-meta">
-        <div class="step-name">Event Intake — Raw Input</div>
-        <div class="step-kb">No KB consulted</div>
-        <div class="step-sub">Engine receives a raw headline. No lookup yet.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-b"><div class="stripe-dot"></div>Case B — <strong>ECHA REACH SVHC Candidate List Update</strong></div>
-      <div class="step-body">
-        <div class="info-grid">
-          <div class="info-chip">
-            <div class="info-key">Raw Headline</div>
-            <div class="info-val">ECHA adds n-Hexane and BPAF to REACH SVHC Candidate List — SCIP notifications due within 6 months</div>
-          </div>
-          <div class="info-chip">
-            <div class="info-key">Source</div>
-            <div class="info-val">ECHA press release, Feb 4, 2026</div>
-          </div>
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.5;">Pure ingestion. Passed to CP0. Note: this headline mentions REACH + SCIP — both EU compliance terms. CP0 will route to EVT-REGULATION, not EVT-TARIFF.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 2 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n2">2</div>
-      <div class="step-meta">
-        <div class="step-name">CP0 — Event Classification</div>
-        <div class="step-kb">EVENT-TYPES.md — Phase B scoring</div>
-        <div class="step-sub">Maps to event family. Scores all 6 types. This is where EVT-REGULATION activates.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-b"><div class="stripe-dot"></div>Case B — <strong>ECHA REACH SVHC Candidate List Update</strong></div>
-      <div class="step-body">
-        <div class="section-label">Phase A — Extracted Fields</div>
-        <div class="info-grid">
-          <div class="info-chip"><div class="info-key">Supplier Countries</div><div class="info-val blue">TR (Turkey), CN (China), BD, IN, PK</div></div>
-          <div class="info-chip"><div class="info-key">Buyer Market</div><div class="info-val blue">EU</div></div>
-          <div class="info-chip"><div class="info-key">Products</div><div class="info-val">Denim (n-Hexane in adhesives/coatings), coated fabrics, home textiles (BPAF in coatings/resins)</div></div>
-          <div class="info-chip"><div class="info-key">Mechanism</div><div class="info-val">Chemical substance added to EU regulatory list → mandatory disclosure + re-testing</div></div>
-        </div>
-        <div class="section-label">Phase B — All 6 Event Families Scored</div>
-        <div class="mapping-row"><div class="map-lbl">EVT-REGULATION</div><div class="map-val">Mandatory chemical compliance change — REACH SVHC update</div><div class="map-tag tag-mod">STRONG ✓</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-TARIFF</div><div class="map-val">No duty/tariff change — not a cost event</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-MARKET-SHIFT</div><div class="map-val">No buyer sourcing shift in headline</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-CURRENCY</div><div class="map-val">No FX mechanism</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-SUPPLY-DISRUPTION</div><div class="map-val">No physical disruption</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="mapping-row"><div class="map-lbl">EVT-ESG-CERT</div><div class="map-val">No ESG certification change — this is regulatory compliance, not certification standard</div><div class="map-tag tag-excl">excluded</div></div>
-        <div class="section-label">Subtype</div>
-        <div class="mapping-row"><div class="map-lbl">Subtype</div><div class="map-val">reach_update — ECHA adds new SVHC to REACH Candidate List</div><div class="map-tag tag-mod">EVT-REGULATION</div></div>
-        <div class="compliance-note">
-          <strong>KB routing note (NEW):</strong> Subtype = <code>reach_update</code> → must consult <code>layer-2/compliance/product-eu.md</code> + <code>buyer-rsl.md</code> in Step 3. This routing was <em>missing</em> before — EVT-REGULATION had principles defined but no L1 KB node lookup instructions. Added to EVENT-TYPES.md as mandatory routing.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 3 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n3">3</div>
-      <div class="step-meta">
-        <div class="step-name">L1 — Compliance KB (NOT TARIFF-DB)</div>
-        <div class="step-kb">layer-2/compliance/product-eu.md + buyer-rsl.md + COUNTRY-DB</div>
-        <div class="step-sub">Hard facts from the compliance KB. This is the KEY DIFFERENCE from tariff events — different L1 data sources.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-b"><div class="stripe-dot"></div>Case B — <strong>ECHA REACH SVHC Candidate List Update</strong></div>
-      <div class="step-body">
-        <div class="kb-node">
-          <div class="kb-dot dot-b"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · product-eu.md — n-Hexane facts</div><strong>n-Hexane (CAS 110-54-3)</strong> — solvent in adhesives, cleaning agents, foam production, coatings. Threshold: <strong>>0.1% w/w per article</strong>. SCIP notification deadline: <strong>Aug 4, 2026</strong> (6 months). Downstream suppliers must be informed within 45 days of request.</div>
-        </div>
-        <div class="kb-node">
-          <div class="kb-dot dot-b"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · product-eu.md — BPAF facts</div><strong>BPAF (CAS 1478-61-1)</strong> — high-performance coatings, epoxy resins, optical polymers, surface treatments. Same <strong>>0.1% w/w threshold</strong>. SCIP deadline: Aug 4, 2026.</div>
-        </div>
-        <div class="kb-node">
-          <div class="kb-dot dot-b"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · product-eu.md — Risk by article type</div>n-Hexane high-risk in: <strong>denim adhesives</strong>, coated fabrics, foam-lined garments. BPAF high-risk in: <strong>coatings, resin-treated fabrics, home textiles</strong>. Other articles: monitor only.</div>
-        </div>
-        <div class="kb-node">
-          <div class="kb-dot dot-b"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · buyer-rsl.md — Buyer RSL floor check</div>Buyer RSL limits are typically <strong>50–90% stricter than REACH regulatory floor</strong>. Major EU buyers (H&M, Zara, Primark) may already restrict n-Hexane / BPAF in their private RSL before the REACH deadline. <em>Always check buyer-specific RSL before assuming REACH floor = buyer floor.</em></div>
-        </div>
-        <div class="kb-node">
-          <div class="kb-dot dot-b"></div>
-          <div class="kb-content"><div class="kb-lbl">L1 · COUNTRY-DB.md — Jurisdiction check</div>EU is the enforcement jurisdiction. Suppliers selling to EU buyers = in scope: <strong>Turkey (high denim export), China (coated fabric), Bangladesh, India, Pakistan</strong>. US-only suppliers = not in scope for this event.</div>
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6;"><strong style="color:#fff;">Contrast with Case A (tariff):</strong> Case A fired <code>TARIFF-DB.md</code> for duty rates. Case B fires <code>product-eu.md</code> + <code>buyer-rsl.md</code> — completely different KB nodes. Same step number, different data sources.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 4 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n4">4</div>
-      <div class="step-meta">
-        <div class="step-name">L2 — Reasoning Principles + Pain Points</div>
-        <div class="step-kb">L1-event-reasoning-principles.md + PP-REG-REACH-001 + PP-REG-CSDDD-001</div>
-        <div class="step-sub">Different principles from Case A. Compliance cost + product risk + buyer market exposure — not country tariff exposure.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-b"><div class="stripe-dot"></div>Case B — <strong>ECHA REACH SVHC Candidate List Update</strong></div>
-      <div class="step-body">
-        <div class="section-label">EVT-REGULATION Principles</div>
-        <div class="principle-row"><div class="wbadge w50">0.5</div><div class="pr-name">PRIN-COMPLIANCE-COST</div><div class="pr-find">Re-testing required: $500–$2,000/product; 2–4 week lab turnaround. Supplier must absorb before shipping.</div></div>
-        <div class="principle-row"><div class="wbadge w30">0.3</div><div class="pr-name">PRIN-PRODUCT-TARIFF</div><div class="pr-find">n-Hexane: denim adhesives. BPAF: coated fabrics. Both = specific product categories, not general.</div></div>
-        <div class="principle-row"><div class="wbadge w20">0.2</div><div class="pr-name">PRIN-BUYER-GEO-EXPOSURE</div><div class="pr-find">EU jurisdiction — all EU-bound shipments from TR/CN/BD/IN/PK in scope.</div></div>
-        <div class="section-label">Pain Point: PP-REG-REACH-001 (activated by reach_update subtype)</div>
-        <div class="layer-item"><div class="layer-tag tag-A">PP</div><div class="layer-text"><strong>PP-REG-REACH-001 chain:</strong> SVHC listed → supplier must re-test → <strong>2–4 week shipment delay</strong> → cashflow gap while goods await clearance → buyer may hold payment → <strong>ARP indicated</strong>. If test fails → shipment stopped at EU customs → goods rejected → invoice disputed.</div></div>
-        <div class="section-label">Layer A–D Reasoning Chain</div>
-        <div class="layer-item"><div class="layer-tag tag-A">A</div><div class="layer-text"><strong>What changed:</strong> n-Hexane and BPAF now on REACH SVHC Candidate List. Any article containing >0.1% w/w requires <strong>SCIP notification to ECHA</strong> (by Aug 4, 2026) + downstream customer disclosure within 45 days. Not a ban — but a compliance obligation with a hard deadline.</div></div>
-        <div class="layer-item"><div class="layer-tag tag-B">B</div><div class="layer-text"><strong>First-order cost:</strong> Re-testing per product = $500–$2,000. For a supplier with 50 active SKUs = $25K–$100K in testing costs. 2–4 week lab turnaround = goods cannot ship until test results confirmed.</div></div>
-        <div class="layer-item"><div class="layer-tag tag-C">C</div><div class="layer-text"><strong>Buyer response:</strong> EU buyers will update their private RSLs to match or exceed REACH SVHC threshold. Buyers may <strong>pause new orders</strong> pending supplier test confirmation. Existing orders in production: supplier must absorb re-testing cost or risk rejection.</div></div>
-        <div class="layer-item"><div class="layer-tag tag-D">D</div><div class="layer-text"><strong>Supplier position:</strong> Suppliers who can show clean test results quickly gain a <strong>competitive compliance advantage</strong>. Suppliers who delay face shipment holds and potential buyer delisting. Cashflow gap during re-testing = the primary Air8 opportunity.</div></div>
-        <div class="section-label">L2 Buyer Cost Response</div>
-        <p style="font-size:12px;color:var(--text-muted);line-height:1.6;"><strong style="color:var(--accent2);">Unlike Case A:</strong> This is not a price-squeeze scenario (tariff). This is a <strong>compliance timeline disruption</strong>. Buyer POs are confirmed (unlike tariff uncertainty) — so PreShip-OBF is <em>safe</em> here. Universal regulation rule: PreShip is safe for EVT-REGULATION (confirmed buyer POs). ESG Finance is <em>not</em> triggered (no ESG dimension).</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 5 -->
-  <div class="step">
-    <div class="step-header">
-      <div class="step-num n5">5</div>
-      <div class="step-meta">
-        <div class="step-name">Client Mapping + Solution Fit</div>
-        <div class="step-kb">CLIENT-DB + SOLUTIONS.md — Playbook 2</div>
-        <div class="step-sub">Same CLIENT-DB query method, different product-country matches. Different solutions from Playbook 2.</div>
-      </div>
-    </div>
-    <div class="step-card">
-      <div class="case-stripe stripe-b"><div class="stripe-dot"></div>Case B — <strong>ECHA REACH SVHC Candidate List Update</strong></div>
-      <div class="step-body">
-        <div class="section-label">Client Mapping — Query: country ∈ {TR,CN,BD,IN,PK} × product ∈ {denim, coated fabric, home textile}</div>
-        <div class="client-row"><div class="combo-id combo-b">COMBO-005</div><div class="combo-text">Turkey Denim Specialist — HIGH exposure: n-Hexane in denim adhesives = direct hit. EU denim buyer concentration high.</div></div>
-        <div class="client-row"><div class="combo-id combo-b">COMBO-004</div><div class="combo-text">China Medium Woven — MEDIUM exposure: BPAF in coatings/resins. Coating-intensive products in scope.</div></div>
-        <div class="client-row"><div class="combo-id combo-b">COMBO-009</div><div class="combo-text">Pakistan Home Textile — MEDIUM exposure: BPAF in home textile coatings for EU buyers.</div></div>
-        <div class="section-label">Solution Mapping — SOLUTIONS.md Playbook 2</div>
-        <div class="sol-row"><div class="sol-lbl">PP-REG-REACH-001</div><div class="sol-val">ARP — cashflow bridge: re-testing creates 2–4 week delay → gap → ARP bridges it</div><div class="urg urg-h">HIGH</div></div>
-        <div class="sol-row"><div class="sol-lbl">EVT-REGULATION</div><div class="sol-val">Pool Factoring — multiple EU buyers = REACH compliance affects entire revenue portfolio</div><div class="urg urg-m">MEDIUM</div></div>
-        <div class="sol-row"><div class="sol-lbl">Universal Reg Rule</div><div class="sol-val">PreShip-OBF — safe here (confirmed buyer POs, known compliance timeline) vs. tariff events where it's contraindicated</div><div class="urg urg-m">MEDIUM</div></div>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:8px;">SOLUTIONS.md: COMBO-005/004/009 · REACH SVHC update · ARP HIGH, Pool MEDIUM, PreShip-OBF MEDIUM. Contraindicated: ESG Finance (no ESG dimension).</p>
-        <div class="section-label">Output</div>
-        <div class="output-row">
-          <div class="output-icon">📄</div>
-          <div class="output-text"><strong>News Article for Factory Owner</strong> — Plain-English explainer: what n-Hexane and BPAF are, which products are affected, what the 0.1% threshold means in practice, what SCIP and buyer RSL mean for their orders, and what they should do now (get tested, notify buyers, check ARP eligibility).</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- end tab-b -->
-
-<hr class="divider">
-
-<!-- =============================================
-     COMPARISON TABLE
-     ============================================= -->
-<div class="compare-title">KB Nodes by Event Type — Side by Side</div>
-<table class="compare-table">
-  <thead>
-    <tr>
-      <th>Step</th>
-      <th class="th-a">Case A — EVT-TARIFF (BD EBA)</th>
-      <th class="th-b">Case B — EVT-REGULATION (REACH SVHC)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="step-col">1 — Event Intake</td>
-      <td class="td-a">— (no KB)</td>
-      <td class="td-b">— (no KB)</td>
-    </tr>
-    <tr>
-      <td class="step-col">2 — CP0 Classify</td>
-      <td class="kb-ref">EVENT-TYPES.md<br><span style="color:var(--text-dim);">→ EVT-TARIFF · gsp_graduation</span></td>
-      <td class="kb-ref">EVENT-TYPES.md<br><span style="color:var(--text-dim);">→ EVT-REGULATION · reach_update</span></td>
-    </tr>
-    <tr>
-      <td class="step-col">3 — L1 Facts</td>
-      <td class="kb-ref">TARIFF-DB.md → duty rates<br>COUNTRY-DB.md → BD EU exposure</td>
-      <td class="kb-ref">layer-2/compliance/<strong>product-eu.md</strong> → SVHC facts<br>layer-2/compliance/<strong>buyer-rsl.md</strong> → buyer RSL floor<br>COUNTRY-DB.md → EU jurisdiction</td>
-    </tr>
-    <tr>
-      <td class="step-col">4 — L2 Reasoning</td>
-      <td class="kb-ref">L1-event-reasoning-principles.md<br>→ PRIN-COUNTRY-EXPOSURE (0.5)<br>→ PRIN-PRODUCT-TARIFF (0.3)<br>→ PRIN-SUPPLIER-RESILIENCE (0.2)<br><br>L2-buyer-cost-response.md<br>→ Price squeeze + RFQ</td>
-      <td class="kb-ref">L1-event-reasoning-principles.md<br>→ PRIN-COMPLIANCE-COST (0.5)<br>→ PRIN-PRODUCT-TARIFF (0.3)<br>→ PRIN-BUYER-GEO-EXPOSURE (0.2)<br><br><strong>PP-REG-REACH-001</strong> (pain point)<br>→ Re-test → 2–4wk delay → cashflow gap</td>
-    </tr>
-    <tr>
-      <td class="step-col">5 — Client + Solution</td>
-      <td class="kb-ref">CLIENT-DB: COMBO-001/002 (BD)<br>SOLUTIONS.md Playbook 1<br>→ ARP HIGH, RT2C MEDIUM<br>→ PayGuard MEDIUM</td>
-      <td class="kb-ref">CLIENT-DB: COMBO-005/004/009 (TR/CN/PK)<br>SOLUTIONS.md Playbook 2<br>→ ARP HIGH, Pool MEDIUM<br>→ PreShip-OBF MEDIUM<br>→ ESG Finance contraindicated</td>
-    </tr>
-    <tr>
-      <td class="step-col">Key difference</td>
-      <td style="color:var(--accent);font-size:12px;">Cost event: price squeeze + sourcing shift<br>L1: rates + country exposure<br>Contraindicated: PreShip (buyer POs uncertain)</td>
-      <td style="color:var(--accent2);font-size:12px;">Compliance event: timeline disruption<br>L1: substance facts + buyer RSL floor<br>Safe: PreShip-OBF (confirmed POs)</td>
-    </tr>
-  </tbody>
+<table class="ctable">
+ <thead>
+  <tr>
+   <th>Event Family</th>
+   <th>Wrong sub-type (too specific)</th>
+   <th>Correct sub-type (functional)</th>
+   <th>Why correct</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr class="bad">
+   <td>EVT-REGULATION</td>
+   <td><span class="tag wrong">reach_update</span></td>
+   <td><span class="tag right">chemical_compliance</span></td>
+   <td>REACH has hundreds of SVHC entries. Each one cannot be a subtype. Functional category is "chemical compliance" — discover specifics in Layer 2.</td>
+  </tr>
+  <tr class="bad">
+   <td>EVT-REGULATION</td>
+   <td><span class="tag wrong">cpsc_ban_announcement</span></td>
+   <td><span class="tag right">product_safety</span></td>
+   <td>CPSC is US-specific. "Product safety" covers US CPSIA, EU GPSR, UK PSTI — any product safety rule.</td>
+  </tr>
+  <tr class="bad">
+   <td>EVT-REGULATION</td>
+   <td><span class="tag wrong">eu_drones_2025</span></td>
+   <td><span class="tag right">technical_standard</span></td>
+   <td>Regulation numbers and years are too specific. "Technical standard" captures any conformity assessment update.</td>
+  </tr>
+  <tr class="bad">
+   <td>EVT-REGULATION</td>
+   <td><span class="tag wrong">upbfa_2023</span></td>
+   <td><span class="tag right">flame_retardant</span></td>
+   <td>UPBFA is one country's rule on one chemical class. "Flame retardant" captures the functional category across all jurisdictions.</td>
+  </tr>
+  <tr class="good">
+   <td>EVT-TARIFF</td>
+   <td><span class="tag wrong">gsp_graduation</span></td>
+   <td><span class="tag right">preference_expiry</span></td>
+   <td>GSP graduation is one mechanism. "Preference expiry" covers EBA, GSP+, Everything but Arms — all preferential tariff schemes.</td>
+  </tr>
+  <tr class="good">
+   <td>EVT-TARIFF</td>
+   <td><span class="tag wrong">mtr_2025_vietnam</span></td>
+   <td><span class="tag right">mtr_implementation</span></td>
+   <td>Multiple countries have MTR (Most Favoured Nation rate) changes. The sub-type captures the mechanism, not one country's calendar.</td>
+  </tr>
+  <tr class="good">
+   <td>EVT-MARKET-SHIFT</td>
+   <td><span class="tag right">buyer_sourcing_shift</span></td>
+   <td><span class="tag right">buyer_sourcing_shift</span></td>
+   <td>Already functional — describes the mechanism, not a specific buyer or year.</td>
+  </tr>
+ </tbody>
 </table>
 
-<p class="footer">
-  Air8 Event Processing Flow — Two Event Types Compared · EVENT-TYPES.md updated 2026-09-08 with EVT-REGULATION mandatory L1 routing<br>
-  KB nodes: EVENT-TYPES.md · TARIFF-DB.md · COUNTRY-DB.md · layer-2/compliance/product-eu.md · layer-2/compliance/buyer-rsl.md · L1-event-reasoning-principles.md · L2-buyer-cost-response.md · PP-REG-REACH-001 · SOLUTIONS.md
-</p>
+<div class="fix-box">
+ <b>Rule:</b> If the sub-type name is a regulation acronym, acronym + year, or CAS number — it is <b>too specific</b>. Rename to the functional category. The specific rule is resolved in Layer 2 via web search against the live regulatory source.
+</div>
 
-</div><!-- end container -->
+ </div></div></div>
+ </article>
+
+ <!-- FLOOR 2: Two-layer architecture -->
+ <article class="floor shut" id="f2">
+ <button class="fhead" type="button" data-target="f2" aria-expanded="false">
+ <span><span class="dot">2</span><span class="ft">Two-Layer KB Architecture — How It Works</span><span class="fb">Layer 1 = routing table. Layer 2 = resolution + DPP output.</span></span>
+ <span class="fcv">›</span>
+ </button>
+ <div class="panel" data-open="false"><div class="in"><div class="fbody">
+
+<p class="lede">The Air8 engine processes every event through two distinct layers. They are not two copies of the same data — they serve completely different functions.</p>
+
+<div class="sec"><span class="secn">A</span><span class="sect">Flow diagram: event → CP0 → L1 → L2 → output</span></div>
+
+<div class="flow">
+ <div class="flow-node">📰 Event headline</div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-node l0">CP0 Classify</div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-node l1">L1 — KB routing</div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-node l2">L2 — Web resolve</div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-node out">📊 DPP output</div>
+</div>
+
+<div class="sec"><span class="secn">B</span><span class="sect">Layer 1 — Static KB routing table (what fires, not what it says)</span></div>
+
+<p class="secnote">Layer 1 is a <b>routing table</b>. Given a sub-type, it tells you which KB files to consult and what kind of live search to run. It does NOT contain specific CAS numbers, current SVHC lists, or regulation text. Those are fetched in Layer 2.</p>
+
+<div class="lstep">
+ <div class="lnum">L1<br>Input</div>
+ <div class="lcon"><b>Sub-type</b> = <span class="sub wide">chemical_compliance <span class="arrow">→</span> EVT-REGULATION</span></div>
+</div>
+<div class="lstep">
+ <div class="lnum">L1<br>Fires</div>
+ <div class="lcon">
+  <b>KB routing:</b> consult these KB nodes for <span class="mka">chemical_compliance</span> events:
+  <div class="srcs">
+   <span class="src">layer-2/compliance/product-eu.md</span>
+   <span class="src">layer-2/compliance/buyer-rsl.md</span>
+   <span class="src">COUNTRY-DB.md</span>
+   <span class="src">COMBO-DB.md</span>
+  </div>
+  <div class="l1box" style="margin-top:12px">
+   <b>Layer 1 guidance — what it tells you:</b><br>
+   "For chemical_compliance events: check the product-EUU KB node for which substance categories apply to your product type, cross-reference buyer-RSL for private buyer limits, and use COUNTRY-DB to confirm enforcement jurisdiction. The specific SVHC/CAS list entry will be resolved in Layer 2 via web search against ECHA's live candidate list."
+  </div>
+  <div class="srcs" style="margin-top:10px">
+   <span class="src">L1-event-reasoning-principles.md</span>
+   <span class="src">PP-REG-REACH-001</span>
+  </div>
+ </div>
+</div>
+<div class="lstep">
+ <div class="lnum">L1<br>Output</div>
+ <div class="lcon"><b>Routing confirmation</b> — Layer 1 confirms which KB nodes are in scope and passes to Layer 2 with search instructions. It does not produce facts, numbers, or specific rules.</div>
+</div>
+
+<div class="sec"><span class="secn">C</span><span class="sect">Layer 2 — Dynamic resolution (KB principles + web search)</span></div>
+
+<p class="secnote">Layer 2 combines two things: (1) the KB pain-point principles and exposure rules from Layer 1 nodes, and (2) live web search against the actual regulatory source. The specific rule — CAS numbers, SVHC names, thresholds, deadlines — is always fetched fresh from the authoritative source.</p>
+
+<div class="lstep">
+ <div class="lnum">L2<br>Input</div>
+ <div class="lcon">KB pain-point principles from L1 + <span class="tag web">web search instructions</span> from L1 routing</div>
+</div>
+<div class="lstep">
+ <div class="lnum">L2<br>Sources</div>
+ <div class="lcon">
+  <div class="l2box">
+   <b>Live web search queries executed in Layer 2:</b><br>
+   Query 1: <span class="src">site:echa.europa.eu "SVHC candidate list" current</span><br>
+   Query 2: <span class="src">ECHA SVHC candidate list latest additions [year]</span><br>
+   Query 3: <span class="src">buyer [H&M / Zara / Primark] RSL n-Hexane BPAF 2026</span>
+  </div>
+  <div style="margin-top:10px">
+   <div class="srcs">
+    <span class="src">KB principle: PRIN-COMPLIANCE-COST (0.5)</span>
+    <span class="src">KB principle: PRIN-BUYER-GEO-EXPOSURE (0.3)</span>
+    <span class="src">KB pain point: PP-REG-REACH-001</span>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="lstep">
+ <div class="lnum">L2<br>Output</div>
+ <div class="lcon">
+  <b>Resolved facts:</b> specific SVHC substances added, CAS numbers, thresholds, SCIP deadlines, affected supplier countries, buyer-specific RSL floors — all from live sources.<br>
+  <b>Plus:</b> supplier-exposure matrix, order impact tally, WIP vs. in-transit split, action plan.<br>
+  <span class="tag out" style="margin-top:8px">Output format: DPP Network Impact Report</span>
+ </div>
+</div>
+
+<div class="sec"><span class="secn">D</span><span class="sect">KB vs. Web — who owns what</span></div>
+
+<table class="ctable">
+ <thead>
+  <tr>
+   <th>Data element</th>
+   <th>Source</th>
+   <th>Layer</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>Event Family (EVT-REGULATION, EVT-TARIFF, etc.)</td>
+   <td>CP0 — EVENT-TYPES.md</td>
+   <td><span class="tag stat">CP0</span></td>
+  </tr>
+  <tr>
+   <td>Functional Sub-Type (chemical_compliance, preference_expiry)</td>
+   <td>CP0 — EVENT-TYPES.md</td>
+   <td><span class="tag stat">CP0</span></td>
+  </tr>
+  <tr>
+   <td>Which KB nodes to consult (routing)</td>
+   <td>KB — L1 routing table per sub-type</td>
+   <td><span class="tag kb">L1</span></td>
+  </tr>
+  <tr>
+   <td>KB pain-point principles (PRIN-*, PP-REG-*)</td>
+   <td>KB — L1-event-reasoning-principles.md</td>
+   <td><span class="tag kb">L1</span></td>
+  </tr>
+  <tr>
+   <td>Specific SVHC / CAS / threshold (live regulatory data)</td>
+   <td><span class="tag web">Web — ECHA, EU Commission, WTO</span></td>
+   <td><span class="tag web">L2</span></td>
+  </tr>
+  <tr>
+   <td>Buyer-specific RSL floor (current version)</td>
+   <td><span class="tag web">Web — buyer published RSL</span></td>
+   <td><span class="tag web">L2</span></td>
+  </tr>
+  <tr>
+   <td>Supplier exposure matrix (COMBO-DB cross-ref)</td>
+   <td>KB — COMBO-DB.md + COUNTRY-DB.md</td>
+   <td><span class="tag kb">L1 → L2</span></td>
+  </tr>
+  <tr>
+   <td>DPP Network Impact Report (output)</td>
+   <td>Generated — L2 synthesis</td>
+   <td><span class="tag out">L2 output</span></td>
+  </tr>
+ </tbody>
+</table>
+
+ </div></div></div>
+ </article>
+
+ <!-- FLOOR 3: REACH case study with two-layer walkthrough -->
+ <article class="floor shut" id="f3">
+ <button class="fhead" type="button" data-target="f3" aria-expanded="false">
+ <span><span class="dot">3</span><span class="sect" style="font-size:17.5px;font-weight:700;letter-spacing:-.019em;">Case Study — ECHA REACH SVHC Update: Full Two-Layer Walkthrough</span><span class="fb">From event headline → CP0 classification → L1 routing → L2 web resolution → DPP output</span></span>
+ <span class="fcv">›</span>
+ </button>
+ <div class="panel" data-open="false"><div class="in"><div class="fbody">
+
+<p class="lede"><b>Event:</b> "ECHA adds two new substances to REACH SVHC Candidate List — SCIP notifications due in 6 months."</p>
+
+<div class="sec"><span class="secn">A</span><span class="sect">CP0 Classification — What actually fires</span></div>
+
+<div class="lstep">
+ <div class="lnum">Event<br>Family</div>
+ <div class="lcon"><span class="sub wide">EVT-REGULATION</span></div>
+</div>
+<div class="lstep">
+ <div class="lnum">Sub-type</div>
+ <div class="lcon">
+  <span class="sub wide">chemical_compliance <span class="arrow">✓</span></span>
+  <div class="fix-box" style="margin-top:10px">
+   <b>NOT</b> <span class="tag wrong">reach_update</span> — that is too specific. REACH is one regulation among many that produce chemical compliance events. The functional sub-type is <span class="mk">chemical_compliance</span>. The specific SVHC entries come from Layer 2 web search.
+  </div>
+ </div>
+</div>
+
+<div class="sec"><span class="secn">B</span><span class="sect">Layer 1 — Routing table fires (static KB)</span></div>
+
+<p class="secnote">Layer 1 does NOT contain n-Hexane, BPAF, or CAS numbers. It contains routing instructions.</p>
+
+<div class="lstep">
+ <div class="lnum">L1<br>KB Node 1</div>
+ <div class="lcon">
+  <b>layer-2/compliance/product-eu.md</b><br>
+  <div class="l1box">
+   "For <b>chemical_compliance</b> sub-type: consult this node for substance categories relevant to your product type. Denim adhesives → solvents; coated fabrics → resins; home textiles → coatings. Jurisdiction = EU. Check current ECHA candidate list via web for active SVHC entries."
+  </div>
+  <div class="srcs" style="margin-top:8px"><span class="src">What it fires: substance category routing</span></div>
+ </div>
+</div>
+
+<div class="lstep">
+ <div class="lnum">L1<br>KB Node 2</div>
+ <div class="lcon">
+  <b>layer-2/compliance/buyer-rsl.md</b><br>
+  <div class="l1box">
+   "For <b>chemical_compliance</b>: buyer RSL floors are typically 50–90% stricter than the REACH regulatory floor (0.1% w/w). Major EU buyers (H&M, Zara, Primark) may already restrict substances in their private RSL before the regulatory deadline. Always check buyer's published RSL."
+  </div>
+  <div class="srcs" style="margin-top:8px"><span class="src">What it fires: buyer RSL floor check instruction</span></div>
+ </div>
+</div>
+
+<div class="lstep">
+ <div class="lnum">L1<br>KB Node 3</div>
+ <div class="lcon">
+  <b>COUNTRY-DB.md</b><br>
+  <div class="l1box">
+   "For <b>chemical_compliance</b> events with EU enforcement: Turkey (high denim export), China (coated fabric), Bangladesh, India, Pakistan are in scope. US-only suppliers = not in scope. Confirm jurisdiction via COUNTRY-DB before mapping COMBO exposure."
+  </div>
+  <div class="srcs" style="margin-top:8px"><span class="src">What it fires: jurisdiction confirmation + supplier country filter</span></div>
+ </div>
+</div>
+
+<div class="lstep">
+ <div class="lnum">L1<br>Principles</div>
+ <div class="lcon">
+  <div class="prin">
+   <div class="pr"><span class="w">0.5</span> PRIN-COMPLIANCE-COST — re-test cost $500–$2K/product, 2–4wk lab turnaround</div>
+   <div class="pr"><span class="w">0.3</span> PRIN-BUYER-GEO-EXPOSURE — EU jurisdiction, all EU-bound goods in scope</div>
+   <div class="pr"><span class="w">0.2</span> PRIN-PRODUCT-TARIFF — denim adhesives, coated fabrics — specific product categories</div>
+  </div>
+  <div style="margin-top:8px">
+   <div class="prin">
+    <div class="pr"><span class="src">Pain point: PP-REG-REACH-001</span></div>
+   </div>
+   <div class="l1box" style="margin-top:8px">
+    "SVHC listed → supplier must re-test → 2–4 week shipment delay → cashflow gap while goods await clearance → buyer may hold payment → ARP indicated. If test fails → shipment stopped at EU customs → goods rejected → invoice disputed."
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="sec"><span class="secn">C</span><span class="sect">Layer 2 — Web search resolves the specific rule (dynamic)</span></div>
+
+<p class="secnote">Layer 2 executes live searches against the authoritative regulatory source. This is where n-Hexane, BPAF, CAS numbers, and thresholds appear — fetched fresh, not stored in KB.</p>
+
+<div class="lstep">
+ <div class="lnum">L2<br>Web Search 1</div>
+ <div class="lcon">
+  <div class="l2box">
+   <b>Query:</b> <span class="src">site:echa.europa.eu "SVHC candidate list" "n-Hexane" OR "BPAF" 2026</span><br>
+   <b>Result:</b> ECHA confirms n-Hexane (CAS 110-54-3) and BPAF (CAS 1478-61-1) added to REACH SVHC Candidate List on Feb 4, 2026. Threshold: >0.1% w/w per article. SCIP notification deadline: Aug 4, 2026. Downstream supplier disclosure: 45 days from buyer request.
+  </div>
+ </div>
+</div>
+
+<div class="lstep">
+ <div class="lnum">L2<br>Web Search 2</div>
+ <div class="lcon">
+  <div class="l2box">
+   <b>Query:</b> <span class="src">H&M RSL 2026 n-Hexane BPAF restriction limit</span><br>
+   <b>Result:</b> H&M Group RSL v26.1 (published Jan 2026): n-Hexane limit = 10 ppm (0.001% w/w) — significantly stricter than REACH 0.1% floor. BPAF not yet listed in H&M RSL as of Q1 2026. Primark RSL: n-Hexane not listed; monitoring only.
+  </div>
+ </div>
+</div>
+
+<div class="lstep">
+ <div class="lnum">L2<br>Combine</div>
+ <div class="lcon">
+  Layer 2 now combines:
+  <div class="srcs">
+   <span class="src">KB principles (PRIN-COMPLIANCE-COST, PP-REG-REACH-001)</span>
+   <span class="src">Web: n-Hexane CAS 110-54-3, BPAF CAS 1478-61-1, 0.1% w/w threshold, Aug 4 2026 deadline</span>
+   <span class="src">Web: H&M RSL 10 ppm n-Hexane (10× stricter than REACH)</span>
+   <span class="src">KB: COMBO-DB → Turkey denim, China woven, PK home textile exposed</span>
+  </div>
+  <div style="margin-top:10px">
+   This combined output feeds directly into the DPP Network Impact Report.
+  </div>
+ </div>
+</div>
+
+ </div></div></div>
+ </article>
+
+ <!-- FLOOR 4: Sample DPP output -->
+ <article class="floor shut" id="f4">
+ <button class="fhead" type="button" data-target="f4" aria-expanded="false">
+ <span><span class="dot">4</span><span class="ft">Sample Output — REACH Chemical Compliance DPP Network Impact Report</span><span class="fb">What Layer 2 produces: supplier exposure matrix, PO impact, WIP analysis, action plan.</span></span>
+ <span class="fcv">›</span>
+ </button>
+ <div class="panel" data-open="false"><div class="in"><div class="fbody">
+
+<p class="lede">This is the output Layer 2 produces after combining KB principles + live web search. Adapted for apparel context. Style inspired by the DPP reference Jerri shared.</p>
+
+<div class="callout">
+ <b>Note:</b> This is a sample output structure — not live data. The format and content style mirror the DPP reference Jerri shared (Battery REACH case). Numbers and supplier names are illustrative for Air8 apparel context.
+</div>
+
+<div class="facts">
+ <div class="fact warn"><div class="v">4</div><div class="k">Suppliers in Scope (EU-bound)</div></div>
+ <div class="fact bad"><div class="v">28 Orders</div><div class="k">Open POs with Denim / Coated Fabric SKUs</div></div>
+ <div class="fact warn"><div class="v">14–21 Days</div><div class="k">Re-test Delay if Substitution Required</div></div>
+</div>
+
+<div class="sec"><span class="secn">A</span><span class="sect">Supplier Exposure Matrix</span></div>
+
+<div class="you"><span class="ymark alert">HIGH</span><span class="ytext"><b>Turkey Denim Specialist</b> — n-Hexane in denim adhesive coatings. EU-bound denim orders: <b>18 POs, $3.2M FOB</b>. H&M buyer RSL already at 10 ppm — 100× stricter than REACH floor. Must re-test before next shipment.</span></div>
+<div class="you"><span class="ymark alert">HIGH</span><span class="ytext"><b>Pakistan Home Textile</b> — BPAF in home textile coatings/resins. EU-bound home textile orders: <b>7 POs, $1.1M FOB</b>. SCIP notification required by Aug 4, 2026. Buyer Primark monitoring only.</span></div>
+<div class="you"><span class="ymark warn">MEDIUM</span><span class="ytext"><b>China Coated Woven</b> — BPAF in coated fabric for outerwear. EU-bound: <b>3 POs, $0.8M FOB</b>. No buyer RSL match yet. May qualify for monitoring track.</span></div>
+<div class="you"><span class="ymark ok">CLEAN</span><span class="ytext"><b>Vietnam Knit / Bangladesh Woven</b> — No n-Hexane or BPAF in current BOM. Verify via buyer RSL test before confirming clean status.</span></div>
+
+<div class="sec"><span class="secn">B</span><span class="sect">WIP vs. In-Transit Split</span></div>
+
+<div class="you"><span class="ymark warn">18 Orders WIP</span><span class="ytext"><b>WIP floor (production):</b> 18 orders currently in production at Turkey and Pakistan factories. Can be held for re-test — 14–21 day lab delay — before shipping. Supplier retains goods; buyer payment not yet due.</span></div>
+<div class="you"><span class="ymark alert">10 Orders In-Transit</span><span class="ytext"><b>In-transit (sea freight):</b> 10 EU-bound shipments currently at sea. If they arrive before Aug 4 SCIP deadline, must hold at port for SCIP notification before customs clearance. 3 shipments (&lt;48 hrs to EU port) = <span class="mkr">CRITICAL</span>.</span></div>
+
+<div class="sec"><span class="secn">C</span><span class="sect">Recommended Action Plan</span></div>
+
+<div class="act"><span class="tm hi">Immediate</span><div>
+ <div class="ctitle">Halt EU Customs Clearance for 3 Near-Port Shipments</div>
+ <div class="cdesc">Issue immediate port holds on 3 Turkey denim shipments arriving within 48 hours. Contact EU customs broker to pause clearance pending SCIP notification submission (due Aug 4, 2026).</div>
+</div></div>
+<div class="act"><span class="tm hi">This Week</span><div>
+ <div class="ctitle">Initiate n-Hexane Re-Test for Turkey Denim SKU Line</div>
+ <div class="cdesc">Submit 6 representative denim styles to ECHA-accredited lab for n-Hexane content testing against H&M RSL (10 ppm). Lab turnaround: 14 days. Authorize production hold on remaining 12 WIP denim POs pending results.</div>
+ <div class="say">"Lab order submitted: 6 Turkey denim styles for n-Hexane content vs. H&M RSL 10 ppm. Results expected within 14 days. 12 WIP POs held pending confirmation."</div>
+</div></div>
+<div class="act"><span class="tm mid">By Jul 15</span><div>
+ <div class="ctitle">Submit SCIP Notifications for Confirmed SVHC Content</div>
+ <div class="cdesc">For articles confirmed above 0.1% w/w: submit SCIP dossier to ECHA before Aug 4 deadline. Factor in 45-day downstream customer disclosure obligation. Update DPP master records for all affected SKUs.</div>
+</div></div>
+<div class="act"><span class="tm lo">By Aug 1</span><div>
+ <div class="ctitle">BPAF RSL Monitoring — Pakistan Home Textile</div>
+ <div class="cdesc">Primark currently monitors only. Set monitoring tracker for BPAF buyer RSL updates. If Primark adds BPAF to their RSL before shipment dates, trigger same re-test protocol as Turkey denim case.</div>
+</div></div>
+
+<div class="a8box">
+ <b>Air8 BD Insight:</b> The <b>14–21 day re-test delay</b> creates a cashflow gap — supplier has goods ready but cannot ship until test results clear. This is the <b>ARP window</b>: the supplier needs a cashflow bridge during the compliance clearance period. Unlike tariff events where buyer POs are uncertain, EVT-REGULATION events have confirmed buyer POs — PreShip-OBF is <b>safe here</b>. ESG Finance is contraindicated (no ESG dimension triggered).
+</div>
+
+ </div></div></div>
+ </article>
+
+ </div>
+</main>
 
 <script>
-function showTab(tab) {
-  document.getElementById('tab-a').classList.remove('active');
-  document.getElementById('tab-b').classList.remove('active');
-  document.querySelectorAll('.tab').forEach(function(t) {
-    t.classList.remove('active-a');
-    t.classList.remove('active-b');
-  });
-  if (tab === 'a') {
-    document.getElementById('tab-a').classList.add('active');
-    document.querySelector('.tab-a').classList.add('active-a');
-  } else {
-    document.getElementById('tab-b').classList.add('active');
-    document.querySelector('.tab-b').classList.add('active-b');
-  }
-}
+(function(){
+ var floors=["f1","f2","f3","f4"];
+ var fill=document.getElementById("spinefill");
+ var allBtn=document.getElementById("openall");
+ function progress(){
+ var openIdx=-1,openCount=0;
+ floors.forEach(function(id,i){
+ if(!document.getElementById(id).classList.contains("shut")){openIdx=i;openCount++;}
+ });
+ allBtn.textContent=(openCount===floors.length)?"Close everything":"Open everything";
+ if(openIdx<0){fill.style.height="0px";return;}
+ var last=document.getElementById(floors[openIdx]);
+ fill.style.height=(last.offsetTop+31)+"px";
+ }
+ function set(id,open,scroll){
+ var f=document.getElementById(id);
+ var panel=f.querySelector(".panel");
+ var btn=f.querySelector(".fhead");
+ panel.setAttribute("data-open",open?"true":"false");
+ btn.setAttribute("aria-expanded",open?"true":"false");
+ f.classList.toggle("shut",!open);
+ if(open&&scroll){
+ window.setTimeout(function(){
+ var y=f.getBoundingClientRect().top+window.scrollY-18;
+ window.scrollTo({top:y,behavior:"smooth"});
+ },150);
+ }
+ progress();
+ }
+ var ub=document.getElementById("unbtn"),up=document.getElementById("unpanel");
+ ub.addEventListener("click",function(){
+ var open=up.getAttribute("data-open")==="true";
+ up.setAttribute("data-open",open?"false":"true");
+ ub.setAttribute("aria-expanded",open?"false":"true");
+ });
+ document.querySelectorAll(".fhead").forEach(function(b){
+ b.addEventListener("click",function(){
+ var id=b.getAttribute("data-target");
+ var shut=document.getElementById(id).classList.contains("shut");
+ set(id,shut,shut);
+ });
+ });
+ allBtn.addEventListener("click",function(){
+ var anyShut=floors.some(function(id){return document.getElementById(id).classList.contains("shut");});
+ if(anyShut){
+ floors.forEach(function(id,i){
+ window.setTimeout(function(){set(id,true,false);},i*130);
+ });
+ }else{
+ floors.forEach(function(id){set(id,false,false);});
+ var y=document.querySelector(".descent").getBoundingClientRect().top+window.scrollY-18;
+ window.scrollTo({top:y,behavior:"smooth"});
+ }
+ });
+ window.addEventListener("resize",progress);
+})();
 </script>
 </body>
 </html>
