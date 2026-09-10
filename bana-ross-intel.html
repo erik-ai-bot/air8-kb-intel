@@ -395,16 +395,17 @@
   #relmap #gBuy{transform-origin:700px 330px}
   #relmap #gToy{transform-origin:150px 330px}
   #relmap #gCat{transform-origin:700px 330px}
-  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat{opacity:1;transform:scale(1);pointer-events:auto}
+  #relmap #gUp{transform-origin:28px 280px}
+  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat,#relmap.expU #gUp{opacity:1;transform:scale(1);pointer-events:auto}
   #relmap .plus{cursor:pointer}
   #relmap .plus:focus{outline:none}
   #relmap .plus:focus-visible circle{stroke-width:3.5}
   #relmap .plus circle{transition:fill .18s,r .18s}
   #relmap .plus:hover circle{fill:var(--blue)}
   #relmap .plus:hover text{fill:#fff}
-  #relmap.expL #pL .sgn-p,#relmap.expR #pR .sgn-p{display:none}
-  #pL .sgn-m,#pR .sgn-m{display:none}
-  #relmap.expL #pL .sgn-m,#relmap.expR #pR .sgn-m{display:block}
+  #relmap.expL #pL .sgn-p,#relmap.expR #pR .sgn-p,#relmap.expU #pU .sgn-p{display:none}
+  #pL .sgn-m,#pR .sgn-m,#pU .sgn-m{display:none}
+  #relmap.expL #pL .sgn-m,#relmap.expR #pR .sgn-m,#relmap.expU #pU .sgn-m{display:block}
   .maphint{display:flex;gap:16px;flex-wrap:wrap;font:500 11.5px var(--body);color:var(--faint);margin-top:6px}
   .maphint b{color:var(--muted);font-weight:600}
 
@@ -488,63 +489,63 @@
   <section id="summary">
     <div class="sechead"><span class="num">00</span><h2>Executive summary</h2></div>
     <!-- SUPPLY CHAIN OVERVIEW -->
-    <p class="thesis" style="margin-bottom:16px"><b>China injection-moulded toy chain — single-tier pretend-play sets, FOB Chenghai, US/EU off-price retail destination.</b> One product line, one category, 20% US tariff, and an A-rated buyer that can replace the supplier in one season. Four things to understand before reading the detail below.</p>
+    <p class="thesis" style="margin-bottom:16px"><b>A Chenghai toy factory selling a $2 moulded plastic play set to a US investment-grade off-price retailer.</b> Single product tier, FOB China, 20% US tariff. The buyer (Ross, S&amp;P A&minus;) is the best thing on this file. The supplier’s commercial position is the weakest part — commodity product, no moat, easily replaced, and a 64% book concentration in one country.</p>
 
     <!-- VERDICT BAR -->
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:16px;background:var(--good-soft);border:1.5px solid var(--good);margin-bottom:20px">
-      <div style="flex:none;padding:6px 16px;border-radius:999px;background:var(--good);color:#fff;font:800 12px var(--display);letter-spacing:.04em;white-space:nowrap">PROCEED · CREDIT ONLY</div>
-      <div style="font:500 13.5px/1.55 var(--body);color:var(--ink)"><b>A-rated buyer + zero claims = credit is clean.</b> Commercial watch: one tier, replaceable in one season, India competitors at half the US tariff. Finance the receivable; manage relationship exposure separately.</div>
+      <div style="flex:none;padding:6px 16px;border-radius:999px;background:var(--good);color:#fff;font:800 12px var(--display);letter-spacing:.04em;white-space:nowrap">PROCEED &middot; CREDIT ONLY</div>
+      <div style="font:500 13.5px/1.55 var(--body);color:var(--ink)"><b>Finance the receivable — buyer credit is clean.</b> Collect certs before drawdown. Watch: one tier, easily replaced, 64% NL book concentration. This is a credit case, not a commercial conviction.</div>
     </div>
 
-    <!-- 4 MODULE CARDS -->
+    <!-- 4 MODULE CARDS — with colored dot visual markers -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px">
 
       <!-- 1. Product & Chain -->
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--blue)">
         <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--blue);margin-bottom:8px">① Product &amp; Chain</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">Moulded plastic play sets, FOB China → US/EU off-price retail</div>
-        <ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:7px;font:500 12px/1.45 var(--body);color:var(--muted)">
-          <li><b style="color:var(--ink)">One SKU tier:</b> 10–25 piece pretend-play sets, $1.87–2.69 FOB (avg $2.08)</li>
-          <li><b style="color:var(--ink)">Category:</b> HS 9503, injection-moulded polypropylene/ABS resin</li>
-          <li><b style="color:var(--ink)">Chain:</b> PP/ABS resin → Chenghai moulding &amp; assembly → FOB Shenzhen → off-price shelf</li>
-          <li><b style="color:var(--ink)">US tariff:</b> 20% (China MFN + Section 301) vs India competitors at 10% — structural disadvantage</li>
-        </ul>
+        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">$2 moulded play set, one tier, 20% tariff, FOB China → US/EU off-price</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">No technical moat</b> — injection moulding + hand assembly. Any Chenghai factory reproduces the mould in 7–15 days.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">PP resin +35% absorbed silently</b> — price to Ross held flat all year ($1.87–2.69). Full input cost squeeze taken in margin, invisible on file.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">20% US tariff vs India 10%</b> — $0.20/unit gap on a $2 product. Ross already runs 4 Indian vendors with 397 consignments/yr.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">H2 PP relief in sight</b> — 5.7Mt new capacity due. Downward price bias. Margin recovers if Ross doesn’t ask for the benefit first.</span></div>
+        </div>
       </div>
 
       <!-- 2. Buyer Dynamics -->
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--good)">
         <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--good);margin-bottom:8px">② Buyer Dynamics</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">A-rated off-price giant — cleanest credit on the page</div>
-        <ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:7px;font:500 12px/1.45 var(--body);color:var(--muted)">
-          <li><b style="color:var(--ink)">Ross credit:</b> S&amp;P A− / Moody’s A2 — investment-grade, no payment risk</li>
-          <li><b style="color:var(--ink)">Zero claims, zero dilution</b> — perfectly clean acceptance and payment history</li>
-          <li><b style="color:var(--ink)">$850K/yr</b> with Ross — BanaToys is 0.21% of Ross’s supply base. Buyer replaces in one week.</li>
-          <li><b style="color:var(--ink)">Off-price model:</b> Ross buys opportunistically, no markdowns — channel is demand-resilient</li>
-        </ul>
+        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">S&amp;P A&minus; off-price giant — best credit in the file, thin relationship</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Investment-grade credit</b> — S&amp;P A&minus; / Moody’s A2. Payment risk: negligible. Receivable is as clean as it gets.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Zero dilution, zero claims</b> — perfectly clean acceptance history. No disputes, no short-pays, no returns on file.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">BanaToys is 0.21% of Ross’s supply base</b> — $850K/yr. Ross replaces within one week using an existing vendor already on its list.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">12.1 days late on delivery</b> — 3rd percentile of Ross’s supplier field. Systematic average, not occasional slippage.</span></div>
+        </div>
       </div>
 
       <!-- 3. Supplier Dynamics -->
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--warn)">
         <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--warn);margin-bottom:8px">③ Supplier Dynamics</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">One-tier Chenghai factory, NL-heavy book, replaceable at Ross</div>
-        <ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:7px;font:500 12px/1.45 var(--body);color:var(--muted)">
-          <li><b style="color:var(--ink)">Scale:</b> 24 buyers, $23.4M stated turnover — Ross is a small line item</li>
-          <li><b style="color:var(--ink)">Book concentration:</b> Action (NL) 34% + Toi-Toys 21% + Adriaanse ≈ 64% Netherlands exposure</li>
-          <li><b style="color:var(--ink)">No premium tier</b> — single mould-class product, no pricing power or ASP ladder</li>
-          <li><b style="color:var(--ink)">Two Chenghai rivals</b> already inside Ross’s vendor list (Cheng Le, Wenyi) — direct replacement risk</li>
-        </ul>
+        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">24 buyers, $23.4M book — but 64% NL and one tier only</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Broad buyer base</b> — 24 buyers, $23.4M stated turnover. Ross is a small line item; factory is not survival-dependent on this one account.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">64% in Netherlands</b> — Action 34% + Toi-Toys 21% + Adriaanse. One Dutch recession or EU regulatory shock hits most of the book at once.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">One tier, bottom of market</b> — no licensed product, no R/C, no premium. Rivals work 2–3 tiers at the same buyers.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">Two Chenghai rivals in Ross’s vendor list</b> — Cheng Le shipped to Ross Aug 2026. Replacement is not theoretical.</span></div>
+        </div>
       </div>
 
       <!-- 4. Financeability -->
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--teal)">
         <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">④ Financeability</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">Financeable on credit — manage concentration and document gaps separately</div>
-        <ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:7px;font:500 12px/1.45 var(--body);color:var(--muted)">
-          <li><b style="color:var(--ink)">Credit: clean</b> — A-rated buyer, zero claims; receivable risk is low</li>
-          <li><b style="color:var(--ink)">Buyer concentration watch:</b> 64% of BanaToys’s book in Netherlands — EU demand shock hits hard</li>
-          <li><b style="color:var(--ink)">Commercial risk:</b> easily replaced at Ross; finance the receivable but flag relationship fragility</li>
-          <li><b style="color:var(--ink)">Document gap:</b> certs stated not sighted — CPSC/REACH/Prop 65 collection needed before drawdown</li>
-        </ul>
+        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">Finance the receivable — collect certs, watch NL concentration</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Receivable is clean</b> — A-rated buyer, zero claims. Standard AR finance; buyer credit risk is effectively zero.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">BanaToys repayment capacity: NL watch</b> — 64% of its book in Netherlands. An Action/Toi-Toys disruption dents the factory’s revenue base and repayment capacity.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Relationship fragility</b> — easily replaced at Ross. Finance today’s receivable; but relationship tenure is uncertain.</span></div>
+          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.45 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">Certs not sighted</b> — CPSC (lead/phthalates), EN71, REACH resin SDS. Collect before first drawdown.</span></div>
+        </div>
       </div>
 
     </div><!-- end modules -->
@@ -555,6 +556,31 @@
       <div class="mapwrap">
       <svg id="relmap" viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
         <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+
+        <!-- UPSTREAM: BanaToys raw material inputs — shown when expU active -->
+        <g id="gUp" class="eg">
+          <text x="8" y="78" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">BANATOYS UPSTREAM &mdash; raw material inputs into the factory</text>
+          <!-- PP Resin — primary input, RISK color (price +35% this year) -->
+          <path class="anim" d="M48 140 C90 140,130 270,150 330" fill="none" stroke="var(--risk)" stroke-width="1.5" opacity=".6"/>
+          <circle class="anim" cx="28" cy="140" r="20" fill="var(--risk)" opacity=".9" data-tip="&lt;b&gt;Polypropylene resin &mdash; China petrochemical&lt;/b&gt;&lt;br&gt;(Sinopec &amp;middot; PetroChina &amp;middot; CNOOC supply chain)&lt;br&gt;&lt;br&gt;Primary input: ~70% of product weight. PP rose &lt;b&gt;+52% to June 2026 peak&lt;/b&gt;, now +35% above January at US$1,274/t. &lt;b&gt;BanaToys absorbed the full increase &mdash; price to Ross never moved.&lt;/b&gt;&lt;br&gt;&lt;br&gt;H2 outlook: 5.7Mt new capacity due. Gradual downward bias. Margin recovers if Ross doesn&amp;rsquo;t ask for the benefit first."/>
+          <text x="54" y="136" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">PP Resin</text>
+          <text x="54" y="149" font-family="var(--mono)" font-size="9" fill="var(--risk)">+35% this year &middot; full squeeze absorbed silently</text>
+          <!-- Moulds & Tooling — WARN color (low barrier = key risk) -->
+          <path class="anim" d="M42 240 C85 240,120 300,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="28" cy="240" r="14" fill="var(--warn)" opacity=".9" data-tip="&lt;b&gt;Moulds &amp; Tooling &mdash; Chenghai cluster&lt;/b&gt;&lt;br&gt;Local mould shops serving all factories in the Chenghai (Shantou) toy cluster.&lt;br&gt;&lt;br&gt;New mould lead time: &lt;b&gt;7&ndash;15 days&lt;/b&gt;. MOQ as low as 60 units.&lt;br&gt;&lt;b&gt;Key risk:&lt;/b&gt; any competitor in the same cluster can reproduce a core SKU inside one season. The low technical barrier here is why BanaToys&amp;rsquo;s switching cost at Ross is effectively zero."/>
+          <text x="48" y="236" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Moulds &amp; Tooling</text>
+          <text x="48" y="249" font-family="var(--mono)" font-size="9" fill="var(--warn)">7&ndash;15 day lead &middot; Chenghai cluster &middot; no barrier</text>
+          <!-- ABS Resin — minor input, neutral (price fell, but wrong cost proxy on file) -->
+          <path class="anim" d="M39 330 C85 330,115 330,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="28" cy="330" r="11" fill="var(--line2)" data-tip="&lt;b&gt;ABS Resin &mdash; minor input&lt;/b&gt;&lt;br&gt;Used in small quantities for some finishing. Price fell 25&ndash;30% from March to June.&lt;br&gt;&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; Air8&amp;rsquo;s file tracks ABS as the primary cost proxy &mdash; this is incorrect. PP is the dominant input. The ABS price data gave a misleadingly benign picture while the real input was rising 35%."/>
+          <text x="45" y="326" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">ABS Resin</text>
+          <text x="45" y="339" font-family="var(--mono)" font-size="9" fill="var(--faint)">minor input &middot; price fell Q2 &middot; wrong cost proxy on file</text>
+          <!-- Pigments & Packaging — small commodity input -->
+          <path class="anim" d="M37 420 C80 420,120 380,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="28" cy="420" r="9" fill="var(--line2)" data-tip="&lt;b&gt;Pigments &amp; Packaging &mdash; commodity inputs&lt;/b&gt;&lt;br&gt;Chemical colorants and cardboard/blister packs.&lt;br&gt;&lt;br&gt;REACH (EU): resin supplier declarations required per grade. Not yet sighted by Air8 &mdash; collection task before drawdown."/>
+          <text x="43" y="416" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Pigments &amp; Packaging</text>
+          <text x="43" y="429" font-family="var(--mono)" font-size="9" fill="var(--faint)">colorants &middot; blister pack &middot; REACH declaration needed</text>
+        </g>
 
         <g id="gToy" class="eg">
           <path class="anim" d="M196 90 C270 90,330 330,420 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
@@ -688,9 +714,17 @@
           <text class="sgn-p" x="690" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
           <text class="sgn-m" x="690" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">&minus;</text>
         </g>
+        <!-- Upstream hint: dashed line + UPSTREAM label + pU button -->
+        <line x1="10" y1="330" x2="86" y2="330" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="100" y="313" text-anchor="middle" font-family="var(--body)" font-weight="600" font-size="10" fill="var(--faint)">UPSTREAM</text>
+        <g id="pU" class="plus" role="button" tabindex="0" aria-label="Expand BanaToys upstream raw material inputs">
+          <circle cx="100" cy="330" r="14" fill="var(--surface)" stroke="var(--blue)" stroke-width="2"/>
+          <text class="sgn-p" x="100" y="336" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
+          <text class="sgn-m" x="100" y="336" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">&minus;</text>
+        </g>
       </svg>
       </div>
-      <div class="maphint"><span><b>+ under BanaToys</b> opens the buyers column &mdash; everyone else BanaToys sells the same toy line to</span><span><b>+ under Ross</b> opens the suppliers column &mdash; everyone else who sells it toys, including both Chenghai rivals &mdash; and what else Ross buys</span></div>
+      <div class="maphint"><span><b>+ UPSTREAM (left of BanaToys)</b> opens the raw material inputs into the factory &mdash; PP resin, moulds, ABS, pigments</span><span><b>+ under BanaToys</b> opens the buyers column &mdash; everyone else BanaToys sells the same toy line to</span><span><b>+ under Ross</b> opens the suppliers column &mdash; everyone else who sells it toys, including both Chenghai rivals &mdash; and what else Ross buys</span></div>
       <div class="src"><b>Same basis as section 03:</b> Ross&rsquo;s 22 suppliers in our own book, $69.5M of trade, grouped by what each one makes &mdash; apparel &amp; textiles 85%, home/d&eacute;cor/furniture 14%, toys and other under 1%. Category is inferred from each supplier&rsquo;s business; the supplier names and amounts are ours. Ross&rsquo;s other <i>toy</i> vendors on the left come from public import records, since none of them is in our book.</div>
       <div class="takeaway"><span class="ic">&rarr;</span><span><b>One category, one product line, and a crowd on both sides of it.</b> Everything between these two companies passes through a single node — pretend-play toys — which is under 1% of what Ross buys through us and 3.6% of BanaToys&rsquo;s stated book. Open either side and the same picture appears twice: Ross has other toy vendors who sell it more than one thing, and BanaToys has other buyers BanaToys sells the same one thing to.</span></div>
     </div>
@@ -1594,10 +1628,10 @@
     g.addEventListener('click',function(){map.classList.toggle(cls)});
     g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();map.classList.toggle(cls)}});}
   function fit(){ if(!map)return;
-    var L=map.classList.contains('expL'), R=map.classList.contains('expR');
-    map.setAttribute('viewBox', (L||R) ? '0 30 1080 620' : '0 286 1080 124');
+    var L=map.classList.contains('expL'), R=map.classList.contains('expR'), U=map.classList.contains('expU');
+    map.setAttribute('viewBox', (L||R||U) ? '0 30 1080 620' : '0 286 1080 124');
   }
-  if(map){tog('pL','expL');tog('pR','expR');
+  if(map){tog('pL','expL');tog('pR','expR');tog('pU','expU');
     map.addEventListener('click',function(){setTimeout(fit,0)});
     map.addEventListener('keyup',function(){setTimeout(fit,0)});
     fit();}
