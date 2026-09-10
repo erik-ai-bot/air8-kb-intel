@@ -38,7 +38,7 @@
   }
   *{box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1120px;margin:0 auto;padding:28px 24px 90px}
+  .wrap{max-width:1440px;margin:0 auto;padding:28px 40px 90px}
 
   /* nav */
   .nav{position:sticky;top:12px;z-index:10;display:flex;gap:2px;flex-wrap:wrap;align-items:center;padding:8px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:var(--shadow);width:max-content;max-width:100%;margin:0 auto 34px}
@@ -395,7 +395,7 @@
   #relmap #gBuy{transform-origin:700px 330px}
   #relmap #gToy{transform-origin:150px 330px}
   #relmap #gCat{transform-origin:700px 330px}
-  #relmap #gUp{transform-origin:28px 280px}
+  #relmap #gUp{transform-origin:270px -100px}
   #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat,#relmap.expU #gUp{opacity:1;transform:scale(1);pointer-events:auto}
   #relmap .plus{cursor:pointer}
   #relmap .plus:focus{outline:none}
@@ -548,29 +548,50 @@
       <svg id="relmap" viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
         <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
 
-        <!-- UPSTREAM: BanaToys raw material inputs — shown when expU active -->
+        <!-- UPSTREAM: feedstock → PP resin producers → BanaToys (expands upward) -->
         <g id="gUp" class="eg">
-          <text x="8" y="78" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">BANATOYS UPSTREAM &mdash; raw material inputs into the factory</text>
-          <!-- PP Resin — primary input, RISK color (price +35% this year) -->
-          <path class="anim" d="M48 140 C90 140,130 270,150 330" fill="none" stroke="var(--risk)" stroke-width="1.5" opacity=".6"/>
-          <circle class="anim" cx="28" cy="140" r="20" fill="var(--risk)" opacity=".9" data-tip="&lt;b&gt;Polypropylene resin &mdash; China petrochemical&lt;/b&gt;&lt;br&gt;(Sinopec &amp;middot; PetroChina &amp;middot; CNOOC supply chain)&lt;br&gt;&lt;br&gt;Primary input: ~70% of product weight. PP rose &lt;b&gt;+52% to June 2026 peak&lt;/b&gt;, now +35% above January at US$1,274/t. &lt;b&gt;BanaToys absorbed the full increase &mdash; price to Ross never moved.&lt;/b&gt;&lt;br&gt;&lt;br&gt;H2 outlook: 5.7Mt new capacity due. Gradual downward bias. Margin recovers if Ross doesn&amp;rsquo;t ask for the benefit first."/>
-          <text x="54" y="136" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">PP Resin</text>
-          <text x="54" y="149" font-family="var(--mono)" font-size="9" fill="var(--risk)">+35% this year &middot; full squeeze absorbed silently</text>
-          <!-- Moulds & Tooling — WARN color (low barrier = key risk) -->
-          <path class="anim" d="M42 240 C85 240,120 300,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
-          <circle class="anim" cx="28" cy="240" r="14" fill="var(--warn)" opacity=".9" data-tip="&lt;b&gt;Moulds &amp; Tooling &mdash; Chenghai cluster&lt;/b&gt;&lt;br&gt;Local mould shops serving all factories in the Chenghai (Shantou) toy cluster.&lt;br&gt;&lt;br&gt;New mould lead time: &lt;b&gt;7&ndash;15 days&lt;/b&gt;. MOQ as low as 60 units.&lt;br&gt;&lt;b&gt;Key risk:&lt;/b&gt; any competitor in the same cluster can reproduce a core SKU inside one season. The low technical barrier here is why BanaToys&amp;rsquo;s switching cost at Ross is effectively zero."/>
-          <text x="48" y="236" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Moulds &amp; Tooling</text>
-          <text x="48" y="249" font-family="var(--mono)" font-size="9" fill="var(--warn)">7&ndash;15 day lead &middot; Chenghai cluster &middot; no barrier</text>
-          <!-- ABS Resin — minor input, neutral (price fell, but wrong cost proxy on file) -->
-          <path class="anim" d="M39 330 C85 330,115 330,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
-          <circle class="anim" cx="28" cy="330" r="11" fill="var(--line2)" data-tip="&lt;b&gt;ABS Resin &mdash; minor input&lt;/b&gt;&lt;br&gt;Used in small quantities for some finishing. Price fell 25&ndash;30% from March to June.&lt;br&gt;&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; Air8&amp;rsquo;s file tracks ABS as the primary cost proxy &mdash; this is incorrect. PP is the dominant input. The ABS price data gave a misleadingly benign picture while the real input was rising 35%."/>
-          <text x="45" y="326" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">ABS Resin</text>
-          <text x="45" y="339" font-family="var(--mono)" font-size="9" fill="var(--faint)">minor input &middot; price fell Q2 &middot; wrong cost proxy on file</text>
-          <!-- Pigments & Packaging — small commodity input -->
-          <path class="anim" d="M37 420 C80 420,120 380,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
-          <circle class="anim" cx="28" cy="420" r="9" fill="var(--line2)" data-tip="&lt;b&gt;Pigments &amp; Packaging &mdash; commodity inputs&lt;/b&gt;&lt;br&gt;Chemical colorants and cardboard/blister packs.&lt;br&gt;&lt;br&gt;REACH (EU): resin supplier declarations required per grade. Not yet sighted by Air8 &mdash; collection task before drawdown."/>
-          <text x="43" y="416" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Pigments &amp; Packaging</text>
-          <text x="43" y="429" font-family="var(--mono)" font-size="9" fill="var(--faint)">colorants &middot; blister pack &middot; REACH declaration needed</text>
+          <text x="15" y="-192" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">BANATOYS UPSTREAM &mdash; feedstock to factory gate</text>
+          <!-- Feedstock node: crude oil → propylene -->
+          <circle class="anim" cx="280" cy="-143" r="21" fill="var(--sunken)" stroke="var(--line2)" stroke-width="2" data-tip="&lt;b&gt;Crude oil &rarr; Naphtha &rarr; Propylene&lt;/b&gt;&lt;br&gt;Primary feedstock for polypropylene resin. PP price tracks Brent crude with a 6&ndash;8 week lag.&lt;br&gt;&lt;br&gt;Every $10/bbl rise in crude adds ~$43&ndash;58/t to PP cost. The 2026 spike (+35%) was driven by a spring crude rally plus propylene tightness."/>
+          <text x="280" y="-140" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--muted)">Crude &rarr;</text>
+          <text x="280" y="-129" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--muted)">Propylene</text>
+          <!-- Lines: feedstock → each producer -->
+          <path class="anim" d="M263 -123 C220 -123,90 -108,80 -104" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>
+          <path class="anim" d="M268 -123 C248 -123,185 -108,178 -104" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>
+          <path class="anim" d="M277 -123 C277 -118,272 -108,271 -104" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>
+          <path class="anim" d="M292 -123 C298 -118,362 -108,364 -104" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>
+          <path class="anim" d="M298 -123 C315 -118,458 -108,460 -104" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>
+          <path class="anim" d="M301 -123 C325 -118,550 -108,552 -104" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>
+          <!-- Sinopec (largest, red — drives PP benchmark price) -->
+          <path class="anim" d="M80 -62 C80 40,130 210,150 330" fill="none" stroke="var(--risk)" stroke-width="1.5" opacity=".45"/>
+          <circle class="anim" cx="80" cy="-83" r="20" fill="var(--risk)" opacity=".9" data-tip="&lt;b&gt;Sinopec (中国石化) &mdash; PP #1 China&lt;/b&gt;&lt;br&gt;China&rsquo;s largest PP producer. ~35% domestic market share.&lt;br&gt;Primary supplier to coastal toy clusters incl. Chenghai, Shantou.&lt;br&gt;&lt;br&gt;Sinopec&rsquo;s spot list price &lt;b&gt;IS the benchmark&lt;/b&gt; for all Guangdong resin buyers. The +35% 2026 spike was a Sinopec list price move."/>
+          <text x="80" y="-108" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10.5" fill="var(--ink)">Sinopec</text>
+          <text x="80" y="-120" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--risk)">+35% this yr &middot; CN #1</text>
+          <!-- PetroChina -->
+          <path class="anim" d="M178 -62 C170 40,155 210,150 330" fill="none" stroke="var(--line2)" stroke-width="1.3" opacity=".5"/>
+          <circle class="anim" cx="178" cy="-83" r="15" fill="var(--blue)" opacity=".85" data-tip="&lt;b&gt;PetroChina (中国石油) &mdash; PP #2 China&lt;/b&gt;&lt;br&gt;Second-largest Chinese PP producer. Strong supply to Shandong, Guangdong markets. Price typically 2&ndash;5% below Sinopec spot."/>
+          <text x="178" y="-103" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">PetroChina</text>
+          <text x="178" y="-115" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">CN #2</text>
+          <!-- CNOOC -->
+          <path class="anim" d="M271 -62 C260 20,190 220,150 330" fill="none" stroke="var(--line2)" stroke-width="1.1" opacity=".4"/>
+          <circle class="anim" cx="271" cy="-83" r="12" fill="var(--blue)" opacity=".75" data-tip="&lt;b&gt;CNOOC (中海油) &mdash; offshore petrochemicals&lt;/b&gt;&lt;br&gt;Offshore oil and downstream petrochemicals. Growing PP capacity in Huizhou, Guangdong &mdash; closest major plant to Chenghai cluster. Competitive on coastal delivery cost."/>
+          <text x="271" y="-100" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">CNOOC</text>
+          <text x="271" y="-112" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">Huizhou · coastal</text>
+          <!-- Borouge (UAE/Austria) -->
+          <path class="anim" d="M364 -62 C345 20,220 230,150 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".38"/>
+          <circle class="anim" cx="364" cy="-83" r="11" fill="var(--line2)" data-tip="&lt;b&gt;Borouge (Abu Dhabi + Borealis) &mdash; UAE&lt;/b&gt;&lt;br&gt;Abu Dhabi National Oil Company JV with Austria&rsquo;s Borealis. Major PP exporter into China and Southeast Asia. Supplies specialty grades; supply independent of China domestic tightness. Premium-priced."/>
+          <text x="364" y="-100" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">Borouge</text>
+          <text x="364" y="-112" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">UAE &middot; specialty</text>
+          <!-- LyondellBasell -->
+          <path class="anim" d="M460 -62 C440 20,250 230,150 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".35"/>
+          <circle class="anim" cx="460" cy="-83" r="10" fill="var(--line2)" data-tip="&lt;b&gt;LyondellBasell &mdash; US / Netherlands&lt;/b&gt;&lt;br&gt;World&rsquo;s largest PP producer by capacity. Mainly REACH-compliant specialty grades for EU export. Less volume in mass-market toy cluster but used where EU compliance grade is required by buyer spec."/>
+          <text x="460" y="-100" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">LyondellBasell</text>
+          <text x="460" y="-112" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">US · REACH grades</text>
+          <!-- Formosa (Taiwan) -->
+          <path class="anim" d="M552 -62 C530 20,270 230,150 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".3"/>
+          <circle class="anim" cx="552" cy="-83" r="9" fill="var(--line2)" data-tip="&lt;b&gt;Formosa Plastics (台塑) &mdash; Taiwan&lt;/b&gt;&lt;br&gt;Taiwan-based PP producer. Historically a major exporter to Guangdong toy clusters via Kaohsiung port. Competitive on price. Cross-strait policy risk is a secondary concern for uninterrupted supply."/>
+          <text x="552" y="-100" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">Formosa</text>
+          <text x="552" y="-112" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">TW &middot; cross-strait risk</text>
         </g>
 
         <g id="gToy" class="eg">
@@ -715,7 +736,7 @@
         </g>
       </svg>
       </div>
-      <div class="maphint"><span><b>+ UPSTREAM (left of BanaToys)</b> opens the raw material inputs into the factory &mdash; PP resin, moulds, ABS, pigments</span><span><b>+ under BanaToys</b> opens the buyers column &mdash; everyone else BanaToys sells the same toy line to</span><span><b>+ under Ross</b> opens the suppliers column &mdash; everyone else who sells it toys, including both Chenghai rivals &mdash; and what else Ross buys</span></div>
+      <div class="maphint"><span><b>+ UPSTREAM (above)</b> opens the feedstock &rarr; PP resin producers chain &mdash; Sinopec, PetroChina, CNOOC, Borouge, LyondellBasell, Formosa</span><span><b>+ under BanaToys</b> opens the buyers column &mdash; everyone else BanaToys sells the same toy line to</span><span><b>+ under Ross</b> opens the suppliers column &mdash; everyone else who sells it toys, including both Chenghai rivals &mdash; and what else Ross buys</span></div>
       <div class="src"><b>Same basis as section 03:</b> Ross&rsquo;s 22 suppliers in our own book, $69.5M of trade, grouped by what each one makes &mdash; apparel &amp; textiles 85%, home/d&eacute;cor/furniture 14%, toys and other under 1%. Category is inferred from each supplier&rsquo;s business; the supplier names and amounts are ours. Ross&rsquo;s other <i>toy</i> vendors on the left come from public import records, since none of them is in our book.</div>
       <div class="takeaway"><span class="ic">&rarr;</span><span><b>One category, one product line, and a crowd on both sides of it.</b> Everything between these two companies passes through a single node — pretend-play toys — which is under 1% of what Ross buys through us and 3.6% of BanaToys&rsquo;s stated book. Open either side and the same picture appears twice: Ross has other toy vendors who sell it more than one thing, and BanaToys has other buyers BanaToys sells the same one thing to.</span></div>
     </div>
@@ -1620,7 +1641,10 @@
     g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();map.classList.toggle(cls)}});}
   function fit(){ if(!map)return;
     var L=map.classList.contains('expL'), R=map.classList.contains('expR'), U=map.classList.contains('expU');
-    map.setAttribute('viewBox', (L||R||U) ? '0 30 1080 620' : '0 286 1080 124');
+    if(U && (L||R)) map.setAttribute('viewBox','0 -220 1080 870');
+    else if(U) map.setAttribute('viewBox','0 -220 1080 620');
+    else if(L||R) map.setAttribute('viewBox','0 30 1080 620');
+    else map.setAttribute('viewBox','0 286 1080 124');
   }
   if(map){tog('pL','expL');tog('pR','expR');tog('pU','expU');
     map.addEventListener('click',function(){setTimeout(fit,0)});
