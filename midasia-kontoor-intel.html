@@ -1,0 +1,1104 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:0;font:14px system-ui;background:#F5F7FB}img{max-width:100%}</style></head><body>
+<title>BanaToys × Ross</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F5F7FB; --surface:#FFFFFF; --sunken:#EEF2F7;
+    --ink:#0F1720; --muted:#5B6B7B; --faint:#8E9BAB; --line:#E3E8EF; --line2:#CBD5E1;
+    --blue:#1A56DB; --teal:#0EA5A4; --blue-soft:#E8F0FE; --teal-soft:#E3F6F5;
+    --good:#1E7A55; --warn:#C08A17; --risk:#C8352B;
+    --good-soft:#E4F3EB; --warn-soft:#F8EFD9; --risk-soft:#FBE5E2;
+    --shadow:0 1px 2px rgba(16,24,40,.05),0 14px 34px -16px rgba(16,24,40,.16);
+    --shadow-hover:0 2px 4px rgba(16,24,40,.06),0 22px 44px -18px rgba(26,86,219,.22);
+    --grid:#EAEEF4;
+    --display:'Plus Jakarta Sans',system-ui,sans-serif; --body:'DM Sans',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1220; --surface:#121B2C; --sunken:#0E1626;
+      --ink:#E8EEF7; --muted:#A3B1C4; --faint:#6F7F95; --line:#22304A; --line2:#33456A;
+      --blue:#6EA8FF; --teal:#3ED2CF; --blue-soft:rgba(110,168,255,.14); --teal-soft:rgba(62,210,207,.14);
+      --good:#3FB27E; --warn:#D8A63A; --risk:#E0654F;
+      --good-soft:rgba(63,178,126,.16); --warn-soft:rgba(216,166,58,.16); --risk-soft:rgba(224,101,79,.16);
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -16px rgba(0,0,0,.6);
+      --shadow-hover:0 2px 4px rgba(0,0,0,.5),0 22px 44px -18px rgba(110,168,255,.28);
+      --grid:#1B2740;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1220; --surface:#121B2C; --sunken:#0E1626;
+    --ink:#E8EEF7; --muted:#A3B1C4; --faint:#6F7F95; --line:#22304A; --line2:#33456A;
+    --blue:#6EA8FF; --teal:#3ED2CF; --blue-soft:rgba(110,168,255,.14); --teal-soft:rgba(62,210,207,.14);
+    --good:#3FB27E; --warn:#D8A63A; --risk:#E0654F;
+    --good-soft:rgba(63,178,126,.16); --warn-soft:rgba(216,166,58,.16); --risk-soft:rgba(224,101,79,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -16px rgba(0,0,0,.6);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.5),0 22px 44px -18px rgba(110,168,255,.28);
+    --grid:#1B2740;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 24px 90px}
+
+  /* nav */
+  .nav{position:sticky;top:12px;z-index:10;display:flex;gap:2px;flex-wrap:wrap;align-items:center;padding:8px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:var(--shadow);width:max-content;max-width:100%;margin:0 auto 34px}
+  .nav a{font:600 12px var(--body);color:var(--muted);text-decoration:none;padding:7px 9px;border-radius:999px;transition:all .18s}
+  .nav a:hover{background:var(--sunken);color:var(--ink)}
+  .nav a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .nav .brand{font:800 12.5px var(--display);color:var(--ink);padding:7px 11px 7px 8px;border-right:1px solid var(--line);margin-right:2px}
+  .nav .brand i{display:inline-block;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));margin-right:8px;vertical-align:1px}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:end;margin-bottom:46px}
+  @media (max-width:820px){.hero{grid-template-columns:1fr}}
+  .eyebrow{font:600 11.5px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:22px;height:2px;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px}
+  h1{font:800 clamp(38px,5.4vw,60px)/1.02 var(--display);letter-spacing:-.035em;margin:0 0 16px;text-wrap:balance}
+  h1 .grad{background:linear-gradient(92deg,var(--blue) 0%,var(--teal) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  h1 .x{color:var(--faint);font-weight:500;padding:0 .08em}
+  .lede{font:400 17px/1.6 var(--body);color:var(--muted);max-width:56ch;margin:0}
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+  .kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+  .kpi .v{font:800 26px/1 var(--display);letter-spacing:-.02em}
+  .kpi .l{font:500 12px/1.4 var(--body);color:var(--muted);margin-top:7px}
+  .kpi .v.g{background:linear-gradient(92deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* sections */
+  section{margin-bottom:64px;scroll-margin-top:90px}
+  .sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+  .num{font:600 12px var(--mono);color:var(--faint);letter-spacing:.06em}
+  h2{font:800 28px/1.1 var(--display);letter-spacing:-.025em;margin:0}
+  .thesis{font:500 16px/1.55 var(--body);color:var(--muted);max-width:78ch;margin:10px 0 22px}
+  .thesis b{color:var(--ink);font-weight:600}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px 24px 18px;box-shadow:var(--shadow);transition:box-shadow .2s}
+  .card:hover{box-shadow:var(--shadow-hover)}
+  .card h3{font:700 15px var(--display);letter-spacing:-.01em;margin:0 0 4px}
+  .card .sub{font:500 12.5px var(--body);color:var(--faint);margin:0 0 14px}
+  .card svg{width:100%;height:auto;display:block}
+  .takeaway{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font:500 13px/1.6 var(--body);color:var(--muted)}
+  .takeaway .ic{flex:none;width:22px;height:22px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--teal));display:grid;place-items:center;color:#fff;font:800 12px var(--display)}
+  .takeaway b{color:var(--ink);font-weight:600}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+  .stack{display:flex;flex-direction:column;gap:18px}
+
+  /* tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+  @media (max-width:860px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow)}
+  .tile .t{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .tile .v{font:800 22px/1.1 var(--display);letter-spacing:-.02em;margin-top:8px}
+  .tile .d{font:500 12px/1.45 var(--body);color:var(--muted);margin-top:6px}
+  .tile .v.down{color:var(--risk)} .tile .v.up{color:var(--good)}
+
+  /* chips */
+  .chip{display:inline-flex;align-items:center;gap:6px;font:600 11.5px var(--body);padding:5px 11px;border-radius:999px;background:var(--sunken);color:var(--muted);white-space:nowrap}
+  .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--faint)}
+  .chip.good{background:var(--good-soft);color:var(--good)} .chip.good::before{background:var(--good)}
+  .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.warn::before{background:var(--warn)}
+  .chip.risk{background:var(--risk-soft);color:var(--risk)} .chip.risk::before{background:var(--risk)}
+  .chip.blue{background:var(--blue-soft);color:var(--blue)} .chip.blue::before{background:var(--blue)}
+
+  /* compliance matrix */
+  .matrix{display:grid;grid-template-columns:1.3fr 1fr 1fr;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .matrix>div{padding:12px 14px;border-bottom:1px solid var(--line);font:500 13px var(--body)}
+  .matrix>div:nth-last-child(-n+3){border-bottom:0}
+  .matrix .h{background:var(--sunken);font:600 10.5px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .matrix .req{font-weight:600}
+  .matrix .req small{display:block;font:500 11.5px var(--body);color:var(--faint);margin-top:2px}
+  .st{display:inline-flex;align-items:center;gap:7px;font:600 12px var(--body)}
+  .st i{width:9px;height:9px;border-radius:50%;flex:none}
+  .st.ok{color:var(--good)} .st.ok i{background:var(--good)}
+  .st.gap{color:var(--risk)} .st.gap i{background:var(--risk)}
+  .st.new{color:var(--warn)} .st.new i{background:var(--warn)}
+  .st.na{color:var(--faint)} .st.na i{background:var(--line2)}
+
+  /* buyer board */
+  .board{width:100%;border-collapse:separate;border-spacing:0}
+  .board th{text-align:left;font:600 10.5px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:0 12px 10px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+  .board td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);font:500 13px var(--body);white-space:nowrap;vertical-align:middle}
+  .board tr:last-child td{border-bottom:0}
+  .board td.m{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12.5px}
+  .board tr.self td{background:linear-gradient(90deg,var(--blue-soft),transparent)}
+  .board tr.self td:first-child{border-radius:10px 0 0 10px;font-weight:700}
+  .rate{display:inline-grid;place-items:center;min-width:34px;height:24px;padding:0 8px;border-radius:8px;font:700 11.5px var(--mono);background:var(--sunken);color:var(--muted)}
+  .rate.a{background:var(--good-soft);color:var(--good)} .rate.b{background:var(--warn-soft);color:var(--warn)} .rate.c{background:var(--risk-soft);color:var(--risk)}
+  .share{display:inline-flex;align-items:center;gap:8px}
+  .share i{display:block;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--teal))}
+  .table-wrap{overflow-x:auto}
+
+  /* scorecard rows */
+  .score{display:grid;grid-template-columns:150px 1fr 96px;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+  .score:last-child{border-bottom:0}
+  .score .lab{font:600 13px var(--body)} .score .lab small{display:block;font:500 11px var(--body);color:var(--faint);margin-top:1px}
+  .track{position:relative;height:12px;background:var(--sunken);border-radius:6px}
+  .track .bench{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,var(--line2) 0 3px,transparent 3px 7px);border-radius:6px;opacity:.9}
+  .track .me{position:absolute;top:-4px;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));border:3px solid var(--surface);box-shadow:0 2px 8px rgba(26,86,219,.35);transform:translateX(-50%)}
+  .track .me.bad{background:var(--risk)} .track .me.good{background:var(--good)}
+  .track .band{position:absolute;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--teal));opacity:.85}
+  .score .val{font:600 12.5px var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+  .score .val small{display:block;font:500 10.5px var(--body);color:var(--faint)}
+  .delta{font:700 11px var(--body);padding:2px 7px;border-radius:6px;display:inline-block;margin-top:3px}
+  .delta.up{background:var(--good-soft);color:var(--good)} .delta.dn{background:var(--risk-soft);color:var(--risk)} .delta.eq{background:var(--sunken);color:var(--muted)}
+
+  .bars{display:flex;flex-direction:column;gap:12px}
+  .brow{display:grid;grid-template-columns:170px 1fr 74px;gap:12px;align-items:center}
+  .brow .l{font:600 13px var(--body)} .brow .l small{display:block;font:500 11px var(--body);color:var(--faint)}
+  .brow .tr{height:12px;background:var(--sunken);border-radius:6px;overflow:hidden}
+  .brow .tr i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--teal));transform-origin:left;animation:growX .9s cubic-bezier(.2,.8,.2,1) both}
+  .brow .tr i.warn{background:var(--warn)} .brow .tr i.risk{background:var(--risk)}
+  .brow .v{font:600 12.5px var(--mono);text-align:right}
+  @keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @media (prefers-reduced-motion:reduce){.brow .tr i,svg .anim{animation:none!important}}
+  svg .anim{transform-box:fill-box;transform-origin:left center;animation:growX .9s cubic-bezier(.2,.8,.2,1) both}
+
+  /* callout */
+  .callout{position:relative;border-radius:22px;padding:22px 26px;background:linear-gradient(135deg,var(--blue-soft),var(--teal-soft));border:1px solid var(--line);overflow:hidden}
+  .callout::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,var(--blue),var(--teal))}
+  .callout .tag{font:700 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px}
+  .callout p{margin:0;font:500 14.5px/1.65 var(--body);color:var(--ink)}
+  .callout p b{font-weight:700}
+
+  .arch ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+  .arch li{font:500 13px/1.55 var(--body);display:flex;gap:12px}
+  .arch li .k{flex:none;font:600 10px var(--mono);letter-spacing:.06em;color:var(--faint);width:60px;padding-top:4px}
+  .arch li b{font-weight:600}
+
+  .gapcard{border:1.5px dashed var(--line2);border-radius:18px;padding:16px 20px;margin-top:18px;background:var(--sunken)}
+  .gapcard .tag{font:700 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--warn);display:block;margin-bottom:10px}
+  .gaps{display:flex;gap:12px;flex-wrap:wrap}
+  .gap{flex:1 1 200px;font:500 12.5px/1.45 var(--body);color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+  .gap .q{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font:700 12px var(--mono);color:var(--faint)}
+
+  /* verdict */
+  .health{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 6px}
+  @media (max-width:640px){.health{grid-template-columns:1fr 1fr}}
+  .stage{border-radius:14px;padding:14px 16px;border:1px solid var(--line);background:var(--surface);position:relative;overflow:hidden}
+  .stage::before{content:"";position:absolute;left:0;right:0;top:0;height:4px}
+  .stage.low::before{background:var(--good)} .stage.med::before{background:var(--warn)} .stage.high::before{background:var(--risk)}
+  .stage .n{font:600 10.5px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .stage .r{font:800 18px var(--display);margin-top:6px}
+  .stage.low .r{color:var(--good)} .stage.med .r{color:var(--warn)} .stage.high .r{color:var(--risk)}
+  .stage .w{font:500 12px/1.45 var(--body);color:var(--muted);margin-top:4px}
+  .verdict{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;margin-top:18px;padding:24px 26px;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+  @media (max-width:700px){.verdict{grid-template-columns:1fr}}
+  .ring{width:118px;height:118px;border-radius:50%;background:conic-gradient(var(--warn) 0 65%,var(--sunken) 65% 100%);display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:11px;border-radius:50%;background:var(--surface)}
+  .ring span{position:relative;z-index:1;font:800 26px/1 var(--display);letter-spacing:-.02em}
+  .ring small{position:relative;z-index:1;display:block;font:600 10px var(--body);color:var(--faint);letter-spacing:.06em;text-align:center;margin-top:3px}
+  .verdict h3{font:800 20px var(--display);letter-spacing:-.02em;margin:0 0 8px}
+  .verdict p{margin:0 0 10px;font:400 14.5px/1.65 var(--body);color:var(--muted)}
+  .verdict p b{color:var(--ink);font-weight:600}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  @media (max-width:760px){.actions{grid-template-columns:1fr}}
+  .act{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font:500 13px/1.5 var(--body);color:var(--muted)}
+  .act b{display:block;font:700 13px var(--display);color:var(--ink);margin-bottom:4px}
+  .act .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;font:800 11px var(--display);margin-bottom:8px}
+
+  footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font:500 11.5px var(--mono);color:var(--faint);display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+
+  /* compact scorecard lanes */
+  .lanes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media (max-width:820px){.lanes{grid-template-columns:1fr}}
+  .lane{border-radius:16px;padding:12px 13px;background:var(--sunken);border:1px solid var(--line)}
+  .lane.dn{background:var(--risk-soft);border-color:transparent}
+  .lane.up{background:var(--good-soft);border-color:transparent}
+  .lane .hd{font:700 10.5px var(--body);letter-spacing:.09em;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:10px;color:var(--muted)}
+  .lane.dn .hd{color:var(--risk)} .lane.up .hd{color:var(--good)}
+  .lane .hd span{margin-left:auto;font:700 11px var(--mono);opacity:.7}
+  .met{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
+  .met:first-of-type{border-top:0}
+  .met .n{font:600 12.5px var(--body)} .met .n small{display:block;font:500 10.5px var(--body);color:var(--faint);margin-top:1px}
+  .met .v{font:700 13px var(--mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+  /* compliance rings */
+  .rings{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  @media (max-width:760px){.rings{grid-template-columns:repeat(3,1fr)}}
+  .ring2{text-align:center}
+  .ring2 .dial{width:74px;height:74px;margin:0 auto 8px;border-radius:50%;position:relative;display:grid;place-items:center;
+    background:conic-gradient(from -90deg,var(--c) 0 var(--p),var(--sunken) var(--p) 100%)}
+  .ring2 .dial::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring2 .rv{position:relative;z-index:1;font:800 15px var(--display);letter-spacing:-.02em}
+  .ring2 .rl{font:600 11.5px var(--body)} .ring2 .rl small{display:block;font:500 10px var(--body);color:var(--faint);margin-top:1px}
+  .pill3{display:flex;flex-direction:column;gap:9px}
+  .pill3 .p{display:grid;grid-template-columns:96px 1fr 38px;gap:10px;align-items:center}
+  .pill3 .p .l{font:600 11.5px var(--body)} .pill3 .p .l small{display:block;font:500 10px var(--mono);color:var(--faint)}
+  .pill3 .p .t{height:9px;border-radius:5px;background:var(--sunken);overflow:hidden}
+  .pill3 .p .t i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--blue),var(--teal));animation:growX .9s cubic-bezier(.2,.8,.2,1) both;transform-origin:left}
+  .pill3 .p .t i.warn{background:var(--warn)}
+  .pill3 .p .v{font:700 11.5px var(--mono);text-align:right}
+
+  /* section 01 additions */
+  .skus{display:flex;flex-direction:column;gap:9px}
+  .sku{display:grid;grid-template-columns:180px 1fr 96px;gap:11px;align-items:center}
+  .sku .l{font:600 12.5px var(--body)} .sku .l small{display:block;font:500 10.5px var(--body);color:var(--faint);margin-top:1px}
+  .sku .t{height:11px;border-radius:6px;background:var(--sunken);overflow:hidden}
+  .sku .t i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--teal));animation:growX .9s cubic-bezier(.2,.8,.2,1) both;transform-origin:left}
+  .sku .t i.alt{background:var(--line2)}
+  .sku .v{font:600 11.5px var(--mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+  .outlier{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:11px 13px;border-radius:12px;background:var(--warn-soft)}
+  .outlier .ic{flex:none;width:20px;height:20px;border-radius:6px;background:var(--warn);color:#fff;display:grid;place-items:center;font:800 11px var(--display)}
+  .outlier p{margin:0;font:500 12px/1.5 var(--body);color:var(--ink)}
+  .outlier b{font-weight:700}
+  .rhythm{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:820px){.rhythm{grid-template-columns:1fr}}
+  .rhythm .cap{font:600 11px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+
+  /* one-product block */
+  .oneprod{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:18px 20px;border-radius:18px;background:linear-gradient(135deg,var(--blue-soft),var(--teal-soft));border:1px solid var(--line);margin-bottom:16px}
+  @media (max-width:700px){.oneprod{grid-template-columns:1fr;gap:12px}}
+  .oneprod .pct{text-align:center;padding-right:22px;border-right:1px solid var(--line2)}
+  @media (max-width:700px){.oneprod .pct{border-right:0;border-bottom:1px solid var(--line2);padding:0 0 12px;text-align:left}}
+  .oneprod .pct b{display:block;font:800 34px/1 var(--display);letter-spacing:-.03em;background:linear-gradient(92deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .oneprod .pct span{display:block;font:600 10.5px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+  .oneprod .nm{font:800 19px var(--display);letter-spacing:-.02em;margin:0 0 5px}
+  .oneprod .sp{font:500 12.5px var(--mono);color:var(--muted)}
+  .themes{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .th{display:grid;grid-template-columns:150px 1fr 74px;gap:11px;align-items:center}
+  .th .l{font:600 12.5px var(--body)}
+  .th .t{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden}
+  .th .t i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--blue),var(--teal));animation:growX .9s cubic-bezier(.2,.8,.2,1) both;transform-origin:left}
+  .th .v{font:600 11.5px var(--mono);text-align:right;color:var(--muted)}
+  .exc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  @media (max-width:600px){.exc{grid-template-columns:1fr}}
+  .ex{border:1px dashed var(--line2);border-radius:12px;padding:11px 13px;background:var(--sunken)}
+  .ex .h{font:700 12px var(--display);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .ex .h em{font:700 13px var(--mono);font-style:normal;color:var(--warn)}
+  .ex .d{font:500 11px/1.45 var(--body);color:var(--muted);margin-top:4px}
+
+  /* tooltips */
+  .tip{position:relative;cursor:help}
+  .tip::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+    background:var(--ink);color:var(--bg);font:500 11px/1.45 var(--body);padding:8px 10px;border-radius:8px;width:190px;
+    opacity:0;pointer-events:none;transition:opacity .16s;z-index:20;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+  .tip:hover::after,.tip:focus-visible::after{opacity:1}
+  .src{font:500 11px var(--body);color:var(--faint);margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+  .src b{color:var(--muted);font-weight:600}
+  /* lollipop rows */
+  .lolli{display:flex;flex-direction:column;gap:0}
+  /* stacked share bar */
+  .sharebar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:var(--sunken)}
+  .sharebar i{display:block;height:100%;position:relative}
+  .sharelegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font:500 11.5px var(--body);color:var(--muted)}
+  .sharelegend span{display:inline-flex;align-items:center;gap:6px}
+  .sharelegend b{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+  /* metric position strips */
+  .posrow{display:grid;grid-template-columns:132px 1fr 118px;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+  .posrow:last-child{border-bottom:0}
+  @media (max-width:760px){.posrow{grid-template-columns:1fr;gap:6px}}
+  .posrow .lab{font:600 12.5px var(--body)} .posrow .lab small{display:block;font:500 10.5px var(--body);color:var(--faint);margin-top:2px}
+  .trk{position:relative;height:36px}
+  .trk .rail{position:absolute;top:19px;left:0;right:0;height:5px;border-radius:3px;background:var(--sunken)}
+  .trk .iqr{position:absolute;top:15px;height:13px;border-radius:4px;background:var(--line2);opacity:.55}
+  .trk .med{position:absolute;top:12px;width:2px;height:19px;background:var(--faint)}
+  .trk .bench{position:absolute;top:11px;width:2px;height:21px;background:var(--ink);opacity:.65}
+  .trk .benchband{position:absolute;top:15px;height:13px;border-radius:4px;background:var(--line2);opacity:.5}
+  .trk .me{position:absolute;top:11px;width:19px;height:19px;margin-left:-9.5px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));border:3px solid var(--surface);box-shadow:0 2px 7px rgba(26,86,219,.4);z-index:2}
+  .trk .me.bad{background:var(--risk);box-shadow:0 2px 7px rgba(200,53,43,.35)}
+  .trk .me.good{background:var(--good);box-shadow:0 2px 7px rgba(30,122,85,.35)}
+  .trk .meband{position:absolute;top:15px;height:13px;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--teal));z-index:1}
+  .trk .cap{position:absolute;top:-1px;font:500 9.5px var(--mono);color:var(--faint)}
+  .trk .cap.r{right:0}
+  .posrow .val{text-align:right}
+  .posrow .val b{display:block;font:700 13px var(--mono);font-variant-numeric:tabular-nums}
+  .posrow .val .vd{display:inline-block;margin-top:4px;font:700 10px var(--body);padding:2px 7px;border-radius:6px}
+  .vd.up{background:var(--good-soft);color:var(--good)} .vd.dn{background:var(--risk-soft);color:var(--risk)}
+  .vd.eq{background:var(--sunken);color:var(--muted)} .vd.wa{background:var(--warn-soft);color:var(--warn)}
+  .grouphd{display:flex;align-items:baseline;gap:10px;margin:4px 0 2px}
+  .grouphd h4{font:700 12.5px var(--display);margin:0}
+  .grouphd span{font:500 11px var(--body);color:var(--faint)}
+  .keyline{display:flex;gap:18px;flex-wrap:wrap;font:500 10.5px var(--body);color:var(--faint);margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+  .keyline i{display:inline-block;width:16px;height:6px;border-radius:3px;vertical-align:1px;margin-right:5px}
+  /* cert verify table */
+  .certtab{width:100%;border-collapse:collapse}
+  .certtab th{text-align:left;font:600 10px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);padding:0 10px 8px 0;border-bottom:1px solid var(--line)}
+  .certtab td{padding:9px 10px 9px 0;border-bottom:1px solid var(--line);font:500 12px var(--body);vertical-align:top}
+  .certtab tr:last-child td{border-bottom:0}
+  .vfy{display:inline-flex;align-items:center;gap:6px;font:600 11px var(--body);white-space:nowrap}
+  .vfy i{width:8px;height:8px;border-radius:50%;flex:none}
+  .vfy.ok{color:var(--good)} .vfy.ok i{background:var(--good)}
+  .vfy.no{color:var(--warn)} .vfy.no i{background:var(--warn)}
+  .vfy.gap{color:var(--risk)} .vfy.gap i{background:var(--risk)}
+
+  /* global tooltip */
+  .gtip{position:absolute;z-index:200;background:var(--ink);color:var(--bg);font:500 11.5px/1.5 var(--body);
+    padding:9px 12px;border-radius:9px;max-width:252px;pointer-events:none;box-shadow:0 12px 32px rgba(0,0,0,.25)}
+  .gtip b{color:var(--bg);font-weight:700}
+  [data-tip]{cursor:help}
+  svg [data-tip]:hover{filter:brightness(1.08)}
+  /* type scale — keep card text consistent */
+  .card p, .card li, .card td{font-size:12.5px}
+  .card .sub{font-size:12.5px}
+  .certtab td{font-size:12.5px}
+  .ring2 .rl{font-size:12px} .ring2 .rl small{font-size:10.5px}
+  .vfy{font-size:11.5px}
+  .src{font-size:11.5px}
+  .takeaway{font-size:12.5px}
+  .posrow .lab{font-size:12.5px}
+  .brow .l,.sku .l,.th .l{font-size:12.5px}
+  /* cert ring badge */
+  .ring2{position:relative}
+  .ring2 .bdg{position:absolute;top:-2px;right:calc(50% - 44px);width:20px;height:20px;border-radius:50%;
+    display:grid;place-items:center;font:800 11px var(--display);color:#fff;border:2.5px solid var(--surface)}
+  .bdg.ok{background:var(--good)} .bdg.no{background:var(--warn)} .bdg.gap{background:var(--risk)}
+  .certkey{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font:500 11.5px var(--body);color:var(--muted)}
+  .certkey span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  .certkey i{width:16px;height:16px;min-width:16px;flex:0 0 16px;border-radius:50%;display:inline-grid;place-items:center;font:800 9px var(--display);color:#fff}
+
+  .xsec{display:flex;flex-direction:column;gap:16px}
+  .xcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .xcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--blue),var(--teal))}
+  .xcard.warn::before{background:var(--warn)} .xcard.risk::before{background:var(--risk)}
+  .xhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .xhead .xn{font:800 12px var(--mono);color:var(--faint)}
+  .xhead h3{font:800 17px var(--display);letter-spacing:-.015em;margin:0;flex:1 1 320px}
+  .xfrom{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 12px}
+  .xfrom span{font:600 10.5px var(--body);padding:4px 9px;border-radius:999px;background:var(--sunken);color:var(--muted);white-space:nowrap}
+  .xfrom span b{color:var(--ink);font-weight:700}
+  .xcard p{margin:0 0 10px;font:400 13.5px/1.68 var(--body);color:var(--muted);max-width:78ch}
+  .xcard p:last-child{margin-bottom:0}
+  .xcard p b{color:var(--ink);font-weight:650}
+  .xso{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font:600 13px/1.6 var(--body);color:var(--ink);display:flex;gap:10px}
+  .xso i{flex:none;font-style:normal;color:var(--blue);font-weight:800}
+
+  .xtldr{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+  @media (max-width:900px){.xtldr{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.xtldr{grid-template-columns:1fr}}
+  .xt{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow);border-top:3px solid var(--blue)}
+  .xt.warn{border-top-color:var(--warn)} .xt.risk{border-top-color:var(--risk)} .xt.good{border-top-color:var(--good)}
+  .xt .n{font:700 10px var(--mono);color:var(--faint);letter-spacing:.06em}
+  .xt .h{font:700 13.5px/1.35 var(--display);letter-spacing:-.01em;margin:6px 0 6px}
+  .xt .m{font:500 11px/1.4 var(--body);color:var(--muted)}
+  .xt .conf{display:inline-block;margin-top:8px;font:700 9.5px var(--body);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
+  .conf.fact{background:var(--good-soft);color:var(--good)} .conf.inf{background:var(--warn-soft);color:var(--warn)}
+
+  .hyp{display:flex;flex-direction:column;gap:12px}
+  .hy{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .hy:last-child{border-bottom:0}
+  .hy .rk{font:800 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:5px 0;text-align:center;border-radius:8px;height:fit-content}
+  .rk.hi{background:var(--good-soft);color:var(--good)} .rk.md{background:var(--warn-soft);color:var(--warn)} .rk.lo{background:var(--sunken);color:var(--muted)}
+  .hy h5{font:700 13.5px var(--display);margin:0 0 5px}
+  .hy p{margin:0 0 6px;font:400 12.5px/1.6 var(--body);color:var(--muted)}
+  .hy .ev{font:500 11.5px/1.55 var(--body);color:var(--muted);background:var(--sunken);border-radius:8px;padding:8px 11px;margin-top:7px}
+  .hy .ev b{color:var(--ink)}
+  .hy .vq{font:600 12px/1.5 var(--body);color:var(--blue);margin-top:8px;display:flex;gap:8px}
+  .hy .vq i{font-style:normal;flex:none}
+  /* ===== executive summary : relationship map ===== */
+  .mapwrap{position:relative}
+  #relmap{transition:none}
+  #relmap .eg{opacity:0;transform:scale(.5);pointer-events:none;transform-box:view-box;
+    transition:opacity .35s ease,transform .55s cubic-bezier(.22,1.1,.36,1)}
+  #relmap #gBuy{transform-origin:700px 330px}
+  #relmap #gToy{transform-origin:150px 330px}
+  #relmap #gCat{transform-origin:700px 330px}
+  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat{opacity:1;transform:scale(1);pointer-events:auto}
+  #relmap .plus{cursor:pointer}
+  #relmap .plus:focus{outline:none}
+  #relmap .plus:focus-visible circle{stroke-width:3.5}
+  #relmap .plus circle{transition:fill .18s,r .18s}
+  #relmap .plus:hover circle{fill:var(--blue)}
+  #relmap .plus:hover text{fill:#fff}
+  #relmap.expL #pL .sgn-p,#relmap.expR #pR .sgn-p{display:none}
+  #pL .sgn-m,#pR .sgn-m{display:none}
+  #relmap.expL #pL .sgn-m,#relmap.expR #pR .sgn-m{display:block}
+  .maphint{display:flex;gap:16px;flex-wrap:wrap;font:500 11.5px var(--body);color:var(--faint);margin-top:6px}
+  .maphint b{color:var(--muted);font-weight:600}
+
+  /* ===== executive summary : chain flow ===== */
+  .flow{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 4px}
+  .fst{flex:1 1 116px;min-width:112px;border:1px solid var(--line);border-radius:14px;padding:11px 12px 12px;
+    background:var(--surface);box-shadow:var(--shadow);text-align:left;font:inherit;color:inherit;cursor:pointer;
+    position:relative;transition:transform .18s,box-shadow .18s,border-color .18s}
+  .fst:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+  .fst:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .fst .k{font:700 9.5px var(--mono);color:var(--faint);letter-spacing:.09em}
+  .fst .t{font:700 12.5px/1.25 var(--display);margin-top:5px;color:var(--ink)}
+  .fst .c{margin-top:8px;font:700 9.5px var(--body);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:5px;display:inline-block}
+  .fst[data-tone=risk] .c{background:var(--risk-soft);color:var(--risk)}
+  .fst[data-tone=warn] .c{background:var(--warn-soft);color:var(--warn)}
+  .fst[data-tone=good] .c{background:var(--good-soft);color:var(--good)}
+  .fst[data-tone=none]{background:var(--sunken);box-shadow:none;cursor:default;border-style:dashed}
+  .fst[data-tone=none]:hover{transform:none;box-shadow:none}
+  .fst[data-tone=none] .t{color:var(--faint)}
+  .fst[data-tone=none] .c{background:transparent;color:var(--faint);padding:2px 0}
+  .fst::after{content:"\2192";position:absolute;right:-10px;top:calc(50% - 9px);color:var(--line2);font:700 13px var(--body);pointer-events:none}
+  .fst:last-child::after{content:none}
+  .flow{overflow:visible}
+  .fst.on{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-soft),var(--shadow)}
+  .fst.on .t{color:var(--blue)}
+  .spanel{display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+  .spanel.on{display:block;animation:fadeUp .32s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .spanel h4{font:800 16px var(--display);letter-spacing:-.015em;margin:0 0 5px}
+  .spanel .lead{margin:0 0 13px;font:500 13px/1.6 var(--body);color:var(--muted);max-width:88ch}
+  .spanel .lead b{color:var(--ink);font-weight:650}
+  .ins{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:900px){.ins{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.ins{grid-template-columns:1fr}}
+  .ins .i{border-radius:13px;padding:12px 14px;background:var(--sunken);font:500 12px/1.55 var(--body);color:var(--muted)}
+  .ins .i .m{display:block;font:800 17px/1.1 var(--display);color:var(--ink);margin-bottom:5px;letter-spacing:-.02em}
+  .ins .i.bad .m{color:var(--risk)} .ins .i.ok .m{color:var(--good)} .ins .i.wa .m{color:var(--warn)}
+  .jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px;align-items:center}
+  .jump span{font:600 10.5px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .jump a{font:600 11.5px var(--body);padding:6px 13px;border-radius:999px;background:var(--blue-soft);color:var(--blue);text-decoration:none;transition:.16s}
+  .jump a:hover{background:var(--blue);color:#fff}
+  section.flash>.sechead>h2{animation:hl 1.8s ease}
+  @keyframes hl{0%,100%{color:var(--ink)}25%,60%{color:var(--blue)}}
+  /* focus mode: a chain stage is selected */
+  body.focus section.dim>*:not(.sechead){display:none}
+  body.focus section.dim{margin-bottom:18px;cursor:pointer}
+  body.focus section.dim .sechead{opacity:.45}
+  body.focus section.dim .sechead::after{content:"not part of this stage · click to show";font:600 11px var(--body);color:var(--faint);margin-left:auto;white-space:nowrap}
+  body.focus section.lit .sechead h2{color:var(--blue)}
+  .focusbar{display:none;align-items:center;gap:12px;margin-top:14px;padding:10px 14px;border-radius:12px;background:var(--blue-soft);font:600 12px var(--body);color:var(--blue)}
+  body.focus .focusbar{display:flex}
+  .focusbar button{margin-left:auto;font:700 11.5px var(--body);color:var(--blue);background:var(--surface);border:1px solid var(--blue);border-radius:999px;padding:5px 12px;cursor:pointer}
+</style>
+
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow"> Supply chain intelligence · one pair</div>
+      <h1><span class="grad">Midasia</span><span class="x">×</span>Kontoor</h1>
+      <p class="lede">A Bangladesh denim factory and a Wrangler-owning S&amp;P BB retailer. Read the pair six ways: what Midasia makes, who it sells it to, how Kontoor's supply chain is wired, the compliance terrain, whether the chain holds, and what Air8's financing exposure actually looks like.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v g">$5.17</div><div class="l">per unit — blended ASP across 370 invoices, Sep 2025–Jan 2026</div></div>
+      <div class="kpi"><div class="v">0.50%</div><div class="l">Midasia's share of Kontoor's $3.15bn supply base — rank 3 of 5 named buyers</div></div>
+      <div class="kpi"><div class="v" style="color:var(--warn)">+15d</div><div class="l">Kontoor pays 15 days late on a 90-day tenor — structurally slow, not distressed</div></div>
+      <div class="kpi"><div class="v">1.4%</div><div class="l">dilution — vendor-borne airfreight and adjustment claims, structural not episodic</div></div>
+    </div>
+  </div>
+
+  <div style="margin:-24px 0 42px;padding:13px 18px;border-radius:14px;border:1px dashed var(--line2);background:var(--sunken);font:500 12.5px/1.6 var(--body);color:var(--muted)">
+    <b style="color:var(--ink)">How to read this page.</b> Everything below is what the invoices, public records and Air8 KB actually show. <b style="color:var(--ink)">Where something is marked absent — a certificate, a shipment, a line item — it means we have not seen it in our record, not that it does not exist.</b> Midasia holds more certifications and ships more lines than appear in our file; each such item is written as a question to ask, not as a finding against Midasia.
+  </div>
+
+  <!-- 00 EXECUTIVE SUMMARY -->
+  <section id="summary" data-stages="p1 p3 p4 p5 p8">
+    <div class="sechead"><span class="num">00</span><h2>Executive summary</h2></div>
+    <p class="thesis"><b>A mid-sized Bangladesh denim factory with genuine multi-tier manufacturing capability — cargo to WR pants in one facility — selling into an S&amp;P BB buyer whose US wholesale is under pressure.</b> The relationship has structural defensibility: three product tiers, wash capability, UFLPA qualification barrier. The risks are real: UFLPA detention could freeze $15M+ at port for 60–90 days, and Kontoor's flat Q2 wholesale against growing retail sell-through means the factory buffers inventory volatility on behalf of the buyer.</p>
+
+    <div class="card">
+      <h3>Who sits either side of this line</h3>
+      <p class="sub">Click the <b>+</b> on Midasia or on Wrangler to expand · hover any circle for details</p>
+      <div class="mapwrap">
+      <svg id="relmap" viewBox="0 30 1080 620" role="img" aria-label="Relationship map: Bangladesh denim suppliers left, Wrangler / HS 6203 center, Midasia's buyers right">
+        <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+        <g id="gToy" class="eg">
+          <text x="0" y="52" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">BD DENIM SUPPLIERS — who else supplies Wrangler / HS 6203</text>
+          <path class="anim" d="M196 90 C270 90,330 300,420 300" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="178" cy="90" r="22" fill="var(--blue)" opacity=".9" data-tip="Ha-Meem Group — largest BD denim exporter. Gap, PVH, Tommy Hilfiger primary. ~60M units/yr capacity. UFLPA-compliant indigo chain."/>
+          <text x="149" y="89" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Ha-Meem</text>
+          <text x="149" y="102" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">BD · largest denim</text>
+          <path class="anim" d="M194 155 C270 155,330 300,420 300" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="178" cy="155" r="19" fill="var(--blue)" opacity=".85" data-tip="DBL Group — H&amp;M primary buyer. ~45M units. Vertical from yarn. Denim + woven."/>
+          <text x="151" y="154" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">DBL Group</text>
+          <text x="151" y="167" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">BD · H&amp;M primary</text>
+          <path class="anim" d="M193 215 C270 215,330 300,420 300" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="178" cy="215" r="17" fill="var(--line2)" data-tip="Noman Group — ~40M units/yr. Multi-buyer: JC Penney, Gap. Woven + denim."/>
+          <text x="152" y="214" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Noman</text>
+          <text x="152" y="227" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">BD · multi-buyer</text>
+          <path class="anim" d="M191 270 C270 270,330 300,420 300" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="178" cy="270" r="16" fill="var(--line2)" data-tip="Epic Group — ~35M units. New CHNS facility. PVH + Gap buyers."/>
+          <text x="152" y="269" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Epic</text>
+          <text x="152" y="282" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">BD · CHNS facility</text>
+          <path class="anim" d="M189 420 C270 420,330 300,420 300" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="178" cy="420" r="14" fill="var(--risk)" data-tip="Beximco — UFLPA elevated-risk. Any shared indigo spinner with Beximco creates detention exposure for Midasia."/>
+          <text x="153" y="419" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Beximco !</text>
+          <text x="153" y="432" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">BD · UFLPA elevated</text>
+          <path class="anim" d="M188 480 C270 480,330 300,420 300" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="178" cy="480" r="13" fill="none" stroke="var(--line2)" stroke-width="1.6" stroke-dasharray="3,3" data-tip="Other BD denim factories — 30+ factories in Kontoor's 330-factory network."/>
+          <text x="153" y="479" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">+ others</text>
+          <text x="153" y="492" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">30+ factories · 28 countries</text>
+        </g>
+        <g id="gCat" class="eg">
+          <text x="420" y="270" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--faint)">Kontoor = Wrangler + Helly Hansen</text>
+          <text x="420" y="330" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--faint)">BB stable · $3.15bn FY2025</text>
+        </g>
+        <g id="gBuy" class="eg">
+          <text x="1024" y="300" text-anchor="end" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">MIDIASIA'S BUYERS — who else buys the same factory's output</text>
+          <path class="anim" d="M460 300 C520 300,580 90,668 90" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="690" cy="90" r="22" fill="var(--blue)" data-tip="H&amp;M — 22% of Midasia's stated book, ~$620K. EU buyer. Faces 2029 EU EBA cliff on BD textile duty."/>
+          <text x="723" y="89" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">H&amp;M</text>
+          <text x="723" y="102" font-family="var(--mono)" font-size="9" fill="var(--faint)">22% · EU · 2029 tariff !</text>
+          <path class="anim" d="M460 300 C520 300,580 150,671 150" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="690" cy="150" r="21" fill="var(--blue)" data-tip="Gap — 22% of Midasia's book, ~$620K. US buyer. Supply chain under turnaround."/>
+          <text x="720" y="149" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Gap</text>
+          <text x="720" y="162" font-family="var(--mono)" font-size="9" fill="var(--faint)">22% · US · turnaround</text>
+          <path class="anim" d="M460 300 C520 300,580 210,674 210" fill="none" stroke="url(#gmap)" stroke-width="2.2"/>
+          <circle class="anim" cx="690" cy="210" r="22" fill="var(--ink)" data-tip="Kontoor / Wrangler — 20% of Midasia's book, ~$620K. S&amp;P BB Stable. Walmart 30%+. THIS BUYER. 370 invoices, $15.73M."/>
+          <text x="690" y="215" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="11" fill="var(--bg)">Kontoor</text>
+          <text x="690" y="228" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--faint)">20% · THIS BUYER</text>
+          <path class="anim" d="M460 300 C520 300,580 270,672 270" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="690" cy="270" r="17" fill="var(--line2)" data-tip="PVH Corp — 16% of Midasia's book, ~$450K. Tommy Hilfiger + Calvin Klein."/>
+          <text x="717" y="269" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">PVH</text>
+          <text x="717" y="282" font-family="var(--mono)" font-size="9" fill="var(--faint)">16% · US · TK + CK</text>
+          <path class="anim" d="M460 300 C520 300,580 330,675 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="690" cy="330" r="16" fill="var(--line2)" data-tip="Next — 20% of Midasia's book, ~$560K. UK retailer."/>
+          <text x="716" y="329" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Next</text>
+          <text x="716" y="342" font-family="var(--mono)" font-size="9" fill="var(--faint)">20% · UK</text>
+          <path class="anim" d="M460 300 C520 300,580 400,673 400" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="690" cy="400" r="14" fill="none" stroke="var(--line2)" stroke-width="1.6" stroke-dasharray="3,3" data-tip="Remaining small-volume buyers. EU + US mix. None above 5%."/>
+          <text x="715" y="399" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">+ others</text>
+          <text x="715" y="412" font-family="var(--mono)" font-size="9" fill="var(--faint)">US 58% / EU 42%</text>
+        </g>
+        <line x1="206" y1="300" x2="390" y2="300" stroke="url(#gmap)" stroke-width="3.5"/>
+        <line x1="450" y1="300" x2="662" y2="300" stroke="url(#gmap)" stroke-width="3.5"/>
+        <circle cx="178" cy="300" r="32" fill="url(#gmap)" data-tip="Midasia Fashions Ltd — Dhaka, Bangladesh. Denim + woven garment factory. FOB full-package. COMBO-002. ~$3.1M Air8 book. Buyer mix: H&amp;M 22%, Gap 22%, Kontoor 20%, PVH 16%, Next 20%."/>
+        <text x="178" y="297" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="10.5" fill="#fff">Midasia</text>
+        <text x="178" y="309" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="10.5" fill="#fff">Fashions</text>
+        <text x="178" y="260" text-anchor="middle" font-family="var(--body)" font-weight="600" font-size="10" fill="var(--faint)">SUPPLIER</text>
+        <circle cx="420" cy="300" r="20" fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5" data-tip="Wrangler / HS 6203 — Men's woven trousers. 87% of all units Kontoor imports."/>
+        <text x="420" y="296" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="9.5" fill="var(--teal)">WRANGLER</text>
+        <text x="420" y="308" text-anchor="middle" font-family="var(--body)" font-size="8.5" fill="var(--faint)">HS 6203 · 87% of units</text>
+        <circle cx="690" cy="210" r="32" fill="var(--ink)" data-tip="Kontoor Brands — Wrangler + Helly Hansen. S&amp;P BB Stable. FY2025 $3.15bn. 85% wholesale, 72% US. Walmart 30%+. Bangladesh 57% of sourcing."/>
+        <text x="690" y="214" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="11" fill="var(--bg)">Kontoor</text>
+        <text x="690" y="227" text-anchor="middle" font-family="var(--body)" font-size="9" fill="var(--faint)">BB · Wrangler + HH</text>
+        <text x="690" y="172" text-anchor="middle" font-family="var(--body)" font-weight="600" font-size="10" fill="var(--faint)">BUYER</text>
+        <g id="pL" class="plus" role="button" tabindex="0" aria-label="Expand BD denim supplier field">
+          <circle cx="178" cy="348" r="14" fill="var(--surface)" stroke="var(--blue)" stroke-width="2"/>
+          <text class="sgn-p" x="178" y="354" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
+          <text class="sgn-m" x="178" y="354" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">-</text>
+        </g>
+        <g id="pR" class="plus" role="button" tabindex="0" aria-label="Expand Midasia's other buyers">
+          <circle cx="690" cy="258" r="14" fill="var(--surface)" stroke="var(--blue)" stroke-width="2"/>
+          <text class="sgn-p" x="690" y="264" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
+          <text class="sgn-m" x="690" y="264" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">-</text>
+        </g>
+      </svg>
+      </div>
+      <div class="maphint"><span><b>+ under Midasia</b> opens the BD denim peer field — five named competitors, one UFLPA-flagged, all in Kontoor's supplier network</span><span><b>+ under Kontoor</b> opens Midasia's other buyers — everyone else buying the same factory output</span></div>
+      <div class="src"><b>Supplier data:</b> Air8 KB denim chain intelligence + invoice records. <b>Buyer data:</b> Kontoor 10-K FY2025, Kontoor Buyer Market Supply Read, Air8 customs data. Kontoor's 330 factories across 28 countries not individually named in our record.</div>
+      <div class="takeaway"><span class="ic">-&gt;</span><span><b>Midasia x Kontoor is a 0.50% share relationship — neither side is essential to the other.</b> What makes it worth financing is the multi-tier capability (cargo to WR in one facility), UFLPA qualification barrier, and Kontoor's US procurement structurally BD-dominant (57%). The risk: UFLPA detention freezes $15M+ and Kontoor's flat wholesale means the factory buffers inventory swings.</span></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h3>Key findings by chain stage</h3>
+      <p class="sub">Click a stage to read what we found there · dashed stages are ones our data does not reach</p>
+      <div class="flow">
+        <button class="fst" data-tone="warn" data-panel="p1"><div class="k">01</div><div class="t">Demand / PO</div><span class="c">3 findings</span></button>
+        <button class="fst" data-tone="risk" data-panel="p2"><div class="k">02</div><div class="t">Raw materials</div><span class="c">2 findings</span></button>
+        <button class="fst" data-tone="good" data-panel="p3"><div class="k">03</div><div class="t">Production</div><span class="c">3 findings</span></button>
+        <button class="fst" data-tone="risk" data-panel="p4"><div class="k">04</div><div class="t">Compliance</div><span class="c">3 findings</span></button>
+        <button class="fst" data-tone="warn" data-panel="p5"><div class="k">05</div><div class="t">Shipment</div><span class="c">2 findings</span></button>
+        <button class="fst" data-tone="none"><div class="k">06</div><div class="t">Delivery</div><span class="c">no data</span></button>
+        <button class="fst" data-tone="warn" data-panel="p7"><div class="k">07</div><div class="t">Acceptance</div><span class="c">2 findings</span></button>
+        <button class="fst" data-tone="warn" data-panel="p8"><div class="k">08</div><div class="t">Payment</div><span class="c">3 findings</span></button>
+      </div>
+      <div class="focusbar"><span id="focustxt"></span><button type="button" id="focusoff">Show all sections</button></div>
+
+      <div class="spanel" id="p1">
+        <h4>Demand and purchase order — multi-tier ramp into a buyer Midasia barely moves the needle on</h4>
+        <p class="lead"><b>370 invoices, $15.73M, 3.04M units across five months.</b> This is the Kontoor line's first meaningful ramp in our data — and it spans three product tiers, not one. The order is growing fast; Midasia is still under 0.50% of Kontoor's supply base.</p>
+        <div class="ins">
+          <div class="i"><span class="m">0.50% / 20%</span><b>Midasia is 0.50% of Kontoor's $3.15bn supply base; Kontoor is 20% of Midasia's book.</b> Kontoor can replace Midasia inside one season. Midasia can survive without Kontoor but cannot replace it.</div>
+          <div class="i wa"><span class="m">3 tiers, 1 factory</span><b>Cargo $4.85 to Nylon WR $7.72 — three distinct price tiers in one facility.</b> This is not a commodity cut-and-sew factory. The wash and finishing capability underneath is the moat.</div>
+          <div class="i"><span class="m">+$3.2M ramp</span><b>Sep $1.41M to Dec $4.64M in four months.</b> Seasonal ramp, not a new permanent baseline. Jan pulls back to $3.0M. The question is whether 2026 ramps to 2025 levels or above.</div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#product">01 Product</a><a href="#buyers">06 Buyers</a></div>
+      </div>
+
+      <div class="spanel" id="p2">
+        <h4>Raw materials — buyer-nominated fabric means Midasia cannot benefit from the cotton softening cycle</h4>
+        <p class="lead">Cotlook A is down 8% year-on-year. For most Bangladesh factories that is margin relief. <b>For Midasia it is irrelevant — 90% of fabric is buyer-nominated, meaning the price is fixed before Midasia sees it.</b> The 56% minimum wage hike, however, is Midasia's to absorb.</p>
+        <div class="ins">
+          <div class="i bad"><span class="m">90% buyer-nominated</span><b>Cotton down 8%, saving ~$0.04–0.08/unit at current volumes — but that saving flows to Kontoor, not Midasia.</b> The CMT margin compression from the 56% BD minimum wage hike is invisible in ASP data.</div>
+          <div class="i wa"><span class="m">90–180d cotton lag</span>Cotton to BD factory lag is <b>90–180 days via Indian spinning.</b> Even if Midasia were buying forward, the price it locks in today reflects inputs from Q3 2026 cotton fields — not the current softening spot.</div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#material">02 Raw material</a></div>
+      </div>
+
+      <div class="spanel" id="p3">
+        <h4>Production — wash capability is the moat; post-wash QC is the highest-risk gate</h4>
+        <p class="lead"><b>Multi-tier production in one facility is genuinely unusual for BD at Midasia's $3M revenue scale.</b> The Nylon WR $7.72 tier requires laser finishing, ZDHC chemical controls, and a separate wash line.</p>
+        <div class="ins">
+          <div class="i ok"><span class="m">3 tiers placed</span><b>Cargo $4.85, stretch denim $4.88–5.87, Nylon WR $7.72.</b> Only Ha-Meem and DBL at scale offer comparable range. Most BD factories operate one tier.</div>
+          <div class="i wa"><span class="m">Post-wash highest scrap risk</span><b>Gate 4 failure = re-wash at 5–15% of FOB.</b> For $4.85 cargo pants this is $0.24–0.73/unit. On 1.37M cargo units, a 3% re-wash rate = $10K–30K exposure per season.</div>
+          <div class="i ok"><span class="m">Track B external laundry</span><b>Default for BD denim at Midasia's wash complexity.</b> ZDHC cert from laundry pre-validated before Gate 4. Air8 must perfect lien at external laundry or drawdown is unsecured during transit + wash.</div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#peers">03 Production &amp; field</a><a href="#compliance">04 Compliance</a></div>
+      </div>
+
+      <div class="spanel" id="p4">
+        <h4>Compliance — UFLPA is the headline; five regimes apply simultaneously</h4>
+        <p class="lead"><b>UFLPA is not hypothetical — it is an enforcement mechanism that can freeze $15M+ of shipments at port for 60–90 days.</b> Five compliance regimes apply: UFLPA, REACH, ZDHC MRSL, AZO dyes, Prop 65. The first is the one that matters for Air8's financing exposure.</p>
+        <div class="ins">
+          <div class="i bad"><span class="m">UFLPA: HIGH risk</span><b>Indigo-dyed yarn passes 4–5 upstream tiers.</b> Gin/farm traceability mandatory for WRO detention to be rebutted. A single CBP detention on a $500K shipment = 60–90 days frozen cash at 8–12% annualised cost.</div>
+          <div class="i wa"><span class="m">5 regimes, 1 optional</span><b>UFLPA (US, mandatory) + REACH (EU, mandatory) + ZDHC MRSL (laundry, mandatory) + AZO (finishing, mandatory) + Prop 65 (treatments, mandatory).</b> Only laser finishing is a compliance advantage.</div>
+          <div class="i wa"><span class="m">Beximco in same chain risk</span><b>Beximco is UFLPA elevated-risk listed.</b> Any shared indigo supplier between Beximco and Midasia creates chain-of-custody risk.</div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#compliance">04 Compliance</a><a href="#performance">05 Performance</a></div>
+      </div>
+
+      <div class="spanel" id="p5">
+        <h4>Shipment — Chittagong to US East Coast in 23–27 days; Red Sea adds 10–14 days on current routing</h4>
+        <p class="lead"><b>Lane is viable but the rerouting risk is live.</b> Chittagong–East Coast US is a well-established lane. Red Sea diversion adds 10–14 days to some routings.</p>
+        <div class="ins">
+          <div class="i wa"><span class="m">23–27d direct, +10–14d Red Sea</span><b>Standard: Chittagong to New York/New Jersey in 23–27 days.</b> Red Sea rerouting adds 10–14 days and $1,200–2,000/40ft. On FOB terms this is Kontoor's issue, not Midasia's P&amp;L.</div>
+          <div class="i wa"><span class="m">Title ambiguity at detention</span><b>If UFLPA detention occurs post-shipment but pre-payment, Air8's outstanding drawdown is in a grey zone on title.</b> Pre-clearance documentation must be locked before Gate 5. LC at sight terms help, but detention after LC acceptance still creates 60–90 day cash freeze.</div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#performance">05 Performance</a></div>
+      </div>
+
+      <div class="spanel" id="p7">
+        <h4>Acceptance — 1.4% dilution is structural, not a one-off; Monday invoice batching signals documentation quality</h4>
+        <p class="lead"><b>The 1.4% dilution figure is consistent across five months and appears in the Kontoor credit file as named supplier Meghna's airfreight experience.</b> For Midasia specifically, the Monday batching pattern suggests document preparation process, not a quality or payment issue.</p>
+        <div class="ins">
+          <div class="i wa"><span class="m">1.4% dilution — structural</span><b>Vendor-borne airfreight and adjustment claims.</b> Meghna precedent suggests this is Kontoor systemic, not Midasia-specific. Still, 1.4% on $15.73M = ~$220K absorbed per season.</div>
+          <div class="i"><span class="m">Monday invoice clustering</span><b>Invoices concentrate on Mondays across 57 unique billing dates.</b> Monday concentration = internal PO-to-invoice process, not a buyer-side payment issue.</div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#performance">05 Performance</a></div>
+      </div>
+
+      <div class="spanel" id="p8">
+        <h4>Payment — 90-day tenor with 15-day systematic delay; structurally slow, not distressed</h4>
+        <p class="lead"><b>Kontoor pays 15 days late on a 90-day LC-at-sight or net-60 OA tenor.</b> This is consistent with Kontoor's published 15-day payment delay in the Air8 credit memo. Consistent across all five months — systematic, not episodic. Zero claims, zero disputes in our record.</p>
+        <div class="ins">
+          <div class="i wa"><span class="m">90d tenor + 15d delay</span><b>Net 105-day effective cycle.</b> At $15.73M/season this represents ~$4.3M permanently tied up in receivables. Significant working capital pressure — hence the case for LC financing.</div>
+          <div class="i ok"><span class="m">Zero claims, zero disputes</span><b>370 invoices, zero deduction claims, zero disputed amounts.</b> Clean acceptance history. The dilution is structural (airfreight) not quality-related.</div>
+          <div class="i wa"><span class="m">Kontoor sells $1.4bn receivables/yr</b>Kontoor runs an on-balance-sheet receivables programme: sells $1.4bn/year at ~$12M fee. <b>Payment is not constrained by Kontoor's cash — it is a supplier terms decision.</b></div>
+        </div>
+        <div class="jump"><span>Sections</span><a href="#performance">05 Performance</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 PRODUCT -->
+  <section id="product" data-stages="p1">
+    <div class="sechead"><span class="num">01</span><h2>What Midasia makes for Kontoor</h2></div>
+    <p class="thesis"><b>Three tiers across 370 invoices: a commodity cargo base, a stretch-denim core, and a premium Nylon WR line at $7.72.</b> The tier breadth is the structural differentiator. Most BD factories at Midasia's revenue scale play one tier. Midasia plays three — and the wash capability underneath is harder to replicate than the cut-and-sew.</p>
+    <div class="card" style="margin-bottom:18px">
+      <h3>Invoice summary — Sep 2025 to Jan 2026</h3>
+      <p class="sub">370 invoices · $15,729,316 total · 3,044,611 units · blended ASP $5.17/unit</p>
+      <div class="table-wrap">
+        <table class="board">
+          <thead><tr><th>Product line</th><th>Value</th><th>Share</th><th>Units</th><th>ASP</th><th>Tier</th></tr></thead>
+          <tbody>
+            <tr><td>Cargo Pants (VFO / Wrangler)</td><td class="m">$6,654,094</td><td class="m">42.3%</td><td class="m">1,370,632</td><td class="m">$4.85</td><td><span class="chip warn">Base tier</span></td></tr>
+            <tr><td>Mens Woven Shorts</td><td class="m">$3,976,560</td><td class="m">25.3%</td><td class="m">814,493</td><td class="m">$4.88</td><td><span class="chip warn">Base tier</span></td></tr>
+            <tr><td>Nylon WR Pants (Wrangler All-Terrain)</td><td class="m">$1,948,695</td><td class="m">12.4%</td><td class="m">252,560</td><td class="m">$7.72</td><td><span class="chip blue">Premium tier</span></td></tr>
+            <tr><td>Mens Woven Pants</td><td class="m">$1,024,779</td><td class="m">6.5%</td><td class="m">186,544</td><td class="m">$5.49</td><td><span class="chip">Mid tier</span></td></tr>
+            <tr><td>Womens Woven Pants</td><td class="m">$783,939</td><td class="m">5.0%</td><td class="m">124,958</td><td class="m">$6.27</td><td><span class="chip">Mid tier</span></td></tr>
+            <tr><td>Girls Woven Overalls</td><td class="m">$638,090</td><td class="m">4.1%</td><td class="m">108,714</td><td class="m">$5.87</td><td><span class="chip">Mid tier</span></td></tr>
+            <tr><td>Womens Woven Shorts</td><td class="m">$530,330</td><td class="m">3.4%</td><td class="m">118,990</td><td class="m">$4.45</td><td><span class="chip warn">Base tier</span></td></tr>
+            <tr><td>Womens Woven Skirt</td><td class="m">$113,261</td><td class="m">0.7%</td><td class="m">18,970</td><td class="m">$5.95</td><td><span class="chip">Mid tier</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="src"><b>Source:</b> Air8 invoice records, Midasia Fashions Ltd to Kontoor Asia Trading Ltd + C0002138, Sep 2025–Jan 2026, 370 invoices.</div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>ASP positioning — where $5.17 sits</h3>
+        <p class="sub">Midasia's blended ASP vs BD denim FOB market band, by tier</p>
+        <div class="skus">
+          <div class="sku"><div class="l">Nylon WR Pants <small>$7.72 — premium</small></div><div class="t"><i style="width:88%;background:linear-gradient(90deg,var(--blue),var(--teal))"></i></div><div class="v">$7.72</div></div>
+          <div class="sku"><div class="l">Womens Pants <small>$6.27 — mid</small></div><div class="t"><i style="width:72%"></i></div><div class="v">$6.27</div></div>
+          <div class="sku"><div class="l">Mens Pants <small>$5.49 — mid</small></div><div class="t"><i style="width:63%"></i></div><div class="v">$5.49</div></div>
+          <div class="sku"><div class="l" style="color:var(--blue);font-weight:700">Midasia blended <small>$5.17 — 45th pctile</small></div><div class="t"><i style="width:59%;background:linear-gradient(90deg,var(--blue),var(--teal))"></i></div><div class="v" style="color:var(--blue)">$5.17</div></div>
+          <div class="sku"><div class="l">Girls Overalls <small>$5.87</small></div><div class="t"><i style="width:67%"></i></div><div class="v">$5.87</div></div>
+          <div class="sku"><div class="l">Mens Shorts <small>$4.88 — base</small></div><div class="t"><i style="width:56%"></i></div><div class="v">$4.88</div></div>
+          <div class="sku"><div class="l">Cargo Pants <small>$4.85 — base</small></div><div class="t"><i style="width:55%"></i></div><div class="v">$4.85</div></div>
+          <div class="sku"><div class="l">Womens Shorts <small>$4.45 — base</small></div><div class="t"><i style="width:51%"></i></div><div class="v">$4.45</div></div>
+        </div>
+        <div class="outlier">
+          <div class="ic">!</div>
+          <p><b>Note on Mens Shorts $71.40 outlier.</b> One invoice at $71.40 ASP vs a $4.44–8.29 range on 81 Mens Shorts invoices. Likely a different HS code or unit-of-measure discrepancy. Treat as anomaly, not a pricing tier.</p>
+        </div>
+        <div class="src"><b>Market band reference:</b> BD denim FOB — basic $12–18, fashion/stretch $18–28, woven tops $6–11 (per Air8 KB). ASP is per-unit garment cost including materials.</div>
+      </div>
+      <div class="card">
+        <h3>Monthly volume ramp</h3>
+        <p class="sub">Sep 2025 – Jan 2026 — value by month</p>
+        <div class="bars">
+          <div class="brow"><div class="l">Sep 2025 <small>Season start</small></div><div class="tr"><i style="width:30%"></i></div><div class="v">$1.41M</div></div>
+          <div class="brow"><div class="l">Oct 2025 <small>Ramp up</small></div><div class="tr"><i style="width:65%"></i></div><div class="v">$3.01M</div></div>
+          <div class="brow"><div class="l">Nov 2025 <small>Peak month</small></div><div class="tr"><i style="width:79%"></i></div><div class="v">$3.67M</div></div>
+          <div class="brow"><div class="l">Dec 2025 <small>Maximum</small></div><div class="tr"><i style="width:100%;background:linear-gradient(90deg,var(--blue),var(--teal))"></i></div><div class="v">$4.64M</div></div>
+          <div class="brow"><div class="l">Jan 2026 <small>Deceleration</small></div><div class="tr"><i style="width:65%"></i></div><div class="v">$3.00M</div></div>
+        </div>
+        <div class="gapcard" style="margin-top:16px">
+          <div class="tag">Ask Midasia</div>
+          <div class="gaps">
+            <div class="gap"><div class="q">Q1</div>Does the Jan pullback reflect a full-season contract end, or an early inventory rebalance by Kontoor?</div>
+            <div class="gap"><div class="q">Q2</div>Is the 2026 season targeting a higher peak than Dec 2025, and what is the ASP mix shift?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 RAW MATERIAL -->
+  <section id="material" data-stages="p2">
+    <div class="sechead"><span class="num">02</span><h2>Raw material — the invisible margin</h2></div>
+    <p class="thesis"><b>Cotton is down 8%, but Midasia cannot benefit: 90% of fabric is buyer-nominated.</b> The price relief flows to Kontoor's margin, not Midasia's. The cost pressure that Midasia cannot pass is the 56% minimum wage increase — and that does not show up in ASP data.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>Cotton price — softening but irrelevant to Midasia</h3>
+        <p class="sub">Cotlook A index, US cents/lb — Jul 2025 vs Jul 2026</p>
+        <div class="lanes">
+          <div class="lane dn"><div class="hd">Cotlook A <span>-8%</span></div><div class="met"><div class="n">Jul 2025<small>baseline</small></div><div class="v" style="color:var(--risk)">91c/lb</div></div><div class="met"><div class="n">Jul 2026<small>current</small></div><div class="v">84c/lb</div></div><div class="met"><div class="n">H2 2026 outlook<small>gradual softening</small></div><div class="v" style="color:var(--good)">down bias</div></div></div>
+          <div class="lane"><div class="hd">Fabric cost saving <span>buyer-nominated</span></div><div class="met"><div class="n">Cot savings/unit<small>if Midasia bought</small></div><div class="v">$0.04-0.08</div></div><div class="met"><div class="n">Who captures it<small>90% buyer-nominated</small></div><div class="v" style="color:var(--risk)">Kontoor</div></div></div>
+          <div class="lane dn"><div class="hd">Wage hike impact <span>Midasia absorbs</span></div><div class="met"><div class="n">BD min wage increase<small>post-2024</small></div><div class="v" style="color:var(--risk)">+56%</div></div><div class="met"><div class="n">CMT margin compression<small>on base tier cargo</small></div><div class="v" style="color:var(--risk)">-2 to 4%</div></div></div>
+        </div>
+        <div class="src"><b>Source:</b> Cotlook A, Jul 2025-2026. BD minimum wage: Bangladesh Gazette. CMT margin estimate: Air8 KB.</div>
+      </div>
+      <div class="card">
+        <h3>Fabric sourcing — structural dependency on India</h3>
+        <p class="sub">BD denim factories source ~60% of yarn from India, 90–180-day lag from cotton price to factory gate</p>
+        <div class="arch ul" style="margin-top:8px">
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+            <li><div class="k">FIELD</div><div><b>Cotton fields</b> (India, US, Brazil) to <b>Indian spinning</b> (Gujarat) to <b>BD fabric mills</b> to <b>Midasia cutting</b></div></li>
+            <li><div class="k">90-180d</div><div><b>Cotton-to-fabric lag.</b> Yarn procurement 45-90d ahead of fabric. Fabric 45-90d ahead of cutting. Today's cutting reflects Q2 2026 cotton.</div></li>
+            <li><div class="k">90% BN</div><div><b>Buyer-nominated.</b> Kontoor nominates the mill. Midasia cannot switch to capture better cotton pricing. The only variable Midasia controls is CMT — under wage pressure.</div></li>
+            <li><div class="k">UFLPA</div><div><b>Indigo yarn chain: 4–5 upstream tiers.</b> Gin/farm traceability must be documented for WRO rebuttal. Any shared spinner with Beximco = chain risk. Gate 1 documentation before any Air8 drawdown.</div></li>
+          </ul>
+        </div>
+        <div class="gapcard" style="margin-top:14px">
+          <div class="tag">Ask Midasia</div>
+          <div class="gaps">
+            <div class="gap"><div class="q">Q1</div>Who nominates the indigo yarn supplier? Is it Kontoor's procurement or Midasia's own sourcing?</div>
+            <div class="gap"><div class="q">Q2</div>Has Kontoor's nominated mill list changed since the UFLPA elevated-risk expansion in 2025?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 PEERS -->
+  <section id="peers" data-stages="p3">
+    <div class="sechead"><span class="num">03</span><h2>Competitive field — Bangladesh denim and Kontoor's sourcing map</h2></div>
+    <p class="thesis"><b>Bangladesh is Kontoor's single largest sourcing country at 57% — structural dominance built on duty preference and scale.</b> Midasia is not Kontoor's largest BD supplier, but its tier breadth is a genuine differentiator in a field of single-tier factories.</p>
+    <div class="grid2" style="margin-bottom:18px">
+      <div class="card">
+        <h3>Bangladesh denim — global position</h3>
+        <p class="sub">Global BD denim FOB market share by country of origin</p>
+        <div class="bars">
+          <div class="brow"><div class="l">Bangladesh <small>34% global</small></div><div class="tr"><i style="width:100%"></i></div><div class="v">34%</div></div>
+          <div class="brow"><div class="l">China <small>28% — +25% Section 301</small></div><div class="tr"><i style="width:82%;background:var(--risk)"></i></div><div class="v" style="color:var(--risk)">28%</div></div>
+          <div class="brow"><div class="l">Vietnam <small>14%</small></div><div class="tr"><i style="width:41%"></i></div><div class="v">14%</div></div>
+          <div class="brow"><div class="l">Pakistan <small>12%</small></div><div class="tr"><i style="width:35%"></i></div><div class="v">12%</div></div>
+          <div class="brow"><div class="l">India + Others <small>12%</small></div><div class="tr"><i style="width:35%"></i></div><div class="v">12%</div></div>
+        </div>
+        <div class="src"><b>Source:</b> Air8 KB denim chain intelligence, Jul 2026. China Section 301 25% on top of MFN means China denim is 43-48% more expensive than BD at the US border.</div>
+      </div>
+      <div class="card">
+        <h3>Kontoor's sourcing geography</h3>
+        <p class="sub">330 factories, 28 countries — Bangladesh 57%, Pakistan 4%, rest 39%</p>
+        <div class="bars">
+          <div class="brow"><div class="l">Bangladesh <small>57% of Kontoor sourcing</small></div><div class="tr"><i style="width:100%;background:linear-gradient(90deg,var(--blue),var(--teal))"></i></div><div class="v">57%</div></div>
+          <div class="brow"><div class="l">Pakistan <small>4% — Air8 had this wrong</small></div><div class="tr"><i style="width:7%"></i></div><div class="v" style="color:var(--warn)">4%</div></div>
+          <div class="brow"><div class="l">Other 26 countries <small>39% combined</small></div><div class="tr"><i style="width:68%"></i></div><div class="v">39%</div></div>
+        </div>
+        <div class="outlier" style="background:var(--warn-soft)">
+          <div class="ic" style="background:var(--warn)">!</div>
+          <p><b>Air8 internal data error corrected.</b> Prior BD KB documents listed Pakistan at 44% — this is backwards. Kontoor's own 10-K and Kontoor Buyer Market Supply Read confirm Bangladesh 57%, Pakistan 4%.</p>
+        </div>
+        <div class="src"><b>Source:</b> Kontoor Brands FY2025 10-K, Kontoor Buyer Market Supply Read (Air8), Jun 2026.</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Named BD denim factories in Kontoor's supplier network</h3>
+      <p class="sub">Five factories with public import records — scale, buyers, compliance posture</p>
+      <div class="table-wrap">
+        <table class="board">
+          <thead><tr><th>Factory</th><th>Scale</th><th>Primary buyers</th><th>Denim tier</th><th>UFLPA posture</th><th>vs Midasia</th></tr></thead>
+          <tbody>
+            <tr><td><b>Ha-Meem Group</b></td><td class="m">~60M units/yr</td><td>Gap, PVH, Tommy Hilfiger</td><td>Basic + fashion</td><td><span class="chip good">Compliant</span></td><td><span class="chip warn">Larger, more buyers</span></td></tr>
+            <tr><td><b>DBL Group</b></td><td class="m">~45M units/yr</td><td>H&amp;M primary, multi-buyer</td><td>Vertical, basic-mid</td><td><span class="chip good">Compliant</span></td><td><span class="chip warn">More vertical</span></td></tr>
+            <tr><td><b>Noman Group</b></td><td class="m">~40M units/yr</td><td>JC Penney, Gap</td><td>Basic-mid</td><td><span class="chip">Standard</span></td><td><span class="chip">Comparable scale</span></td></tr>
+            <tr><td><b>Epic Group</b></td><td class="m">~35M units/yr</td><td>PVH, Gap</td><td>Basic + CHNS</td><td><span class="chip">Standard</span></td><td><span class="chip good">Comparable</span></td></tr>
+            <tr class="self"><td><b>Midasia Fashions</b></td><td class="m">~$3.1M book</td><td>H&amp;M, Gap, Kontoor, PVH, Next</td><td><b>3 tiers incl. WR</b></td><td><span class="chip warn">Elevated — indigo chain</span></td><td><span class="chip blue">This factory</span></td></tr>
+            <tr><td><b>Beximco !</b></td><td class="m">Large</td><td>Global majors</td><td>Full range</td><td><span class="chip risk">UFLPA elevated-risk</span></td><td><span class="chip risk">Shared chain risk</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="takeaway"><span class="ic">-&gt;</span><span><b>Midasia's differentiation is the tier breadth, not the scale.</b> Ha-Meem and DBL are 10-20x larger. What Midasia does that they mostly don't is the Nylon WR line — and that $7.72 premium tier requires exactly the wash compliance infrastructure that is also the UFLPA weak point.</span></div>
+    </div>
+  </section>
+
+  <!-- 04 COMPLIANCE -->
+  <section id="compliance" data-stages="p4">
+    <div class="sechead"><span class="num">04</span><h2>Compliance — five regimes, one detention risk that freezes $15M</h2></div>
+    <p class="thesis"><b>UFLPA is the financing risk that matters for Air8.</b> Five regimes apply: UFLPA, REACH, ZDHC MRSL, AZO dyes, Prop 65. The first can freeze $15M+ for 60–90 days. The others can be managed operationally.</p>
+    <div class="card" style="margin-bottom:18px">
+      <h3>Compliance matrix</h3>
+      <p class="sub">Five regimes apply — UFLPA is the one that can stop Air8's financing cold</p>
+      <div class="matrix" style="margin-top:12px">
+        <div class="h">Regulation</div><div class="h">Jurisdiction</div><div class="h">Risk level</div>
+        <div class="req">UFLPA <small>CBP Withhold Release Order — forced labour</small></div>
+        <div><span class="chip risk">HIGH — financing-critical</span></div>
+        <div><span class="st gap"><i></i>Detention 60-90d, $15M+ exposure</span></div>
+        <div class="req">REACH Annex XVII <small>Chemical restrictions — permanganate, AZO</small></div>
+        <div><span class="chip blue">EU mandatory</span></div>
+        <div><span class="st ok"><i></i>Laser finishing = compliant; permanganate restricted</span></div>
+        <div class="req">ZDHC MRSL v3.1 <small>Chemical management — laundry/wash</small></div>
+        <div><span class="chip blue">US + EU laundry</span></div>
+        <div><span class="st new"><i></i>External laundry cert required pre-drawdown (Track B)</span></div>
+        <div class="req">Prop 65 <small>California — lead, formaldehyde, PFAS treatments</small></div>
+        <div><span class="chip blue">US — California</span></div>
+        <div><span class="st new"><i></i>Stretch denim treatments; test per colour/season</span></div>
+        <div class="req">AZO Dyes <small>Aromatic amines from certain dyes</small></div>
+        <div><span class="chip blue">EU mandatory</span></div>
+        <div><span class="st ok"><i></i>Indigo exempt; overdyeing/finishing chemicals under scrutiny</span></div>
+      </div>
+      <div class="gapcard" style="margin-top:14px">
+        <div class="tag">Air8 financing action — Gate 1 pre-clearance</div>
+        <div class="gaps">
+          <div class="gap"><div class="q">Must</div>Pre-clearance UFLPA documentation audit before any drawdown — gin traceability, 4–5 upstream tiers, no shared chain with Beximco.</div>
+          <div class="gap"><div class="q">Must</div>Perfect lien at external laundry (Track B) — transfer note + ZDHC cert + return receipt + wash QC before Gate 4 release.</div>
+          <div class="gap"><div class="q">Must</div>Confirm indigo yarn supplier is not on any shared chain with UFLPA elevated-risk BD factories.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>WIP Gates — where compliance meets production</h3>
+      <p class="sub">Five gates from fabric receipt to final acceptance; Gate 4 (post-wash QC) is the highest scrap risk</p>
+      <div class="grid3">
+        <div class="tile" style="border-top:3px solid var(--blue)"><div class="t">Gate 1</div><div class="v" style="color:var(--blue)">Fabric receipt</div><div class="d">Lab dip approval, buyer nomination confirmation, UFLPA gin traceability docs — <b>must clear before LC acceptance</b></div></div>
+        <div class="tile" style="border-top:3px solid var(--blue)"><div class="t">Gate 2</div><div class="v" style="color:var(--blue)">Relaxation + Cut</div><div class="d">Marker efficiency, cut precision, spreader hygiene. 0.5–1.5% cutting waste normal in stretch denim.</div></div>
+        <div class="tile" style="border-top:3px solid var(--warn)"><div class="t">Gate 3</div><div class="v" style="color:var(--warn)">Post-wash QC</div><div class="d"><b>Highest scrap risk gate.</b> Re-wash cost = 5–15% of FOB. Air8 lien must be perfected at laundry before this gate.</div></div>
+        <div class="tile" style="border-top:3px solid var(--warn)"><div class="t">Gate 4</div><div class="v" style="color:var(--warn)">Lab compliance</div><div class="d">ZDHC MRSL + shrinkage test. ZDHC cert from external laundry <b>mandatory pre-Gate 4 release.</b></div></div>
+        <div class="tile" style="border-top:3px solid var(--blue)"><div class="t">Gate 5</div><div class="v" style="color:var(--blue)">Final AQL + UFLPA</div><div class="d">Final AQL inspection, UFLPA clearance, packing. <b>Pre-clearance package must be ready before Gate 5 — not after.</b></div></div>
+        <div class="tile" style="border-top:3px solid var(--faint);opacity:.75"><div class="t">Track B</div><div class="v">External laundry</div><div class="d"><b>Default for BD denim at Midasia's wash complexity.</b> Separate lien perfection, ZDHC cert, return receipt, and wash QC workflow.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 PERFORMANCE -->
+  <section id="performance" data-stages="p5 p7 p8">
+    <div class="sechead"><span class="num">05</span><h2>Performance — clean acceptance, structurally slow payment</h2></div>
+    <p class="thesis"><b>Zero claims, zero disputes across 370 invoices.</b> The 1.4% dilution is structural (vendor-borne airfreight) not quality-related. The payment is systematically 15 days late on 90-day tenor — Kontoor's policy, not distress.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>Payment performance</h3>
+        <p class="sub">Kontoor payment vs Air8 credit benchmark — 370 invoices</p>
+        <div class="score"><div class="lab">Effective tenor <small>Kontoor net 105d vs benchmark 90d</small></div><div class="track"><div class="band" style="left:0;width:90%;opacity:.25"></div><div class="me bad" style="left:100%"></div></div><div class="val" style="color:var(--risk)">+15d <small>late, systematic</small></div></div>
+        <div class="score"><div class="lab">Dilution <small>airfreight + adjustments / total invoiced</small></div><div class="track"><div class="bench" style="left:83%;width:4%;opacity:.6"></div><div class="band" style="left:0;width:1.4%;opacity:.25"></div><div class="me" style="left:1.4%"></div></div><div class="val">1.4% <small>$220K/season</small></div></div>
+        <div class="score"><div class="lab">Deduction claims <small>disputes, short-pays, quality claims</small></div><div class="track"><div class="me good" style="left:0"></div></div><div class="val" style="color:var(--good)">0 <small>zero claims</small></div></div>
+        <div class="score"><div class="lab">Invoice batching <small>concentration on Mondays</small></div><div class="track"><div class="bench" style="left:33%;width:4%;opacity:.6"></div><div class="me" style="left:43%"></div></div><div class="val">Mon cluster <small>doc process, not credit</small></div></div>
+        <div class="src"><b>Source:</b> Air8 invoice data, Midasia to Kontoor, Sep 2025–Jan 2026. Monday clustering confirmed across 57 unique billing dates.</div>
+      </div>
+      <div class="card">
+        <h3>Dilution breakdown</h3>
+        <p class="sub">What 1.4% dilution actually means in dollar terms</p>
+        <div class="bars">
+          <div class="brow"><div class="l">Total invoiced <small>Sep-Jan 2026</small></div><div class="tr"><i style="width:100%"></i></div><div class="v">$15.73M</div></div>
+          <div class="brow"><div class="l">Airfreight <small>vendor-borne, Meghna precedent</small></div><div class="tr"><i style="width:70%"></i></div><div class="v">~$154K est.</div></div>
+          <div class="brow"><div class="l">Adjustment claims <small>size/weight/adjustments</small></div><div class="tr"><i style="width:20%"></i></div><div class="v">~$66K est.</div></div>
+          <div class="brow"><div class="l">Net collected <small>after dilution</small></div><div class="tr"><i style="width:98.6%;background:linear-gradient(90deg,var(--good),var(--teal))"></i></div><div class="v" style="color:var(--good)">$15.51M</div></div>
+        </div>
+        <div class="callout" style="margin-top:16px">
+          <div class="tag">Kontoor Receivables Programme</div>
+          <p>Kontoor sells <b>$1.4bn of receivables/year</b> at ~$12M fee (zero payables finance programme). <b>Payment is not constrained by Kontoor's cash position</b> — it is a supplier terms decision. The 15-day delay is structural policy, not a cash problem.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 BUYERS -->
+  <section id="buyers" data-stages="p1">
+    <div class="sechead"><span class="num">06</span><h2>Midasia's buyer roster — five named accounts, two geographies</h2></div>
+    <p class="thesis"><b>H&amp;M and Gap are Midasia's largest accounts; Kontoor is the third and growing fastest.</b> US exposure is 58% — atypical for Bangladesh, where EU buyers normally dominate. The EU 42% faces a 2029 tariff cliff from Bangladesh's LDC graduation; the Kontoor line is structurally insulated from it.</p>
+    <div class="grid2" style="margin-bottom:18px">
+      <div class="card">
+        <h3>Buyer concentration</h3>
+        <p class="sub">Five named buyers — Midasia's stated book</p>
+        <div class="sharebar" style="margin-bottom:8px">
+          <i style="width:22%;background:var(--blue)"></i>
+          <i style="width:22%;background:var(--blue)"></i>
+          <i style="width:20%;background:var(--ink)"></i>
+          <i style="width:16%;background:var(--line2)"></i>
+          <i style="width:20%;background:var(--line2)"></i>
+        </div>
+        <div class="sharelegend">
+          <span><i style="background:var(--blue)"></i> H&amp;M 22% / Gap 22% / Kontoor 20%</span>
+          <span><i style="background:var(--ink)"></i> PVH 16% / Next 20%</span>
+        </div>
+        <div class="table-wrap" style="margin-top:14px">
+          <table class="board">
+            <thead><tr><th>Buyer</th><th>Share</th><th>Geography</th><th>Product</th><th>2029 risk</th></tr></thead>
+            <tbody>
+              <tr><td>H&amp;M</td><td class="m">22%</td><td><span class="chip blue">EU</span></td><td>Denim + woven</td><td><span class="chip risk">2029 cliff</span></td></tr>
+              <tr><td>Gap</td><td class="m">22%</td><td><span class="chip blue">US</span></td><td>Denim + woven</td><td><span class="chip good">None</span></td></tr>
+              <tr class="self"><td>Kontoor / Wrangler</td><td class="m">20%</td><td><span class="chip blue">US</span></td><td>Cargo + shorts + WR</td><td><span class="chip good">None — US buyer</span></td></tr>
+              <tr><td>PVH</td><td class="m">16%</td><td><span class="chip blue">US</span></td><td>Denim + woven</td><td><span class="chip good">None</span></td></tr>
+              <tr><td>Next</td><td class="m">20%</td><td><span class="chip">UK</span></td><td>Woven</td><td><span class="chip warn">Brexit-adjacent risk</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Geographic split — US 58% / EU 42%</h3>
+        <p class="sub">Atypical for Bangladesh; this is Midasia's structural hedge against the EU tariff cliff</p>
+        <div class="bars">
+          <div class="brow"><div class="l">US buyers <small>Kontoor, Gap, PVH</small></div><div class="tr"><i style="width:100%;background:linear-gradient(90deg,var(--blue),var(--teal))"></i></div><div class="v">58%</div></div>
+          <div class="brow"><div class="l">EU buyers <small>H&amp;M + Next</small></div><div class="tr"><i style="width:72%"></i></div><div class="v" style="color:var(--warn)">42%</div></div>
+        </div>
+        <div class="callout" style="margin-top:14px">
+          <div class="tag">2029 LDC Cliff — EU Exposure</div>
+          <p>Bangladesh loses <b>EBA LDC duty preference</b> on EU textile imports in 2026–2029. EU textile duty on HS 6203 goes from <b>0% to 9.6–12%.</b> This affects H&amp;M and Next directly. <b>Kontoor's US line is unaffected — making it more strategically valuable post-2029 than it looks today.</b></p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Kontoor's buyer-side context</h3>
+      <p class="sub">What Kontoor looks like as a credit — and what it means for Midasia</p>
+      <div class="grid3">
+        <div class="tile"><div class="t">S&amp;P Rating</div><div class="v">BB</div><div class="d">Stable outlook, upgraded from Negative Apr 2026. Post-Lee sale leverage below 1.5x by year-end 2026.</div></div>
+        <div class="tile"><div class="t">Revenue</div><div class="v">$3.15bn</div><div class="d">FY2025, +21%. Wrangler 61% of revenue at 23.0% segment margin. Lee sold Q4 2026.</div></div>
+        <div class="tile"><div class="t">Walmart exposure</div><div class="v up">30%+</div><div class="d">Post-Lee sale materially higher. Wholesale flat Q2 — inventory burn = factory buffer risk.</div></div>
+        <div class="tile"><div class="t">Payment delay</div><div class="v" style="color:var(--warn)">+15d</div><div class="d">15 days late on 90-day terms. Systematic, not distressed. $1.4bn receivables sold/year — cash not constrained.</div></div>
+        <div class="tile"><div class="t">Q2 wholesale</div><div class="v down">Flat</div><div class="d">17 consecutive quarters of Wrangler US share gains, but Q2 wholesale flat vs retail +5.9%. Factory buffers inventory volatility.</div></div>
+        <div class="tile"><div class="t">Air8 financed</div><div class="v" style="color:var(--risk)">0</div><div class="d"><b>Zero Kontoor suppliers currently in Air8's financing book.</b> Midasia would be the first.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 INSIGHTS -->
+  <section id="crosscut">
+    <div class="sechead"><span class="num">07</span><h2>Six insights</h2></div>
+    <div class="xtldr">
+      <div class="xt good"><div class="n">01 · MOAT</div><div class="h">Multi-tier: cargo to WR in one factory</div><div class="m">Three distinct price tiers in one BD facility is genuinely unusual at Midasia's revenue scale. The wash and finishing infrastructure underneath is harder to replicate than the cut-and-sew.</div><div class="conf fact">Confidence: High</div></div>
+      <div class="xt warn"><div class="n">02 · MARGIN</div><div class="h">Cotton relief goes to Kontoor, not Midasia</div><div class="m">90% buyer-nominated fabric means the 8% cotton price softening is invisible to Midasia's margin. The 56% wage hike is not. The squeeze is structural and invisible in ASP data.</div><div class="conf fact">Confidence: High</div></div>
+      <div class="xt risk"><div class="n">03 · RISK #1</div><div class="h">UFLPA: $15M+ frozen for 60–90 days</div><div class="m">Indigo yarn passes 4–5 upstream tiers. A CBP detention freezes title-ambiguous receivables at 8–12% annualised cost. Pre-clearance docs at Gate 1 are non-negotiable before any drawdown.</div><div class="conf fact">Confidence: High</div></div>
+      <div class="xt warn"><div class="n">04 · DEMAND</div><div class="h">Kontoor to Walmart: factory bears the buffer</div><div class="m">Q2 wholesale flat despite 17 quarters of Wrangler share gains. Retail inventory down low-double digits. When the chain compresses, the factory holds unpaid inventory. Watch order volumes monthly.</div><div class="conf inf">Confidence: Medium</div></div>
+      <div class="xt"><div class="n">05 · CREDIT</div><div class="h">15d late / 90d tenor — slow but clean</div><div class="m">Zero claims, zero disputes, 1.4% structural dilution. Monday invoice batching = document process, not credit process. The slowness is Kontoor's policy, not its cash position. LC terms make this financeable.</div><div class="conf fact">Confidence: High</div></div>
+      <div class="xt good"><div class="n">06 · STRUCTURE</div><div class="h">Kontoor line = the post-2029 hedge</div><div class="m">EU 42% of Midasia's book faces 9.6–12% tariff cliff as Bangladesh loses LDC status 2026–2029. Kontoor's US line is unaffected — making this relationship more structurally valuable post-2029 than the 20% share figure suggests.</div><div class="conf fact">Confidence: High</div></div>
+    </div>
+    <div class="xsec">
+      <div class="xcard"><div class="xhead"><div class="xn">01</div><h3>Multi-tier capability is the moat — cargo $4.85 to WR $7.72 in one facility</h3></div><div class="xfrom"><span>Applies to: <b>Demand / PO / Production</b></span></div><p><b>Three distinct price tiers across 370 invoices.</b> Cargo pants at $4.85 (42% of mix), stretch denim shorts at $4.88–5.87, and Nylon WR pants at $7.72 (12% of mix, highest ASP). Most BD factories at Midasia's $3M revenue scale play one tier. The tier breadth is not an accident — it requires a separate wash line, ZDHC chemical controls, and laser finishing capability.</p><p>The Nylon WR line is the most interesting: Wrangler's All-Terrain or equivalent premium outdoor-adjacent pant. At $7.72 vs $4.85 cargo, that is a 59% ASP premium on the same factory floor. It is also the tier with the highest UFLPA exposure — because the finishing chemistry that creates the WR property is exactly where Prop 65 and ZDHC scrutiny concentrates.</p><div class="xso"><i>Q</i>Ask Midasia for the wash cost breakdown and ZDHC certificate for the Nylon WR line specifically. If the WR tier is profitable at $7.72 after the 56% wage increase, the multi-tier story holds.</div></div>
+      <div class="xcard warn"><div class="xhead"><div class="xn">02</div><h3>Buyer-nominated fabric means Midasia cannot capture cotton relief — and the wage squeeze is invisible</h3></div><div class="xfrom"><span>Applies to: <b>Raw materials</b></span></div><p><b>Cotlook A is down 8%.</b> At current volumes, that is approximately $0.04–0.08 per garment in raw material saving — roughly $120K–240K per season across 3M units. But Midasia cannot access that saving, because 90% of fabric is buyer-nominated. Kontoor's procurement team nominates the mill, locks the price, and the saving flows to Kontoor's margin at the next price negotiation.</p><p>The 56% minimum wage increase post-2024, however, is Midasia's to absorb. On a $4.85 cargo pant with a CMT component of roughly $1.20–1.80, a 56% wage increase adds $0.67–1.01 to CMT — not visible in ASP, because ASP is full-package.</p><div class="xso"><i>Q</i>Get the BOM breakdown for the base tier (Cargo $4.85) and the Nylon WR ($7.72). The gap between these two is where Midasia's margin lives — and where the wage pressure bites hardest on the lower tier.</div></div>
+      <div class="xcard risk"><div class="xhead"><div class="xn">03</div><h3>UFLPA is the #1 financing risk — indigo yarn 4–5 upstream tiers, $15M exposure at port</h3></div><div class="xfrom"><span>Applies to: <b>Compliance / Shipment</b></span></div><p><b>A single CBP detention freezes $15M+ of outstanding Air8 drawdowns for 60–90 days.</b> Indigo dyeing is the critical supply chain node. Indigo dye is applied at the yarn stage (rope dyeing or slasher dyeing) at mills in India or Bangladesh. From yarn to finished garment, the indigo passes through 4–5 transformation steps: yarn to roving to greige fabric to indigo-dyed fabric to finished fabric to garment.</p><p>The gin/farm traceability requirement is the hardest part. For a farm in Gujarat or Tamil Nadu to document that the cotton was not produced with forced labour — and for that documentation to travel with the yarn through four subsequent transformations — requires a supply chain mapping system most mid-size BD factories do not have. Midasia's indigo chain must be fully traced and pre-cleared before Gate 5.</p><div class="xso"><i>Q</i>Request Midasia's UFLPA pre-clearance documentation package at Gate 1 — specifically: gin-level traceability for the indigo yarn, confirmation the nominated spinner is not sharing a facility with Beximco-listed entities, and the completed WRO rebuttal package. Do not draw down without this.</div></div>
+      <div class="xcard warn"><div class="xhead"><div class="xn">04</div><h3>Kontoor to Walmart chain: wholesale flat vs 17 quarters of share gains — factory bears the buffer</h3></div><div class="xfrom"><span>Applies to: <b>Demand / PO / Payment</b></span></div><p><b>Kontoor has 17 consecutive quarters of Wrangler US market share gains.</b> The problem is that the gains are at retail — Wrangler sell-through is +5.9% — while wholesale is flat. This is a channel inventory story: Kontoor's wholesale customers (Walmart, Target, T.J. Maxx) are reducing their inventory positions, which compresses Kontoor's order volume, even though consumers are still buying Wrangler at retail.</p><p>The December invoice spike ($4.64M) followed by January pullback ($3.0M) is exactly this pattern visible in the invoice data. The question is whether this is a normal seasonal inventory drawdown or a structural order cut.</p><div class="xso"><i>Q</i>Ask Midasia what their Q1 2026 Kontoor order book looks like as of today. Is there a confirmed PO for the same or higher volume than Jan 2026? If yes, the pattern is seasonal. If no, there is an inventory-driven order reduction in progress.</div></div>
+      <div class="xcard"><div class="xhead"><div class="xn">05</div><h3>15 days late on 90-day tenor — structurally slow, not distressed; zero claims</h3></div><div class="xfrom"><span>Applies to: <b>Payment / Acceptance</b></span></div><p><b>370 invoices, zero deduction claims, zero disputes, 1.4% structural dilution.</b> The payment story is clean and consistent. Kontoor pays 15 days late on a 90-day LC-at-sight or net-60 OA tenor — an effective 105-day cycle. This is consistent with the $1.4bn annual receivables sale programme: Kontoor's payment is a supplier terms decision, not a cash constraint.</p><p>The 1.4% dilution — roughly $220K per season on $15.73M — is vendor-borne airfreight. The named supplier precedent (Meghna) in the Kontoor credit file suggests this is systemic across Kontoor's Bangladesh suppliers, not specific to Midasia.</p><div class="xso"><i>Q</i>Confirm whether the 1.4% dilution is consistent across the full 12-month Kontoor relationship or specific to the Sep–Jan seasonal window (holiday shipping airfreight).</div></div>
+      <div class="xcard"><div class="xhead"><div class="xn">06</div><h3>Kontoor's US line is the structural hedge as EU 42% faces a 2029 tariff cliff</h3></div><div class="xfrom"><span>Applies to: <b>Demand / PO</b></span></div><p><b>Bangladesh's EBA LDC graduation is 2026–2029.</b> EU textile and apparel duties on HS 6203 will increase from 0% to 9.6–12% when Bangladesh loses LDC status. H&amp;M (22%) and Next (20%) will face this directly on their EU-bound orders from Bangladesh. For a $4.85 cargo pant, a 12% EU duty adds $0.58 to the landed cost in Europe.</p><p>Kontoor's US orders are unaffected. Bangladesh denim to the US faces no additional tariff from LDC graduation. Section 301 tariffs apply to China, not Bangladesh. The US duty advantage for BD denim vs China is 25 percentage points regardless of LDC status.</p><div class="xso"><i>Q</i>Model the EU tariff cliff scenario: if H&amp;M reduces Bangladesh volume by 30% post-2029, what does Midasia's capacity utilisation look like, and does the Kontoor line absorb that capacity?</div></div>
+    </div>
+  </section>
+
+  <!-- 08 VERDICT -->
+  <section id="verdict">
+    <div class="sechead"><span class="num">08</span><h2>Verdict</h2></div>
+    <div class="health">
+      <div class="stage med"><div class="n">Demand</div><div class="r">MED</div><div class="w">Growing but 0.5% share — Kontoor can replace; Midasia can survive without Kontoor but cannot replace it</div></div>
+      <div class="stage high"><div class="n">Compliance</div><div class="r">HIGH</div><div class="w">UFLPA detention = 60–90d frozen cash; indigo chain 4–5 tiers; pre-clearance docs mandatory before any drawdown</div></div>
+      <div class="stage med"><div class="n">Margin</div><div class="r">MED</div><div class="w">Multi-tier moat real but wage pressure on base tier invisible in ASP; BOM needed to price CMT accurately</div></div>
+      <div class="stage med"><div class="n">Credit</div><div class="r">CLEAN</div><div class="w">Zero claims, systematic 15d delay, structural 1.4% dilution — LC terms make this financeable</div></div>
+    </div>
+    <div class="verdict">
+      <div class="ring" style="background:conic-gradient(var(--warn) 0 62%,var(--sunken) 62% 100%)"><span>62</span><small>of 100</small></div>
+      <div>
+        <h3>Conditional go — with three pre-drawdown requirements</h3>
+        <p><b>Stronger moat than a commodity cut-and-sew factory</b> — the multi-tier capability (cargo to WR) is genuine and defensible at BD scale. The UFLPA exposure is the dominant risk: not hypothetical, not manageable after the fact — it requires pre-clearance before the first drawdown.</p>
+        <p>The Kontoor credit is clean and the payment story is structurally slow rather than distressed. The relationship has a post-2029 structural value (EU tariff cliff hedge) that the current 20% share figure understates.</p>
+        <p>The two risks to structure around are: (1) UFLPA detention freezing $15M+ and (2) Kontoor inventory compression bleeding into Midasia's order book faster than the seasonal ramp suggests.</p>
+        <div class="actions">
+          <div class="act"><div class="n">1</div><b>Gate 1 UFLPA pre-audit</b>Complete WRO rebuttal documentation, gin traceability, and indigo chain pre-clearance before any drawdown on the Kontoor line. This is not optional.</div>
+          <div class="act"><div class="n">2</div><b>Get BOM + wash cost breakdown</b>For the base tier ($4.85 Cargo) and premium ($7.72 Nylon WR), with the 56% wage increase modelled in. Price the CMT accurately before quoting a financing structure.</div>
+          <div class="act"><div class="n">3</div><b>Watch Kontoor order volumes monthly</b>The Jan pullback is either seasonal or the start of an inventory-driven order reduction. If Q1 2026 PO book is below Jan 2026 levels, the Walmart chain signal is on.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 REFERENCE -->
+  <section id="ref">
+    <div class="sechead"><span class="num">09</span><h2>Data sources and references</h2></div>
+    <div class="card">
+      <div class="arch ul">
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li><div class="k">Invoice</div><div><b>Midasia Fashions Ltd to Kontoor Asia Trading Ltd</b> — 370 invoices, Sep 2025–Jan 2026, $15.73M, 3.04M units. Air8 invoice records.</div></li>
+          <li><div class="k">Kontoor</div><div><b>Kontoor Brands FY2025 Annual Report</b> (10-K). Revenue $3.15bn, BB S&amp;P, Bangladesh 57% sourcing, 330 factories / 28 countries, Lee sale Q4 2026. <b>Kontoor Buyer Market Supply Read</b> — Air8 internal intelligence.</div></li>
+          <li><div class="k">BD denim</div><div><b>Air8 KB denim chain intelligence</b> (Sep 2026). Bangladesh denim FOB market share, $12–28 fashion band, buyer-nominated fabric 90%, India yarn dependency 60%, COMBO-002 profile.</div></li>
+          <li><div class="k">Cotton</div><div><b>Cotlook A:</b> 91c/lb Jul 2025 to 84c/lb Jul 2026, -8% YoY. <b>BD minimum wage:</b> Bangladesh Gazette, +56% post-2024.</div></li>
+          <li><div class="k">UFLPA</div><div><b>US CBP UFLPA Entity List</b> — Beximco elevated-risk. <b>WRO rebuttal:</b> gin/farm traceability through 4–5 upstream tiers. <b>Detention cost:</b> 60–90 day freeze at 8–12% annualised.</div></li>
+          <li><div class="k">EU tariff</div><div><b>Bangladesh EBA LDC graduation:</b> 2026–2029. <b>EU HS 6203 duty post-LDC:</b> 9.6–12% vs current 0%.</div></li>
+          <li><div class="k">Air8 KB</div><div><b>COMBO-002 profile:</b> BD factory FOB, US + EU buyers, denim + woven. <b>Air8 denim chain intelligence</b> (Sep 2026). <b>Air8 credit memo:</b> Kontoor Brands, 15-day payment delay, 1.4% dilution (Meghna precedent).</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Midasia Fashions Ltd times Kontoor Brands — Air8 Supply Chain Intelligence</span>
+    <span>September 2026 · Air8 KB Tuned · BD denim FOB · COMBO-002 · HS 6203</span>
+  </footer>
+
+<script>
+(function(){
+  var t=document.createElement('div'); t.className='gtip'; t.hidden=true; document.body.appendChild(t);
+  function place(el){
+    t.innerHTML=el.getAttribute('data-tip'); t.hidden=false;
+    var r=el.getBoundingClientRect(), tw=t.offsetWidth, th=t.offsetHeight;
+    var x=Math.max(10,Math.min(r.left+r.width/2-tw/2, window.innerWidth-tw-10));
+    var y=r.top-th-10; if(y<8) y=r.bottom+10;
+    t.style.left=(x+window.scrollX)+'px'; t.style.top=(y+window.scrollY)+'px';
+  }
+  function on(e){ var el=e.target.closest&&e.target.closest('[data-tip]'); if(el) place(el); }
+  function off(e){ var to=e.relatedTarget; if(!to||!to.closest||!to.closest('[data-tip]')) t.hidden=true; }
+  document.addEventListener('mouseover',on); document.addEventListener('mouseout',off);
+  document.addEventListener('focusin',on); document.addEventListener('focusout',function(){t.hidden=true;});
+})();
+
+(function(){
+  var map=document.getElementById('relmap');
+  function tog(id,cls){var g=document.getElementById(id); if(!g)return;
+    g.addEventListener('click',function(){map.classList.toggle(cls)});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();map.classList.toggle(cls)}});}
+  function fit(){ if(!map)return;
+    var L=map.classList.contains('expL'), R=map.classList.contains('expR');
+    map.setAttribute('viewBox', (L||R) ? '0 30 1080 620' : '0 286 1080 124');
+  }
+  if(map){tog('pL','expL');tog('pR','expR');
+    map.addEventListener('click',function(){setTimeout(fit,0)});
+    map.addEventListener('keyup',function(){setTimeout(fit,0)});
+    fit();}
+
+  var btns=[].slice.call(document.querySelectorAll('.fst[data-panel]'));
+  var secs=[].slice.call(document.querySelectorAll('section[data-stages]'));
+  var names={p1:'Demand / PO',p2:'Raw materials',p3:'Production',p4:'Quality & compliance',p5:'Shipment',p7:'Acceptance',p8:'Payment'};
+  function focusOff(){
+    document.body.classList.remove('focus');
+    secs.forEach(function(x){x.classList.remove('dim','lit')});
+  }
+  function focusOn(id){
+    document.body.classList.add('focus');
+    var lit=[];
+    secs.forEach(function(x){
+      var ok=(' '+x.getAttribute('data-stages')+' ').indexOf(' '+id+' ')>=0;
+      x.classList.toggle('dim',!ok); x.classList.toggle('lit',ok); if(ok)lit.push(x);
+    });
+    var t=document.getElementById('focustxt');
+    if(t)t.textContent='Showing the sections behind “'+names[id]+'” — the rest are folded to their titles.';
+  }
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-panel'), open=b.classList.contains('on');
+      btns.forEach(function(x){x.classList.remove('on')});
+      [].forEach.call(document.querySelectorAll('.spanel'),function(p){p.classList.remove('on')});
+      if(!open){b.classList.add('on');var p=document.getElementById(id); if(p)p.classList.add('on'); focusOn(id);}
+      else{focusOff();}
+    });
+  });
+  var off=document.getElementById('focusoff'); if(off)off.addEventListener('click',function(){
+    btns.forEach(function(x){x.classList.remove('on')});
+    [].forEach.call(document.querySelectorAll('.spanel'),function(p){p.classList.remove('on')});
+    focusOff();
+  });
+  secs.forEach(function(x){ x.addEventListener('click',function(e){ if(x.classList.contains('dim')){x.classList.remove('dim');} }); });
+
+  [].forEach.call(document.querySelectorAll('.jump a'),function(a){
+    a.addEventListener('click',function(){
+      var t=document.querySelector(a.getAttribute('href'));
+      if(!t)return; t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+    });
+  });
+})();
+</script>
+
+</body></html>
