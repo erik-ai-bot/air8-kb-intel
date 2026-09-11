@@ -38,7 +38,7 @@
   }
   *{box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1200px;margin:0 auto;padding:28px 40px 90px}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 24px 90px}
 
   /* nav */
   .nav{position:sticky;top:12px;z-index:10;display:flex;gap:2px;flex-wrap:wrap;align-items:center;padding:8px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:var(--shadow);width:max-content;max-width:100%;margin:0 auto 34px}
@@ -369,7 +369,7 @@
   @media (max-width:900px){.xtldr{grid-template-columns:1fr 1fr}}
   @media (max-width:520px){.xtldr{grid-template-columns:1fr}}
   .xt{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow);border-top:3px solid var(--blue)}
-  .xt.warn{border-top-color:var(--warn)} .xt.risk{border-top-color:var(--risk)} .xt.good{border-top-color:var(--good)}
+  .xt.warn{border-top-color:var(--warn)} .xt.risk{border-top-color:var(--risk);border-top-width:6px} .xt.good{border-top-color:var(--good)}
   .xt .n{font:700 10px var(--mono);color:var(--faint);letter-spacing:.06em}
   .xt .h{font:700 13.5px/1.35 var(--display);letter-spacing:-.01em;margin:6px 0 6px}
   .xt .m{font:500 11px/1.4 var(--body);color:var(--muted)}
@@ -395,8 +395,7 @@
   #relmap #gBuy{transform-origin:700px 330px}
   #relmap #gToy{transform-origin:150px 330px}
   #relmap #gCat{transform-origin:700px 330px}
-  #relmap #gUp{transform-origin:-390px 330px}
-  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat,#relmap.expU #gUp{opacity:1;transform:scale(1);pointer-events:auto}
+  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat{opacity:1;transform:scale(1);pointer-events:auto}
   #relmap .plus{cursor:pointer}
   #relmap .plus:focus{outline:none}
   #relmap .plus:focus-visible circle{stroke-width:3.5}
@@ -406,6 +405,11 @@
   #relmap.expL #pL .sgn-p,#relmap.expR #pR .sgn-p,#relmap.expU #pU .sgn-p{display:none}
   #pL .sgn-m,#pR .sgn-m,#pU .sgn-m{display:none}
   #relmap.expL #pL .sgn-m,#relmap.expR #pR .sgn-m,#relmap.expU #pU .sgn-m{display:block}
+  #relmap #gUpstream{transform-origin:-90px 330px}
+  #relmap.expU #gUpstream{opacity:1;transform:scale(1);pointer-events:auto}
+  #relmap #pU circle{stroke:var(--teal)}
+  #relmap #pU .sgn-p,#relmap #pU .sgn-m{fill:var(--teal)}
+  #relmap .plus:hover #pU circle,#relmap #pU:hover circle{fill:var(--teal)}
   .maphint{display:flex;gap:16px;flex-wrap:wrap;font:500 11.5px var(--body);color:var(--faint);margin-top:6px}
   .maphint b{color:var(--muted);font-weight:600}
 
@@ -467,130 +471,37 @@
     <a href="#summary">Summary</a><a href="#product">Product</a><a href="#material">Materials</a><a href="#peers">Production</a><a href="#compliance">Compliance</a><a href="#performance">Performance</a><a href="#buyers">Buyers</a><a href="#crosscut">Insights</a><a href="#verdict">Verdict</a><a href="#ref">Lists</a>
   </nav>
 
-  <div class="hero" style="grid-template-columns:1fr;margin-bottom:32px">
+  <div class="hero">
     <div>
-      <div class="eyebrow">Supply chain intelligence &middot; one pair</div>
-      <h1><span class="grad">BanaToys</span><span class="x">&times;</span>Ross</h1>
+      <div class="eyebrow">Supply chain intelligence · one pair</div>
+      <h1><span class="grad">BanaToys</span><span class="x">×</span>Ross</h1>
+      <p class="lede">A Chenghai toy factory and a US off-price giant. One product segment between them, read six ways: the segment itself, the buyer side, the supplier against its peers, the competitive field, the material underneath, and whether the chain holds.</p>
     </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v g">$2.08</div><div class="l">what Ross pays per unit — 45th percentile of the market band</div></div>
+      <div class="kpi"><div class="v">0.21%</div><div class="l">BanaToys's share of Ross's supply base — rank 16 of 22</div></div>
+      <div class="kpi"><div class="v">A</div><div class="l">Ross external rating · $850K/yr on file</div></div>
+      <div class="kpi"><div class="v" style="color:var(--warn)">8.09 d</div><div class="l">Ross pays BanaToys 8 days late — the same as its other mid-sized manufacturers</div></div>
+    </div>
+  </div>
+
+  <div style="margin:-24px 0 42px;padding:13px 18px;border-radius:14px;border:1px dashed var(--line2);background:var(--sunken);font:500 12.5px/1.6 var(--body);color:var(--muted)">
+    <b style="color:var(--ink)">How to read this page.</b> Everything below is what our file, the invoices and public records actually show. <b style="color:var(--ink)">Where something is marked absent — a certificate, a product line, a shipment — it means we have not seen it, not that it does not exist.</b> The supplier makes and certifies more than appears in our record; each such item is written as a question to ask, not as a finding against BanaToys.
   </div>
 
   <!-- 00 EXECUTIVE SUMMARY -->
   <section id="summary">
     <div class="sechead"><span class="num">00</span><h2>Executive summary</h2></div>
-    <!-- SUPPLY CHAIN OVERVIEW -->
-    <p class="thesis" style="margin-bottom:20px"><b>BanaToys</b>, a Chenghai-based OEM factory, sells <b>injection-moulded plastic play sets</b> (HS&nbsp;9503) to <b>Ross</b> (US off-price retail, S&amp;P&nbsp;A&minus;). The product has <b>low production barriers</b> but is subject to <b>multiple compliance requirements</b>; price range <b>$1.5&ndash;4 FOB</b>. The market is <b>highly competitive</b> &mdash; leading buyers are <b>US/EU off-price and discount chains</b>; leading sellers are <b>Chinese OEM/ODM factories</b> from the Guangdong cluster, increasingly challenged by Indian manufacturers with a 10% tariff advantage. Overall trend: off-price channel <b>growing</b>, factory <b>margins under pressure</b> from input cost inflation and limited pricing power.</p>
-
-    <!-- VERDICT BAR -->
-    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:16px;background:var(--good-soft);border:1.5px solid var(--good);margin-bottom:20px">
-      <div style="flex:none;padding:6px 16px;border-radius:999px;background:var(--good);color:#fff;font:800 12px var(--display);letter-spacing:.04em;white-space:nowrap">RECOMMEND FINANCING</div>
-      <div style="font:500 13.5px/1.55 var(--body);color:var(--ink)"><b>Buyer (Ross, S&amp;P A&minus;) pays reliably with zero dilution; supplier quality above peers.</b> Start with a <b>smaller initial limit</b>, monitor BanaToys&rsquo;s NL concentration (64%), and <b>collect EN71/CPSC certs before first drawdown</b>.</div>
-    </div>
-
-    <!-- 4 MODULE CARDS — with colored dot visual markers -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px">
-
-      <!-- 1. Product & Chain -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--blue)">
-        <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--blue);margin-bottom:8px">&#9312; Product &amp; Chain</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">$2 moulded play set &mdash; low barrier, mid-price, easy to substitute</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Compliance risk LOW</b> &mdash; standard EN71&nbsp;+&nbsp;CPSC/ASTM F963; factory actively shipping, certs expected.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Price mid-market, margin squeezed</b> &mdash; $2.08 FOB (45th pctile); PP resin <b style="color:var(--ink)">+35% absorbed</b>, zero pass-through.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Tariff disadvantage vs India</b> &mdash; China 20% vs India 10%; <b style="color:var(--ink)">$0.20/unit gap</b>; India already in Ross&rsquo;s vendor mix.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Segment: off-price toy channel resilient</b> &mdash; US toy market flat; off-price gaining share; <b style="color:var(--ink)">$2 pretend-play benefits from consumer trade-down</b>. BanaToys book growing ($23.4M, 24 buyers).</span></div>
-        </div>
-      </div>
-
-      <!-- 2. Buyer Dynamics -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--good)">
-        <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--good);margin-bottom:8px">&#9313; Buyer (Ross)</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">S&amp;P A&minus; off-price giant &mdash; pays on time, zero dilution, thin account</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">A-rated buyer</b> (S&amp;P A&minus;/Moody&rsquo;s A2) &mdash; receivable finance risk negligible.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Pays 8.09 days late</b> &mdash; consistent across vendors; systematic policy, not distress.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Zero claims, zero dilution</b> &mdash; perfectly clean acceptance history.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Thin account</b> &mdash; $850K/yr, 0.21% of Ross&rsquo;s supply base; can de-list without disruption.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:4px"></span><span><b style="color:var(--ink)">Segment leading buyers</b> &mdash; US off-price: <b>Ross, TJX (TJ Maxx/Marshalls), Burlington</b>; EU discount chains: <b>Action, Pepco, Tedi, Lidl</b>. All price-sensitive; buy on quality/price ratio, no vendor loyalty.</span></div>
-        </div>
-      </div>
-
-      <!-- 3. Supplier Dynamics -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--warn)">
-        <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--warn);margin-bottom:8px">&#9314; Supplier (BanaToys)</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">Chenghai, China &mdash; quality above peers, zero pricing power, NL-concentrated</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Quality above peers</b> &mdash; no recall history, zero disputes; the supplier&rsquo;s only real differentiator.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Delivery 12.1 days late</b> (3rd percentile of Ross&rsquo;s field) &mdash; systematic lag, not occasional.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">Competition STRONG</b> &mdash; Cheng Le (same cluster) shipped to Ross Aug&nbsp;2026; India at 10% tariff. Switch cost: 7&ndash;15 days.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--risk);margin-top:4px"></span><span><b style="color:var(--ink)">64% Netherlands-concentrated</b> &mdash; Action 34% + Toi-Toys 21%; one EU shock hits most of the book.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Pricing power zero</b> &mdash; PP +35% absorbed with no pass-through; price mid-market but margin compressed.</span></div>
-        </div>
-      </div>
-
-      <!-- 4. Financeability -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--teal)">
-        <div style="font:700 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">&#9315; Financeability</div>
-        <div style="font:700 14px/1.3 var(--display);letter-spacing:-.01em;margin-bottom:12px;color:var(--ink)">Finance the receivable &mdash; Ross pays; manage three conditions</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--good);margin-top:4px"></span><span><b style="color:var(--ink)">Receivable clean</b> &mdash; A-rated buyer, zero claims; standard AR finance.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Watch NL concentration</b> &mdash; 64% of BanaToys&rsquo;s book in Netherlands; disruption there dents repayment capacity.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Start smaller</b> &mdash; supplier easily replaceable at Ross; finance today, don&rsquo;t assume long tenure.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:500 12px/1.4 var(--body);color:var(--muted)"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:4px"></span><span><b style="color:var(--ink)">Collect certs before drawdown</b> &mdash; EN71, ASTM F963, CPSC CPC expected to exist; not yet shared with Air8.</span></div>
-        </div>
-      </div>
-
-    </div><!-- end modules -->
+    <p class="thesis"><b>A clean, reliable, easily replaced supplier selling one product line into a buyer it barely registers with.</b> The credit is the strongest part of the file — zero dilution, zero claims, an A-rated buyer. The commercial position is the weakest: one tier, no pricing power, two capable neighbours in the same cluster, and a duty gap that favours India. Nothing here is a credit problem; the questions are about placement and about documents we have not yet asked for.</p>
 
     <div class="card">
       <h3>Who sits either side of this line</h3>
       <p class="sub">Click the <b>+</b> on BanaToys or on Ross to open their side · hover any circle</p>
-      <div class="mapwrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-      <svg id="relmap" style="min-width:1080px" viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
-        <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+      <div class="mapwrap">
+      <svg id="relmap" viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
+        <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient><linearGradient id="gmapU" gradientUnits="userSpaceOnUse" x1="-110" y1="0" x2="150" y2="0"><stop offset="0" stop-color="var(--teal)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>
 
-        <!-- UPSTREAM: horizontal chain extending LEFT within compact y range (no height change) -->
-        <g id="gUp" class="eg">
-          <text x="-610" y="268" font-family="var(--body)" font-weight="700" font-size="11" fill="var(--muted)">BANATOYS UPSTREAM &mdash; raw material chain to factory</text>
-          <!-- Feedstock: Crude → Propylene -->
-          <circle class="anim" cx="-528" cy="330" r="17" fill="var(--sunken)" stroke="var(--line2)" stroke-width="2" data-tip="&lt;b&gt;Crude oil &rarr; Naphtha &rarr; Propylene&lt;/b&gt;&lt;br&gt;Primary feedstock for PP resin. Tracks Brent crude with 6&ndash;8 week lag. Every $10/bbl rise adds ~$43&ndash;58/t to PP cost."/>
-          <text x="-528" y="351" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--muted)">Crude</text>
-          <text x="-528" y="362" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--muted)">&rarr; Propylene</text>
-          <!-- Feedstock → T1 lines -->
-          <path class="anim" d="M-511 321 C-475 305,-452 298,-410 295" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".55"/>
-          <path class="anim" d="M-511 339 C-475 355,-452 368,-403 375" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".55"/>
-          <!-- T1: Sinopec (red, benchmark) -->
-          <path class="anim" d="M-374 295 C-310 295,-150 312,86 330" fill="none" stroke="var(--risk)" stroke-width="1.5" opacity=".35"/>
-          <circle class="anim" cx="-392" cy="295" r="18" fill="var(--risk)" opacity=".92" data-tip="&lt;b&gt;Sinopec (中国石化) &mdash; CN #1 PP&lt;/b&gt;&lt;br&gt;~35% CN domestic market share. Sinopec&rsquo;s spot list price is the industry benchmark for Guangdong resin buyers.&lt;br&gt;The 2026 +35% spike tracked Sinopec&rsquo;s list price move directly."/>
-          <text x="-392" y="278" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">Sinopec</text>
-          <text x="-392" y="267" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--risk)">CN #1 &middot; +35% this yr</text>
-          <!-- T1: PetroChina (blue) -->
-          <path class="anim" d="M-377 375 C-310 368,-150 345,86 330" fill="none" stroke="var(--line2)" stroke-width="1.2" opacity=".3"/>
-          <circle class="anim" cx="-390" cy="375" r="13" fill="var(--blue)" opacity=".85" data-tip="&lt;b&gt;PetroChina (中国石油) &mdash; CN #2 PP&lt;/b&gt;&lt;br&gt;Second-largest CN PP producer. Price typically 2&ndash;5% below Sinopec spot. Strong Guangdong distribution."/>
-          <text x="-390" y="393" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9.5" fill="var(--ink)">PetroChina</text>
-          <text x="-390" y="404" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">CN #2</text>
-          <!-- T2: CNOOC (blue, smaller) -->
-          <path class="anim" d="M-226 290 C-180 290,-100 310,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".28"/>
-          <circle class="anim" cx="-237" cy="290" r="11" fill="var(--blue)" opacity=".75" data-tip="&lt;b&gt;CNOOC (中海油)&lt;/b&gt;&lt;br&gt;Offshore petrochemicals. Huizhou (Guangdong) plant &mdash; closest major PP producer to Chenghai cluster."/>
-          <text x="-237" y="305" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9.5" fill="var(--ink)">CNOOC</text>
-          <text x="-237" y="316" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">Huizhou &middot; coastal</text>
-          <!-- T2: Borouge (grey) -->
-          <path class="anim" d="M-226 375 C-180 372,-100 345,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".25"/>
-          <circle class="anim" cx="-237" cy="375" r="10" fill="var(--line2)" data-tip="&lt;b&gt;Borouge (Abu Dhabi + Borealis) &mdash; UAE&lt;/b&gt;&lt;br&gt;Major PP exporter to CN and SE Asia. Specialty grades; supply independent of CN domestic disruptions."/>
-          <text x="-237" y="390" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9.5" fill="var(--ink)">Borouge</text>
-          <text x="-237" y="401" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">UAE &middot; specialty</text>
-          <!-- T3: LyondellBasell (grey, small) -->
-          <path class="anim" d="M-99 285 C-70 285,-20 312,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".22"/>
-          <circle class="anim" cx="-110" cy="285" r="9" fill="var(--line2)" data-tip="&lt;b&gt;LyondellBasell &mdash; US / Netherlands&lt;/b&gt;&lt;br&gt;World&rsquo;s largest PP producer by capacity. REACH-compliant specialty grades for EU export."/>
-          <text x="-110" y="299" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--ink)">LyondellBasell</text>
-          <text x="-110" y="309" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">US &middot; REACH grades</text>
-          <!-- T3: Formosa (grey, small) -->
-          <path class="anim" d="M-100 378 C-70 376,-20 348,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".2"/>
-          <circle class="anim" cx="-110" cy="378" r="8" fill="var(--line2)" data-tip="&lt;b&gt;Formosa Plastics (台塑) &mdash; Taiwan&lt;/b&gt;&lt;br&gt;Taiwan-based PP producer supplying Guangdong clusters. Competitive pricing; cross-strait policy risk."/>
-          <text x="-110" y="393" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--ink)">Formosa</text>
-          <text x="-110" y="403" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">TW &middot; cross-strait risk</text>
-        </g>
-
-        <g id="gToy" class="eg"> class="eg"> class="eg">
+        <g id="gToy" class="eg">
           <path class="anim" d="M196 90 C270 90,330 330,420 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
           <circle class="anim" cx="178" cy="90" r="18" fill="var(--line2)" data-tip="&lt;b&gt;Spin Master · Hong Kong&lt;/b&gt;&lt;br&gt;Brand intermediary. Squishmallows and Pokémon — $1,290,058 in 2 shipments, $645K a consignment. The $30–70 tier, already inside Ross&amp;rsquo;s vendor list."/>
           <text x="149" y="89" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Spin Master</text>
@@ -695,6 +606,53 @@
           <text x="1024" y="620" text-anchor="end" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">TOY BUYERS &mdash; who else BanaToys sells the same line to</text>
         </g>
 
+        <g id="gUpstream" class="eg">
+          <!-- upstream chain line: PP hub → BanaToys -->
+          <line x1="-70" y1="330" x2="150" y2="330" stroke="url(#gmapU)" stroke-width="3.5"/>
+          <!-- RAW MAT hub -->
+          <circle cx="-90" cy="330" r="20" fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5" data-tip="&lt;b&gt;Polypropylene · PP&lt;/b&gt;&lt;br&gt;Primary input for injection-moulded toys. PP rose 35% January–July 2026 — BanaToys absorbed the full increase without raising its price to Ross."/>
+          <text x="-90" y="334" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="9.5" fill="var(--teal)">PP</text>
+          <text x="-90" y="308" text-anchor="middle" font-family="var(--body)" font-size="9" fill="var(--faint)">RAW MATERIAL</text>
+          <text x="-90" y="362" text-anchor="middle" font-family="var(--body)" font-size="9" fill="var(--faint)">polypropylene</text>
+          <text x="25" y="318" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--faint)">PP +35% YTD · no pass-through</text>
+          <!-- column header -->
+          <text x="-390" y="52" text-anchor="start" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">PP SUPPLIERS — who makes the resin BanaToys moulds</text>
+          <!-- PetroChina -->
+          <path class="anim" d="M-110 330 C-170 330,-230 90,-280 90" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="90" r="20" fill="var(--blue)" data-tip="&lt;b&gt;PetroChina · China&lt;/b&gt;&lt;br&gt;China&apos;s largest PP producer. Daqing, Lanzhou and Maoming refineries. Dominant domestic supplier to Guangdong toy cluster. Output ~5 Mt PP/yr."/>
+          <text x="-328" y="89" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">PetroChina</text>
+          <text x="-328" y="102" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">CN · ~5 Mt/yr PP</text>
+          <!-- Sinopec -->
+          <path class="anim" d="M-110 330 C-170 330,-230 150,-282 150" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="150" r="18" fill="var(--blue)" data-tip="&lt;b&gt;Sinopec · China&lt;/b&gt;&lt;br&gt;China&apos;s second-largest PP producer. Yanshan, Maoming, Guangzhou refineries. Key commodity grade supplier to Chenghai cluster."/>
+          <text x="-326" y="149" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Sinopec</text>
+          <text x="-326" y="162" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">CN · commodity grade</text>
+          <!-- CNOOC -->
+          <path class="anim" d="M-110 330 C-170 330,-230 210,-285 210" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="210" r="15" fill="var(--line2)" data-tip="&lt;b&gt;CNOOC Petrochemicals · China&lt;/b&gt;&lt;br&gt;Huizhou PP unit ships to Guangdong industrial belt — close to Chenghai."/>
+          <text x="-323" y="209" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">CNOOC</text>
+          <text x="-323" y="222" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">CN · Huizhou, Guangdong</text>
+          <!-- Borouge -->
+          <path class="anim" d="M-110 330 C-170 330,-230 390,-285 390" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="390" r="15" fill="var(--line2)" data-tip="&lt;b&gt;Borouge · UAE&lt;/b&gt;&lt;br&gt;ADNOC / Borealis joint venture. Borstar PP technology; ships high-clarity grades to Chinese toy manufacturers."/>
+          <text x="-323" y="389" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Borouge</text>
+          <text x="-323" y="402" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">AE · Borstar grade</text>
+          <!-- LyondellBasell -->
+          <path class="anim" d="M-110 330 C-170 330,-230 450,-284 450" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="450" r="16" fill="var(--line2)" data-tip="&lt;b&gt;LyondellBasell · US / NL&lt;/b&gt;&lt;br&gt;Largest global PP producer by capacity. Exports commodity and specialty grades to China via traders."/>
+          <text x="-324" y="449" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">LyondellBasell</text>
+          <text x="-324" y="462" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">US/NL · global largest</text>
+          <!-- Formosa -->
+          <path class="anim" d="M-110 330 C-170 330,-230 510,-286 510" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="510" r="14" fill="var(--line2)" data-tip="&lt;b&gt;Formosa Plastics · Taiwan&lt;/b&gt;&lt;br&gt;Taiwan-based PP producer. Close proximity to Chenghai; commodity grade shipped direct to Guangdong traders."/>
+          <text x="-322" y="509" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Formosa</text>
+          <text x="-322" y="522" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">TW · close proximity</text>
+          <!-- +others -->
+          <path class="anim" d="M-110 330 C-170 330,-230 570,-284 570" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="570" r="14" fill="none" stroke="var(--line2)" stroke-width="1.6" stroke-dasharray="3,3" data-tip="&lt;b&gt;Other PP suppliers&lt;/b&gt;&lt;br&gt;Including Zhongke Refining, Shaanxi Yanchang and smaller Guangdong traders. Not all feedstock chains visible from public records."/>
+          <text x="-322" y="569" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">+ others</text>
+          <text x="-322" y="582" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">unnamed</text>
+        </g>
         <line x1="206" y1="330" x2="420" y2="330" stroke="url(#gmap)" stroke-width="3.5"/>
         <line x1="460" y1="330" x2="662" y2="330" stroke="url(#gmap)" stroke-width="3.5"/>
         <circle cx="440" cy="330" r="20" fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5" data-tip="&lt;b&gt;Toys · HS 9503&lt;/b&gt;&lt;br&gt;The single category between them: 10&ndash;25 piece moulded pretend-play sets at $1.87&ndash;2.69, $2.08 average."/>
@@ -722,17 +680,15 @@
           <text class="sgn-p" x="690" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
           <text class="sgn-m" x="690" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">&minus;</text>
         </g>
-        <!-- Upstream hint: dashed line + UPSTREAM label + pU button -->
-        <line x1="10" y1="330" x2="86" y2="330" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <text x="100" y="313" text-anchor="middle" font-family="var(--body)" font-weight="600" font-size="10" fill="var(--faint)">UPSTREAM</text>
-        <g id="pU" class="plus" role="button" tabindex="0" aria-label="Expand BanaToys upstream raw material inputs">
-          <circle cx="100" cy="330" r="14" fill="var(--surface)" stroke="var(--blue)" stroke-width="2"/>
-          <text class="sgn-p" x="100" y="336" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
-          <text class="sgn-m" x="100" y="336" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">&minus;</text>
+        <g id="pU" class="plus" role="button" tabindex="0" aria-label="Expand upstream PP suppliers">
+          <circle cx="90" cy="374" r="14" fill="var(--surface)" stroke="var(--teal)" stroke-width="2"/>
+          <text class="sgn-p" x="90" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--teal)">+</text>
+          <text class="sgn-m" x="90" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--teal)">&minus;</text>
+          <text x="90" y="395" text-anchor="middle" font-family="var(--body)" font-size="8.5" fill="var(--faint)">← UPSTREAM</text>
         </g>
       </svg>
       </div>
-      <div class="maphint"><span><b>+ UPSTREAM (above)</b> extends the chart LEFT &mdash; scroll left to see feedstock &rarr; Sinopec, PetroChina, CNOOC, Borouge, LyondellBasell, Formosa</span><span><b>+ under BanaToys</b> opens the buyers column &mdash; everyone else BanaToys sells the same toy line to</span><span><b>+ under Ross</b> opens the suppliers column &mdash; everyone else who sells it toys, including both Chenghai rivals &mdash; and what else Ross buys</span></div>
+      <div class="maphint"><span><b>+ under BanaToys</b> opens the buyers column &mdash; everyone else BanaToys sells the same toy line to</span><span><b>← + upstream of BanaToys</b> opens the PP supplier column &mdash; who makes the resin BanaToys moulds</span><span><b>+ under Ross</b> opens the suppliers column &mdash; everyone else who sells it toys, including both Chenghai rivals &mdash; and what else Ross buys</span></div>
       <div class="src"><b>Same basis as section 03:</b> Ross&rsquo;s 22 suppliers in our own book, $69.5M of trade, grouped by what each one makes &mdash; apparel &amp; textiles 85%, home/d&eacute;cor/furniture 14%, toys and other under 1%. Category is inferred from each supplier&rsquo;s business; the supplier names and amounts are ours. Ross&rsquo;s other <i>toy</i> vendors on the left come from public import records, since none of them is in our book.</div>
       <div class="takeaway"><span class="ic">&rarr;</span><span><b>One category, one product line, and a crowd on both sides of it.</b> Everything between these two companies passes through a single node — pretend-play toys — which is under 1% of what Ross buys through us and 3.6% of BanaToys&rsquo;s stated book. Open either side and the same picture appears twice: Ross has other toy vendors who sell it more than one thing, and BanaToys has other buyers BanaToys sells the same one thing to.</span></div>
     </div>
@@ -823,7 +779,7 @@
         <p class="lead">The counterparty is investment grade and settles in full. <b>It pays its manufacturers a week or so late as a matter of course, and BanaToys is inside that pattern rather than outside it.</b></p>
         <div class="ins">
           <div class="i ok"><span class="m">A2 / A&minus;</span>Ross is Moody&rsquo;s A2 and S&amp;P A&minus;. The receivable itself is the strongest part of this file.</div>
-          <div class="i wa"><span class="m">8.09 days late</span>Ross settles BanaToys 8.09 days past due. The 4-day &ldquo;norm&rdquo; across Ross&rsquo;s book is really one giant apparel platform&rsquo;s number (62% of the weight, paid in 2.6 days). <b>Ross&rsquo;s mid-sized manufacturers all run 7&ndash;9 days late</b> &mdash; BanaToys is ordinary for BanaToys's size, not slow.</div>
+          <div class="i wa"><span class="m">8.09 days late</span>Ross settles BanaToys 8.09 days past due. The 4-day &ldquo;norm&rdquo; across Ross&rsquo;s book is really one giant apparel platform&rsquo;s number. <b>Ross&rsquo;s mid-sized manufacturers all run 7&ndash;9 days late</b> &mdash; BanaToys is ordinary for BanaToys's size, not slow.</div>
           <div class="i wa"><span class="m">NL 64% · Action 34%</span>Top-3 buyers are all Dutch — same consumer cycle, same EU regime. <b>Losing Action removes a third of the book.</b> Ross at 3.6% is the dollar-denominated offset.</div>
         </div>
         <div class="jump"><span>Sections</span><a href="#buyers">06 Buyers &amp; payment</a></div>
@@ -974,7 +930,7 @@
         <div class="tile"><div class="t">Swing factor</div><div class="v" style="color:var(--warn)">Crude</div><div class="d">Every $10/bbl on oil adds about $43&ndash;58/t to PP. A Middle East spike is the one route back to the June peak.</div></div>
         <div class="tile"><div class="t">Who keeps the relief</div><div class="v">BanaToys</div><div class="d">BanaToys's price to Ross did not rise with PP, so it will not fall with it either &mdash; unless Ross asks.</div></div>
       </div>
-      <div class="takeaway"><span class="ic">&rarr;</span><span><b>For once the direction is in BanaToys's favour.</b> BanaToys absorbed the whole 2026 increase without a price move; if PP drifts down through Q4 as the market expects, the margin BanaToys gave up comes back to BanaToys quietly. The two things that would undo that are an oil spike, or Ross reading the same outlook and asking for it first &mdash; which on a 20-cent-a-set freight increase (see Shipment) is not unlikely.</span></div>
+      <div class="takeaway"><span class="ic">&rarr;</span><span><b>For once the direction is in BanaToys's favour.</b> BanaToys absorbed the whole 2026 increase without a price move; if PP drifts down through Q4 as the market expects, the margin BanaToys gave up comes back to BanaToys quietly. The two things that would undo that are an oil spike, or Ross reading the same outlook and asking for it first &mdash; which on a 20-cent-a-set freight increase is not unlikely.</span></div>
     </div>
   </section>
   <!-- 03 SUPPLIER & COMPETITIVE FIELD -->
@@ -984,7 +940,7 @@
 
     <div class="card">
       <h3>Where Ross sources &mdash; and where its toy vendors sit inside that</h3>
-      <p class="sub">Ross&rsquo;s overall import sourcing by country (all categories) &middot; the toy vendors we can place are named under each bar &middot; hover a bar</p>
+      <p class="sub">Ross&rsquo;s overall import sourcing by country &middot; the toy vendors we can place are named under each bar &middot; hover a bar</p>
       <svg viewBox="0 0 1000 340" role="img" aria-label="Ross overall sourcing by country with toy vendors named per country">
         <g stroke="var(--grid)" stroke-width="1"><line x1="300" y1="16" x2="300" y2="302"/><line x1="462" y1="16" x2="462" y2="302"/><line x1="625" y1="16" x2="625" y2="302"/><line x1="787" y1="16" x2="787" y2="302"/><line x1="950" y1="16" x2="950" y2="302"/></g>
         <g font-family="var(--mono)" font-size="11" fill="var(--faint)" text-anchor="middle"><text x="300" y="322">0%</text><text x="462" y="322">15%</text><text x="625" y="322">30%</text><text x="787" y="322">45%</text><text x="950" y="322">60%</text></g>
@@ -1110,7 +1066,7 @@
         <text x="0" y="178" font-family="var(--display)" font-weight="700" font-size="12.5" fill="var(--ink)">Already in place at Ross:</text>
         <text x="300" y="178" font-family="var(--body)" font-size="12" fill="var(--muted)"><tspan font-family="var(--mono)" font-weight="700" fill="var(--ink)">4</tspan> Indian vendors · <tspan font-family="var(--mono)" font-weight="700" fill="var(--ink)">397</tspan> consignments · <tspan font-family="var(--mono)" font-weight="700" fill="var(--ink)">$1.57M</tspan> CIF · one toy maker, three in d&eacute;cor · India is still under 1% of US toy imports</text>
       </svg>
-      <div class="takeaway"><span class="ic">!</span><span><b>Every axis points somewhere other than at BanaToys.</b> On capability, two Chenghai neighbours and one Indian maker can build a tier above BanaToys's; the brand houses (Spin Master, Jazwares) own the licensed tier outright, moving $237K&ndash;645K a consignment against BanaToys's $850K a year. <b>On landed cost, India lands the same goods 20 cents cheaper on a $2 item &mdash; about a quarter of BanaToys's entire price band &mdash; and Ross already runs four Indian vendors and 397 consignments a year, so the lane, the compliance history and the payment relationship all exist.</b> <span style="opacity:.8">The honest limit: the three large Indian vendors ship decor rather than pretend-play, so India is a direction rather than a substitution already under way; Cheng Le is the one that competes on identical terms today.</span> What BanaToys actually has is reliability &mdash; zero dilution, zero claims, a price that has not moved &mdash; and that is a different thing from an advantage.</span></div>
+      <div class="takeaway"><span class="ic">!</span><span><b>Every axis points somewhere other than at BanaToys.</b> On capability, two Chenghai neighbours and one Indian maker can build a tier above BanaToys's; the brand houses own the licensed tier outright, moving $237K&ndash;645K a consignment against BanaToys's $850K a year. <b>On landed cost, India lands the same goods 20 cents cheaper on a $2 item &mdash; about a quarter of BanaToys's entire price band &mdash; and Ross already runs four Indian vendors and 397 consignments a year, so the lane, the compliance history and the payment relationship all exist.</b> <span style="opacity:.8">The honest limit: the three large Indian vendors ship decor rather than pretend-play, so India is a direction rather than a substitution already under way; Cheng Le is the one that competes on identical terms today.</span> What BanaToys actually has is reliability &mdash; zero dilution, zero claims, a price that has not moved &mdash; and that is a different thing from an advantage.</span></div>
     </div>
 
     <div class="card arch" style="margin-top:18px">
@@ -1157,7 +1113,7 @@
         <span><i class="bdg no" style="position:static;border:0">?</i>stated on file · we have not sighted it</span>
         <span><i class="bdg gap" style="position:static;border:0">✕</i>not in our file · or not applicable</span>
       </div>
-      <p class="src" style="margin-top:10px"><b>% = share of applicable items covered on file</b> (e.g. EN71-3 at 80% = 20% of painted items not in the report we hold). File-based, not independently audited.</p>
+      <p class="src" style="margin-top:10px"><b>% = share of applicable items covered on file</b>. File-based, not independently audited.</p>
       <div class="src"><b>Now corroborated by a second source:</b> ISO 9001, <b>ISO 14001</b> and <b>SEDEX</b> all appear on an independent supplier profile — SEDEX was previously marked not found anywhere public, and that finding is withdrawn. <b>Also on the public manufacturer profile, still unconfirmed elsewhere:</b> OHSAS 18001, and Walmart, Toys R Us and Kmart named as customers. <b>Not applicable:</b> WRAP and OEKO-TEX are on file but are garment certificates. Product-safety test reports are never published anywhere, so EN71 and ASTM F963 can only come from the client — their absence here carries no signal at all.</div>
       <div class="takeaway"><span class="ic">!</span><span><b>Four independent sources now put the scale below the filed figure — and none of them agrees with the others.</b> On file: ~500 workers, ~20 lines, $15M turnover. Publicly: 6 lines and $2.5–5M on one listing; 101–200 staff and $1–2.5M on another; <b>51–100 staff and $5.16M on the supplier-intelligence profile</b>. The one number every outside source shares is that the headcount and the turnover are a fraction of the declared ones. <b>Ask for audited accounts and a plant list before any size-dependent decision.</b></span></div>
     </div>
@@ -1372,7 +1328,7 @@
       <div style="margin-top:12px;padding:11px 14px;border-radius:11px;background:var(--sunken);font:500 12px/1.55 var(--body);color:var(--muted)">
         <b style="color:var(--ink)">What "14 markets" hides.</b> The headline count of 14 markets suggests diversification that the value does not support. 64% of stated turnover sits in a single country — which means a Dutch consumer recession, an EUR/USD FX move, or a stricter round of EU toy border enforcement does not hit one account: it hits two-thirds of the book simultaneously. Ross and Walgreens, by contrast, are US-dollar buyers with investment-grade credit and no EU regulatory exposure. The credit risk is in the US. The concentration risk is in the Netherlands.
       </div>
-      <div class="takeaway"><span class="ic">!</span><span><b>Twenty-four buyers across fourteen markets — but 64% of the value in one country, all paying EUR.</b> The real exposure in this file is not Ross (10% of stated value, A-rated, zero dilution). It is the NL cluster, which is correlated in every dimension that matters: consumer cycle, currency, and regulation.</span></div>
+      <div class="takeaway"><span class="ic">!</span><span><b>Twenty-four buyers across fourteen markets — but 64% of the value in one country, all paying EUR.</b> The real exposure in this file is not Ross. It is the NL cluster, which is correlated in every dimension that matters: consumer cycle, currency, and regulation.</span></div>
     </div>
 
     <div class="card" style="margin-top:18px">
@@ -1632,18 +1588,14 @@
 
 (function(){
   var map=document.getElementById('relmap');
-  function tog(id,cls,close){var g=document.getElementById(id); if(!g)return;
-    function act(){close.forEach(function(c){map.classList.remove(c)});map.classList.toggle(cls);setTimeout(fit,0);}
-    g.addEventListener('click',act);
-    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});}
+  function tog(id,cls){var g=document.getElementById(id); if(!g)return;
+    g.addEventListener('click',function(){map.classList.toggle(cls)});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();map.classList.toggle(cls)}});}
   function fit(){ if(!map)return;
     var L=map.classList.contains('expL'), R=map.classList.contains('expR'), U=map.classList.contains('expU');
-    var wrap=map.parentNode;
-    if(U){map.setAttribute('viewBox','-620 258 1720 240');map.style.minWidth='1720px';}
-    else if(L||R){map.setAttribute('viewBox','-20 30 1120 600');map.style.minWidth='1080px';if(wrap)wrap.scrollLeft=0;}
-    else{map.setAttribute('viewBox','0 286 1080 124');map.style.minWidth='1080px';if(wrap)wrap.scrollLeft=0;}
+    map.setAttribute('viewBox', U ? '-420 30 1500 620' : (L||R) ? '0 30 1080 620' : '0 286 1080 124');
   }
-  if(map){tog('pL','expL',['expU']);tog('pR','expR',['expU']);tog('pU','expU',['expL','expR']);
+  if(map){tog('pL','expL');tog('pR','expR');tog('pU','expU');
     map.addEventListener('click',function(){setTimeout(fit,0)});
     map.addEventListener('keyup',function(){setTimeout(fit,0)});
     fit();}
