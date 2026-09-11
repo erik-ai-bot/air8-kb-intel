@@ -481,42 +481,67 @@
   <!-- 00 EXECUTIVE SUMMARY -->
   <section id="summary">
     <div class="sechead"><span class="num">00</span><h2>Executive summary</h2></div>
-    <!-- SUPPLY CHAIN OVERVIEW -->
-    <div class="card" style="margin-bottom:24px">
-      <div style="font:700 10px/1 var(--body);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:14px">The Chain</div>
-      <p style="margin:0 0 18px;font:400 15px/1.65 var(--body);color:var(--ink)">
-        <b>BanaToys</b>, a Chenghai toy brand/trading house with its own moulding lines and a sub-supplier network, sells injection-moulded pretend-play sets (HS&nbsp;9503) to <b>Ross</b>, a US off-price retailer rated <b>A2&nbsp;/&nbsp;A&minus;</b> <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);vertical-align:middle"></span>. The product has <b>low production barriers</b> but sits in a <b>heavily regulated class</b>; price to Ross <b>$1.9&ndash;2.7&nbsp;FOB, $2.08 average</b> <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);vertical-align:middle"></span>.
-      </p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
-        <div style="background:var(--sunken);border-radius:10px;padding:16px 18px">
-          <div style="font:600 10px/1 var(--body);letter-spacing:.09em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Leading Buyers</div>
-          <div style="font:700 14px/1.3 var(--display);color:var(--ink);margin-bottom:8px">US / EU off-price and discount chains</div>
-          <div style="font:400 12.5px/1.55 var(--body);color:var(--muted)">Ross, TJX, Burlington; Action, Pepco, Tedi, Lidl in Europe. All buy on price-to-quality; none runs a vendor program.</div>
-        </div>
-        <div style="background:var(--sunken);border-radius:10px;padding:16px 18px">
-          <div style="font:600 10px/1 var(--body);letter-spacing:.09em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Leading Sellers</div>
-          <div style="font:700 14px/1.3 var(--display);color:var(--ink);margin-bottom:8px">Guangdong OEM / ODM clusters</div>
-          <div style="font:400 12.5px/1.55 var(--body);color:var(--muted)">China is ~two-thirds of US toy imports <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);vertical-align:middle"></span>. India is the alternative origin at <b>10%</b> duty vs China's <b>20%</b> <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);vertical-align:middle"></span>, and already inside Ross's vendor mix.</div>
-        </div>
-        <div style="background:var(--sunken);border-radius:10px;padding:16px 18px">
-          <div style="font:600 10px/1 var(--body);letter-spacing:.09em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Trend</div>
-          <div style="font:700 14px/1.3 var(--display);color:var(--ink);margin-bottom:8px">Channel growing, band shrinking, margins squeezed</div>
-          <div style="font:400 12.5px/1.55 var(--body);color:var(--muted)">Off-price is gaining; the sub-$20 toy band is not. Input cost inflation with no pricing power at the factory.</div>
-        </div>
-      </div>
-    </div>
+    <!-- CHAIN + FINANCING 2-COL LAYOUT -->
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:24px;align-items:stretch">
 
-    <!-- VERDICT BAR -->
-    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:16px;background:var(--good-soft);border:1.5px solid var(--good);margin-bottom:20px">
-      <div style="flex:none;padding:6px 16px;border-radius:999px;background:var(--good);color:#fff;font:800 12px var(--display);letter-spacing:.04em;white-space:nowrap">RECOMMEND FINANCING</div>
-      <div style="font:500 13.5px/1.55 var(--body);color:var(--ink)">
-        <b>Buyer (Ross, S&amp;P A&minus;) pays reliably with zero dilution; supplier quality above peers.</b>
-        <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;font:400 12.5px/1.5 var(--body)">
-          <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Watch NL concentration</b> &mdash; 64% of BanaToys&rsquo;s book in Netherlands; disruption there dents repayment capacity.</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Start smaller</b> &mdash; supplier easily replaceable at Ross; finance today, don&rsquo;t assume long tenure.</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex:none;width:9px;height:9px;border-radius:50%;border:1.5px solid #aaa;background:transparent;margin-top:3px"></span><span><b style="color:var(--ink)">Collect certs before drawdown</b> &mdash; EN71, ASTM F963, CPSC CPC expected to exist; not yet shared with Air8.</span></div>
+      <!-- LEFT: THE CHAIN (content unchanged) -->
+      <div class="card" style="margin:0">
+        <div style="font:700 10px/1 var(--body);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:14px">The Chain</div>
+        <p style="margin:0 0 18px;font:400 15px/1.65 var(--body);color:var(--ink)">
+          <b>BanaToys</b>, a Chenghai toy brand/trading house with its own moulding lines and a sub-supplier network, sells injection-moulded pretend-play sets (HS&nbsp;9503) to <b>Ross</b>, a US off-price retailer rated <b>A2&nbsp;/&nbsp;A&minus;</b> <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);vertical-align:middle"></span>. The product has <b>low production barriers</b> but sits in a <b>heavily regulated class</b>; price to Ross <b>$1.9&ndash;2.7&nbsp;FOB, $2.08 average</b> <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);vertical-align:middle"></span>.
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:var(--sunken);border-radius:10px;padding:16px 18px">
+            <div style="font:600 10px/1 var(--body);letter-spacing:.09em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Leading Buyers</div>
+            <div style="font:700 14px/1.3 var(--display);color:var(--ink);margin-bottom:8px">US / EU off-price and discount chains</div>
+            <div style="font:400 12.5px/1.55 var(--body);color:var(--muted)">Ross, TJX, Burlington; Action, Pepco, Tedi, Lidl in Europe. All buy on price-to-quality; none runs a vendor program.</div>
+          </div>
+          <div style="background:var(--sunken);border-radius:10px;padding:16px 18px">
+            <div style="font:600 10px/1 var(--body);letter-spacing:.09em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Leading Sellers</div>
+            <div style="font:700 14px/1.3 var(--display);color:var(--ink);margin-bottom:8px">Guangdong OEM / ODM clusters</div>
+            <div style="font:400 12.5px/1.55 var(--body);color:var(--muted)">China is ~two-thirds of US toy imports <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);vertical-align:middle"></span>. India is the alternative origin at <b>10%</b> duty vs China's <b>20%</b> <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);vertical-align:middle"></span>, and already inside Ross's vendor mix.</div>
+          </div>
+          <div style="background:var(--sunken);border-radius:10px;padding:16px 18px">
+            <div style="font:600 10px/1 var(--body);letter-spacing:.09em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Trend</div>
+            <div style="font:700 14px/1.3 var(--display);color:var(--ink);margin-bottom:8px">Channel growing, band shrinking, margins squeezed</div>
+            <div style="font:400 12.5px/1.55 var(--body);color:var(--muted)">Off-price is gaining; the sub-$20 toy band is not. Input cost inflation with no pricing power at the factory.</div>
+          </div>
         </div>
       </div>
+
+      <!-- RIGHT: FINANCING RECOMMENDATION green card -->
+      <div style="background:#166534;border-radius:16px;padding:26px 28px;display:flex;flex-direction:column">
+        <div style="font:700 10px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:12px">Financing Recommendation</div>
+        <div style="font:900 28px/1.1 var(--display);color:#fff;letter-spacing:-.02em;margin-bottom:8px">RECOMMEND<br>FINANCING</div>
+        <div style="font:400 13.5px/1.5 var(--body);color:rgba(255,255,255,.75);margin-bottom:20px">Buyer pays reliably &middot; supplier quality above peers</div>
+
+        <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:16px;margin-bottom:14px">
+          <div style="font:700 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px">Why</div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font:400 13px/1.55 var(--body);color:rgba(255,255,255,.9)">
+            <span style="flex:none;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:10px;margin-top:1px">&#10003;</span>
+            <span>Buyer (Ross, S&amp;P A&minus;) pays reliably with zero dilution; supplier quality above peers.</span>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:16px;flex:1">
+          <div style="font:700 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px">Conditions</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.5 var(--body);color:rgba(255,255,255,.9)">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <span style="flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 11px var(--mono);color:#fff;margin-top:1px">1</span>
+              <span>Start with a <b style="color:#fff">smaller initial limit</b>.</span>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <span style="flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 11px var(--mono);color:#fff;margin-top:1px">2</span>
+              <span>Monitor BanaToys&rsquo;s <b style="color:#fff">NL concentration</b> (64%).</span>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <span style="flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 11px var(--mono);color:#fff;margin-top:1px">3</span>
+              <span>Collect <b style="color:#fff">EN71 / CPSC certs</b> before first drawdown.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- 4 MODULE CARDS -->
