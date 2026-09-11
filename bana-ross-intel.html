@@ -395,8 +395,7 @@
   #relmap #gBuy{transform-origin:700px 330px}
   #relmap #gToy{transform-origin:150px 330px}
   #relmap #gCat{transform-origin:700px 330px}
-  #relmap #gUp{transform-origin:-390px 330px}
-  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat,#relmap.expU #gUp{opacity:1;transform:scale(1);pointer-events:auto}
+  #relmap.expL #gBuy,#relmap.expR #gToy,#relmap.expR #gCat{opacity:1;transform:scale(1);pointer-events:auto}
   #relmap .plus{cursor:pointer}
   #relmap .plus:focus{outline:none}
   #relmap .plus:focus-visible circle{stroke-width:3.5}
@@ -406,6 +405,11 @@
   #relmap.expL #pL .sgn-p,#relmap.expR #pR .sgn-p,#relmap.expU #pU .sgn-p{display:none}
   #pL .sgn-m,#pR .sgn-m,#pU .sgn-m{display:none}
   #relmap.expL #pL .sgn-m,#relmap.expR #pR .sgn-m,#relmap.expU #pU .sgn-m{display:block}
+  #relmap #gUpstream{transform-origin:-90px 330px}
+  #relmap.expU #gUpstream{opacity:1;transform:scale(1);pointer-events:auto}
+  #relmap #pU circle{stroke:var(--teal)}
+  #relmap #pU .sgn-p,#relmap #pU .sgn-m{fill:var(--teal)}
+  #relmap .plus:hover #pU circle,#relmap #pU:hover circle{fill:var(--teal)}
   .maphint{display:flex;gap:16px;flex-wrap:wrap;font:500 11.5px var(--body);color:var(--faint);margin-top:6px}
   .maphint b{color:var(--muted);font-weight:600}
 
@@ -545,52 +549,10 @@
       <h3>Who sits either side of this line</h3>
       <p class="sub">Click the <b>+</b> on BanaToys or on Ross to open their side · hover any circle</p>
       <div class="mapwrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-      <svg id="relmap" style="min-width:1080px" viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
-        <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+      <svg id="relmap" viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
+        <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient><linearGradient id="gmapU" gradientUnits="userSpaceOnUse" x1="-110" y1="0" x2="150" y2="0"><stop offset="0" stop-color="var(--teal)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>
 
-        <!-- UPSTREAM: horizontal chain extending LEFT within compact y range (no height change) -->
-        <g id="gUp" class="eg">
-          <text x="-610" y="268" font-family="var(--body)" font-weight="700" font-size="11" fill="var(--muted)">BANATOYS UPSTREAM &mdash; raw material chain to factory</text>
-          <!-- Feedstock: Crude → Propylene -->
-          <circle class="anim" cx="-528" cy="330" r="17" fill="var(--sunken)" stroke="var(--line2)" stroke-width="2" data-tip="&lt;b&gt;Crude oil &rarr; Naphtha &rarr; Propylene&lt;/b&gt;&lt;br&gt;Primary feedstock for PP resin. Tracks Brent crude with 6&ndash;8 week lag. Every $10/bbl rise adds ~$43&ndash;58/t to PP cost."/>
-          <text x="-528" y="351" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--muted)">Crude</text>
-          <text x="-528" y="362" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--muted)">&rarr; Propylene</text>
-          <!-- Feedstock → T1 lines -->
-          <path class="anim" d="M-511 321 C-475 305,-452 298,-410 295" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".55"/>
-          <path class="anim" d="M-511 339 C-475 355,-452 368,-403 375" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".55"/>
-          <!-- T1: Sinopec (red, benchmark) -->
-          <path class="anim" d="M-374 295 C-310 295,-150 312,86 330" fill="none" stroke="var(--risk)" stroke-width="1.5" opacity=".35"/>
-          <circle class="anim" cx="-392" cy="295" r="18" fill="var(--risk)" opacity=".92" data-tip="&lt;b&gt;Sinopec (中国石化) &mdash; CN #1 PP&lt;/b&gt;&lt;br&gt;~35% CN domestic market share. Sinopec&rsquo;s spot list price is the industry benchmark for Guangdong resin buyers.&lt;br&gt;The 2026 +35% spike tracked Sinopec&rsquo;s list price move directly."/>
-          <text x="-392" y="278" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="10" fill="var(--ink)">Sinopec</text>
-          <text x="-392" y="267" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--risk)">CN #1 &middot; +35% this yr</text>
-          <!-- T1: PetroChina (blue) -->
-          <path class="anim" d="M-377 375 C-310 368,-150 345,86 330" fill="none" stroke="var(--line2)" stroke-width="1.2" opacity=".3"/>
-          <circle class="anim" cx="-390" cy="375" r="13" fill="var(--blue)" opacity=".85" data-tip="&lt;b&gt;PetroChina (中国石油) &mdash; CN #2 PP&lt;/b&gt;&lt;br&gt;Second-largest CN PP producer. Price typically 2&ndash;5% below Sinopec spot. Strong Guangdong distribution."/>
-          <text x="-390" y="393" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9.5" fill="var(--ink)">PetroChina</text>
-          <text x="-390" y="404" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">CN #2</text>
-          <!-- T2: CNOOC (blue, smaller) -->
-          <path class="anim" d="M-226 290 C-180 290,-100 310,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".28"/>
-          <circle class="anim" cx="-237" cy="290" r="11" fill="var(--blue)" opacity=".75" data-tip="&lt;b&gt;CNOOC (中海油)&lt;/b&gt;&lt;br&gt;Offshore petrochemicals. Huizhou (Guangdong) plant &mdash; closest major PP producer to Chenghai cluster."/>
-          <text x="-237" y="305" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9.5" fill="var(--ink)">CNOOC</text>
-          <text x="-237" y="316" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">Huizhou &middot; coastal</text>
-          <!-- T2: Borouge (grey) -->
-          <path class="anim" d="M-226 375 C-180 372,-100 345,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".25"/>
-          <circle class="anim" cx="-237" cy="375" r="10" fill="var(--line2)" data-tip="&lt;b&gt;Borouge (Abu Dhabi + Borealis) &mdash; UAE&lt;/b&gt;&lt;br&gt;Major PP exporter to CN and SE Asia. Specialty grades; supply independent of CN domestic disruptions."/>
-          <text x="-237" y="390" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9.5" fill="var(--ink)">Borouge</text>
-          <text x="-237" y="401" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">UAE &middot; specialty</text>
-          <!-- T3: LyondellBasell (grey, small) -->
-          <path class="anim" d="M-99 285 C-70 285,-20 312,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".22"/>
-          <circle class="anim" cx="-110" cy="285" r="9" fill="var(--line2)" data-tip="&lt;b&gt;LyondellBasell &mdash; US / Netherlands&lt;/b&gt;&lt;br&gt;World&rsquo;s largest PP producer by capacity. REACH-compliant specialty grades for EU export."/>
-          <text x="-110" y="299" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--ink)">LyondellBasell</text>
-          <text x="-110" y="309" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">US &middot; REACH grades</text>
-          <!-- T3: Formosa (grey, small) -->
-          <path class="anim" d="M-100 378 C-70 376,-20 348,86 330" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".2"/>
-          <circle class="anim" cx="-110" cy="378" r="8" fill="var(--line2)" data-tip="&lt;b&gt;Formosa Plastics (台塑) &mdash; Taiwan&lt;/b&gt;&lt;br&gt;Taiwan-based PP producer supplying Guangdong clusters. Competitive pricing; cross-strait policy risk."/>
-          <text x="-110" y="393" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="9" fill="var(--ink)">Formosa</text>
-          <text x="-110" y="403" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--faint)">TW &middot; cross-strait risk</text>
-        </g>
-
-        <g id="gToy" class="eg"> class="eg"> class="eg">
+        <g id="gToy" class="eg">
           <path class="anim" d="M196 90 C270 90,330 330,420 330" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
           <circle class="anim" cx="178" cy="90" r="18" fill="var(--line2)" data-tip="&lt;b&gt;Spin Master · Hong Kong&lt;/b&gt;&lt;br&gt;Brand intermediary. Squishmallows and Pokémon — $1,290,058 in 2 shipments, $645K a consignment. The $30–70 tier, already inside Ross&amp;rsquo;s vendor list."/>
           <text x="149" y="89" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Spin Master</text>
@@ -695,6 +657,53 @@
           <text x="1024" y="620" text-anchor="end" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">TOY BUYERS &mdash; who else BanaToys sells the same line to</text>
         </g>
 
+        <g id="gUpstream" class="eg">
+          <!-- upstream chain line: PP hub → BanaToys -->
+          <line x1="-70" y1="330" x2="150" y2="330" stroke="url(#gmapU)" stroke-width="3.5"/>
+          <!-- RAW MAT hub -->
+          <circle cx="-90" cy="330" r="20" fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5" data-tip="&lt;b&gt;Polypropylene · PP&lt;/b&gt;&lt;br&gt;Primary input for injection-moulded toys. PP rose 35% January–July 2026 — BanaToys absorbed the full increase without raising its price to Ross."/>
+          <text x="-90" y="334" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="9.5" fill="var(--teal)">PP</text>
+          <text x="-90" y="308" text-anchor="middle" font-family="var(--body)" font-size="9" fill="var(--faint)">RAW MATERIAL</text>
+          <text x="-90" y="362" text-anchor="middle" font-family="var(--body)" font-size="9" fill="var(--faint)">polypropylene</text>
+          <text x="25" y="318" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--faint)">PP +35% YTD · no pass-through</text>
+          <!-- column header -->
+          <text x="-390" y="52" text-anchor="start" font-family="var(--body)" font-weight="700" font-size="11.5" fill="var(--muted)">PP SUPPLIERS — who makes the resin BanaToys moulds</text>
+          <!-- PetroChina -->
+          <path class="anim" d="M-110 330 C-170 330,-230 90,-280 90" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="90" r="20" fill="var(--blue)" data-tip="&lt;b&gt;PetroChina · China&lt;/b&gt;&lt;br&gt;China&apos;s largest PP producer. Daqing, Lanzhou and Maoming refineries. Dominant domestic supplier to Guangdong toy cluster. Output ~5 Mt PP/yr."/>
+          <text x="-328" y="89" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">PetroChina</text>
+          <text x="-328" y="102" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">CN · ~5 Mt/yr PP</text>
+          <!-- Sinopec -->
+          <path class="anim" d="M-110 330 C-170 330,-230 150,-282 150" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="150" r="18" fill="var(--blue)" data-tip="&lt;b&gt;Sinopec · China&lt;/b&gt;&lt;br&gt;China&apos;s second-largest PP producer. Yanshan, Maoming, Guangzhou refineries. Key commodity grade supplier to Chenghai cluster."/>
+          <text x="-326" y="149" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Sinopec</text>
+          <text x="-326" y="162" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">CN · commodity grade</text>
+          <!-- CNOOC -->
+          <path class="anim" d="M-110 330 C-170 330,-230 210,-285 210" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="210" r="15" fill="var(--line2)" data-tip="&lt;b&gt;CNOOC Petrochemicals · China&lt;/b&gt;&lt;br&gt;Huizhou PP unit ships to Guangdong industrial belt — close to Chenghai."/>
+          <text x="-323" y="209" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">CNOOC</text>
+          <text x="-323" y="222" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">CN · Huizhou, Guangdong</text>
+          <!-- Borouge -->
+          <path class="anim" d="M-110 330 C-170 330,-230 390,-285 390" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="390" r="15" fill="var(--line2)" data-tip="&lt;b&gt;Borouge · UAE&lt;/b&gt;&lt;br&gt;ADNOC / Borealis joint venture. Borstar PP technology; ships high-clarity grades to Chinese toy manufacturers."/>
+          <text x="-323" y="389" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Borouge</text>
+          <text x="-323" y="402" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">AE · Borstar grade</text>
+          <!-- LyondellBasell -->
+          <path class="anim" d="M-110 330 C-170 330,-230 450,-284 450" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="450" r="16" fill="var(--line2)" data-tip="&lt;b&gt;LyondellBasell · US / NL&lt;/b&gt;&lt;br&gt;Largest global PP producer by capacity. Exports commodity and specialty grades to China via traders."/>
+          <text x="-324" y="449" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">LyondellBasell</text>
+          <text x="-324" y="462" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">US/NL · global largest</text>
+          <!-- Formosa -->
+          <path class="anim" d="M-110 330 C-170 330,-230 510,-286 510" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="510" r="14" fill="var(--line2)" data-tip="&lt;b&gt;Formosa Plastics · Taiwan&lt;/b&gt;&lt;br&gt;Taiwan-based PP producer. Close proximity to Chenghai; commodity grade shipped direct to Guangdong traders."/>
+          <text x="-322" y="509" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">Formosa</text>
+          <text x="-322" y="522" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">TW · close proximity</text>
+          <!-- +others -->
+          <path class="anim" d="M-110 330 C-170 330,-230 570,-284 570" fill="none" stroke="var(--line2)" stroke-width="1.3"/>
+          <circle class="anim" cx="-300" cy="570" r="14" fill="none" stroke="var(--line2)" stroke-width="1.6" stroke-dasharray="3,3" data-tip="&lt;b&gt;Other PP suppliers&lt;/b&gt;&lt;br&gt;Including Zhongke Refining, Shaanxi Yanchang and smaller Guangdong traders. Not all feedstock chains visible from public records."/>
+          <text x="-322" y="569" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--ink)">+ others</text>
+          <text x="-322" y="582" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">unnamed</text>
+        </g>
         <line x1="206" y1="330" x2="420" y2="330" stroke="url(#gmap)" stroke-width="3.5"/>
         <line x1="460" y1="330" x2="662" y2="330" stroke="url(#gmap)" stroke-width="3.5"/>
         <circle cx="440" cy="330" r="20" fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5" data-tip="&lt;b&gt;Toys · HS 9503&lt;/b&gt;&lt;br&gt;The single category between them: 10&ndash;25 piece moulded pretend-play sets at $1.87&ndash;2.69, $2.08 average."/>
@@ -722,13 +731,11 @@
           <text class="sgn-p" x="690" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
           <text class="sgn-m" x="690" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">&minus;</text>
         </g>
-        <!-- Upstream hint: dashed line + UPSTREAM label + pU button -->
-        <line x1="10" y1="330" x2="86" y2="330" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <text x="100" y="313" text-anchor="middle" font-family="var(--body)" font-weight="600" font-size="10" fill="var(--faint)">UPSTREAM</text>
-        <g id="pU" class="plus" role="button" tabindex="0" aria-label="Expand BanaToys upstream raw material inputs">
-          <circle cx="100" cy="330" r="14" fill="var(--surface)" stroke="var(--blue)" stroke-width="2"/>
-          <text class="sgn-p" x="100" y="336" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">+</text>
-          <text class="sgn-m" x="100" y="336" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--blue)">&minus;</text>
+        <g id="pU" class="plus" role="button" tabindex="0" aria-label="Expand upstream PP suppliers">
+          <circle cx="90" cy="374" r="14" fill="var(--surface)" stroke="var(--teal)" stroke-width="2"/>
+          <text class="sgn-p" x="90" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--teal)">+</text>
+          <text class="sgn-m" x="90" y="380" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--teal)">&minus;</text>
+          <text x="90" y="395" text-anchor="middle" font-family="var(--body)" font-size="8.5" fill="var(--faint)">← UPSTREAM</text>
         </g>
       </svg>
       </div>
@@ -1632,18 +1639,14 @@
 
 (function(){
   var map=document.getElementById('relmap');
-  function tog(id,cls,close){var g=document.getElementById(id); if(!g)return;
-    function act(){close.forEach(function(c){map.classList.remove(c)});map.classList.toggle(cls);setTimeout(fit,0);}
-    g.addEventListener('click',act);
-    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});}
+  function tog(id,cls){var g=document.getElementById(id); if(!g)return;
+    g.addEventListener('click',function(){map.classList.toggle(cls)});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();map.classList.toggle(cls)}});}
   function fit(){ if(!map)return;
     var L=map.classList.contains('expL'), R=map.classList.contains('expR'), U=map.classList.contains('expU');
-    var wrap=map.parentNode;
-    if(U){map.setAttribute('viewBox','-620 258 1720 240');map.style.minWidth='1720px';}
-    else if(L||R){map.setAttribute('viewBox','-20 30 1120 600');map.style.minWidth='1080px';if(wrap)wrap.scrollLeft=0;}
-    else{map.setAttribute('viewBox','0 286 1080 124');map.style.minWidth='1080px';if(wrap)wrap.scrollLeft=0;}
+    map.setAttribute('viewBox', U ? '-420 30 1500 620' : (L||R) ? '0 30 1080 620' : '0 286 1080 124');
   }
-  if(map){tog('pL','expL',['expU']);tog('pR','expR',['expU']);tog('pU','expU',['expL','expR']);
+  if(map){tog('pL','expL');tog('pR','expR');tog('pU','expU');
     map.addEventListener('click',function(){setTimeout(fit,0)});
     map.addEventListener('keyup',function(){setTimeout(fit,0)});
     fit();}
