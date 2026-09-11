@@ -509,34 +509,38 @@
         </div>
       </div>
 
-      <!-- RIGHT: FINANCING RECOMMENDATION green card -->
-      <div style="background:#166534;border-radius:16px;padding:26px 28px;display:flex;flex-direction:column;box-sizing:border-box;min-height:100%">
-        <div style="font:700 10px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:12px">Financing Recommendation</div>
-        <div style="font:900 28px/1.1 var(--display);color:#fff;letter-spacing:-.02em;margin-bottom:8px">RECOMMEND<br>FINANCING</div>
-        <div style="font:400 13.5px/1.5 var(--body);color:rgba(255,255,255,.75);margin-bottom:20px">Buyer pays reliably &middot; supplier quality above peers</div>
-
-        <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:16px;margin-bottom:14px">
-          <div style="font:700 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px">Why</div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font:400 13px/1.55 var(--body);color:rgba(255,255,255,.9)">
-            <span style="flex:none;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:10px;margin-top:1px">&#10003;</span>
-            <span>Buyer (Ross, S&amp;P A&minus;) pays reliably with zero dilution; supplier quality above peers.</span>
-          </div>
+      <!-- RIGHT: FINANCING RECOMMENDATION card (green banner top, white body) -->
+      <div style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)">
+        <!-- Green banner -->
+        <div style="background:#166534;padding:22px 24px 20px">
+          <div style="font:700 10px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px">Financing Recommendation</div>
+          <div style="font:900 26px/1.1 var(--display);color:#fff;letter-spacing:-.02em;margin-bottom:7px">RECOMMEND FINANCING</div>
+          <div style="font:400 13px/1.45 var(--body);color:rgba(255,255,255,.78)">Buyer pays reliably &middot; supplier quality above peers</div>
         </div>
-
-        <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:16px;flex:1">
-          <div style="font:700 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px">Conditions</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.5 var(--body);color:rgba(255,255,255,.9)">
-            <div style="display:flex;gap:10px;align-items:flex-start">
-              <span style="flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 11px var(--mono);color:#fff;margin-top:1px">1</span>
-              <span>Start with a <b style="color:#fff">smaller initial limit</b>.</span>
+        <!-- White body -->
+        <div style="padding:20px 24px">
+          <div style="margin-bottom:18px">
+            <div style="font:700 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Why</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font:400 13px/1.55 var(--body);color:var(--ink)">
+              <span style="flex:none;width:18px;height:18px;border-radius:4px;background:var(--good-soft);border:1px solid var(--good);display:grid;place-items:center;font-size:11px;color:var(--good);margin-top:1px">&#10003;</span>
+              <span>Buyer (Ross, S&amp;P A&minus;) pays reliably with <b>zero dilution</b>; supplier quality above peers.</span>
             </div>
-            <div style="display:flex;gap:10px;align-items:flex-start">
-              <span style="flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 11px var(--mono);color:#fff;margin-top:1px">2</span>
-              <span>Monitor BanaToys&rsquo;s <b style="color:#fff">NL concentration</b> (64%).</span>
-            </div>
-            <div style="display:flex;gap:10px;align-items:flex-start">
-              <span style="flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 11px var(--mono);color:#fff;margin-top:1px">3</span>
-              <span>Collect <b style="color:#fff">EN71 / CPSC certs</b> before first drawdown.</span>
+          </div>
+          <div style="border-top:1px solid var(--line);padding-top:16px">
+            <div style="font:700 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Conditions</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.5 var(--body);color:var(--ink)">
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="flex:none;width:20px;height:20px;border-radius:6px;background:var(--sunken);border:1px solid var(--line2);display:grid;place-items:center;font:700 11px var(--mono);color:var(--muted);margin-top:1px">1</span>
+                <span>Start with a <b>smaller initial limit</b>.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="flex:none;width:20px;height:20px;border-radius:6px;background:var(--sunken);border:1px solid var(--line2);display:grid;place-items:center;font:700 11px var(--mono);color:var(--muted);margin-top:1px">2</span>
+                <span>Monitor BanaToys&rsquo;s <b>NL concentration</b> (64%).</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="flex:none;width:20px;height:20px;border-radius:6px;background:var(--sunken);border:1px solid var(--line2);display:grid;place-items:center;font:700 11px var(--mono);color:var(--muted);margin-top:1px">3</span>
+                <span>Collect <b>EN71 / CPSC certs</b> before first drawdown.</span>
+              </div>
             </div>
           </div>
         </div>
