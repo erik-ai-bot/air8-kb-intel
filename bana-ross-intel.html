@@ -38,7 +38,7 @@
   }
   *{box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1200px;margin:0 auto;padding:28px 40px 90px}
+  .wrap{max-width:1280px;margin:0 auto;padding:28px 20px 90px}
 
   /* nav */
   .nav{position:sticky;top:12px;z-index:10;display:flex;gap:2px;flex-wrap:wrap;align-items:center;padding:8px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:var(--shadow);width:max-content;max-width:100%;margin:0 auto 34px}
@@ -513,55 +513,55 @@
     </div>
 
     <!-- 4 MODULE CARDS -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px">
 
       <!-- 1. Product & Chain -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--ok)">
-        <div style="font:700 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ok);margin-bottom:8px">&#9312; Product &amp; Chain</div>
-        <div style="font:800 16px/1.25 var(--display);letter-spacing:-.01em;margin-bottom:14px;color:var(--ink)">Low barrier &middot; mid-price &middot; easy to substitute</div>
-        <div style="display:flex;flex-direction:column;gap:9px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;margin-top:3px"></span><span><b style="color:var(--ink)">Compliance-heavy, evidence not yet seen</b> &mdash; standard EN71&nbsp;+&nbsp;CPSC/ASTM F963; factory actively shipping, certs expected.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Price mid-market, margin squeezed</b> &mdash; $2.08 FOB (45th percentile); PP resin <b style="color:var(--ink)">+35%</b> absorbed, zero pass-through.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Tariff disadvantage vs India</b> &mdash; China 20% vs India 10%; <b style="color:var(--ink)">$0.20/unit gap</b>; India already in Ross&rsquo;s vendor mix.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Trend</b> &mdash; off-price channel growing, but the sub-$20 toy band is shrinking. BanaToys +86% into Ross is share capture in a flat market, not a rising tide.</span></div>
+      <div style="background:var(--surface);border:2px solid var(--line2);border-radius:14px;padding:20px 22px">
+        <div style="font:600 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">&#9312; Product &amp; Chain</div>
+        <div style="font:800 22px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:16px;color:var(--ink)">Low barrier &middot; mid-price &middot; easy to substitute</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.55 var(--body);color:var(--muted)">
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;border:1.5px solid #aaa;background:transparent;margin-top:3px"></span><span><b style="color:var(--ink)">Compliance-heavy, evidence not yet seen</b> &mdash; standard EN71 + CPSC/ASTM F963; factory actively shipping, certs expected.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Price mid-market, margin squeezed</b> &mdash; $2.08 FOB (45th percentile); PP resin <b style="color:var(--ink)">+35%</b> absorbed, zero pass-through.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Tariff disadvantage vs India</b> &mdash; China 20% vs India 10%; <b style="color:var(--ink)">$0.20/unit gap</b>; India already in Ross&rsquo;s vendor mix.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Trend</b> &mdash; off-price channel growing, but the sub-$20 toy band is shrinking. BanaToys +86% into Ross is share capture in a flat market, not a rising tide.</span></div>
         </div>
       </div>
 
       <!-- 2. Buyer · Ross -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid #f59e0b">
-        <div style="font:700 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:#f59e0b;margin-bottom:8px">&#9313; Buyer &middot; Ross</div>
-        <div style="font:800 16px/1.25 var(--display);letter-spacing:-.01em;margin-bottom:14px;color:var(--ink)">Pays reliably &middot; zero dilution &middot; thin account</div>
-        <div style="display:flex;flex-direction:column;gap:9px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">A-rated buyer</b> (S&amp;P A&minus;&nbsp;/&nbsp;Moody&rsquo;s A2) &mdash; receivable finance risk negligible.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Pays 8.09 days late</b> &mdash; consistent with its other manufacturers (7&ndash;9&nbsp;d); systematic policy, not distress.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">Zero claims, zero dilution</b> &mdash; perfectly clean acceptance history.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Thin account</b> &mdash; $850K/yr, <b style="color:var(--ink)">0.21%</b> of Ross&rsquo;s supply base; can de-list without disruption.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Competitive buyer set</b> &mdash; Ross, TJX, Burlington and their EU equivalents (Action, Pepco, Lidl) all buy the same $1&ndash;4 assortment on price/quality; no vendor program &mdash; de-list risk is always present.</span></div>
+      <div style="background:var(--surface);border:2px solid #f59e0b;border-radius:14px;padding:20px 22px">
+        <div style="font:600 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:10px">&#9313; Buyer &middot; Ross</div>
+        <div style="font:800 22px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:16px;color:var(--ink)">Pays reliably &middot; zero dilution &middot; thin account</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.55 var(--body);color:var(--muted)">
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">A-rated buyer</b> (S&amp;P A&minus; / Moody&rsquo;s A2) &mdash; receivable finance risk negligible.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Pays 8.09 days late</b> &mdash; consistent with its other manufacturers (7&ndash;9&nbsp;d); systematic policy, not distress.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">Zero claims, zero dilution</b> &mdash; perfectly clean acceptance history.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Thin account</b> &mdash; $850K/yr, <b style="color:var(--ink)">0.21%</b> of Ross&rsquo;s supply base; can de-list without disruption.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Competitive buyer set</b> &mdash; Ross, TJX, Burlington and EU equivalents (Action, Pepco, Lidl) all buy the same $1&ndash;4 assortment on price/quality; no vendor program &mdash; de-list risk is always present.</span></div>
         </div>
       </div>
 
       <!-- 3. Supplier · BanaToys -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--risk)">
-        <div style="font:700 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--risk);margin-bottom:8px">&#9314; Supplier &middot; BanaToys</div>
-        <div style="font:800 16px/1.25 var(--display);letter-spacing:-.01em;margin-bottom:14px;color:var(--ink)">Quality above peers &middot; zero pricing power &middot; NL-concentrated</div>
-        <div style="display:flex;flex-direction:column;gap:9px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">Quality above peers</b> &mdash; no recall found, zero disputes; the supplier&rsquo;s only real differentiator.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Delivery 12.1 days late</b> (3rd percentile of Ross&rsquo;s field) &mdash; systematic lag, not occasional.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Competition STRONG</b> &mdash; Cheng Le (same cluster) shipped to Ross Aug&nbsp;2026; India at <b style="color:var(--ink)">10%</b> tariff. Switch cost: 7&ndash;15 days.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">64% Netherlands-concentrated</b> &mdash; Action 34% + Toi-Toys 21%; one EU shock hits most of the book.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Pricing power zero</b> &mdash; PP +35% absorbed with no pass-through; price mid-market but margin compressed.</span></div>
+      <div style="background:var(--surface);border:2px solid var(--risk);border-radius:14px;padding:20px 22px">
+        <div style="font:600 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--risk);margin-bottom:10px">&#9314; Supplier &middot; BanaToys</div>
+        <div style="font:800 22px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:16px;color:var(--ink)">Quality above peers &middot; zero pricing power &middot; NL-concentrated</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.55 var(--body);color:var(--muted)">
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">Quality above peers</b> &mdash; no recall found, zero disputes; the supplier&rsquo;s only real differentiator.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Delivery 12.1 days late</b> (3rd percentile of Ross&rsquo;s field) &mdash; systematic lag, not occasional.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Competition STRONG</b> &mdash; Cheng Le (same cluster) shipped to Ross Aug&nbsp;2026; India at <b style="color:var(--ink)">10%</b> tariff. Switch cost: 7&ndash;15 days.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">64% Netherlands-concentrated</b> &mdash; Action 34% + Toi-Toys 21%; one EU shock hits most of the book.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--risk);margin-top:3px"></span><span><b style="color:var(--ink)">Pricing power zero</b> &mdash; PP +35% absorbed with no pass-through; price mid-market but margin compressed.</span></div>
         </div>
       </div>
 
       <!-- 4. Financeability -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--blue)">
-        <div style="font:700 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--blue);margin-bottom:8px">&#9315; Financeability</div>
-        <div style="font:800 16px/1.25 var(--display);letter-spacing:-.01em;margin-bottom:14px;color:var(--ink)">Ross pays &middot; manage three conditions</div>
-        <div style="display:flex;flex-direction:column;gap:9px">
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">Receivable clean</b> &mdash; A-rated buyer, zero claims; standard AR finance.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Watch NL concentration</b> &mdash; 64% of BanaToys&rsquo;s book in Netherlands; disruption there dents repayment capacity.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Start smaller</b> &mdash; supplier easily replaceable at Ross; finance today, don&rsquo;t assume long tenure.</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;font:400 12.5px/1.5 var(--body);color:var(--muted)"><span style="flex:none;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;margin-top:3px"></span><span><b style="color:var(--ink)">Collect certs before drawdown</b> &mdash; EN71, ASTM F963, CPSC CPC expected to exist; not yet shared with Air8.</span></div>
+      <div style="background:var(--surface);border:2px solid var(--blue);border-radius:14px;padding:20px 22px">
+        <div style="font:600 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px">&#9315; Financeability</div>
+        <div style="font:800 22px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:16px;color:var(--ink)">Ross pays &middot; manage three conditions</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font:400 13px/1.55 var(--body);color:var(--muted)">
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--ok);margin-top:3px"></span><span><b style="color:var(--ink)">Receivable clean</b> &mdash; A-rated buyer, zero claims; standard AR finance.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Watch NL concentration</b> &mdash; 64% of BanaToys&rsquo;s book in Netherlands; disruption there dents repayment capacity.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-top:3px"></span><span><b style="color:var(--ink)">Start smaller</b> &mdash; supplier easily replaceable at Ross; finance today, don&rsquo;t assume long tenure.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:10px;height:10px;border-radius:50%;border:1.5px solid #aaa;background:transparent;margin-top:3px"></span><span><b style="color:var(--ink)">Collect certs before drawdown</b> &mdash; EN71, ASTM F963, CPSC CPC expected to exist; not yet shared with Air8.</span></div>
         </div>
       </div>
 
