@@ -72,6 +72,13 @@
   @keyframes flow{to{stroke-dashoffset:-44}}
   @media(prefers-reduced-motion:reduce){#macro .flow{animation:none}}
   #macro .pool text{fill:var(--faint)}
+  .perctl{display:inline-flex;align-items:center;gap:0;background:var(--sunken);border-radius:999px;padding:3px;margin-left:auto}
+  .perctl button{font:700 11px var(--body);color:var(--muted);background:none;border:0;border-radius:999px;padding:5px 11px;cursor:pointer}
+  .perctl button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(16,24,40,.12)}
+  .perctl button.play{color:var(--blue)}
+  .perctl .cur{font:700 11px var(--mono);color:var(--ink);background:var(--surface);border-radius:999px;padding:5px 11px;box-shadow:0 1px 3px rgba(16,24,40,.12)}
+  .stagehd .zoombtn{margin-left:10px}
+  #macro .p0,#macro .p1{transition:opacity .25s}
   #macro .chainpill{cursor:pointer}
   #macro .chainpill:hover rect{fill:var(--blue)} #macro .chainpill:hover text{fill:#fff}
   #macro circle[data-tip]{cursor:help}
@@ -133,7 +140,8 @@
   .gtip{position:absolute;z-index:200;background:var(--ink);color:var(--bg);font:500 11.5px/1.5 var(--body);padding:9px 12px;border-radius:9px;max-width:252px;pointer-events:none;box-shadow:0 12px 32px rgba(0,0,0,.25)}
   .gtip b{color:var(--bg);font-weight:700}
   [data-tip]{cursor:help}
-  .src{font:500 11px/1.5 var(--body);color:var(--faint);margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+  .src{font:500 10.5px/1.5 var(--body);color:var(--faint);margin-top:9px;padding-top:8px;border-top:1px dashed var(--line)}
+  .src b{color:var(--muted);font-weight:700;letter-spacing:.04em}
   .src b{color:var(--muted);font-weight:600}
 
   /* level 3 sections */
@@ -263,20 +271,22 @@
   <!-- LEVEL 1 : what this chain is -->
   <div class="card">
     <div class="lvl">Level 1 · The chain</div>
-    <p class="lede" style="margin-top:8px"><b>A small Chenghai toy factory sells $2 plastic play sets to a US off-price chain.</b> A <b>commoditised, compliance-heavy</b> product in a <b>buyer-dominated</b> market: fragmented Guangdong supply sells to a few off-price chains that buy on <b>price, on-time delivery and quality</b>, with <b>compliance a must-have</b>; <b>low switching cost</b>, a mature category <b>trading down</b>, <b>sensitive to tariff and freight</b>.</p>
+    <p class="lede" style="margin-top:8px"><b>A small Chenghai toy factory sells $2 plastic play sets to a US off-price chain.</b> A <b>commoditised, compliance-heavy</b> product in a <b>buyer-dominated</b> market: fragmented Guangdong supply sells to a few off-price chains that buy on <b>price, on-time delivery and quality</b>, with <b>compliance a must-have, not a selling point</b>; <b>low switching cost</b>, a mature category <b>trading down</b>, <b>sensitive to tariff and freight</b>.</p>
     <div class="mapstage">
-      <div class="stagehd"><span class="lvl" id="stagelbl">The field &middot; where this chain sits</span><button type="button" class="zoombtn" id="zoomIn">Zoom in to this chain &rarr;</button><button type="button" class="zoombtn back" id="zoomOut" hidden>&larr; Back to the field</button></div>
-      <svg id="macro" viewBox="0 0 1000 386" role="img" aria-label="The wider field of toy trade, with one line — BanaToys to basic sets to Ross — running through it">
-        <defs><linearGradient id="gmac" gradientUnits="userSpaceOnUse" x1="178" y1="0" x2="858" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
-        <!-- THE POOL : everything in the field, kept quiet -->
-        <rect x="26" y="46" width="948" height="308" rx="60" fill="var(--sunken)" opacity=".7"/>
-        <g class="pool" font-family="var(--body)" font-weight="700" font-size="10.5" letter-spacing="1.2" text-anchor="middle">
-          <text x="150" y="22">WHERE TOYS ARE MADE</text><text x="500" y="22">WHAT IS MADE</text><text x="850" y="22">WHO BUYS IT</text>
+      <div class="stagehd"><span class="lvl" id="stagelbl">The field &middot; where this chain sits</span><span class="perctl" id="perctl"><span class="cur" id="curPer">2026 &middot; Jan&ndash;Jul</span><button type="button" class="play" id="playBtn">&#9654; Play 3 years</button></span><button type="button" class="zoombtn" id="zoomIn">Zoom in to this chain &rarr;</button><button type="button" class="zoombtn back" id="zoomOut" hidden>&larr; Back to the field</button></div>
+      <svg id="macro" viewBox="0 0 1000 400" role="img" aria-label="The wider field of toy trade, with one line running through it">
+          <defs><linearGradient id="gmac" gradientUnits="userSpaceOnUse" x1="178" y1="0" x2="858" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+          <rect x="26" y="46" width="948" height="308" rx="60" fill="var(--sunken)" opacity=".7"/>
+          <g class="pool" font-family="var(--body)" font-weight="700" font-size="10.5" letter-spacing="1.2" text-anchor="middle">
+            <text x="150" y="22">WHERE TOYS ARE MADE</text><text x="500" y="22">WHAT IS MADE</text><text x="850" y="22">WHO BUYS IT</text></g>
+          <g class="pool" font-family="var(--body)" font-size="9.5" text-anchor="middle">
+            <text x="150" y="36">share of US toy imports</text><text x="500" y="36">HS 9503 &middot; the category</text></g>
+        <g font-family="var(--mono)" font-size="9" text-anchor="middle" fill="var(--faint)">
+          <text class="p0" x="850" y="36">market size: US $8.03bn &middot; EU &euro;2.64bn</text>
+          <text class="p1" x="850" y="36">US $7.33bn <tspan style="fill:var(--risk)">&minus;9%</tspan> &middot; EU &euro;3.22bn <tspan style="fill:var(--good)">+22%</tspan></text>
+          <text class="p2" x="850" y="36">US $7.12bn <tspan style="fill:var(--risk)">&minus;3%</tspan> &middot; EU &euro;3.10bn <tspan style="fill:var(--risk)">&minus;4%</tspan></text>
         </g>
-        <g class="pool" font-family="var(--body)" font-size="9.5" text-anchor="middle">
-          <text x="150" y="36">share of US toy imports</text><text x="500" y="36">HS 9503 by price tier</text><text x="850" y="36">retail channel &middot; direction</text>
-        </g>
-        <g fill="none" stroke="var(--line2)" opacity=".4" stroke-linecap="round">
+          <g fill="none" stroke="var(--line2)" opacity=".4" stroke-linecap="round">
           <path d="M210 184 C361 184,361 153,513 153" stroke-width="5"/>
           <path d="M177 85 C345 85,345 145,513 145" stroke-width="3"/>
           <path d="M175 89 C316 89,316 193,457 193" stroke-width="1.5"/>
@@ -284,118 +294,129 @@
           <path d="M170 311 C343 311,343 161,515 161" stroke-width="1"/>
           <path d="M74 121 C265 121,265 198,456 198" stroke-width="1.2"/>
           <path d="M65 300 C264 300,264 210,455 210" stroke-width="1"/>
-          <path d="M65 298 C293 298,293 157,514 157" stroke-width="1"/>
-          <path d="M521 215 C669 215,669 311,816 311" stroke-width="5"/>
-          <path d="M521 194 C670 194,670 87,819 87" stroke-width="3"/>
-          <path d="M523 209 C724 209,724 297,930 297" stroke-width="2"/>
-          <path d="M523 200 C725 200,725 134,928 134" stroke-width="1"/>
-          <path d="M564 163 C691 163,691 305,819 305" stroke-width="5"/>
-          <path d="M566 157 C746 157,746 294,930 294" stroke-width="4"/>
-          <path d="M567 153 C681 153,681 183,794 183" stroke-width="2"/>
-          <path d="M566 144 C692 144,692 84,818 84" stroke-width="2"/>
-          <path d="M567 149 C747 149,747 131,928 131" stroke-width="1.5"/>
-        </g>
-        <!-- origins (pool) -->
+          <path d="M521 215 C669 215,669 240,800 240" stroke-width="5"/>
+          <path d="M521 194 C670 194,670 80,812 80" stroke-width="3"/>
+          <path d="M523 209 C724 209,724 232,806 232" stroke-width="2"/>
+          <path d="M564 163 C691 163,691 226,802 226" stroke-width="5"/>
+          <path d="M566 144 C692 144,692 74,814 74" stroke-width="2"/></g>
+          <text id="yrLabel" x="500" y="292" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="30" fill="var(--line2)">2026</text>
+          <g class="pool" font-family="var(--display)" font-weight="700" text-anchor="middle">
+            <circle class="ghost" cx="150" cy="190" r="63.8" fill="none" stroke="var(--risk)" stroke-width="1.3" stroke-dasharray="5,4" opacity=".7"/>
+            <circle class="orig" data-r0="63.8" data-r1="60.8" data-r2="57.9" cx="150" cy="190" r="57.9" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.4" data-tip="&lt;b&gt;China&lt;/b&gt; &mdash; the centre of gravity, losing share in the US only&lt;br&gt;&lt;b&gt;US&lt;/b&gt; Jan&ndash;Jul share 74.8% (2024) &rarr; 67.8% (2025) &rarr; 61.4% (2026); $4.37bn YTD, &minus;12.1% year on year. FY2025: $9.14bn, &minus;32.0%.&lt;br&gt;&lt;b&gt;EU&lt;/b&gt; H1 share 77.5% &rarr; 78.4% &rarr; 75.9%; &euro;5.97bn in 2025 (+2.1%).&lt;br&gt;&lt;b&gt;Duty&lt;/b&gt; 20% into the US, none into the EU."/>
+            <circle cx="119.4" cy="199.4" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="174.9" cy="177.2" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="116.8" cy="188.4" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="162.0" cy="217.5" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="119.6" cy="157.7" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="188.3" cy="214.6" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="147.5" cy="183.1" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="130.4" cy="161.5" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="152.4" cy="193.6" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="141.4" cy="188.4" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="156.8" cy="207.3" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="105.3" cy="207.5" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="114.5" cy="185.7" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="113.2" cy="190.1" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="130.5" cy="195.3" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="171.1" cy="156.9" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="142.8" cy="206.6" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="147.7" cy="199.3" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="152.6" cy="164.8" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="164.1" cy="169.7" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="196.8" cy="177.4" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="167.2" cy="190.1" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="173.8" cy="174.9" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="175.0" cy="186.9" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="153.5" cy="170.5" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="191.0" cy="180.6" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="163.9" cy="202.7" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="157.1" cy="195.2" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="154.6" cy="175.0" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="124.6" cy="180.1" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="164.8" cy="227.8" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="154.6" cy="209.3" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="194.3" cy="181.8" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="156.1" cy="214.3" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="171.8" cy="161.6" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="154.4" cy="208.8" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="153.2" cy="167.9" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="147.2" cy="199.4" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="151.5" cy="223.9" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="131.0" cy="209.8" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="177.8" cy="182.7" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="155.9" cy="203.2" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="188.7" cy="164.9" r="2" fill="var(--faint)" opacity=".45"/>
+          <circle cx="150.1" cy="206.2" r="2" fill="var(--faint)" opacity=".45"/>
+            <text x="150" y="266" font-size="12" style="fill:var(--muted)">China</text>
+            <text class="p0" x="150" y="279" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="9">US <tspan style="fill:var(--muted)">74.8%</tspan> &middot; EU 77.5%</text>
+            <text class="p1" x="150" y="279" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="9">US <tspan style="fill:var(--risk)">67.8% &#9660;</tspan> &middot; EU 78.4%</text>
+            <text class="p2" x="150" y="279" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="9">US <tspan style="fill:var(--risk)">61.4% &#9660;</tspan> &middot; EU 75.9%</text>
+            <text class="" x="150" y="291" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5">20% US duty &middot; none into the EU</text>
+            <circle class="ghost" cx="150" cy="80" r="19.9" fill="none" stroke="var(--good)" stroke-width="1.2" stroke-dasharray="5,4" opacity=".7"/>
+            <circle class="orig" data-r0="19.9" data-r1="24.8" data-r2="27.0" cx="150" cy="80" r="27.0" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Vietnam&lt;/b&gt; &mdash; where production leaving China goes&lt;br&gt;&lt;b&gt;US&lt;/b&gt; Jan&ndash;Jul share 7.3% &rarr; 11.3% &rarr; 13.4%; $950m YTD, +15.1%. FY2025 $1.85bn, +22.9%.&lt;br&gt;&lt;b&gt;EU&lt;/b&gt; H1 share 5.3% &rarr; 5.7% &rarr; 7.1%; &euro;479m in 2025 (+14.5%).&lt;br&gt;Smaller fast routes in the US: Cambodia +228%, Thailand +22% YTD."/>
+            <text x="184" y="76" text-anchor="start" font-size="10">Vietnam</text>
+            <text class="p0" x="184" y="88" text-anchor="start" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--muted)">7.2%</tspan> &middot; EU 5.3%</text>
+            <text class="p1" x="184" y="88" text-anchor="start" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--good)">11.3% &#9650;</tspan> &middot; EU 5.7%</text>
+            <text class="p2" x="184" y="88" text-anchor="start" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--good)">13.3% &#9650;</tspan> &middot; EU 7.1%</text>
+            <circle class="ghost" cx="150" cy="322" r="21.0" fill="none" stroke="var(--good)" stroke-width="1.2" stroke-dasharray="5,4" opacity=".7"/>
+            <circle class="orig" data-r0="21.0" data-r1="22.7" data-r2="25.0" cx="150" cy="322" r="25.0" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Mexico&lt;/b&gt; &mdash; nearshoring, US only&lt;br&gt;&lt;b&gt;US&lt;/b&gt; Jan&ndash;Jul share 8.1% &rarr; 9.4% &rarr; 11.4%; $814m YTD, +17.8%. FY2025 $1.22bn, +5.9%.&lt;br&gt;&lt;b&gt;EU&lt;/b&gt; &euro;46m in 2025, 0.6% &mdash; not a factor.&lt;br&gt;Bulkier, faster-turn product; no ocean lane risk."/>
+            <text x="181" y="318" text-anchor="start" font-size="10">Mexico</text>
+            <text class="p0" x="181" y="330" text-anchor="start" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--muted)">8.1%</tspan></text>
+            <text class="p1" x="181" y="330" text-anchor="start" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--good)">9.4% &#9650;</tspan></text>
+            <text class="p2" x="181" y="330" text-anchor="start" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--good)">11.4% &#9650;</tspan></text>
+            <circle class="ghost" cx="52" cy="300" r="11.8" fill="none" stroke="var(--good)" stroke-width="1.1" stroke-dasharray="4,3" opacity=".7"/>
+            <circle class="orig" data-r0="11.8" data-r1="13.2" data-r2="15.0" cx="52" cy="300" r="15.0" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Indonesia&lt;/b&gt;&lt;br&gt;&lt;b&gt;US&lt;/b&gt; Jan&ndash;Jul share 2.6% &rarr; 3.2% &rarr; 4.2%; $295m YTD, +26.5%. FY2025 $485m, +4.0%.&lt;br&gt;&lt;b&gt;EU&lt;/b&gt; H1 share 2.0% &rarr; 2.2%; &euro;164m in 2025 (+7.5%)."/>
+            <text x="52" y="328" font-size="9">Indonesia</text>
+            <text class="p0" x="52" y="339" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--muted)">2.6%</tspan></text>
+            <text class="p1" x="52" y="339" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--good)">3.2% &#9650;</tspan></text>
+            <text class="p2" x="52" y="339" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5">US <tspan style="fill:var(--good)">4.2% &#9650;</tspan></text>
+            <circle class="orig" data-r0="5.7" data-r1="6.0" data-r2="7.0" cx="60" cy="118" r="7.0" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.8" data-tip="&lt;b&gt;India&lt;/b&gt; &mdash; tiny in toys, fastest-growing US origin&lt;br&gt;&lt;b&gt;US&lt;/b&gt; Jan&ndash;Jul share 0.59% &rarr; 0.67% &rarr; 0.90%; $64m YTD, &lt;b&gt;+30.3%&lt;/b&gt; while China fell 12%. FY2025 $114m, &minus;0.9% &mdash; the move started in 2026.&lt;br&gt;&lt;b&gt;EU&lt;/b&gt; H1 share 0.82% &rarr; 0.68% &rarr; 0.66%; &minus;5.4% in H1 2026 &mdash; no Indian inroad in the EU.&lt;br&gt;&lt;b&gt;Duty&lt;/b&gt; 10% into the US against China&amp;rsquo;s 20%; already 22% of Ross&amp;rsquo;s overall sourcing."/>
+            <text x="60" y="100" font-size="9.5">India</text>
+            <text class="p0" x="60" y="140" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--warn)">0.59% &middot; 10% duty</text>
+            <text class="p1" x="60" y="140" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--warn)">0.67% &middot; 10% duty</text>
+            <text class="p2" x="60" y="140" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--warn)">0.90% &#9650; &middot; 10% duty</text>
+          </g>
+          <g class="pool" font-family="var(--display)" font-weight="700" text-anchor="middle">
+            <circle class="orig" data-r0="78.0" data-r1="77.5" data-r2="76.3" cx="500" cy="180" r="76.3" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.4" data-tip="&lt;b&gt;The category, both markets&lt;/b&gt;&lt;br&gt;Jan&ndash;Jul US$ plus Jan&ndash;Jun &euro;, unconverted: 10.7bn (2024) &rarr; 10.6bn (2025) &rarr; 10.2bn (2026).&lt;br&gt;Flat to slightly down &mdash; the category is not growing; the mix inside it is what moves."/>
+            <text x="500" y="112" font-weight="800" font-size="11.5">Toys &middot; HS 9503</text>
+            <text class="p0" x="500" y="124" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="9">$8.0bn + &euro;2.6bn</text>
+            <text class="p1" x="500" y="124" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="9">$7.3bn + &euro;3.2bn</text>
+            <text class="p2" x="500" y="124" text-anchor="middle" font-family="var(--mono)" font-weight="500" font-size="9">$7.1bn + &euro;3.1bn</text>
+            <circle cx="540" cy="150" r="27" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Licensed &amp; electronic &mdash; $30&ndash;70&lt;/b&gt;&lt;br&gt;The growing tier (+18%). Brand houses (Spin Master, Jazwares) sell it into off-price too."/>
+            <text x="540" y="146" font-size="9.5">$30&ndash;70</text><text x="540" y="157" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--good)">growing</text>
+          </g>
         <g class="pool" font-family="var(--display)" font-weight="700" text-anchor="middle">
-          <circle cx="150" cy="190" r="60" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.4" data-tip="&lt;b&gt;China — 66.5% of US toy imports&lt;/b&gt;&lt;br&gt;Thousands of Guangdong factories; Chenghai is the pretend-play cluster. 20% US toy duty. BanaToys is one dot in this pool — so are both of his direct rivals."/>
-          <circle cx="143.3" cy="203.3" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="144.1" cy="181.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="125.8" cy="184.5" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="160.3" cy="194.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="106.7" cy="212.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="163.2" cy="203.0" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="126.9" cy="177.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="157.9" cy="188.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="163.5" cy="173.3" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="158.0" cy="200.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="132.8" cy="234.7" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="164.5" cy="221.1" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="133.9" cy="170.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="141.1" cy="187.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="166.4" cy="196.5" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="138.4" cy="165.1" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="136.5" cy="221.7" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="129.0" cy="196.4" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="161.1" cy="151.3" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="151.3" cy="224.0" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="147.2" cy="168.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="162.9" cy="188.4" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="111.9" cy="211.5" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="167.4" cy="214.6" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="153.1" cy="156.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="166.0" cy="174.1" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="138.2" cy="157.1" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="124.8" cy="176.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="112.1" cy="196.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="159.3" cy="170.9" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="120.9" cy="215.4" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="156.4" cy="201.3" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="191.4" cy="206.1" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="163.5" cy="204.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="171.9" cy="142.9" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="145.2" cy="216.5" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="164.4" cy="186.1" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="158.4" cy="206.9" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="153.1" cy="219.8" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="132.8" cy="179.2" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="177.1" cy="190.7" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="127.1" cy="214.6" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="188.1" cy="178.4" r="2" fill="var(--faint)" opacity=".45"/>
-          <circle cx="114.1" cy="186.5" r="2" fill="var(--faint)" opacity=".45"/>
-          <text x="150" y="266" font-size="12" style="fill:var(--muted)">China</text>
-          <text x="150" y="279" font-family="var(--mono)" font-weight="500" font-size="9">66.5% &middot; 20% duty &middot; thousands of factories</text>
-          <circle cx="150" cy="80" r="27" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Vietnam — 13.3%&lt;/b&gt;&lt;br&gt;Where higher-value toy production leaving China mostly goes."/>
-          <text x="150" y="78" font-size="10">Vietnam</text><text x="150" y="90" font-family="var(--mono)" font-weight="500" font-size="8.5">13.3%</text>
-          <circle cx="150" cy="322" r="22" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Mexico — 8.5%&lt;/b&gt;&lt;br&gt;Nearshoring; bulkier, faster-turn product."/>
-          <text x="150" y="320" font-size="9.5">Mexico</text><text x="150" y="332" font-family="var(--mono)" font-weight="500" font-size="8.5">8.5%</text>
-          <circle cx="60" cy="118" r="14" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6" data-tip="&lt;b&gt;India — 0.8% of US toy imports&lt;/b&gt;&lt;br&gt;Tiny as a toy origin today, but 10% duty against China&amp;rsquo;s 20%, and already 22% of Ross&amp;rsquo;s overall sourcing."/>
-          <text x="60" y="98" font-size="9.5">India</text><text x="60" y="146" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--warn)">0.8% &middot; 10% duty</text>
-          <circle cx="52" cy="304" r="13" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Indonesia — 3.5%&lt;/b&gt;"/>
-          <text x="52" y="330" font-size="9">Indonesia 3.5%</text>
-        </g>
-        <!-- product (pool) -->
-        <g class="pool" font-family="var(--display)" font-weight="700" text-anchor="middle">
-          <circle cx="500" cy="180" r="78" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.4"/>
-          <text x="500" y="112" font-weight="800" font-size="11.5">Toys &middot; HS 9503</text>
-          <circle cx="540" cy="150" r="27" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Licensed &amp; electronic — $30–70&lt;/b&gt;&lt;br&gt;The growing tier (+18%). Brand houses (Spin Master, Jazwares) sell it into off-price too."/>
-          <text x="540" y="146" font-size="9.5">$30&ndash;70</text><text x="540" y="157" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--good)">growing</text>
-        </g>
-        <!-- buyers (pool) -->
-        <g class="pool" font-family="var(--display)" font-weight="700" text-anchor="middle">
-          <circle cx="850" cy="190" r="56" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.4" data-tip="&lt;b&gt;US off-price — Ross, TJX, Burlington&lt;/b&gt;&lt;br&gt;Taking toy share as full-price specialists shrink. Buy on price, no vendor programs, investment-grade payers. Ross is one of three."/>
+          <circle cx="850" cy="190" r="56" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.4" data-tip="&lt;b&gt;US off-price &mdash; Ross, TJX, Burlington&lt;/b&gt;&lt;br&gt;Taking toy share as full-price specialists shrink. Buy on price, no vendor programs, investment-grade payers. Ross is one of three.&lt;br&gt;US toy imports overall, Jan&ndash;Jul: $8.03bn (2024) &rarr; $7.33bn (2025) &rarr; $7.12bn (2026)."/>
           <circle cx="833" cy="200" r="3.5" fill="var(--faint)" opacity=".6"/><circle cx="866" cy="214" r="3.5" fill="var(--faint)" opacity=".6"/>
           <text x="850" y="262" font-size="12" style="fill:var(--muted)">US off-price</text>
           <text x="850" y="275" font-family="var(--mono)" font-weight="500" font-size="9">Ross &middot; TJX &middot; Burlington &middot; <tspan style="fill:var(--good)">&#9650; gaining</tspan></text>
-          <circle cx="850" cy="76" r="30" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;EU discount — Action, Pepco, Lidl&lt;/b&gt;&lt;br&gt;Same behaviour as US off-price; BanaToys&amp;rsquo;s biggest buyers are here."/>
+          <circle cx="850" cy="76" r="30" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;EU discount &mdash; Action, Pepco, Lidl&lt;/b&gt;&lt;br&gt;Same behaviour as US off-price; BanaToys&amp;rsquo;s biggest buyers are here.&lt;br&gt;EU toy imports overall, Jan&ndash;Jun: &euro;2.64bn (2024) &rarr; &euro;3.22bn (2025, +22%) &rarr; &euro;3.10bn (2026, &minus;4%). No China toy tariff."/>
           <text x="850" y="73" font-size="10">EU discount</text><text x="850" y="86" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--good)">&#9650; gaining</text>
-          <circle cx="850" cy="322" r="30" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;US mass — Walmart, Target&lt;/b&gt;&lt;br&gt;Largest toy channel by volume; programme-driven, longer relationships."/>
+          <circle cx="850" cy="322" r="30" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;US mass &mdash; Walmart, Target&lt;/b&gt;&lt;br&gt;Largest toy channel by volume; programme-driven, longer relationships."/>
           <text x="850" y="319" font-size="10">US mass</text><text x="850" y="332" font-family="var(--mono)" font-weight="500" font-size="8.5">Walmart &middot; Target</text>
-          <circle cx="950" cy="130" r="22" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="4,3" data-tip="&lt;b&gt;Full-price specialists — Toys&amp;ldquo;R&amp;rdquo;Us, Intertoys&lt;/b&gt;&lt;br&gt;Losing share to off-price and online; Intertoys sits in BanaToys&amp;rsquo;s own roster."/>
+          <circle cx="950" cy="130" r="22" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="4,3" data-tip="&lt;b&gt;Full-price specialists &mdash; Toys&amp;ldquo;R&amp;rdquo;Us, Intertoys&lt;/b&gt;&lt;br&gt;Losing share to off-price and online; Intertoys sits in BanaToys&amp;rsquo;s own roster."/>
           <text x="950" y="127" font-size="9">full-price</text><text x="950" y="139" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--risk)">&#9660; losing</text>
-          <circle cx="952" cy="300" r="22" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Online — Amazon and marketplaces&lt;/b&gt;&lt;br&gt;Gaining; not a channel BanaToys sells into."/>
+          <circle cx="952" cy="300" r="22" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.2" data-tip="&lt;b&gt;Online &mdash; Amazon and marketplaces&lt;/b&gt;&lt;br&gt;Gaining; not a channel BanaToys sells into."/>
           <text x="952" y="297" font-size="9.5">Online</text><text x="952" y="309" font-family="var(--mono)" font-weight="500" font-size="8.5" style="fill:var(--good)">&#9650; gaining</text>
         </g>
-        <!-- THE LINE : one unbroken thread, BanaToys → basic sets → Ross -->
-        <path d="M178 206 C330 206,380 205,489 205 C610 205,730 176,858 176" fill="none" stroke="var(--blue)" stroke-width="18" stroke-linecap="round" opacity=".10"/>
-        <path class="thischain" d="M178 206 C330 206,380 205,489 205 C610 205,730 176,858 176" fill="none" stroke="url(#gmac)" stroke-width="5.5" stroke-linecap="round"/>
-        <path class="flow" d="M178 206 C330 206,380 205,489 205 C610 205,730 176,858 176" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>
-        <!-- bead on the thread: the product tier -->
-        <circle cx="489" cy="205" r="30" fill="var(--surface)" stroke="url(#gmac)" stroke-width="3.5" data-tip="&lt;b&gt;Basic moulded sets — $0.2–4&lt;/b&gt;&lt;br&gt;Pretend-play, no electronics, no licence. The sub-$20 band is shrinking; this is BanaToys&amp;rsquo;s only tier."/>
-        <text x="489" y="201" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="10" fill="var(--ink)">basic sets</text><text x="489" y="212" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">$0.2&ndash;4</text><text x="489" y="223" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--risk)">shrinking</text>
-        <!-- the two ends -->
-        <circle cx="178" cy="206" r="9" fill="none" stroke="var(--blue)" stroke-width="2.5"/><circle cx="178" cy="206" r="4.5" fill="var(--blue)"/>
-        <line x1="184" y1="212" x2="222" y2="248" stroke="var(--blue)" stroke-width="1.2"/><text x="226" y="252" font-family="var(--display)" font-weight="800" font-size="10.5" fill="var(--blue)">BanaToys</text>
-        <text x="226" y="263" font-family="var(--body)" font-size="8.5" fill="var(--muted)">one of thousands</text>
-        <circle cx="858" cy="176" r="9" fill="none" stroke="var(--teal)" stroke-width="2.5"/><circle cx="858" cy="176" r="4.5" fill="var(--teal)"/>
-        <line x1="852" y1="170" x2="822" y2="142" stroke="var(--teal)" stroke-width="1.2"/><text x="818" y="138" text-anchor="end" font-family="var(--display)" font-weight="800" font-size="10.5" fill="var(--teal)">Ross</text>
-        <text x="818" y="149" text-anchor="end" font-family="var(--body)" font-size="8.5" fill="var(--muted)">one of three</text>
-        <!-- chain label -->
-        <g class="chainpill" role="button" tabindex="0">
-          <rect x="300" y="304" width="400" height="30" rx="15" fill="var(--surface)" stroke="var(--blue)" stroke-width="1.6"/>
-          <text x="500" y="323" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--blue)">This line: BanaToys &rarr; $2 pretend-play sets &rarr; Ross &middot; zoom in &rarr;</text>
+          <path d="M178 206 C330 206,380 205,489 205 C610 205,730 176,858 176" fill="none" stroke="var(--blue)" stroke-width="18" stroke-linecap="round" opacity=".10"/>
+          <path class="thischain" d="M178 206 C330 206,380 205,489 205 C610 205,730 176,858 176" fill="none" stroke="url(#gmac)" stroke-width="5.5" stroke-linecap="round"/>
+          <path class="flow" d="M178 206 C330 206,380 205,489 205 C610 205,730 176,858 176" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>
+          <circle cx="489" cy="205" r="30" fill="var(--surface)" stroke="url(#gmac)" stroke-width="3.5" data-tip="&lt;b&gt;Basic moulded sets &mdash; $0.2&ndash;4&lt;/b&gt;&lt;br&gt;Pretend-play, no electronics, no licence. The sub-$20 band is the shrinking part of the category; this is BanaToys&amp;rsquo;s only tier."/>
+          <text x="489" y="201" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="10" fill="var(--ink)">basic sets</text><text x="489" y="212" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">$0.2&ndash;4</text><text x="489" y="223" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--risk)">shrinking</text>
+          <circle cx="178" cy="206" r="9" fill="none" stroke="var(--blue)" stroke-width="2.5"/><circle cx="178" cy="206" r="4.5" fill="var(--blue)"/>
+          <line x1="184" y1="212" x2="222" y2="248" stroke="var(--blue)" stroke-width="1.2"/><text x="226" y="252" font-family="var(--display)" font-weight="800" font-size="10.5" fill="var(--blue)">BanaToys</text>
+          <text x="226" y="263" font-family="var(--body)" font-size="8.5" fill="var(--muted)">one of thousands</text>
+          <circle cx="858" cy="176" r="9" fill="none" stroke="var(--teal)" stroke-width="2.5"/><circle cx="858" cy="176" r="4.5" fill="var(--teal)"/>
+          <line x1="852" y1="170" x2="822" y2="142" stroke="var(--teal)" stroke-width="1.2"/><text x="818" y="138" text-anchor="end" font-family="var(--display)" font-weight="800" font-size="10.5" fill="var(--teal)">Ross</text>
+          <text x="818" y="149" text-anchor="end" font-family="var(--body)" font-size="8.5" fill="var(--muted)">one of three</text>
+          <g class="chainpill" role="button" tabindex="0">
+          <rect x="300" y="318" width="400" height="30" rx="15" fill="var(--surface)" stroke="var(--blue)" stroke-width="1.6"/>
+          <text x="500" y="337" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="11" fill="var(--blue)">This line: BanaToys &rarr; $2 pretend-play sets &rarr; Ross &middot; zoom in &rarr;</text>
         </g>
-        <text x="500" y="372" text-anchor="middle" font-family="var(--body)" font-size="9.5" fill="var(--faint)">the grey field is the whole toy trade &mdash; every origin, tier and channel, ribbons &asymp; relative volume; the coloured line is the one chain we look at</text>
-      </svg>
+          <text x="500" y="370" text-anchor="middle" font-family="var(--body)" font-size="9.5" fill="var(--faint)">origin bubbles and the category circle are sized by value and animate &mdash; press Play to run Jan&ndash;Jul 2024 &rarr; 2025 &rarr; 2026 &middot; <tspan style="fill:var(--faint)">dashed ring</tspan> = 2024 &middot; channel bubbles show direction, not size</text>
+          <text x="500" y="384" text-anchor="middle" font-family="var(--body)" font-size="9" fill="var(--faint)">Sources: US Census / USA Trade Online, HS 9503 imports, customs value, Jan&ndash;Jul each year &middot; EU: Eurostat Comext DS-059331, extra-EU27 imports, SITC 8942, Jan&ndash;Jun each year</text>
+              </svg>
       <svg id="relmap" hidden viewBox="0 286 1080 124" role="img" aria-label="Relationship map: toy suppliers on the left, the toy category in the middle, toy buyers on the right, and Ross's other merchandise categories">
         <defs><linearGradient id="gmap" gradientUnits="userSpaceOnUse" x1="122" y1="0" x2="728" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
 
@@ -585,7 +606,7 @@
       <h3>Supplier</h3><div class="st">China-centred, small, price-takers</div>
       <ul>
         <li><b>Who &amp; where</b> &mdash; small Chenghai OEM/ODM houses with sub-suppliers; India rising at half the duty.</li>
-        <li><b>How they compete</b> &mdash; price, on-time delivery and quality; compliance is a must-have.</li>
+        <li><b>How they compete</b> &mdash; price, on-time delivery and quality; compliance is the entry ticket.</li>
         <li><b>Direction</b> &mdash; input costs up, no pass-through; margins thinning.</li>
       </ul>
     </div>
@@ -630,6 +651,7 @@
     <div class="ptile"><div class="t">Customers named publicly</div><div class="v">Walmart · TRU</div><div class="d">Walmart, Toys R Us, Kmart on his profile; 24 buyers in our file (see Buyer).</div></div>
   </div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>He makes more than he has ever sold into this account.</b> The one-tier position at Ross is a placement gap, not a manufacturing one.</span></div>
+  <div class="src"><b>Source:</b> client file (scale, model) · public manufacturer and B2B profiles (range, sub-suppliers, named customers)</div>
 </div>
 
 <div class="l3sec"><div class="k">S·2 · where he stands in Ross&rsquo;s toy field</div><h4>Several can serve this aisle; only he serves one tier</h4>
@@ -658,7 +680,7 @@
         <rect class="anim" x="300" y="276" width="41" height="22" rx="6" fill="var(--line2)" opacity=".7" data-tip="&lt;b&gt;Other — 3.8%&lt;/b&gt;&lt;br&gt;Includes Hong Kong (Spin Master, a brand intermediary) and an Indonesian toy maker routed via Singapore."/>
         <text x="351" y="291" font-family="var(--mono)" font-size="11.5" fill="var(--muted)">3.8%</text>
       </svg>
-  <div class="intel"><span class="tag">Intelligence</span><span><b>China is the centre of gravity &mdash; and so are both of his direct rivals.</b> India is 22% of Ross&rsquo;s sourcing at half the duty: the lane is open, but toys from India are under 1% of the US category &mdash; a direction, not a substitute yet.</span></div>
+  <div class="intel"><span class="tag">Intelligence</span><span><b>China is the centre of gravity &mdash; and so are both of his direct rivals.</b> India is 22% of Ross&rsquo;s sourcing at half the duty, and in toys it is now the fastest-growing origin of any size: <b>+30% in Jan&ndash;Jul 2026 while China fell 12%</b>. Still under 1% of the US category, so the shift has started from a very small base &mdash; a direction with evidence behind it, not yet a substitute.</span></div>
   <p class="cap" style="margin-top:14px">Every vendor that can serve this aisle, on the same axes · hover a cell</p><svg viewBox="0 0 1000 335" role="img" aria-label="Capability, duty and presence at Ross for every vendor that can serve this aisle"><defs><linearGradient id="gp_c" gradientUnits="userSpaceOnUse" x1="190" y1="0" x2="940" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
         <g font-family="var(--body)" font-weight="600" font-size="10.5" fill="var(--faint)" text-anchor="middle">
         <text x="470" y="30">Plain moulded sets</text>
@@ -745,6 +767,7 @@
     <li><span class="k">TARIFF</span>Rivals pay the same 20%; <b>India 10%</b> &mdash; 4 Indian vendors already at Ross.</li>
     <li><span class="k">MOAT</span><b>Reliability</b>: zero dilution, full coverage, price unmoved. Not capability.</li>
   </ul>
+  <div class="src"><b>Source:</b> client sourcing data · US customs records (rival shipments to the same buyers) · US import statistics · HS 9503 duty schedules</div>
 </div>
 
 <div class="l3sec"><div class="k">S·3 · how he performs &middot; internal data vs benchmark</div><h4>Quality above benchmark; the 2-day lag is small and consistent</h4>
@@ -757,6 +780,7 @@
   <div class="posrow"><div class="lab">On-time delivery<small>and delay when late</small></div><div class="trk"><div class="rail"></div><div class="med" style="left:60%"></div><div class="me bad" style="left:3%"></div><p class="cap" style="left:0">worst</p><p class="cap r">best</p></div><div class="val"><b>87% · 2 d</b><span class="vd dn">3rd pctile</span></div></div>
   <div class="posrow"><div class="lab">Relationship age<small>with Ross</small></div><div class="trk"><div class="rail"></div><div class="med" style="left:100%"></div><div class="me" style="left:13%"></div><p class="cap" style="left:0">0</p><p class="cap r">5 yrs</p></div><div class="val"><b>~8 months</b><span class="vd eq">no full season</span></div></div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>He is predictable on both axes: quality above benchmark, and a 2-day lag that repeats rather than swings.</b> Invoices are cut in weekly batches, so part of it is documentation timing. A small, stable lag is a planning fact, not a performance problem.</span></div>
+  <div class="src"><b>Source:</b> our trade documents and internal performance data · platform category benchmark · CPSC and EU Safety Gate for the recall check</div>
 </div>
 
 <div class="l3sec"><div class="k">S·4 · logistics &middot; the lane</div><h4>One lane, cost &times;2 &mdash; Ross pays it, we cannot see it</h4>
@@ -767,6 +791,7 @@
     <div class="ptile"><div class="t">Milestones we see</div><div class="v wa">Invoice only</div><div class="d">No booking, B/L, container, customs or delivery-confirmation events on file &mdash; the &ldquo;2 days late&rdquo; is read from invoice dates.</div></div>
   </div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>The lane hurts his buyer, not him &mdash; which is exactly why Ross is the party likely to reopen price.</b> Without shipment milestones we cannot separate production lag from documentation lag.</span></div>
+  <div class="src"><b>Source:</b> client file (Incoterm, invoice dates) · transpacific freight rate index and blank-sailing reports</div>
 </div>
 
 <div class="l3sec"><div class="k">S·5 · what we cannot see yet</div><h4>Not yet seen: accounts, sub-suppliers, capacity</h4>
@@ -786,7 +811,8 @@
   <li><b>Shipment dates vs invoice dates</b>, last 20 consignments <i>&mdash; real delay or weekly batching?</i></li>
   <li><b>Cause codes for late shipments</b> / production-plan visibility <i>&mdash; the one open performance question</i></li>
   <li><b>B/L dates and forwarder milestones</b> for the Ross consignments <i>&mdash; separates production lag from paperwork lag</i></li>
-</ul></div>
+</ul>  <div class="src"><b>Source:</b> gaps against the client file &mdash; nothing inferred</div>
+</div>
 
     </div>
     <div class="foot">Full report:<a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#peers">Production &amp; field</a><a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#performance">Performance</a><a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#ref">Vendor list</a></div>
@@ -837,6 +863,7 @@
         <text x="190" y="198" font-family="var(--body)" font-size="10.5" fill="var(--faint)">Two July first-time SKUs sit outside this range: <tspan font-family="var(--mono)" fill="var(--warn)">$7.60</tspan> electronic kitchen &nbsp;·&nbsp; <tspan font-family="var(--mono)" fill="var(--warn)">$10.59</tspan> vinyl doll</text>
       </svg>
   <div class="intel"><span class="tag">Intelligence</span><span><b>45th percentile: not pushed to the floor, not drifting.</b> A cheaper Chenghai line exists underneath; the tier ceiling is the relationship&rsquo;s, not the factory&rsquo;s.</span></div>
+  <div class="src"><b>Source:</b> our invoices · category price band from marketplace listings and customs unit values</div>
 </div>
 
 <div class="l3sec"><div class="k">P·2 · what it is made of</div><h4>PP +35%; price unchanged</h4>
@@ -890,33 +917,73 @@
     <div class="ptile"><div class="t">Who keeps the relief</div><div class="v">Him</div><div class="d">Price did not rise with PP, so will not fall with it &mdash; unless Ross asks.</div></div>
   </div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>Zero pass-through: the whole increase was absorbed at peak-season volume.</b> If PP softens through Q4 the margin comes back quietly &mdash; but Ross, carrying a doubled freight rate under FOB, is the party likely to ask first.</span></div>
+  <div class="src"><b>Source:</b> PP and ABS price indices · our invoice prices · client-supplied resin suppliers</div>
 </div>
 
 <div class="l3sec"><div class="k">P·3 · where demand is going</div><h4>Band shrinking; he grows 86% inside it</h4>
-  <p class="cap">Category direction against BanaToys&rsquo;s own direction on this product</p><svg viewBox="0 0 1000 250" role="img" aria-label="Market category growth versus BanaToys own growth on this product"><defs><linearGradient id="gp_t" gradientUnits="userSpaceOnUse" x1="190" y1="0" x2="940" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
-          <line x1="300" y1="26" x2="300" y2="192" stroke="var(--line2)" stroke-width="1.4"/>
-          <g stroke="var(--grid)" stroke-width="1"><line x1="510" y1="26" x2="510" y2="192"/><line x1="720" y1="26" x2="720" y2="192"/><line x1="930" y1="26" x2="930" y2="192"/></g>
-          <g font-family="var(--mono)" font-size="11" fill="var(--faint)" text-anchor="middle">
-            <text x="300" y="212">0%</text><text x="510" y="212">+25%</text><text x="720" y="212">+50%</text><text x="930" y="212">+100%</text>
-          </g>
-          <text x="0" y="52" font-family="var(--body)" font-weight="600" font-size="12.5" fill="var(--muted)">Sub-$20 band</text>
-          <rect class="anim" x="240" y="41" width="60" height="17" rx="5" fill="var(--risk)" opacity=".6" data-tip="<b>Sub-$20 toys</b><br>The band this product sits in. Volume is drifting down as the market shifts to higher price points."/>
-          <text x="312" y="54" font-family="var(--mono)" font-size="11" fill="var(--risk)">declining</text>
-
-          <text x="0" y="92" font-family="var(--body)" font-weight="600" font-size="12.5" fill="var(--muted)">This category</text>
-          <rect class="anim" x="300" y="81" width="34" height="17" rx="5" fill="var(--line2)" data-tip="<b>Pretend-play category</b><br>Mature. Low single-digit growth — replacement demand, not expansion."/>
-          <text x="346" y="94" font-family="var(--mono)" font-size="11" fill="var(--muted)">low single digit</text>
-
-          <text x="0" y="132" font-family="var(--body)" font-weight="600" font-size="12.5" fill="var(--muted)">$30–70 band</text>
-          <rect class="anim" x="300" y="121" width="151" height="17" rx="5" fill="var(--line2)" data-tip="<b>$30–70 toys</b><br>The growing half of the market: licensed, collectible and electronic product. Nothing in our record sits in this band — we have not seen product here, which is not the same as none existing."/>
-          <text x="463" y="134" font-family="var(--mono)" font-size="11" fill="var(--muted)">+18% — nothing of his in our record here</text>
-
-          <text x="0" y="176" font-family="var(--display)" font-weight="800" font-size="13" fill="var(--ink)">BanaToys → Ross</text>
-          <rect class="anim" x="300" y="163" width="631" height="21" rx="6" fill="url(#gp_t)" data-tip="<b>+86%</b><br>Value in the second half of the period against the first. Unit price moved $2.01 to $2.13 over the same span."/>
-          <text x="918" y="178" text-anchor="end" font-family="var(--mono)" font-size="13" font-weight="700" fill="#fff">+86%</text>
-          <text x="300" y="238" font-family="var(--body)" font-size="11.5" fill="var(--muted)">Value, first half of the period against the second. Unit price <tspan font-family="var(--mono)" fill="var(--ink)">$2.01 → $2.13</tspan>.</text>
+  <p class="cap"><b style="color:var(--ink)">1 &middot; the market</b> &mdash; <b style="color:var(--muted)">all toys</b>: US imports under HS 9503 (customs value) and EU imports under SITC 8942, year on year</p><svg viewBox="0 0 1000 206" role="img" aria-label="year on year change"><defs><linearGradient id="gp_t" gradientUnits="userSpaceOnUse" x1="190" y1="0" x2="940" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+        <defs><linearGradient id="gtr" gradientUnits="userSpaceOnUse" x1="400" y1="0" x2="916" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+        <line x1="280" y1="22" x2="280" y2="160" stroke="var(--grid)" stroke-width="1"/>
+        <text x="280" y="178" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">-20%</text>
+        <line x1="400" y1="22" x2="400" y2="160" stroke="var(--grid)" stroke-width="1"/>
+        <text x="400" y="178" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">0%</text>
+        <line x1="550" y1="22" x2="550" y2="160" stroke="var(--grid)" stroke-width="1"/>
+        <text x="550" y="178" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">+25%</text>
+        <line x1="700" y1="22" x2="700" y2="160" stroke="var(--grid)" stroke-width="1"/>
+        <text x="700" y="178" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">+50%</text>
+        <line x1="850" y1="22" x2="850" y2="160" stroke="var(--grid)" stroke-width="1"/>
+        <text x="850" y="178" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">+75%</text>
+        <line x1="400" y1="18" x2="400" y2="164" stroke="var(--line2)" stroke-width="1.6"/>
+        <text x="250" y="40" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">US toy imports</text>
+        <text x="250" y="52" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">FY2025 vs FY2024</text>
+        <rect x="268.6" y="29" width="131.4" height="18" rx="4" fill="var(--risk)" opacity="1"/>
+        <text x="276.6" y="42" text-anchor="start" font-family="var(--mono)" font-weight="700" font-size="11" fill="#fff">&minus;22%</text>
+        <text x="250" y="74" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">US toy imports</text>
+        <text x="250" y="86" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">Jan&ndash;Jul 2026 vs 2025</text>
+        <rect x="382.0" y="63" width="18.0" height="18" rx="4" fill="var(--risk)" opacity="1"/>
+        <text x="375.0" y="76" text-anchor="end" font-family="var(--mono)" font-weight="700" font-size="11" fill="var(--risk)">&minus;3%</text>
+        <text x="438.0" y="76" text-anchor="start" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">the collapse was 2025; 2026 is flat</text>
+        <text x="250" y="108" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">EU toy imports</text>
+        <text x="250" y="120" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">2025 vs 2024</text>
+        <rect x="400.0" y="97" width="20.4" height="18" rx="4" fill="var(--line2)" opacity=".9"/>
+        <text x="428.4" y="110" text-anchor="start" font-family="var(--mono)" font-weight="700" font-size="11" fill="var(--muted)">+3%</text>
+        <text x="250" y="142" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">EU toy imports</text>
+        <text x="250" y="154" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">H1 2026 vs H1 2025</text>
+        <rect x="377.8" y="131" width="22.2" height="18" rx="4" fill="var(--risk)" opacity="1"/>
+        <text x="370.8" y="144" text-anchor="end" font-family="var(--mono)" font-weight="700" font-size="11" fill="var(--risk)">&minus;4%</text>
+        <text x="433.8" y="144" text-anchor="start" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">the EU turned a year later</text>
+        <text x="250" y="196" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">both markets, same direction, one year apart</text>
         </svg>
-  <div class="intel"><span class="tag">Intelligence</span><span><b>He is displacing someone on Ross&rsquo;s shelf, in the band the market is leaving.</b> Growth is in the $30&ndash;70 licensed tier &mdash; already in Ross&rsquo;s aisle via Spin Master and Jazwares, and not his.</span></div>
+  <p class="cap" style="margin-top:16px"><b style="color:var(--ink)">2 &middot; the price bands inside it</b> &mdash; retail price tiers within toys (category reporting, <b style="color:var(--muted)">not a customs split</b>), against his own invoiced line</p><svg viewBox="0 0 1000 172" role="img" aria-label="year on year change">
+        <defs><linearGradient id="gtb" gradientUnits="userSpaceOnUse" x1="400" y1="0" x2="916" y2="0"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient></defs>
+        <line x1="280" y1="22" x2="280" y2="126" stroke="var(--grid)" stroke-width="1"/>
+        <text x="280" y="144" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">-20%</text>
+        <line x1="400" y1="22" x2="400" y2="126" stroke="var(--grid)" stroke-width="1"/>
+        <text x="400" y="144" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">0%</text>
+        <line x1="550" y1="22" x2="550" y2="126" stroke="var(--grid)" stroke-width="1"/>
+        <text x="550" y="144" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">+25%</text>
+        <line x1="700" y1="22" x2="700" y2="126" stroke="var(--grid)" stroke-width="1"/>
+        <text x="700" y="144" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">+50%</text>
+        <line x1="850" y1="22" x2="850" y2="126" stroke="var(--grid)" stroke-width="1"/>
+        <text x="850" y="144" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">+75%</text>
+        <line x1="400" y1="18" x2="400" y2="130" stroke="var(--line2)" stroke-width="1.6"/>
+        <text x="250" y="40" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">Sub-$20 basic band</text>
+        <text x="250" y="52" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">BanaToys&rsquo;s only tier</text>
+        <rect x="310" y="29" width="86" height="18" rx="9" fill="var(--risk-soft)"/>
+        <text x="353" y="42" text-anchor="middle" font-family="var(--mono)" font-weight="700" font-size="10" fill="var(--risk)">&#9660; declining</text>
+        <text x="412" y="42" text-anchor="start" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">no published figure; the shrinking part of the category</text>
+        <text x="250" y="74" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">$30&ndash;70 licensed tier</text>
+        <text x="250" y="86" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">the growing tier</text>
+        <rect x="400.0" y="63" width="108.0" height="18" rx="4" fill="var(--line2)" opacity=".9"/>
+        <text x="516.0" y="76" text-anchor="start" font-family="var(--mono)" font-weight="700" font-size="11" fill="var(--muted)">+18%</text>
+        <text x="564.0" y="76" text-anchor="start" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">nothing of his in our record here</text>
+        <text x="250" y="108" text-anchor="end" font-family="var(--display)" font-weight="700" font-size="11.5" fill="var(--ink)">BanaToys &rarr; Ross</text>
+        <text x="250" y="120" text-anchor="end" font-family="var(--body)" font-size="9.5" fill="var(--faint)">his one line, this buyer</text>
+        <rect x="400.0" y="97" width="516.0" height="18" rx="4" fill="url(#gtb)" opacity="1"/>
+        <text x="924.0" y="110" text-anchor="start" font-family="var(--mono)" font-weight="700" font-size="11" fill="var(--ink)">+86%</text>
+        </svg>
+  <div class="intel"><span class="tag">Intelligence</span><span><b>His +86% is not demand &mdash; it is shelf space taken from another vendor, in the part of the market that is shrinking.</b> Both markets are flat to down (US &minus;22% in FY2025 and &minus;3% YTD; EU +3% in 2025 and &minus;4% in H1 2026) and the sub-$20 basic band is the declining part; the growth sits in the $30&ndash;70 licensed tier, already in Ross&rsquo;s aisle via Spin Master and Jazwares and not his. So he is a <b>share-taker in a declining band at a single buyer, on a price he could not raise</b>: the volume grows, the position does not get stronger, and the gain reverses the moment the shelf goes to someone cheaper.</span></div>
+  <div class="src"><b>Source:</b> chart 1 &mdash; US Census / USA Trade Online, HS 9503 imports, customs value (all toys, no pretend-play split at this level) and Eurostat Comext DS-059331, SITC 8942 · chart 2 &mdash; toy category tier reporting and our own invoices for his line · Ross import records for the licensed tier</div>
 </div>
 
 <div class="l3sec"><div class="k">P·4 · what it must clear &middot; and what we have seen</div><h4>Two documents cover it; both sit with Ross</h4>
@@ -950,7 +1017,8 @@
   <li><b>Current-season EN71 and ASTM F963 reports + CPC</b>, per colour / batch <i>&mdash; two documents settle the compliance read</i></li>
   <li><b>Certificate numbers + expiry</b> (ISO 9001 / 14001), SEDEX audit date <i>&mdash; &ldquo;sighted&rdquo; &rarr; &ldquo;verified&rdquo;</i></li>
   <li><b>SKU list with tier / price</b> actually offered to Ross <i>&mdash; is the one-tier position his choice or Ross&rsquo;s?</i></li>
-</ul></div>
+</ul>  <div class="src"><b>Source:</b> client certificate file · public manufacturer and third-party supplier profiles · CPSC and EU Safety Gate</div>
+</div>
 
     </div>
     <div class="foot">Full report:<a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#product">Product</a><a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#material">Raw material</a><a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#compliance">Compliance</a></div>
@@ -989,11 +1057,12 @@
     <div class="bs"><div class="n">Amazon &amp; marketplaces <small class="up">&#9650; online</small></div><div class="c">gaining; not a channel he sells into</div><div class="b"><span class="st na">Not in his file</span></div></div>
   </div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>Demand for the aisle is secure; demand for this vendor is not.</b> Every buyer in this set buys on price with no vendor program &mdash; Ross owes him nothing, and the one exit on file (Winners) followed a price cut.</span></div>
+  <div class="src"><b>Source:</b> Ross annual report (category mix) · channel share reporting · client buyer roster</div>
 </div>
 
 <div class="l3sec"><div class="k">B·2 · can it pay</div><h4>Investment grade, zero dilution, thin account</h4>
   <div class="ptiles">
-    <div class="ptile"><div class="t">Dilution · claims</div><div class="v up">0%</div><div class="d">66 invoices, full coverage, no deductions.</div></div>
+    <div class="ptile"><div class="t">Dilution · claims</div><div class="v up">0 · 0</div><div class="d">66 invoices, full coverage, no deductions.</div></div>
     <div class="ptile"><div class="t">Coverage</div><div class="v up">100%</div><div class="d">Every invoice settled in full.</div></div>
     <div class="ptile"><div class="t">Ross&rsquo;s category mix</div><div class="v">Home 26%</div><div class="d">Ladies 22 · Men&rsquo;s 15 · Accessories 15 · Shoes 13 · Children&rsquo;s 9 (FY2025).</div></div>
     <div class="ptile"><div class="t">Through us</div><div class="v">$69.5M</div><div class="d">22 Ross suppliers in our book; toys 0.2% of it, BanaToys the only one.</div></div>
@@ -1006,6 +1075,7 @@
     <div class="mb"><span><b>Toys · BanaToys only</b></span><div class="bar hi" style="width:1%"></div><span class="v">0.2%</span></div>
   </div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>The receivable is the strongest part of the file; the account is the thinnest.</b></span></div>
+  <div class="src"><b>Source:</b> Moody&rsquo;s and S&amp;P · our book (22 Ross suppliers) · Ross annual report</div>
 </div>
 
 <div class="l3sec"><div class="k">B·3 · does it pay on time &middot; the core of this pillar</div><h4>8 days late on every invoice, nothing ever deducted &mdash; a clock you can plan around</h4>
@@ -1021,6 +1091,7 @@
   <div class="posrow"><div class="lab">Payment coverage<small>settled vs invoiced</small></div><div class="trk"><div class="rail"></div><div class="iqr" style="left:85%;width:15%"></div><div class="med" style="left:100%"></div><div class="me good" style="left:99.5%"></div><p class="cap" style="left:0">90%</p><p class="cap r">100%</p></div><div class="val"><b>100%</b><span class="vd up">full</span></div></div>
   <div class="posrow"><div class="lab">Days outstanding<small>invoice to cash</small></div><div class="trk"><div class="rail"></div><div class="iqr" style="left:30.4%;width:34%"></div><div class="med" style="left:40%"></div><div class="me" style="left:59.2%"></div><p class="cap" style="left:0">20 d</p><p class="cap r">140 d</p></div><div class="val"><b>~90 d</b><span class="vd wa">longer than 70%</span></div></div>
   <div class="intel"><span class="tag">Intelligence</span><span><b>Predictability is the asset here: a fixed clock, zero dilution, full coverage &mdash; the 8 days are process, not stress.</b> The one commercial consequence is the length of the cycle (~90 d against 60&ndash;90 d terms), which is a pricing question, not a credit one.</span></div>
+  <div class="src"><b>Source:</b> our settlement data across all of Ross&rsquo;s suppliers in the book · 66 invoices on this line</div>
 </div>
 
 <div class="l3sec"><div class="k">B·4 · Ross among his other buyers</div><h4>Eighth account, only US one; two-thirds of his book is Dutch</h4>
@@ -1092,7 +1163,8 @@
         <text x="0" y="302" font-family="var(--body)" font-size="10.5" fill="var(--faint)">Dilution is nil across every account with settled history: Metro 0.36%, all others 0.00%. Eighteen buyers have no settled history to measure.</text>
         <text x="0" y="322" font-family="var(--body)" font-size="10.5" fill="var(--faint)">Ross's weighted average is <tspan font-family="var(--mono)" fill="var(--ink)">4.04 days</tspan>, but 62% of that weight is one apparel platform paid in 2.6 days. Ross's mid-sized manufacturers run <tspan font-family="var(--mono)" fill="var(--ink)">7–9 days</tspan> — BanaToys is typical, not slow.</text>
       </svg>
-  <div class="intel"><span class="tag">Intelligence</span><span><b>24 buyers across 14 markets looks like diversification; two-thirds in one country is not.</b> Action, Toi-Toys, Adriaanse and Intertoys &mdash; all Dutch, all EU value channels &mdash; carry the book and move together on consumer cycle, currency and regulation. Ross is not a priority by size; as a USD account outside the NL cluster it is a partial hedge.</span></div>
+  <div class="intel"><span class="tag">Intelligence</span><span><b>24 buyers across 14 markets looks like diversification; two-thirds in one country is not.</b> Action, Toi-Toys, Adriaanse and Intertoys &mdash; all Dutch, all EU value channels &mdash; carry the book and move together on consumer cycle, currency and regulation. Ross is not a priority by size; as a USD account outside the NL cluster it is a partial hedge. It is also the only part of his book exposed to the tariff shift: the EU takes <b>78.7%</b> of its toys from China (2025) with no China toy tariff, and Indian toy exports into the EU actually <b>fell 5%</b> in H1 2026 &mdash; so the India substitution threat sits on the Ross line, not on the accounts that carry him.</span></div>
+  <div class="src"><b>Source:</b> client buyer roster (stated annual value, terms) · our settlement data where history exists · Eurostat Comext DS-059331, extra-EU27 imports, SITC 8942, 2025 and H1 2026</div>
 </div>
 
 <div class="l3sec"><div class="k">B·5 · is this trade normal</div><h4>A normal replenishment trade; quantity still to prove</h4>
@@ -1112,7 +1184,8 @@
   <li><b>Ross vendor scorecard / chargeback history</b> <i>&mdash; Ross measures on-time; we only see our side</i></li>
   <li><b>Terms and payment history with Action and Toi-Toys</b> <i>&mdash; the accounts that carry his book</i></li>
   <li><b>Why Winners stopped</b> <i>&mdash; price, product or buyer decision; the one exit we can learn from</i></li>
-</ul></div>
+</ul>  <div class="src"><b>Source:</b> our order and invoice history · channel terms norms</div>
+</div>
 
     </div>
     <div class="foot">Full report:<a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#buyers">Buyers &amp; payment</a><a href="https://claude.ai/code/artifact/cb804ad4-a6a2-41ad-b2fc-88e6c3b8219a#peers">Ross&rsquo;s vendor field</a></div>
@@ -1148,9 +1221,25 @@
   var macro=document.getElementById('macro'), zin=document.getElementById('zoomIn'), zout=document.getElementById('zoomOut'), lbl=document.getElementById('stagelbl');
   function hide(el,on){ if(on) el.setAttribute('hidden',''); else el.removeAttribute('hidden'); }
   function isHidden(el){ return el.hasAttribute('hidden'); }
-  function zoomIn(){ if(!macro)return; hide(macro,true); hide(map,false); zin.hidden=true; zout.hidden=false; if(lbl) lbl.textContent='This chain · who sits either side of the line'; fit(); }
-  function zoomOut(){ if(!macro)return; hide(map,true); hide(macro,false); zin.hidden=false; zout.hidden=true; if(lbl) lbl.textContent='The field · where this chain sits'; }
+  function zoomIn(){ if(!macro)return; var pc=document.getElementById('perctl'); if(pc) pc.hidden=true; hide(macro,true); hide(map,false); zin.hidden=true; zout.hidden=false; if(lbl) lbl.textContent='This chain · who sits either side of the line'; fit(); }
+  function zoomOut(){ if(!macro)return; var pc=document.getElementById('perctl'); if(pc) pc.hidden=false; hide(map,true); hide(macro,false); zin.hidden=false; zout.hidden=true; if(lbl) lbl.textContent='The field · where this chain sits'; }
   if(zin) zin.addEventListener('click',zoomIn); if(zout) zout.addEventListener('click',zoomOut);
+  var per=2, playing=false, timer=null;
+  var YRS=['2024','2025','2026'], YLB=['2024 · Jan–Jul','2025 · Jan–Jul','2026 · Jan–Jul'];
+  function tween(el, to){ var from=parseFloat(el.getAttribute('r')), t0=performance.now(), d=750;
+    function step(t){ var k=Math.min(1,(t-t0)/d); k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2; el.setAttribute('r',(from+(to-from)*k).toFixed(2)); if(k<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step); }
+  function setPeriod(p){ per=p;
+    [].forEach.call(document.querySelectorAll('#macro .orig'),function(c){ var t=c.getAttribute('data-r'+p); if(t) tween(c, parseFloat(t)); });
+    [0,1,2].forEach(function(i){ [].forEach.call(document.querySelectorAll('#macro .p'+i),function(t){ t.style.opacity = (i===p)?1:0; }); });
+    [].forEach.call(document.querySelectorAll('#macro .ghost'),function(c){ c.style.opacity = p? .7 : 0; });
+    var yl=document.getElementById('yrLabel'); if(yl) yl.textContent=YRS[p];
+    var cp=document.getElementById('curPer'); if(cp) cp.innerHTML=YLB[p];
+  }
+  function stopPlay(){ playing=false; if(timer) clearInterval(timer); timer=null; var pb=document.getElementById('playBtn'); if(pb) pb.innerHTML='&#9654; Play 3 years'; }
+  var pb=document.getElementById('playBtn');
+  if(pb) pb.addEventListener('click',function(){ if(playing){ stopPlay(); setPeriod(2); return; } playing=true; pb.innerHTML='&#9632; Stop'; setPeriod(0); timer=setInterval(function(){ setPeriod((per+1)%3); },1500); });
+  setPeriod(2);
   var pill=document.querySelector('#macro .chainpill'); if(pill){ pill.addEventListener('click',zoomIn); pill.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();zoomIn();}}); }
   var boxes=[].slice.call(document.querySelectorAll('.box[data-l2]'));
   boxes.forEach(function(b){
