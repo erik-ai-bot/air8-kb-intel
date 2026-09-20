@@ -307,44 +307,9 @@ function guessSteps(msg) {
       { text: 'Pulling sourcing shift data', src: 'Customs records' },
       { text: 'Identifying supply chain implications', src: 'Air8 KB' },
     ];
-  } else if(/financial|revenue|margin|dpo|payment|credit/i.test(m)) {
-    return [
-      { text: 'Retrieving financial statements', src: 'SEC / Annual reports' },
-      { text: 'Calculating DPO and payment behavior', src: 'Public filings' },
-      { text: 'Assessing credit risk for suppliers', src: 'Air8 Intelligence' },
-    ];
-  } else if(/sourc|country|china|vietnam|bangladesh|tariff/i.test(m)) {
-    return [
-      { text: 'Querying customs records', src: 'Customs DB' },
-      { text: 'Analyzing country mix and trends', src: 'Trade data' },
-      { text: 'Checking tariff and UFLPA exposure', src: 'USITC / CBP' },
-    ];
-  } else if(/signal|news|latest|recent|what happened/i.test(m)) {
-    return [
-      { text: 'Scanning recent news and signals', src: 'Web search' },
-      { text: 'Filtering supply chain relevant events', src: 'Air8 Intelligence' },
-    ];
-  } else if(/competitor|rival|compare|landscape/i.test(m)) {
-    return [
-      { text: 'Building competitive comparison', src: 'Air8 Intelligence' },
-      { text: 'Cross-referencing buyer stance and DPO', src: 'Public filings' },
-    ];
-  } else if(/compliance|risk|esg|audit|b corp/i.test(m)) {
-    return [
-      { text: 'Checking compliance and ESG requirements', src: 'Company disclosures' },
-      { text: 'Assessing supplier audit requirements', src: 'Air8 KB' },
-    ];
   } else {
-    // Full buyer Layer 1 query — show 7-dimension steps
-    return [
-      { text: `D1 · Overview: ${buyer}`, src: 'Air8 PulseLink' },
-      { text: 'D2 · Financials — statements, DPO, credit', src: 'SEC / Annual reports' },
-      { text: 'D3 · Products & categories from Asia', src: 'Customs records' },
-      { text: 'D4 · Sourcing — country mix & tariff risk', src: 'Customs DB' },
-      { text: 'D5 · Risk & compliance check', src: 'Air8 Intelligence' },
-      { text: 'D6 · Latest signals & news scan', src: 'Brave Search' },
-      { text: 'D7 · Competitive landscape', src: 'Air8 Intelligence' },
-    ];
+    // Buyer queries: real steps come from SSE, start empty (addRealStep fills in)
+    return [];
   }
 }
 
