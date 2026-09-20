@@ -115,52 +115,53 @@ async function send() {
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({message:msg, context:hist.slice(-8)})
     });
-    // SSE streaming: accumulate deltas, render on done
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText = '';
 
-    const processSSE = async () => {
-      while(true) {
+    if(!res.ok) { removeEl(thinkId); addText('⚠️ Server error: '+res.status); return; }
+
+    const ct = res.headers.get('content-type')||'';
+
+    if(ct.includes('application/json')) {
+      // Off-topic / simple JSON
+      const data = await res.json();
+      removeEl(thinkId);
+      const reply = data.text || data.reply || '';
+      if(data.error || !reply) addText('⚠️ '+(data.error||'No response.'));
+      else { addMarkdown(reply); hist.push({role:'assistant',content:reply}); }
+    } else {
+      // SSE streaming
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf='', fullText='', done_received=false;
+      outer: while(true) {
         const {done, value} = await reader.read();
         if(done) break;
-        const chunk = decoder.decode(value, {stream:true});
-        for(const line of chunk.split('\n')) {
+        buf += decoder.decode(value, {stream:true});
+        const lines = buf.split('\n'); buf = lines.pop()||'';
+        for(const line of lines) {
           if(!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if(!data) continue;
+          const raw = line.slice(6).trim();
+          if(!raw || raw==='[DONE]') continue;
           try {
-            const ev = JSON.parse(data);
+            const ev = JSON.parse(raw);
+            if(ev.delta) fullText += ev.delta;
+            if(ev.error) { removeEl(thinkId); addText('⚠️ '+ev.error); done_received=true; break outer; }
             if(ev.done) {
               fullText = ev.text || fullText;
-            } else if(ev.delta) {
-              fullText += ev.delta;
-            } else if(ev.error) {
-              throw new Error(ev.error);
+              removeEl(thinkId);
+              addMarkdown(fullText);
+              hist.push({role:'assistant',content:fullText});
+              done_received=true; break outer;
             }
-          } catch(e) { if(e.message !== 'JSON') throw e; }
+          } catch(e) {}
         }
       }
-    };
-
-    await processSSE();
-    removeEl(thinkId);
-
-    if(!fullText) {
-      addText('⚠️ No response. Please try again.');
-    } else {
-      // Try as tabbed JSON first (for comparison responses that still return JSON)
-      const parsed = extractJSON(fullText);
-      if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
-        addTabCard(parsed);
-      } else {
-        addMarkdown(fullText);
+      if(!done_received && fullText) {
+        removeEl(thinkId); addMarkdown(fullText); hist.push({role:'assistant',content:fullText});
       }
-      hist.push({role:'assistant', content:fullText.slice(0,400)});
     }
   } catch(err) {
     removeEl(thinkId);
-    addText('⚠️ Connection error — please try again.');
+    addText('⚠️ Error: '+String(err));
   }
 }
 
@@ -242,77 +243,6 @@ function extractJSON(text) {
   return null;
 }
 
-// ── TAB-ON-DEMAND LOADER ──────────────────────────────────────────────────────
-window._tabCache = {}; // {cardId_tabId: content}
-window._cardBuyer = {}; // {cardId: buyer name from overview}
-
-function loadTab(cardId, tabId, msgForContext) {
-  var cacheKey = cardId + '_' + tabId;
-  if(window._tabCache[cacheKey]) {
-    renderTabContent(cardId, tabId, window._tabCache[cacheKey]);
-    return;
-  }
-
-  // Show loading state
-  var panel = document.getElementById(cardId + '-p-' + tabId);
-  if(!panel) return;
-  panel.innerHTML = '<div style="padding:20px;text-align:center;color:#64748b">' +
-    '<div style="width:20px;height:20px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px"></div>' +
-    '<div style="font-size:12px">正在加载 ' + tabId + ' 数据...</div></div>';
-
-  var buyer = window._cardBuyer[cardId] || msgForContext || '';
-  var payload = {
-    message: buyer,
-    context: hist.slice(-4),
-    tab_id: tabId
-  };
-
-  var fullText = '';
-  fetch(WORKER, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  }).then(function(r) {
-    var reader = r.body.getReader();
-    var decoder = new TextDecoder();
-    function pump() {
-      return reader.read().then(function(res) {
-        if(res.done) {
-          window._tabCache[cacheKey] = fullText;
-          renderTabContent(cardId, tabId, fullText);
-          return;
-        }
-        var chunk = decoder.decode(res.value, {stream:true});
-        chunk.split('\n').forEach(function(line) {
-          if(!line.startsWith('data: ')) return;
-          try {
-            var ev = JSON.parse(line.slice(6));
-            if(ev.delta) fullText += ev.delta;
-            if(ev.done) fullText = ev.text || fullText;
-          } catch(e) {}
-        });
-        return pump();
-      });
-    }
-    return pump();
-  }).catch(function(e) {
-    if(panel) panel.innerHTML = '<div style="padding:16px;color:#be123c;font-size:12px">⚠️ 加载失败，请重试。</div>';
-  });
-}
-
-function renderTabContent(cardId, tabId, text) {
-  var panel = document.getElementById(cardId + '-p-' + tabId);
-  if(!panel) return;
-  panel.innerHTML = '<div class="px-5 py-4 markdown-body">' + parseMarkdown(text) + '</div>';
-  // Wire explore-chip clicks
-  panel.querySelectorAll('.explore-chip').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.getElementById('inp').value = btn.dataset.query;
-      send();
-    });
-  });
-}
-
 // ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
 function guessSteps(msg) {
   const m = msg.toLowerCase();
@@ -340,13 +270,43 @@ function guessSteps(msg) {
       { text: 'Pulling sourcing shift data', src: 'Customs records' },
       { text: 'Identifying supply chain implications', src: 'Air8 KB' },
     ];
-  } else {
+  } else if(/financial|revenue|margin|dpo|payment|credit/i.test(m)) {
     return [
-      { text: `Searching buyer database: ${buyer}`, src: 'Air8 PulseLink' },
-      { text: 'Retrieving financial statements & DPO', src: 'Public filings / IR' },
-      { text: 'Pulling customs & sourcing records', src: 'Customs DB' },
-      { text: 'Running web search for latest signals', src: 'Brave Search' },
-      { text: 'Compiling intelligence report', src: null },
+      { text: 'Retrieving financial statements', src: 'SEC / Annual reports' },
+      { text: 'Calculating DPO and payment behavior', src: 'Public filings' },
+      { text: 'Assessing credit risk for suppliers', src: 'Air8 Intelligence' },
+    ];
+  } else if(/sourc|country|china|vietnam|bangladesh|tariff/i.test(m)) {
+    return [
+      { text: 'Querying customs records', src: 'Customs DB' },
+      { text: 'Analyzing country mix and trends', src: 'Trade data' },
+      { text: 'Checking tariff and UFLPA exposure', src: 'USITC / CBP' },
+    ];
+  } else if(/signal|news|latest|recent|what happened/i.test(m)) {
+    return [
+      { text: 'Scanning recent news and signals', src: 'Web search' },
+      { text: 'Filtering supply chain relevant events', src: 'Air8 Intelligence' },
+    ];
+  } else if(/competitor|rival|compare|landscape/i.test(m)) {
+    return [
+      { text: 'Building competitive comparison', src: 'Air8 Intelligence' },
+      { text: 'Cross-referencing buyer stance and DPO', src: 'Public filings' },
+    ];
+  } else if(/compliance|risk|esg|audit|b corp/i.test(m)) {
+    return [
+      { text: 'Checking compliance and ESG requirements', src: 'Company disclosures' },
+      { text: 'Assessing supplier audit requirements', src: 'Air8 KB' },
+    ];
+  } else {
+    // Full buyer Layer 1 query — show 7-dimension steps
+    return [
+      { text: `D1 · Overview: ${buyer}`, src: 'Air8 PulseLink' },
+      { text: 'D2 · Financials — statements, DPO, credit', src: 'SEC / Annual reports' },
+      { text: 'D3 · Products & categories from Asia', src: 'Customs records' },
+      { text: 'D4 · Sourcing — country mix & tariff risk', src: 'Customs DB' },
+      { text: 'D5 · Risk & compliance check', src: 'Air8 Intelligence' },
+      { text: 'D6 · Latest signals & news scan', src: 'Brave Search' },
+      { text: 'D7 · Competitive landscape', src: 'Air8 Intelligence' },
     ];
   }
 }
@@ -484,6 +444,23 @@ function parseMarkdown(md) {
 
   const flushList = () => {
     if(!listItems.length) return;
+
+    // 💬 Suggested questions (from 7-dim Layer 1 or drill-down follow-ups)
+    const isSuggestedQ = listItems.some(l => l.trimStart().startsWith('💬'));
+    if(isSuggestedQ) {
+      const chips = listItems
+        .filter(l => l.trimStart().startsWith('💬'))
+        .map(item => {
+          const q = item.replace(/^💬\s*/, '').trim();
+          return `<button class="explore-chip text-left w-full px-3 py-2 text-xs rounded-xl border border-blue-100 text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 transition-all" data-query="${esc(q)}">${esc(q)}</button>`;
+        }).join('');
+      html += `<div class="mt-3 mb-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">💡 继续深入探索</div>
+        <div class="flex flex-col gap-1.5">${chips}</div>
+      </div>`;
+      listItems = []; inList = false; return;
+    }
+
     // Check if these are "Explore further" items
     const isExplore = listItems.some(l => /💰|📦|🌍|⚠️|📰|🥊/.test(l));
     if(isExplore) {
@@ -506,10 +483,10 @@ function parseMarkdown(md) {
           'Competitors':'Compare them to their main competitors',
           '竞争':'和主要竞争对手相比如何',
         };
-        const q = qMap[label.split(' &')[0].trim()] || `Tell me more about ${label.toLowerCase()}`;
-        return `<button class="explore-chip text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all" data-query="${esc(q)}">${icon} ${esc(label)}</button>`;
+        const q = qMap[label.split(' &')[0].trim()] || \`Tell me more about \${label.toLowerCase()}\`;
+        return \`<button class="explore-chip text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all" data-query="\${esc(q)}">\${icon} \${esc(label)}</button>\`;
       }).join('');
-      html += `<div class="mt-2 mb-1"><div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Explore further</div><div class="flex flex-wrap gap-2">${chips}</div></div>`;
+      html += \`<div class="mt-2 mb-1"><div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Explore further</div><div class="flex flex-wrap gap-2">\${chips}</div></div>\`;
     } else {
       html += '<ul class="space-y-1 my-2">' + listItems.map(l=>`<li class="flex gap-2 text-sm text-gray-600"><span class="text-gray-400 mt-0.5">•</span><span>${inlineFormat(l)}</span></li>`).join('') + '</ul>';
     }
@@ -536,11 +513,11 @@ function parseMarkdown(md) {
 
     // Headings
     if(trimmed.startsWith('# ')) {
-      html += `<div class="mb-3"><span class="text-lg font-black text-gray-900">${inlineFormat(trimmed.slice(2))}</span></div>`;
+      html += \`<div class="mb-3"><span class="text-lg font-black text-gray-900">\${inlineFormat(trimmed.slice(2))}</span></div>\`;
     } else if(trimmed.startsWith('## ')) {
-      html += `<div class="text-sm font-bold text-gray-800 mt-4 mb-2">${inlineFormat(trimmed.slice(3))}</div>`;
+      html += \`<div class="text-sm font-bold text-gray-800 mt-4 mb-2">\${inlineFormat(trimmed.slice(3))}</div>\`;
     } else if(trimmed.startsWith('### ')) {
-      html += `<div class="text-xs font-semibold text-gray-600 mt-3 mb-1 uppercase tracking-wide">${inlineFormat(trimmed.slice(4))}</div>`;
+      html += \`<div class="text-xs font-semibold text-gray-600 mt-3 mb-1 uppercase tracking-wide">\${inlineFormat(trimmed.slice(4))}</div>\`;
     }
     // HR
     else if(trimmed === '---' || trimmed === '***') {
@@ -548,15 +525,15 @@ function parseMarkdown(md) {
     }
     // Bold headline (starts and ends with **)
     else if(trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 4) {
-      html += `<div class="flex gap-2 p-3.5 rounded-xl my-3" style="background:#eff6ff;border:1px solid #bfdbfe"><svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg><p class="text-xs font-semibold leading-relaxed" style="color:#1e3a8a">${inlineFormat(trimmed.slice(2,-2))}</p></div>`;
+      html += \`<div class="flex gap-2 p-3.5 rounded-xl my-3" style="background:#eff6ff;border:1px solid #bfdbfe"><svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg><p class="text-xs font-semibold leading-relaxed" style="color:#1e3a8a">\${inlineFormat(trimmed.slice(2,-2))}</p></div>\`;
     }
     // Source line (starts with *)
     else if(trimmed.startsWith('*Source:') || trimmed.startsWith('*Data:')) {
-      html += `<p class="text-[10px] text-gray-400 mt-2 leading-relaxed">${inlineFormat(trimmed.slice(1,-1))}</p>`;
+      html += \`<p class="text-[10px] text-gray-400 mt-2 leading-relaxed">\${inlineFormat(trimmed.slice(1,-1))}</p>\`;
     }
     // Regular paragraph
     else if(trimmed) {
-      html += `<p class="text-sm text-gray-600 leading-relaxed my-1.5">${inlineFormat(trimmed)}</p>`;
+      html += \`<p class="text-sm text-gray-600 leading-relaxed my-1.5">\${inlineFormat(trimmed)}</p>\`;
     }
   }
   flushTable(); flushList();
@@ -585,7 +562,7 @@ function addTabCard(data) {
 
   const panels=data.tabs.map((t,i)=>`
     <div id="${cid}-p-${t.id}" class="${i===0?'':'hidden'}">
-      ${t.content ? buildPanel(t,cid) : (i===0 ? buildPanel(t,cid) : '<div style="padding:24px;text-align:center"><button onclick="loadTab(\''+cid+'\',\''+t.id+'\',window._cardBuyer[\''+cid+'\']||\'\')" style="padding:8px 20px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;color:#1d4ed8;font-size:13px;cursor:pointer">点击加载 '+t.icon+' '+t.label+'</button></div>')}
+      ${buildPanel(t,cid)}
     </div>`).join('');
 
   // Store followups in global map to avoid onclick escaping issues
@@ -635,7 +612,6 @@ function addTabCard(data) {
 
   chat.appendChild(el);
   // Render charts after DOM insert
-  window._cardBuyer[cid] = data.buyer || '';
   data.tabs.forEach(t => { if(t.chart) renderChart(t,cid); });
   scrollDown();
 }
@@ -800,10 +776,6 @@ function renderChart(tab, cid) {
 
   const blue='#1d4ed8', palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
 
-  if(tab.chart.type==='donut'&&tab.chart.values) {
-    charts[key]=new Chart(canvas,{type:'doughnut',data:{labels:tab.chart.labels||[],datasets:[{data:tab.chart.values,backgroundColor:['#1d4ed8','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899'],borderColor:'#fff',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:true,position:'right',labels:{font:{size:11},boxWidth:12,padding:10}}}}});
-    return;
-  }
   if(tab.chart.type==='grouped_bar'&&tab.chart.datasets) {
     charts[key]=new Chart(canvas,{
       type:'bar',
