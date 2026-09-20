@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air8 Buyer Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .chat-bubble-bot { animation: fadeUp 0.2s ease-out; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .dot-bounce { animation: bounce 1.2s infinite; }
+    .dot-bounce:nth-child(2) { animation-delay: 0.2s; }
+    .dot-bounce:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+    .stat-pill { display:inline-flex; flex-direction:column; align-items:center; }
+    .section-chip:hover { transform: translateY(-1px); }
+    .msg-content h2 { font-size:15px; font-weight:700; color:#111; margin:12px 0 4px; }
+    .msg-content h3 { font-size:13px; font-weight:600; color:#374151; margin:10px 0 3px; }
+    .msg-content p { font-size:13px; color:#4b5563; line-height:1.6; margin:0 0 6px; }
+    .msg-content ul { font-size:13px; color:#4b5563; padding-left:16px; margin:4px 0 8px; }
+    .msg-content li { margin-bottom:2px; }
+    .msg-content strong { color:#111; font-weight:600; }
+    .msg-content table { width:100%; border-collapse:collapse; font-size:12px; margin:8px 0; }
+    .msg-content th { background:#f1f5f9; text-align:left; padding:6px 10px; color:#475569; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+    .msg-content td { padding:7px 10px; border-bottom:1px solid #f1f5f9; color:#334155; }
+    .msg-content tr:last-child td { border-bottom:none; }
+    .msg-content hr { border:none; border-top:1px solid #e5e7eb; margin:12px 0; }
+    textarea { resize: none; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
+
+  <!-- HEADER -->
+  <header class="bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between flex-shrink-0">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+        <span class="text-white font-bold text-sm">A8</span>
+      </div>
+      <div>
+        <div class="text-sm font-semibold text-gray-900">Air8 Intelligence</div>
+        <div class="text-xs text-gray-400">Buyer · Product · Market · Tariff</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+      <span class="text-xs text-gray-500">Live</span>
+    </div>
+  </header>
+
+  <!-- CHAT AREA -->
+  <div id="chatArea" class="flex-1 overflow-y-auto px-4 py-5 space-y-4">
+
+    <!-- Welcome card -->
+    <div class="flex justify-center">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 max-w-lg w-full text-center shadow-sm">
+        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+        </div>
+        <h2 class="text-sm font-semibold text-gray-900 mb-1">Ask me anything about buyers & supply chain</h2>
+        <p class="text-xs text-gray-500 mb-4">Buyer profiles · Financials · Sourcing · Tariffs · Market trends · Compliance</p>
+        <div class="flex flex-wrap justify-center gap-2">
+          <button onclick="sendQuick('Tell me about Walmart')" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 text-gray-600 text-xs rounded-full transition-all">Walmart</button>
+          <button onclick="sendQuick('Tell me about SHEIN')" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 text-gray-600 text-xs rounded-full transition-all">SHEIN</button>
+          <button onclick="sendQuick('Tell me about H&M')" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 text-gray-600 text-xs rounded-full transition-all">H&M</button>
+          <button onclick="sendQuick('US apparel tariff from China 2025')" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 text-gray-600 text-xs rounded-full transition-all">US Tariff</button>
+          <button onclick="sendQuick('Vietnam fast fashion sourcing trend 2026')" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 text-gray-600 text-xs rounded-full transition-all">Vietnam Sourcing</button>
+          <button onclick="sendQuick('Which buyers are sourcing activewear?')" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 text-gray-600 text-xs rounded-full transition-all">Who buys activewear</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INPUT AREA -->
+  <div class="bg-white border-t border-gray-200 px-4 py-3 flex-shrink-0">
+    <div class="flex items-end gap-2 max-w-3xl mx-auto">
+      <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 focus-within:border-orange-400 focus-within:ring-1 focus-within:ring-orange-400 transition-all">
+        <textarea id="userInput" rows="1"
+          placeholder="Ask about any buyer, product, tariff, or market trend..."
+          class="w-full bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+          style="max-height:100px; line-height:1.5"
+          oninput="autoResize(this)"
+          onkeydown="handleKey(event)"></textarea>
+      </div>
+      <button onclick="sendMessage()"
+        class="w-10 h-10 bg-orange-500 hover:bg-orange-600 text-white rounded-xl flex items-center justify-center flex-shrink-0 transition-colors shadow-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+      </button>
+    </div>
+    <p class="text-center text-xs text-gray-400 mt-2">Air8 Intelligence · Powered by public data + Air8 internal records</p>
+  </div>
+
+<script>
+const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
+let history = [];
+
+// ── Auto-resize textarea ─────────────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function sendQuick(text) {
+  document.getElementById('userInput').value = text;
+  sendMessage();
+}
+
+// ── Send message ─────────────────────────────────────────────────────────────
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+
+  appendUser(msg);
+  history.push({ role: 'user', content: msg });
+
+  const typingId = appendTyping();
+
+  try {
+    const res = await fetch(WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, context: history.slice(-12) })
+    });
+    const data = await res.json();
+    removeTyping(typingId);
+
+    if (data.reply) {
+      appendBot(data.reply, data.intent, data.buyer);
+      history.push({ role: 'assistant', content: data.reply });
+    } else {
+      appendBot('⚠️ ' + (data.error || 'Something went wrong.'));
+    }
+  } catch {
+    removeTyping(typingId);
+    appendBot('⚠️ Connection error — please try again.');
+  }
+}
+
+// ── Render user bubble ───────────────────────────────────────────────────────
+function appendUser(text) {
+  const area = document.getElementById('chatArea');
+  const wrap = document.createElement('div');
+  wrap.className = 'flex justify-end';
+  wrap.innerHTML = `
+    <div class="max-w-[75%] bg-orange-500 text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 leading-relaxed">
+      ${escHtml(text)}
+    </div>`;
+  area.appendChild(wrap);
+  scrollBot();
+}
+
+// ── Typing indicator ─────────────────────────────────────────────────────────
+function appendTyping() {
+  const area = document.getElementById('chatArea');
+  const id = 'typing-' + Date.now();
+  const wrap = document.createElement('div');
+  wrap.id = id;
+  wrap.className = 'flex justify-start gap-2.5';
+  wrap.innerHTML = `
+    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+      <span class="text-orange-600 font-bold text-xs">A8</span>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+      <div class="flex gap-1 items-center h-4">
+        <div class="w-2 h-2 bg-gray-300 rounded-full dot-bounce"></div>
+        <div class="w-2 h-2 bg-gray-300 rounded-full dot-bounce"></div>
+        <div class="w-2 h-2 bg-gray-300 rounded-full dot-bounce"></div>
+      </div>
+    </div>`;
+  area.appendChild(wrap);
+  scrollBot();
+  return id;
+}
+
+function removeTyping(id) {
+  document.getElementById(id)?.remove();
+}
+
+// ── Render bot response ──────────────────────────────────────────────────────
+function appendBot(text, intent, buyer) {
+  const area = document.getElementById('chatArea');
+  const wrap = document.createElement('div');
+  wrap.className = 'flex justify-start gap-2.5 chat-bubble-bot';
+
+  const html = renderMarkdown(text);
+
+  wrap.innerHTML = `
+    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
+      <span class="text-orange-600 font-bold text-xs">A8</span>
+    </div>
+    <div class="flex-1 max-w-[85%]">
+      <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm msg-content">
+        ${html}
+      </div>
+    </div>`;
+
+  area.appendChild(wrap);
+  
+  // Wire section chip clicks
+  wrap.querySelectorAll('.section-chip[data-query]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('userInput').value = btn.dataset.query;
+      sendMessage();
+    });
+  });
+
+  scrollBot();
+}
+
+// ── Markdown → HTML renderer ─────────────────────────────────────────────────
+function renderMarkdown(md) {
+  let html = md;
+
+  // ── Stat strip: lines like "📊 **Rev** $600M | **EBITDA** $23M | ..."
+  html = html.replace(/📊 ([^\n]+)/g, (_, line) => {
+    const pills = line.split('|').map(s => s.trim()).filter(Boolean);
+    const pillHtml = pills.map(p => {
+      const m = p.match(/\*\*(.+?)\*\*\s+(.+)/);
+      if (m) return `<div class="stat-pill px-3 py-1.5 bg-slate-50 rounded-xl border border-slate-100 text-center min-w-[72px]">
+        <div class="text-[10px] text-gray-500 font-medium">${escHtml(m[1])}</div>
+        <div class="text-sm font-bold text-gray-900 mt-0.5">${escHtml(m[2])}</div>
+      </div>`;
+      return `<div class="px-3 py-1.5 bg-slate-50 rounded-xl border border-slate-100 text-xs text-gray-700">${escHtml(p)}</div>`;
+    }).join('');
+    return `<div class="flex flex-wrap gap-2 mb-3">${pillHtml}</div>`;
+  });
+
+  // ── Buyer name header line (bold + ticker + metadata)
+  html = html.replace(/^\*\*(.+?)\*\*\s*·([^\n]+)/gm, (_, name, meta) =>
+    `<div class="flex items-center gap-2 flex-wrap mb-3">
+      <span class="text-base font-bold text-gray-900">${escHtml(name)}</span>
+      <span class="text-xs text-gray-500">${escHtml(meta.trim())}</span>
+    </div>`);
+
+  // ── Risk badge line
+  html = html.replace(/⚠️\s+\*\*Risk[^*]*\*\*\s*\n?([\s\S]*?)(?=\n\n|\n📋|$)/g, (_, content) =>
+    `<div class="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+      <div class="flex items-center gap-1.5 mb-1">
+        <span class="text-amber-600 text-xs font-semibold">⚠️ Risk Signal</span>
+      </div>
+      <div class="text-xs text-amber-800 leading-relaxed">${escHtml(content.trim())}</div>
+    </div>`);
+
+  // ── Section menu — convert to chips
+  html = html.replace(/📋\s+\*\*Explore further[^*]*\*\*[:\s]*([\s\S]*?)(?:\*\(Data:[^)]*\)\*|\*(Source:[^*]*)\*|$)/gi, (_, items, src) => {
+    const chips = [];
+    const chipRe = /[•\-]\s*([💰📦🌍⚠️📰🥊🏪])\s*\*\*(.+?)\*\*\s*(?:—\s*)?(.+?)(?=\n[•\-]|$)/g;
+    let m;
+    while ((m = chipRe.exec(items)) !== null) {
+      const icon = m[1], label = m[2].trim(), desc = m[3].trim();
+      // Build query from label
+      const queryMap = {
+        'Financials': 'Tell me more about their financials',
+        '财务': '能否深入介绍一下他们的财务情况',
+        'Products': 'Tell me more about their products and categories',
+        '产品': '能否深入介绍一下他们的产品品类',
+        'Sourcing': 'Tell me about their sourcing and supply chain',
+        '采购': '能否深入介绍一下他们的采购来源',
+        'Risk': 'Tell me about their risk and compliance requirements',
+        '风险': '能否深入介绍他们的风险和合规要求',
+        'Signals': 'What are the latest news and signals',
+        '信号': '有哪些最新动态和信号',
+        'Competitors': 'How do they compare to competitors',
+        '竞争': '和竞争对手相比怎么样',
+      };
+      const q = queryMap[label] || `Tell me more about their ${label.toLowerCase()}`;
+      chips.push(`<button class="section-chip flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-300 rounded-xl text-xs text-gray-700 hover:text-orange-700 transition-all" data-query="${escAttr(q)}">
+        <span>${icon}</span><span class="font-medium">${escHtml(label)}</span>
+      </button>`);
+    }
+    const sourceNote = src ? `<p class="text-xs text-gray-400 mt-2">${escHtml(src)}</p>` : '';
+    return `<div class="mt-3 pt-3 border-t border-gray-100">
+      <div class="text-xs text-gray-500 font-medium mb-2">Explore further:</div>
+      <div class="flex flex-wrap gap-2">${chips.join('')}</div>
+      ${sourceNote}
+    </div>`;
+  });
+
+  // ── Horizontal rule
+  html = html.replace(/^---+$/gm, '<hr>');
+
+  // ── Headers
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+
+  // ── Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // ── Italic
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  // ── Tables
+  html = html.replace(/(\|[^\n]+\|\n\|[-| :]+\|\n(?:\|[^\n]+\|\n?)*)/g, match => {
+    const rows = match.trim().split('\n');
+    const headers = rows[0].split('|').slice(1,-1).map(s => s.trim());
+    const body = rows.slice(2).map(r => r.split('|').slice(1,-1).map(s => s.trim()));
+    const headHtml = headers.map(h => `<th>${escHtml(h)}</th>`).join('');
+    const bodyHtml = body.map(r => `<tr>${r.map(c => `<td>${escHtml(c)}</td>`).join('')}</tr>`).join('');
+    return `<table><thead><tr>${headHtml}</tr></thead><tbody>${bodyHtml}</tbody></table>`;
+  });
+
+  // ── Unordered lists
+  html = html.replace(/((?:^[•\-\*] .+$\n?)+)/gm, match => {
+    const items = match.trim().split('\n').map(l => l.replace(/^[•\-\*]\s+/, ''));
+    return '<ul>' + items.map(i => `<li>${escHtml(i)}</li>`).join('') + '</ul>';
+  });
+
+  // ── Paragraphs
+  html = html.replace(/\n\n/g, '</p><p>').replace(/^(?!<[a-z])(.+)$/gm, (_, l) => {
+    if (l.startsWith('<') || l.trim() === '') return l;
+    return l;
+  });
+  html = '<p>' + html + '</p>';
+
+  // Clean up empty <p> tags
+  html = html.replace(/<p>\s*<\/p>/g, '');
+  html = html.replace(/<p>(<[htu])/g, '$1');
+  html = html.replace(/(<\/[htu][^>]*>)<\/p>/g, '$1');
+  html = html.replace(/<p>(<div)/g, '$1');
+  html = html.replace(/(<\/div>)<\/p>/g, '$1');
+
+  return html;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) {
+  return String(s).replace(/"/g,'&quot;');
+}
+
+function scrollBot() {
+  const area = document.getElementById('chatArea');
+  requestAnimationFrame(() => area.scrollTop = area.scrollHeight);
+}
+</script>
+
+</body>
+</html>
