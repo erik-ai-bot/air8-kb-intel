@@ -57,7 +57,7 @@
 
 <script>
 var W = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
-var history = [];
+var msgHist = [];
 var charts = {};
 var cardCount = 0;
 
@@ -463,7 +463,7 @@ function send() {
   inp.style.height = 'auto';
 
   addMsg('user', msg);
-  history.push({ role: 'user', content: msg });
+  msgHist.push({ role: 'user', content: msg });
 
   var steps = guessSteps(msg);
   var thinkId = showThinking(steps);
@@ -472,7 +472,7 @@ function send() {
   document.getElementById('sndLdr').style.display = 'block';
   document.getElementById('sndBtn').disabled = true;
 
-  var payload = JSON.stringify({ message: msg, history: history.slice(-6) });
+  var payload = JSON.stringify({ message: msg, history: msgHist.slice(-6) });
 
   fetch(W, {
     method: 'POST',
@@ -491,10 +491,10 @@ function send() {
 
     if (p && p.tabs) {
       addTabCard(p);
-      history.push({ role: 'assistant', content: p.summary || 'Tabbed intelligence report generated.' });
+      msgHist.push({ role: 'assistant', content: p.summary || 'Tabbed intelligence report generated.' });
     } else {
       addMarkdown(p && p.text ? p.text : raw);
-      history.push({ role: 'assistant', content: raw.slice(0, 300) });
+      msgHist.push({ role: 'assistant', content: raw.slice(0, 300) });
     }
   })
   .catch(function(err) {
