@@ -121,12 +121,18 @@ async function send() {
     const ct = res.headers.get('content-type')||'';
 
     if(ct.includes('application/json')) {
-      // Off-topic / simple JSON
       const data = await res.json();
       removeEl(thinkId);
-      const reply = data.text || data.reply || '';
-      if(data.error || !reply) addText('⚠️ '+(data.error||'No response.'));
-      else { addMarkdown(reply); hist.push({role:'assistant',content:reply}); }
+      if(data.tabs && Array.isArray(data.tabs)) {
+        // Layer 1 tab card response
+        addTabCard(data);
+        hist.push({role:'assistant', content: data.summary || data.buyer || 'Buyer overview'});
+      } else {
+        // Off-topic / simple text response
+        const reply = data.text || data.reply || '';
+        if(data.error || !reply) addText('⚠️ '+(data.error||'No response.'));
+        else { addMarkdown(reply); hist.push({role:'assistant',content:reply}); }
+      }
     } else {
       // SSE streaming
       const reader = res.body.getReader();
