@@ -105,104 +105,47 @@ async function send() {
   const inp=document.getElementById('inp'), msg=inp.value.trim();
   if(!msg) return;
   inp.value=''; inp.style.height='auto';
+
   addUser(msg);
   hist.push({role:'user',content:msg});
-  const thinkId = addThinking(guessSteps(msg));
+
+  // Detect intent for chain-of-thought
+  const intentSteps = guessSteps(msg);
+  const thinkId = addThinking(intentSteps);
 
   try {
     const res = await fetch(WORKER, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({message:msg, context:hist.slice(-8)})
+      body: JSON.stringify({message:msg, context:hist.slice(-10)})
     });
     const data = await res.json();
     removeEl(thinkId);
-    // Handle current worker: tabbed JSON or {text} or {reply}
+
+    // Handle both formats:
+    // New worker: {tabs:[...]} direct JSON, or {text:"markdown"}
+    // Old worker: {reply: "JSON string or markdown"}
     if(data.tabs && Array.isArray(data.tabs)) {
       addTabCard(data);
-      hist.push({role:'assistant', content: data.summary || 'Report generated.'});
+      hist.push({role:'assistant', content: data.summary || ''});
     } else {
-      const reply = data.text || data.reply || '';
-      if(data.error || !reply) {
+      const raw = data.text || data.reply || '';
+      if(data.error || !raw) {
         addText('⚠️ '+(data.error||'No response. Please try again.'));
       } else {
-        const parsed = extractJSON(reply);
+        const parsed = extractJSON(raw);
         if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
           addTabCard(parsed);
         } else {
-          addMarkdown(reply);
+          addText(raw);
         }
-        hist.push({role:'assistant', content:reply});
+        hist.push({role:'assistant', content:raw});
       }
     }
   } catch(err) {
     removeEl(thinkId);
     addText('⚠️ Connection error — please try again.');
   }
-}
-
-function handleStreamEvent(ev, thinkId, msg) {
-  if(ev.type === 'step') {
-    updateThinkingStep(thinkId, ev);
-  } else if(ev.type === 'done_prev') {
-    markPrevStepDone(thinkId);
-  } else if(ev.type === 'result') {
-    removeEl(thinkId);
-    const raw = ev.reply || '';
-    const parsed = extractJSON(raw);
-    if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
-      addTabCard(parsed);
-    } else {
-      addText(raw || '⚠️ No response.');
-    }
-    hist.push({role:'assistant', content:raw});
-  } else if(ev.type === 'error') {
-    removeEl(thinkId);
-    addText('⚠️ ' + (ev.message||'Error'));
-  }
-}
-
-// ── STREAM STEP HELPERS ──────────────────────────────────────────────────────
-function updateThinkingStep(thinkId, ev) {
-  // The addThinking function already handles this via intervals
-  // For SSE, we add steps directly
-  const box = document.getElementById(thinkId+'-steps');
-  if(!box) return;
-  const row = document.createElement('div');
-  row.className = 'flex items-start gap-2.5 step-row';
-  row.innerHTML = `
-    <div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px">
-      <div class="spinner" style="width:12px;height:12px"></div>
-    </div>
-    <div class="flex-1 min-w-0">
-      <div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(ev.text||'')}</div>
-      ${ev.src ? `<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(ev.src)}</div>` : ''}
-    </div>`;
-  // Mark previous as done first
-  const rows = box.querySelectorAll('.step-row');
-  rows.forEach(r => {
-    const icon = r.querySelector('.step-icon');
-    if(icon && icon.querySelector('.spinner')) {
-      icon.innerHTML = `<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
-      const txt = r.querySelector('.step-text');
-      if(txt) txt.style.color='#6b7280';
-    }
-  });
-  box.appendChild(row);
-  scrollDown();
-}
-
-function markPrevStepDone(thinkId) {
-  const box = document.getElementById(thinkId+'-steps');
-  if(!box) return;
-  box.querySelectorAll('.step-row').forEach(r => {
-    const icon = r.querySelector('.step-icon');
-    if(icon && icon.querySelector('.spinner')) {
-      icon.innerHTML = `<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
-      const txt = r.querySelector('.step-text');
-      if(txt) txt.style.color='#6b7280';
-    }
-  });
 }
 
 // ── EXTRACT JSON (robust) ────────────────────────────────────────────────────
@@ -339,158 +282,6 @@ function addText(md) {
   scrollDown();
 }
 
-// ── MARKDOWN RESPONSE ───────────────────────────────────────────────────────
-function addMarkdown(md) {
-  const chat=document.getElementById('chat');
-  const el=document.createElement('div');
-  el.className='flex justify-start gap-2.5 fade-in';
-
-  const rendered = parseMarkdown(md);
-
-  el.innerHTML=`
-    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
-      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
-    </div>
-    <div class="flex-1 max-w-[92%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
-      <div class="px-5 py-4 markdown-body">${rendered}</div>
-    </div>`;
-  chat.appendChild(el);
-
-  // Wire "Explore further" bullet clicks
-  el.querySelectorAll('.explore-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.getElementById('inp').value = btn.dataset.query;
-      send();
-    });
-  });
-  scrollDown();
-}
-
-function parseMarkdown(md) {
-  // Process line by line for better control
-  const lines = md.split('\n');
-  let html = '';
-  let inTable = false, tableRows = [];
-  let inList = false, listItems = [];
-
-  const flushTable = () => {
-    if(!tableRows.length) return;
-    const [header, , ...body] = tableRows;
-    const ths = header.split('|').slice(1,-1).map(c=>`<th class="px-4 py-2 text-left text-[10px] font-bold text-gray-500 uppercase bg-slate-50 border-b border-gray-200">${esc(c.trim())}</th>`).join('');
-    const rows = body.map((r,ri)=>
-      `<tr class="${ri%2?'bg-slate-50/40':'bg-white'}">` +
-      r.split('|').slice(1,-1).map(c=>{
-        const v=c.trim();
-        const cls=v.startsWith('↑')?'text-emerald-600 font-semibold':v.startsWith('↓')?'text-red-500 font-semibold':'text-gray-700';
-        return `<td class="px-4 py-2.5 text-xs ${cls} border-b border-gray-100">${esc(v)}</td>`;
-      }).join('')+`</tr>`).join('');
-    html += `<div class="overflow-hidden rounded-xl border border-gray-200 my-3 shadow-sm"><table class="w-full"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table></div>`;
-    tableRows = []; inTable = false;
-  };
-
-  const flushList = () => {
-    if(!listItems.length) return;
-    // Check if these are "Explore further" items
-    const isExplore = listItems.some(l => /💰|📦|🌍|⚠️|📰|🥊|📈|📊|🏭|🔮|📋|⏱️|💡|🗓️/.test(l));
-    if(isExplore) {
-      const chips = listItems.map(item => {
-        const iconMatch = item.match(/^(💰|📦|🌍|⚠️|📰|🥊)/);
-        const icon = iconMatch ? iconMatch[0] : '';
-        const labelMatch = item.match(/\*\*(.+?)\*\*/);
-        const label = labelMatch ? labelMatch[1] : item.replace(/^[💰📦🌍⚠️📰🥊]\s*/,'').split('—')[0].trim();
-        const qMap = {
-          'Financials':'Deep dive: financials, DPO, credit rating, and payment reliability',
-          'Products':'What products and categories do they source from Asia — breakdown and trends',
-          'Sourcing':'Tell me about their sourcing strategy and country diversification',
-          'Risk':'What are the compliance and risk requirements for suppliers — RSL, audits, UFLPA',
-          'Signals':'What are the latest news and signals affecting suppliers',
-          'Competitors':'Compare them to their main competitors',
-          'Rates & Codes':'What are the current HTS tariff rates for this product?',
-          'China Exposure':'How exposed is my supply chain to Section 301 tariffs?',
-          'Product Impact':'Which product categories face the highest tariff burden?',
-          'Mitigation':'What FTA or country-switching options reduce tariff costs?',
-          'Cost Calc':'What is the landed cost difference for China vs Vietnam?',
-          'Timeline':'What upcoming tariff changes should I plan for?',
-          'Trends':'What are the key market trends affecting this sector?',
-          'Regional':'How do regional dynamics impact sourcing strategy?',
-          'Trade Data':'What trade volume shifts signal buyer behavior changes?',
-          'Sourcing Shifts':'Where are major buyers shifting their sourcing?',
-          'Outlook':'What is the 12-month outlook for this market?',
-          'Documentation':'What documents are required for this import?',
-          'Compliance':'What UFLPA or C-TPAT requirements apply?',
-          'Timeline & Cost':'How long does customs clearance take and what does it cost?',
-          'Recommendations':'What are the top steps to improve trade compliance?',
-          'Country Comparison':'Which country offers the best cost-quality-risk balance?',
-          'Sourcing Hubs':'What factory hubs should I consider?',
-          'MOQ & Terms':'What are typical MOQs and payment terms?',
-          'Risk Factors':'What are the top sourcing risks in this region?',
-          'Diversification':'How do I reduce China concentration safely?',
-          'Financing Angle':'How does Air8 financing help with this sourcing shift?',
-        };
-        const q = qMap[label.split(' &')[0].trim()] || `Tell me more about ${label.toLowerCase()}`;
-        return `<button class="explore-chip text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all" data-query="${esc(q)}">${icon} ${esc(label)}</button>`;
-      }).join('');
-      html += `<div class="mt-2 mb-1"><div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Explore further</div><div class="flex flex-wrap gap-2">${chips}</div></div>`;
-    } else {
-      html += '<ul class="space-y-1 my-2">' + listItems.map(l=>`<li class="flex gap-2 text-sm text-gray-600"><span class="text-gray-400 mt-0.5">•</span><span>${inlineFormat(l)}</span></li>`).join('') + '</ul>';
-    }
-    listItems = []; inList = false;
-  };
-
-  for(let i=0; i<lines.length; i++) {
-    const line = lines[i];
-    const trimmed = line.trim();
-
-    // Table rows
-    if(trimmed.startsWith('|') && trimmed.endsWith('|')) {
-      if(!inTable) { flushList(); inTable = true; }
-      tableRows.push(trimmed);
-      continue;
-    } else if(inTable) { flushTable(); }
-
-    // List items
-    if(trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
-      if(!inList) inList = true;
-      listItems.push(trimmed.replace(/^[-•]\s+/,''));
-      continue;
-    } else if(inList) { flushList(); }
-
-    // Headings
-    if(trimmed.startsWith('# ')) {
-      html += `<div class="mb-3"><span class="text-lg font-black text-gray-900">${inlineFormat(trimmed.slice(2))}</span></div>`;
-    } else if(trimmed.startsWith('## ')) {
-      html += `<div class="text-sm font-bold text-gray-800 mt-4 mb-2">${inlineFormat(trimmed.slice(3))}</div>`;
-    } else if(trimmed.startsWith('### ')) {
-      html += `<div class="text-xs font-semibold text-gray-600 mt-3 mb-1 uppercase tracking-wide">${inlineFormat(trimmed.slice(4))}</div>`;
-    }
-    // HR
-    else if(trimmed === '---' || trimmed === '***') {
-      html += '<hr class="my-3 border-gray-100">';
-    }
-    // Bold headline (starts and ends with **)
-    else if(trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 4) {
-      html += `<div class="flex gap-2 p-3.5 rounded-xl my-3" style="background:#eff6ff;border:1px solid #bfdbfe"><svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg><p class="text-xs font-semibold leading-relaxed" style="color:#1e3a8a">${inlineFormat(trimmed.slice(2,-2))}</p></div>`;
-    }
-    // Source line (starts with *)
-    else if(trimmed.startsWith('*Source:') || trimmed.startsWith('*Data:')) {
-      html += `<p class="text-[10px] text-gray-400 mt-2 leading-relaxed">${inlineFormat(trimmed.slice(1,-1))}</p>`;
-    }
-    // Regular paragraph
-    else if(trimmed) {
-      html += `<p class="text-sm text-gray-600 leading-relaxed my-1.5">${inlineFormat(trimmed)}</p>`;
-    }
-  }
-  flushTable(); flushList();
-  return html;
-}
-
-function inlineFormat(s) {
-  return esc(s)
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*([^*]+?)\*/g,'<em>$1</em>')
-    .replace(/`([^`]+?)`/g,'<code class="bg-gray-100 px-1 rounded text-[11px]">$1</code>');
-}
-
 // ── TABBED CARD ───────────────────────────────────────────────────────────────
 function addTabCard(data) {
   const chat=document.getElementById('chat');
@@ -547,11 +338,6 @@ function addTabCard(data) {
       <div class="p-5">${panels}</div>
       <!-- Suggested questions -->
       ${followupHtml}
-      ${data.sources ? `<div class="px-5 pb-3 pt-0">
-        <div class="text-[10px] text-gray-400 leading-relaxed">
-          <span class="font-semibold">Sources:</span> ${esc(data.sources)}
-        </div>
-      </div>` : ''}
     </div>`;
 
   chat.appendChild(el);
@@ -663,34 +449,6 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-
-  // Key Takeaways bullets
-  if(tab.bullets && tab.bullets.length) {
-    h+=`<div class="space-y-2.5 mb-4">`;
-    tab.bullets.forEach(b=>{
-      h+=`<div class="flex gap-3 p-3 rounded-xl" style="background:#f8faff;border:1px solid #e0e7ff">
-        <div class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center" style="background:#1d4ed8">
-          <svg style="width:8px;height:8px;color:white" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>
-        </div>
-        <p class="text-xs text-gray-700 leading-relaxed">${esc(b)}</p>
-      </div>`;
-    });
-    h+=`</div>`;
-  }
-
-  // Coverage gaps
-  if(tab.coverage_gaps) {
-    h+=`<div class="flex gap-2.5 p-3 rounded-xl border" style="background:#fffbeb;border-color:#fde68a">
-      <svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#b45309" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      <div>
-        <div class="text-[10px] font-bold text-amber-700 mb-0.5 uppercase tracking-wide">Data coverage note</div>
-        <p class="text-[11px] text-amber-800 leading-relaxed">${esc(tab.coverage_gaps)}</p>
-      </div>
-    </div>`;
-  }
-
   return h;
 }
 
@@ -720,31 +478,22 @@ function renderChart(tab, cid) {
 
   const blue='#1d4ed8', palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
 
-  // Donut / pie chart
-  if(tab.chart.type==='donut' && tab.chart.values) {
+  // Donut chart for sourcing
+  if(tab.chart.type==='donut'&&tab.chart.values) {
     charts[key]=new Chart(canvas,{
       type:'doughnut',
       data:{
         labels:tab.chart.labels||[],
-        datasets:[{
-          data:tab.chart.values,
-          backgroundColor:['#1d4ed8','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4'],
-          borderColor:'#fff',
-          borderWidth:2
-        }]
+        datasets:[{data:tab.chart.values,
+          backgroundColor:['#1d4ed8','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899'],
+          borderColor:'#fff',borderWidth:2}]
       },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        cutout:'60%',
-        plugins:{
-          legend:{display:true,position:'right',labels:{font:{size:11},boxWidth:12,padding:10}}
-        }
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+        plugins:{legend:{display:true,position:'right',labels:{font:{size:11},boxWidth:12,padding:10}}}
       }
     });
     return;
   }
-
   if(tab.chart.type==='grouped_bar'&&tab.chart.datasets) {
     charts[key]=new Chart(canvas,{
       type:'bar',
