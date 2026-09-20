@@ -7,182 +7,462 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:#f8fafc}
-  @keyframes fa{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  .fa{animation:fa .25s ease-out}
-  .tab-btn{font-size:13px;font-weight:500;color:#64748b;white-space:nowrap;border-bottom:2px solid transparent;padding:12px 18px;cursor:pointer;transition:all .15s;background:none;border-left:none;border-right:none;border-top:none}
-  .tab-btn:hover{color:#1e293b;background:#f8fafc}
-  .tab-btn.act{color:#1d4ed8;border-bottom-color:#1d4ed8}
-  .risk-low{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
-  .risk-med{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
-  .risk-hi{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}
-  .chip{padding:6px 14px;background:#fff;border:1px solid #e2e8f0;color:#64748b;font-size:12px;border-radius:999px;cursor:pointer;transition:all .15s;white-space:nowrap}
-  .chip:hover{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
-  .flw{font-size:13px;color:#64748b;padding:10px 14px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-top:12px;line-height:1.6}
-  .flw b{color:#1d4ed8;font-weight:600}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  :root { --blue: #1d4ed8; --blue-light: #eff6ff; --blue-mid: #bfdbfe; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation: fadeUp .25s ease-out; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .spinner { width:12px;height:12px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0; }
+  @keyframes stepIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+  .step-row { animation: stepIn .2s ease-out forwards; opacity:0; }
+  textarea { resize:none; }
+  ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:4px}
+  .tab-active { border-bottom:2px solid #1d4ed8; color:#1d4ed8; font-weight:600; }
+  .tab-inactive { border-bottom:2px solid transparent; color:#64748b; }
+  .tab-inactive:hover { color:#1e293b; background:#f8fafc; }
+  .risk-low  { background:#f0fdf4; color:#15803d; border-color:#bbf7d0; }
+  .risk-med  { background:#fffbeb; color:#b45309; border-color:#fde68a; }
+  .risk-high { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
+  .chip { padding:7px 16px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px; border-radius:999px; cursor:pointer; transition:all .15s; white-space:nowrap; }
+  .chip:hover { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
 </style>
 </head>
-<body>
-<header style="background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10">
-  <div style="display:flex;align-items:center;gap:10px">
-    <div style="width:32px;height:32px;border-radius:8px;background:#1d4ed8;display:flex;align-items:center;justify-content:center">
-      <span style="color:#fff;font-weight:700;font-size:13px">A8</span>
+<body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
+
+<!-- HEADER -->
+<header class="bg-white border-b border-gray-200 px-5 py-3.5 flex items-center justify-between flex-shrink-0">
+  <div class="flex items-center gap-2.5">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#1d4ed8">
+      <span class="text-white font-bold text-sm">A8</span>
     </div>
     <div>
-      <div style="font-size:13px;font-weight:700;color:#1e293b">Air8 Intelligence</div>
-      <div style="font-size:11px;color:#94a3b8">Buyer · Market · Tariff · Sourcing</div>
+      <div class="text-sm font-bold text-gray-900">Air8 Intelligence</div>
+      <div class="text-[11px] text-gray-400">Buyer · Market · Tariff · Sourcing</div>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:6px">
-    <div style="width:8px;height:8px;border-radius:50%;background:#34d399"></div>
-    <span style="font-size:12px;color:#94a3b8">Live</span>
+  <div class="flex items-center gap-1.5">
+    <div class="w-2 h-2 bg-emerald-400 rounded-full"></div>
+    <span class="text-xs text-gray-500">Live</span>
   </div>
 </header>
 
-<div id="chat" style="flex:1;overflow-y:auto;padding:24px 16px;display:flex;flex-direction:column;gap:20px;max-width:860px;margin:0 auto;width:100%"></div>
+<!-- CHAT -->
+<div id="chat" class="flex-1 overflow-y-auto px-4 py-6 space-y-5" style="max-width:860px;margin:0 auto;width:100%">
 
-<div style="background:#fff;border-top:1px solid #e2e8f0;padding:14px 16px 16px;flex-shrink:0">
-  <div style="display:flex;align-items:flex-end;gap:8px;max-width:860px;margin:0 auto">
-    <div style="flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:10px 16px;transition:border-color .15s" id="inpWrap">
-      <textarea id="inp" rows="1" placeholder="Ask about any buyer, tariff, product or market trend..." style="width:100%;background:transparent;border:none;outline:none;font-size:14px;color:#1e293b;resize:none;line-height:1.6;max-height:80px" oninput="ar(this)" onkeydown="hk(event)"></textarea>
+  <!-- Welcome -->
+  <div class="flex justify-center fade-in">
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 max-w-lg w-full shadow-sm text-center">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3" style="background:#eff6ff">
+        <svg class="w-6 h-6" style="color:#1d4ed8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+      <p class="text-sm font-semibold text-gray-900 mb-1">Ask about any buyer, product, or market</p>
+      <p class="text-xs text-gray-500 mb-5">Get structured intelligence with financials, sourcing, products & risk signals</p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <button onclick="sq('Tell me about Walmart')" class="chip">Walmart</button>
+        <button onclick="sq('Tell me about SHEIN')" class="chip">SHEIN</button>
+        <button onclick="sq('Compare AKA Brands vs REVOLVE')" class="chip">AKA vs REVOLVE</button>
+        <button onclick="sq('US tariff on apparel from China 2025')" class="chip">US Tariff</button>
+        <button onclick="sq('Vietnam fast fashion sourcing trend 2026')" class="chip">Vietnam Trend</button>
+      </div>
     </div>
-    <button onclick="send()" id="sndBtn" style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#1d4ed8;color:#fff;border:none;cursor:pointer;flex-shrink:0">
-      <svg id="sndIco" style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-      <div id="sndLdr" style="display:none;width:12px;height:12px;border:2px solid #bfdbfe;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></div>
+  </div>
+
+</div>
+
+<!-- INPUT -->
+<div class="bg-white border-t border-gray-200 px-4 pt-3.5 pb-4 flex-shrink-0">
+  <div class="flex items-end gap-2" style="max-width:860px;margin:0 auto">
+    <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 transition-all focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-200">
+      <textarea id="inp" rows="1" placeholder="Ask about any buyer, tariff, product or market trend..."
+        class="w-full bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none leading-relaxed"
+        style="max-height:80px" oninput="ar(this)" onkeydown="hk(event)"></textarea>
+    </div>
+    <button onclick="send()" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white transition-colors shadow-sm" style="background:#1d4ed8" onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1d4ed8'">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+      </svg>
     </button>
   </div>
-  <p style="text-align:center;font-size:10px;color:#94a3b8;margin:8px 0 0">Air8 Intelligence · Verify key data before decisions</p>
+  <p class="text-center text-[10px] text-gray-400 mt-2">Air8 Intelligence · Verify key data before decisions</p>
 </div>
 
 <script>
-var W = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
-var msgHist = [];
-var charts = {};
-var cardCount = 0;
+const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
+let hist = [], charts = {};
 
-function ar(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
+function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
+function sq(t) { document.getElementById('inp').value=t; send(); }
+function fqClick(cid, idx) {
+  const q = window._fq && window._fq[cid] && window._fq[cid][idx];
+  if(q) sq(q);
 }
 
-function hk(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    send();
+// ── SEND ─────────────────────────────────────────────────────────────────────
+async function send() {
+  const inp=document.getElementById('inp'), msg=inp.value.trim();
+  if(!msg) return;
+  inp.value=''; inp.style.height='auto';
+  addUser(msg);
+  hist.push({role:'user',content:msg});
+  const thinkId = addThinking(guessSteps(msg));
+
+  try {
+    const res = await fetch(WORKER, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({message:msg, context:hist.slice(-8)})
+    });
+    const data = await res.json();
+    removeEl(thinkId);
+    // Handle current worker: tabbed JSON or {text} or {reply}
+    if(data.tabs && Array.isArray(data.tabs)) {
+      addTabCard(data);
+      hist.push({role:'assistant', content: data.summary || 'Report generated.'});
+    } else {
+      const reply = data.text || data.reply || '';
+      if(data.error || !reply) {
+        addText('⚠️ '+(data.error||'No response. Please try again.'));
+      } else {
+        const parsed = extractJSON(reply);
+        if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
+          addTabCard(parsed);
+        } else {
+          addMarkdown(reply);
+        }
+        hist.push({role:'assistant', content:reply});
+      }
+    }
+  } catch(err) {
+    removeEl(thinkId);
+    addText('⚠️ Connection error — please try again.');
   }
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function handleStreamEvent(ev, thinkId, msg) {
+  if(ev.type === 'step') {
+    updateThinkingStep(thinkId, ev);
+  } else if(ev.type === 'done_prev') {
+    markPrevStepDone(thinkId);
+  } else if(ev.type === 'result') {
+    removeEl(thinkId);
+    const raw = ev.reply || '';
+    const parsed = extractJSON(raw);
+    if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
+      addTabCard(parsed);
+    } else {
+      addText(raw || '⚠️ No response.');
+    }
+    hist.push({role:'assistant', content:raw});
+  } else if(ev.type === 'error') {
+    removeEl(thinkId);
+    addText('⚠️ ' + (ev.message||'Error'));
+  }
 }
 
-function addMsg(role, html, extra) {
-  var chat = document.getElementById('chat');
-  var wrap = document.createElement('div');
-  wrap.className = 'fa';
-  if (role === 'user') {
-    wrap.innerHTML = '<div style="display:flex;justify-content:flex-end"><div style="max-width:72%;background:#1d4ed8;color:#fff;padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:14px;line-height:1.6">' + esc(html) + '</div></div>';
+// ── STREAM STEP HELPERS ──────────────────────────────────────────────────────
+function updateThinkingStep(thinkId, ev) {
+  // The addThinking function already handles this via intervals
+  // For SSE, we add steps directly
+  const box = document.getElementById(thinkId+'-steps');
+  if(!box) return;
+  const row = document.createElement('div');
+  row.className = 'flex items-start gap-2.5 step-row';
+  row.innerHTML = `
+    <div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px">
+      <div class="spinner" style="width:12px;height:12px"></div>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(ev.text||'')}</div>
+      ${ev.src ? `<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(ev.src)}</div>` : ''}
+    </div>`;
+  // Mark previous as done first
+  const rows = box.querySelectorAll('.step-row');
+  rows.forEach(r => {
+    const icon = r.querySelector('.step-icon');
+    if(icon && icon.querySelector('.spinner')) {
+      icon.innerHTML = `<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+      const txt = r.querySelector('.step-text');
+      if(txt) txt.style.color='#6b7280';
+    }
+  });
+  box.appendChild(row);
+  scrollDown();
+}
+
+function markPrevStepDone(thinkId) {
+  const box = document.getElementById(thinkId+'-steps');
+  if(!box) return;
+  box.querySelectorAll('.step-row').forEach(r => {
+    const icon = r.querySelector('.step-icon');
+    if(icon && icon.querySelector('.spinner')) {
+      icon.innerHTML = `<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+      const txt = r.querySelector('.step-text');
+      if(txt) txt.style.color='#6b7280';
+    }
+  });
+}
+
+// ── EXTRACT JSON (robust) ────────────────────────────────────────────────────
+function extractJSON(text) {
+  if(!text) return null;
+  // 1. direct parse
+  try { return JSON.parse(text.trim()); } catch{}
+  // 2. strip code fences (any variant)
+  const stripped = text.replace(/^[\s\S]*?```(?:json)?\s*/,'').replace(/```[\s\S]*$/,'').trim();
+  try { return JSON.parse(stripped); } catch{}
+  // 3. find first { ... } block
+  const m = text.match(/\{[\s\S]*\}/);
+  if(m) { try { return JSON.parse(m[0]); } catch{} }
+  return null;
+}
+
+// ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
+function guessSteps(msg) {
+  const m = msg.toLowerCase();
+  const buyer = msg.replace(/tell me (sth |something )?(about|more about)|查|了解|分析|compare|vs\s/gi,'').replace(/\?/,'').trim().slice(0,35);
+  
+  if(/compare|vs /i.test(msg)) {
+    const parts = msg.match(/([A-Za-z &.]+)\s+vs\.?\s+([A-Za-z &.]+)/i);
+    const a = parts?.[1]?.trim()||'Buyer A', b = parts?.[2]?.trim()||'Buyer B';
+    return [
+      { text: `Searching buyer database: ${a}`, src: 'Air8 PulseLink' },
+      { text: `Searching buyer database: ${b}`, src: 'Air8 PulseLink' },
+      { text: 'Pulling financial profiles & DPO data', src: 'Public filings' },
+      { text: 'Cross-referencing sourcing & customs records', src: 'Customs DB' },
+      { text: 'Composing side-by-side analysis', src: null },
+    ];
+  } else if(/tariff|duty|hts/i.test(m)) {
+    return [
+      { text: 'Querying HTS tariff schedule', src: 'USITC' },
+      { text: 'Checking Section 301 / de minimis rules', src: 'CBP.gov' },
+      { text: 'Calculating rate differentials by origin', src: 'Air8 Tariff DB' },
+    ];
+  } else if(/trend|market|industry/i.test(m)) {
+    return [
+      { text: 'Scanning trade news & signals', src: 'Web search' },
+      { text: 'Pulling sourcing shift data', src: 'Customs records' },
+      { text: 'Identifying supply chain implications', src: 'Air8 KB' },
+    ];
   } else {
-    wrap.innerHTML = '<div style="display:flex;gap:10px;align-items:flex-start"><div style="width:28px;height:28px;border-radius:8px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><span style="color:#fff;font-size:10px;font-weight:700">A8</span></div><div style="flex:1;min-width:0">' + html + (extra || '') + '</div></div>';
+    return [
+      { text: `Searching buyer database: ${buyer}`, src: 'Air8 PulseLink' },
+      { text: 'Retrieving financial statements & DPO', src: 'Public filings / IR' },
+      { text: 'Pulling customs & sourcing records', src: 'Customs DB' },
+      { text: 'Running web search for latest signals', src: 'Brave Search' },
+      { text: 'Compiling intelligence report', src: null },
+    ];
   }
-  chat.appendChild(wrap);
-  chat.scrollTop = chat.scrollHeight;
-  return wrap;
+}
+
+// ── THINKING INDICATOR — spinner→checkmark sequence ──────────────────────────
+function addThinking(steps) {
+  const chat=document.getElementById('chat');
+  const id='think-'+Date.now();
+  const el=document.createElement('div');
+  el.id=id; el.className='flex justify-start gap-2.5 fade-in';
+
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden" style="min-width:290px;max-width:380px">
+      <div class="px-4 py-2 border-b border-gray-100 flex items-center gap-2" style="background:#f8faff">
+        <div class="spinner" style="width:10px;height:10px;border-width:1.5px"></div>
+        <span class="text-[11px] font-semibold" style="color:#1d4ed8">Researching…</span>
+      </div>
+      <div class="px-4 py-3 space-y-2" id="${id}-steps"></div>
+    </div>`;
+  chat.appendChild(el);
+  scrollDown();
+
+  const TICK = 850;
+  steps.forEach((step,i) => {
+    setTimeout(() => {
+      const box=document.getElementById(`${id}-steps`);
+      if(!box) return;
+
+      // Mark previous step done
+      const prev=document.getElementById(`${id}-step-${i-1}`);
+      if(prev) {
+        const icon=prev.querySelector('.step-icon');
+        if(icon) icon.innerHTML=`<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+        const txt=prev.querySelector('.step-text');
+        if(txt) txt.style.color='#6b7280';
+      }
+
+      // New step
+      const row=document.createElement('div');
+      row.id=`${id}-step-${i}`;
+      row.className='flex items-start gap-2.5 step-row';
+      row.innerHTML=`
+        <div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px">
+          <div class="spinner" style="width:12px;height:12px"></div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(step.text)}</div>
+          ${step.src ? `<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(step.src)}</div>` : ''}
+        </div>`;
+      box.appendChild(row);
+      scrollDown();
+    }, i * TICK);
+  });
+
+  return id;
+}
+
+// ── USER BUBBLE ───────────────────────────────────────────────────────────────
+function addUser(text) {
+  const chat=document.getElementById('chat');
+  const el=document.createElement('div');
+  el.className='flex justify-end fade-in';
+  el.innerHTML=`<div class="max-w-[72%] text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 leading-relaxed shadow-sm" style="background:#1d4ed8">${esc(text)}</div>`;
+  chat.appendChild(el);
+  scrollDown();
+}
+
+// ── PLAIN TEXT RESPONSE ───────────────────────────────────────────────────────
+function addText(md) {
+  const chat=document.getElementById('chat');
+  const el=document.createElement('div');
+  el.className='flex justify-start gap-2.5 fade-in';
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
+    </div>
+    <div class="flex-1 max-w-[85%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm text-sm text-gray-700 leading-relaxed">
+      ${renderMd(md)}
+    </div>`;
+  chat.appendChild(el);
+  scrollDown();
+}
+
+// ── MARKDOWN RESPONSE ───────────────────────────────────────────────────────
+function addMarkdown(md) {
+  const chat=document.getElementById('chat');
+  const el=document.createElement('div');
+  el.className='flex justify-start gap-2.5 fade-in';
+
+  const rendered = parseMarkdown(md);
+
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
+    </div>
+    <div class="flex-1 max-w-[92%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
+      <div class="px-5 py-4 markdown-body">${rendered}</div>
+    </div>`;
+  chat.appendChild(el);
+
+  // Wire "Explore further" bullet clicks
+  el.querySelectorAll('.explore-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('inp').value = btn.dataset.query;
+      send();
+    });
+  });
+  scrollDown();
 }
 
 function parseMarkdown(md) {
-  var lines = md.split('\n');
-  var html = '';
-  var inTable = false, tableRows = [];
-  var inList = false, listItems = [];
+  // Process line by line for better control
+  const lines = md.split('\n');
+  let html = '';
+  let inTable = false, tableRows = [];
+  let inList = false, listItems = [];
 
-  var flushTable = function() {
+  const flushTable = () => {
     if(!tableRows.length) return;
-    var header = tableRows[0];
-    var body = tableRows.slice(2);
-    var ths = header.split('|').slice(1,-1).map(function(c){ return '<th style="padding:8px 16px;text-align:left;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;background:#f8fafc;border-bottom:1px solid #e2e8f0">' + esc(c.trim()) + '</th>'; }).join('');
-    var rows = body.map(function(r,ri){
-      return '<tr style="' + (ri%2?'background:#f8fafc':'background:#fff') + '">' +
-        r.split('|').slice(1,-1).map(function(c){
-          var v=c.trim();
-          var cls=v.charAt(0)==='\u2191'?'color:#16a34a;font-weight:600':v.charAt(0)==='\u2193'?'color:#be123c;font-weight:600':'color:#374151';
-          return '<td style="padding:10px 16px;font-size:12px;'+cls+';border-bottom:1px solid #f1f5f9">'+esc(v)+'</td>';
-        }).join('')+'</tr>';
-    }).join('');
-    html += '<div style="overflow:hidden;border-radius:12px;border:1px solid #e2e8f0;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,0.05)"><table style="width:100%;border-collapse:collapse"><thead><tr>'+ths+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
+    const [header, , ...body] = tableRows;
+    const ths = header.split('|').slice(1,-1).map(c=>`<th class="px-4 py-2 text-left text-[10px] font-bold text-gray-500 uppercase bg-slate-50 border-b border-gray-200">${esc(c.trim())}</th>`).join('');
+    const rows = body.map((r,ri)=>
+      `<tr class="${ri%2?'bg-slate-50/40':'bg-white'}">` +
+      r.split('|').slice(1,-1).map(c=>{
+        const v=c.trim();
+        const cls=v.startsWith('↑')?'text-emerald-600 font-semibold':v.startsWith('↓')?'text-red-500 font-semibold':'text-gray-700';
+        return `<td class="px-4 py-2.5 text-xs ${cls} border-b border-gray-100">${esc(v)}</td>`;
+      }).join('')+`</tr>`).join('');
+    html += `<div class="overflow-hidden rounded-xl border border-gray-200 my-3 shadow-sm"><table class="w-full"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table></div>`;
     tableRows = []; inTable = false;
   };
 
-  var EXPLORE_EMOJIS = /\ud83d\udcb0|\ud83d\udce6|\ud83c\udf0d|\u26a0\ufe0f|\ud83d\udcf0|\ud83e\udd4a|\ud83d\udcc8|\ud83c\udfed|\ud83d\udcca|\ud83d\udd2e|\ud83d\udccb|\u23f1\ufe0f|\ud83d\udca1|\ud83d\uddd3\ufe0f/;
-
-  var flushList = function() {
+  const flushList = () => {
     if(!listItems.length) return;
-    var isExplore = listItems.some(function(l){ return EXPLORE_EMOJIS.test(l); });
+    // Check if these are "Explore further" items
+    const isExplore = listItems.some(l => /💰|📦|🌍|⚠️|📰|🥊/.test(l));
     if(isExplore) {
-      var qMap = {
-        'Rates & Codes':'What are the current HTS tariff rates for this product?',
-        'China Exposure':'How exposed is my supply chain to Section 301 tariffs?',
-        'Product Impact':'Which of my product categories face the highest tariff burden?',
-        'Mitigation':'What FTA or country-switching options reduce tariff costs?',
-        'Cost Calc':'What is the landed cost difference for China vs Vietnam?',
-        'Timeline':'What upcoming tariff changes should I plan for?',
-        'Trends':'What are the key market trends affecting this sector?',
-        'Regional':'How do regional dynamics impact my sourcing strategy?',
-        'Trade Data':'What trade volume shifts signal buyer behavior changes?',
-        'Sourcing Shifts':'Where are major buyers shifting their sourcing?',
-        'Outlook':'What is the 12-month outlook for this market?',
-        'Documentation':'What documents are required for this import?',
-        'Compliance':'What UFLPA or C-TPAT requirements apply?',
-        'Timeline & Cost':'How long does customs clearance take and what does it cost?',
-        'Recommendations':'What are the top 3 steps to improve compliance?',
-        'Country Comparison':'Which country offers the best cost-quality-risk balance?',
-        'Sourcing Hubs':'What factory hubs should I consider in this country?',
-        'MOQ & Terms':'What are typical MOQs and payment terms?',
-        'Risk Factors':'What are the top sourcing risks in this country?',
-        'Diversification':'How do I reduce China concentration safely?',
-        'Financing Angle':'How does Air8 financing help with this sourcing shift?'
-      };
-      var chips = listItems.map(function(item) {
-        var iconMatch = item.match(new RegExp('^(' + EXPLORE_EMOJIS.source + ')'));
-        var icon = iconMatch ? iconMatch[0] : '';
-        var labelMatch = item.match(/\*\*(.+?)\*\*/);
-        var label = labelMatch ? labelMatch[1] : item.replace(new RegExp('^' + EXPLORE_EMOJIS.source + '\\s*'), '').split('\u2014')[0].trim();
-        var q = qMap[label.split(' &')[0].trim()] || ('Tell me more about ' + label.toLowerCase());
-        return '<button class="explore-chip" style="text-align:left;padding:6px 12px;font-size:11px;border-radius:999px;border:1px solid #e2e8f0;color:#475569;background:#fff;cursor:pointer;transition:all .15s" onmouseover="this.style.background=\'#eff6ff\';this.style.color=\'#1d4ed8\';this.style.borderColor=\'#bfdbfe\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'#475569\';this.style.borderColor=\'#e2e8f0\'" data-query="' + esc(q) + '">' + icon + ' ' + esc(label) + '</button>';
+      const chips = listItems.map(item => {
+        const iconMatch = item.match(/^(💰|📦|🌍|⚠️|📰|🥊)/);
+        const icon = iconMatch ? iconMatch[0] : '';
+        const labelMatch = item.match(/\*\*(.+?)\*\*/);
+        const label = labelMatch ? labelMatch[1] : item.replace(/^[💰📦🌍⚠️📰🥊]\s*/,'').split('—')[0].trim();
+        const qMap = {
+          'Financials':'Tell me more about their financials and credit profile',
+          '财务':'能否深入介绍他们的财务情况',
+          'Products':'Tell me about their products and categories',
+          '产品':'能否深入介绍他们的产品品类',
+          'Sourcing':'Tell me about their sourcing and supply chain',
+          '采购':'能否深入介绍他们的采购来源',
+          'Risk':'What are their compliance and risk requirements for suppliers',
+          '风险':'能否详细介绍他们对供应商的合规要求',
+          'Signals':'What are the latest news and signals',
+          '信号':'最近有什么动态',
+          'Competitors':'Compare them to their main competitors',
+          '竞争':'和主要竞争对手相比如何',
+        };
+        const q = qMap[label.split(' &')[0].trim()] || `Tell me more about ${label.toLowerCase()}`;
+        return `<button class="explore-chip text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all" data-query="${esc(q)}">${icon} ${esc(label)}</button>`;
       }).join('');
-      html += '<div style="margin-top:8px"><div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Explore further</div><div style="display:flex;flex-wrap:wrap;gap:6px">' + chips + '</div></div>';
+      html += `<div class="mt-2 mb-1"><div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Explore further</div><div class="flex flex-wrap gap-2">${chips}</div></div>`;
     } else {
-      html += '<ul style="margin:6px 0;padding-left:20px">' + listItems.map(function(l){ return '<li style="font-size:13px;color:#475569;margin:4px 0;line-height:1.6">' + inlineFormat(l) + '</li>'; }).join('') + '</ul>';
+      html += '<ul class="space-y-1 my-2">' + listItems.map(l=>`<li class="flex gap-2 text-sm text-gray-600"><span class="text-gray-400 mt-0.5">•</span><span>${inlineFormat(l)}</span></li>`).join('') + '</ul>';
     }
     listItems = []; inList = false;
   };
 
-  for(var i=0; i<lines.length; i++) {
-    var line = lines[i];
-    var trimmed = line.trim();
-    if(trimmed.charAt(0)==='|' && trimmed.charAt(trimmed.length-1)==='|') {
+  for(let i=0; i<lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // Table rows
+    if(trimmed.startsWith('|') && trimmed.endsWith('|')) {
       if(!inTable) { flushList(); inTable = true; }
-      tableRows.push(trimmed); continue;
+      tableRows.push(trimmed);
+      continue;
     } else if(inTable) { flushTable(); }
-    if(trimmed.startsWith('- ') || trimmed.startsWith('\u2022 ')) {
+
+    // List items
+    if(trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
       if(!inList) inList = true;
-      listItems.push(trimmed.replace(/^[-\u2022]\s+/,'')); continue;
+      listItems.push(trimmed.replace(/^[-•]\s+/,''));
+      continue;
     } else if(inList) { flushList(); }
+
+    // Headings
     if(trimmed.startsWith('# ')) {
-      html += '<div style="margin-bottom:12px"><span style="font-size:18px;font-weight:800;color:#1e293b">' + inlineFormat(trimmed.slice(2)) + '</span></div>';
+      html += `<div class="mb-3"><span class="text-lg font-black text-gray-900">${inlineFormat(trimmed.slice(2))}</span></div>`;
     } else if(trimmed.startsWith('## ')) {
-      html += '<div style="font-size:14px;font-weight:700;color:#1e293b;margin-top:16px;margin-bottom:8px">' + inlineFormat(trimmed.slice(3)) + '</div>';
+      html += `<div class="text-sm font-bold text-gray-800 mt-4 mb-2">${inlineFormat(trimmed.slice(3))}</div>`;
     } else if(trimmed.startsWith('### ')) {
-      html += '<div style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-top:12px;margin-bottom:4px">' + inlineFormat(trimmed.slice(4)) + '</div>';
-    } else if(trimmed === '---' || trimmed === '***') {
-      html += '<hr style="margin:12px 0;border-color:#f1f5f9">';
-    } else if(trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 4) {
-      html += '<div style="display:flex;gap:8px;padding:12px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;margin:10px 0;line-height:1.6"><svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg><p style="font-size:13px;font-weight:600;color:#1e3a8a;line-height:1.6">' + inlineFormat(trimmed.slice(2,-2)) + '</p></div>';
-    } else if(trimmed.startsWith('*Source:') || trimmed.startsWith('*Data:')) {
-      html += '<p style="font-size:10px;color:#94a3b8;margin-top:8px">' + inlineFormat(trimmed.slice(1)) + '</p>';
-    } else if(trimmed) {
-      html += '<p style="font-size:13px;color:#475569;line-height:1.7;margin:6px 0">' + inlineFormat(trimmed) + '</p>';
+      html += `<div class="text-xs font-semibold text-gray-600 mt-3 mb-1 uppercase tracking-wide">${inlineFormat(trimmed.slice(4))}</div>`;
+    }
+    // HR
+    else if(trimmed === '---' || trimmed === '***') {
+      html += '<hr class="my-3 border-gray-100">';
+    }
+    // Bold headline (starts and ends with **)
+    else if(trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 4) {
+      html += `<div class="flex gap-2 p-3.5 rounded-xl my-3" style="background:#eff6ff;border:1px solid #bfdbfe"><svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg><p class="text-xs font-semibold leading-relaxed" style="color:#1e3a8a">${inlineFormat(trimmed.slice(2,-2))}</p></div>`;
+    }
+    // Source line (starts with *)
+    else if(trimmed.startsWith('*Source:') || trimmed.startsWith('*Data:')) {
+      html += `<p class="text-[10px] text-gray-400 mt-2 leading-relaxed">${inlineFormat(trimmed.slice(1,-1))}</p>`;
+    }
+    // Regular paragraph
+    else if(trimmed) {
+      html += `<p class="text-sm text-gray-600 leading-relaxed my-1.5">${inlineFormat(trimmed)}</p>`;
     }
   }
   flushTable(); flushList();
@@ -191,522 +471,295 @@ function parseMarkdown(md) {
 
 function inlineFormat(s) {
   return esc(s)
-    .replace(/\*\*(.+?)\*\*/g,'<strong style="font-weight:700;color:#1e293b">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*([^*]+?)\*/g,'<em>$1</em>')
-    .replace(/`([^`]+?)`/g,'<code style="background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11px">$1</code>');
+    .replace(/`([^`]+?)`/g,'<code class="bg-gray-100 px-1 rounded text-[11px]">$1</code>');
 }
 
-function addMarkdown(md) {
-  var chat = document.getElementById('chat');
-  var wrap = document.createElement('div');
-  wrap.className = 'fa';
-  var rendered = parseMarkdown(md);
-  wrap.innerHTML =
-    '<div style="display:flex;gap:10px;align-items:flex-start">' +
-    '<div style="width:28px;height:28px;border-radius:8px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><span style="color:#fff;font-size:10px;font-weight:700">A8</span></div>' +
-    '<div style="flex:1;max-width:92%">' +
-    '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden">' +
-    '<div style="padding:16px 20px">' + rendered + '</div>' +
-    '</div></div></div>';
-  chat.appendChild(wrap);
-  // Wire Explore further chip clicks
-  wrap.querySelectorAll('.explore-chip').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.getElementById('inp').value = btn.dataset.query;
-      send();
+// ── TABBED CARD ───────────────────────────────────────────────────────────────
+function addTabCard(data) {
+  const chat=document.getElementById('chat');
+  const cid='c'+Date.now();
+  const el=document.createElement('div');
+  el.className='flex justify-start gap-2.5 fade-in';
+
+  const tabBtns=data.tabs.map((t,i)=>`
+    <button onclick="swTab('${cid}','${t.id}')" id="${cid}-b-${t.id}"
+      class="tab-btn flex items-center gap-1.5 px-4 py-3 text-xs whitespace-nowrap transition-all ${i===0?'tab-active':'tab-inactive'}">
+      <span>${t.icon||''}</span>${esc(t.label)}
+    </button>`).join('');
+
+  const panels=data.tabs.map((t,i)=>`
+    <div id="${cid}-p-${t.id}" class="${i===0?'':'hidden'}">
+      ${buildPanel(t,cid)}
+    </div>`).join('');
+
+  // Store followups in global map to avoid onclick escaping issues
+  if(!window._fq) window._fq = {};
+  const fqKey = cid;
+  window._fq[fqKey] = data.followups || [];
+
+  const followupHtml = data.followups && data.followups.length ? `
+    <div class="px-5 pb-4 pt-3 border-t border-gray-100">
+      <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Suggested questions</div>
+      <div class="flex flex-wrap gap-2">
+        ${data.followups.map((q,qi)=>`<button onclick="fqClick('${cid}',${qi})"
+          class="text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 transition-all hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200"
+          >${esc(q)}</button>`).join('')}
+      </div>
+    </div>` : '';
+
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
+    </div>
+    <div class="flex-1 min-w-0 max-w-[92%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
+      <!-- Card header -->
+      <div class="px-5 pt-4 pb-3 border-b border-gray-100" style="background:linear-gradient(to right,#f8faff,#fff)">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-base font-black text-gray-900">${esc(data.buyer||'')}</div>
+            ${data.summary?`<p class="text-xs text-gray-500 mt-0.5">${esc(data.summary)}</p>`:''}
+          </div>
+          <div class="text-2xl">${data.tabs&&data.tabs[0]?data.tabs[0].icon:''}</div>
+        </div>
+      </div>
+      <!-- Tab bar -->
+      <div class="flex gap-0 border-b border-gray-100 overflow-x-auto px-2" style="scrollbar-width:none">
+        ${tabBtns}
+      </div>
+      <!-- Panels -->
+      <div class="p-5">${panels}</div>
+      <!-- Suggested questions -->
+      ${followupHtml}
+      ${data.sources ? `<div class="px-5 pb-3 pt-0">
+        <div class="text-[10px] text-gray-400 leading-relaxed">
+          <span class="font-semibold">Sources:</span> ${esc(data.sources)}
+        </div>
+      </div>` : ''}
+    </div>`;
+
+  chat.appendChild(el);
+  // Render charts after DOM insert
+  data.tabs.forEach(t => { if(t.chart) renderChart(t,cid); });
+  scrollDown();
+}
+
+// ── PANEL BUILDER ─────────────────────────────────────────────────────────────
+const FLAGS={'china':'🇨🇳','vietnam':'🇻🇳','bangladesh':'🇧🇩','india':'🇮🇳','cambodia':'🇰🇭','indonesia':'🇮🇩','turkey':'🇹🇷','pakistan':'🇵🇰','morocco':'🇲🇦','sri lanka':'🇱🇰','other':'🌐','mexico':'🇲🇽','us':'🇺🇸','usa':'🇺🇸'};
+function flag(n){return FLAGS[(n||'').toLowerCase().replace(/[^a-z ]/g,'')]||'';}
+
+function buildPanel(tab, cid) {
+  let h='';
+
+  // Insight box
+  if(tab.insight) h+=`
+    <div class="flex gap-3 p-4 rounded-2xl mb-4 border" style="background:#eff6ff;border-color:#bfdbfe">
+      <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+      </svg>
+      <p class="text-xs leading-relaxed font-medium" style="color:#1e3a8a">${esc(tab.insight)}</p>
+    </div>`;
+
+  // Stats
+  if(tab.stats&&tab.stats.length) {
+    h+=`<div class="grid grid-cols-2 gap-3 mb-4">`;
+    tab.stats.forEach(s=>{
+      h+=`<div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm">
+        <div class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mb-1">${esc(s.label)}</div>
+        <div class="text-xl font-black text-gray-900">${esc(s.value)}</div>
+        ${s.delta?`<div class="text-xs font-semibold mt-1" style="color:#16a34a">${esc(s.delta)}</div>`:''}
+      </div>`;
     });
-  });
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function statColor(c) {
-  if (c === 'blue') return 'background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe';
-  if (c === 'green') return 'background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0';
-  if (c === 'amber' || c === 'yellow') return 'background:#fffbeb;color:#b45309;border:1px solid #fde68a';
-  if (c === 'red') return 'background:#fff1f2;color:#be123c;border:1px solid #fecdd3';
-  if (c === 'purple') return 'background:#faf5ff;color:#7e22ce;border:1px solid #e9d5ff';
-  return 'background:#f8fafc;color:#475569;border:1px solid #e2e8f0';
-}
-
-function buildStats(stats) {
-  if (!stats || !stats.length) return '';
-  var html = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">';
-  for (var i = 0; i < stats.length; i++) {
-    var s = stats[i];
-    html += '<div style="' + statColor(s.color) + ';border-radius:10px;padding:10px 14px;flex:1;min-width:120px">';
-    html += '<div style="font-size:11px;opacity:.7;margin-bottom:2px">' + esc(s.label) + '</div>';
-    html += '<div style="font-size:16px;font-weight:700">' + esc(s.value) + '</div>';
-    if (s.sub) html += '<div style="font-size:10px;opacity:.6;margin-top:2px">' + esc(s.sub) + '</div>';
-    html += '</div>';
+    h+=`</div>`;
   }
-  html += '</div>';
-  return html;
-}
 
-function buildRisks(risks) {
-  if (!risks || !risks.length) return '';
-  var html = '<div style="display:flex;flex-direction:column;gap:8px;margin:10px 0">';
-  for (var i = 0; i < risks.length; i++) {
-    var r = risks[i];
-    var cls = r.level === 'High' ? 'risk-hi' : r.level === 'Med' || r.level === 'Medium' ? 'risk-med' : 'risk-low';
-    html += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0">';
-    html += '<span class="' + cls + '" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0">' + esc(r.level) + '</span>';
-    html += '<div><div style="font-size:13px;font-weight:600;color:#1e293b">' + esc(r.label) + '</div>';
-    if (r.note) html += '<div style="font-size:12px;color:#64748b;margin-top:2px">' + esc(r.note) + '</div>';
-    html += '</div></div>';
+  // Free text
+  if(tab.text) h+=`<p class="text-sm text-gray-600 leading-relaxed mb-4">${esc(tab.text)}</p>`;
+
+  // Chart placeholder
+  if(tab.chart) {
+    h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+      ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>`:''}
+      <div style="height:${tab.chart.type==='grouped_bar'?190:160}px">
+        <canvas id="${cid}-chart-${tab.id}"></canvas>
+      </div>
+    </div>`;
   }
-  html += '</div>';
-  return html;
-}
 
-function buildSignals(signals) {
-  if (!signals || !signals.length) return '';
-  var typeColor = function(t) {
-    if (t === 'MARKET') return 'background:#eff6ff;color:#1d4ed8';
-    if (t === 'COMPANY') return 'background:#f0fdf4;color:#15803d';
-    if (t === 'REGULATORY') return 'background:#fff1f2;color:#be123c';
-    return 'background:#f8fafc;color:#64748b';
-  };
-  var html = '<div style="display:flex;flex-direction:column;gap:6px;margin:10px 0">';
-  for (var i = 0; i < signals.length; i++) {
-    var s = signals[i];
-    html += '<div style="padding:10px 14px;border-radius:10px;background:#fff;border:1px solid #e2e8f0">';
-    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">';
-    html += '<span style="' + typeColor(s.type) + ';font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">' + esc(s.type) + '</span>';
-    if (s.date) html += '<span style="font-size:11px;color:#94a3b8">' + esc(s.date) + '</span>';
-    html += '</div>';
-    html += '<div style="font-size:13px;font-weight:600;color:#1e293b">' + esc(s.title) + '</div>';
-    if (s.impact) html += '<div style="font-size:12px;color:#64748b;margin-top:3px">' + esc(s.impact) + '</div>';
-    html += '</div>';
+  // Country tiles for sourcing
+  if(tab.id==='sourcing'&&tab.chart&&tab.chart.labels) {
+    const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
+    h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
+    tab.chart.labels.forEach((lbl,i)=>{
+      const pct=tab.chart.values[i]||0, bar=Math.round(pct/total*100);
+      h+=`<div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+        <div class="flex items-center gap-1.5 mb-2">
+          <span class="text-base">${flag(lbl)}</span>
+          <span class="text-xs font-semibold text-gray-800">${esc(lbl)}</span>
+          <span class="ml-auto text-xs font-black" style="color:#1d4ed8">${pct}%</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-1.5">
+          <div class="h-1.5 rounded-full" style="width:${bar}%;background:#1d4ed8"></div>
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
   }
-  html += '</div>';
-  return html;
+
+  // Table
+  if(tab.table) h+=buildTable(tab.table);
+
+  // Risk grid
+  if(tab.risks&&tab.risks.length) {
+    h+=`<div class="grid grid-cols-2 gap-3 mb-4">`;
+    tab.risks.forEach(r=>{
+      const lv=r.level||'';
+      const cls=lv==='Low'?'risk-low':lv==='High'?'risk-high':'risk-med';
+      const dot=lv==='Low'?'#16a34a':lv==='High'?'#be123c':'#b45309';
+      h+=`<div class="p-3 rounded-2xl border ${cls}">
+        <div class="flex items-center gap-1.5 mb-1.5">
+          <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${dot}"></div>
+          <span class="text-[11px] font-bold">${esc(r.label)}</span>
+          <span class="ml-auto text-[10px] font-black uppercase">${esc(lv)}</span>
+        </div>
+        <div class="text-[11px] leading-relaxed opacity-80">${esc(r.note||'')}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  // Signals
+  if(tab.signals&&tab.signals.length) {
+    h+=`<div class="space-y-3">`;
+    const tmap={COMPANY:{bg:'#eff6ff',border:'#bfdbfe',tag:'#1d4ed8',ico:'🏢'},REGULATORY:{bg:'#faf5ff',border:'#e9d5ff',tag:'#7e22ce',ico:'⚖️'},MARKET:{bg:'#fffbeb',border:'#fde68a',tag:'#b45309',ico:'📈'}};
+    tab.signals.forEach(s=>{
+      const t=tmap[s.type]||tmap.MARKET;
+      h+=`<div class="rounded-2xl border p-4" style="background:${t.bg};border-color:${t.border}">
+        <div class="flex items-center gap-2 mb-2">
+          <span>${t.ico}</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold text-white" style="background:${t.tag}">${esc(s.type)}</span>
+          <span class="ml-auto text-[10px] text-gray-400">${esc(s.date||'')}</span>
+        </div>
+        <div class="text-xs font-semibold text-gray-900 mb-1.5">${esc(s.title||'')}</div>
+        <div class="text-[11px] text-gray-600 leading-relaxed pt-1.5 border-t" style="border-color:${t.border}">${esc(s.impact||'')}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+
+  // Key Takeaways bullets
+  if(tab.bullets && tab.bullets.length) {
+    h+=`<div class="space-y-2.5 mb-4">`;
+    tab.bullets.forEach(b=>{
+      h+=`<div class="flex gap-3 p-3 rounded-xl" style="background:#f8faff;border:1px solid #e0e7ff">
+        <div class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center" style="background:#1d4ed8">
+          <svg style="width:8px;height:8px;color:white" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>
+        </div>
+        <p class="text-xs text-gray-700 leading-relaxed">${esc(b)}</p>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  // Coverage gaps
+  if(tab.coverage_gaps) {
+    h+=`<div class="flex gap-2.5 p-3 rounded-xl border" style="background:#fffbeb;border-color:#fde68a">
+      <svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#b45309" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <div class="text-[10px] font-bold text-amber-700 mb-0.5 uppercase tracking-wide">Data coverage note</div>
+        <p class="text-[11px] text-amber-800 leading-relaxed">${esc(tab.coverage_gaps)}</p>
+      </div>
+    </div>`;
+  }
+
+  return h;
 }
 
-function renderC(key, ch) {
-  var canvas = document.getElementById('c-' + key);
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  if (charts[key]) { charts[key].destroy(); delete charts[key]; }
+// ── TABLE ────────────────────────────────────────────────────────────────────
+function buildTable(t) {
+  if(!t||!t.headers) return '';
+  const heads=t.headers.map(h=>`<th class="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-slate-50 border-b border-gray-200">${esc(h)}</th>`).join('');
+  const rows=(t.rows||[]).map((r,ri)=>
+    `<tr class="${ri%2===0?'bg-white':'bg-slate-50/60'} hover:bg-blue-50/30 transition-colors">
+      ${r.map((c,ci)=>{
+        const up=String(c).startsWith('↑'), dn=String(c).startsWith('↓');
+        const cls=up?'font-semibold" style="color:#16a34a':dn?'font-semibold" style="color:#be123c':ci===0?'font-medium text-gray-800':'text-gray-600';
+        return `<td class="px-4 py-2.5 text-xs ${cls} border-b border-gray-100">${esc(c)}</td>`;
+      }).join('')}
+    </tr>`).join('');
+  return `<div class="overflow-hidden rounded-2xl border border-gray-200 shadow-sm mt-3">
+    <table class="w-full"><thead><tr>${heads}</tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
 
-  var type = ch.type || 'bar';
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function renderChart(tab, cid) {
+  const canvas=document.getElementById(`${cid}-chart-${tab.id}`);
+  if(!canvas||!tab.chart) return;
+  const key=`${cid}-${tab.id}`;
+  if(charts[key]) charts[key].destroy();
 
-  if (type === 'donut') {
-    charts[key] = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ch.labels || [],
-        datasets: [{
-          data: ch.values || [],
-          backgroundColor: ['#1d4ed8','#1d4ed8','#10b981','#8b5cf6','#f59e0b','#ef4444','#06b6d4'],
-          borderWidth: 2,
-          borderColor: '#fff'
+  const blue='#1d4ed8', palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
+
+  if(tab.chart.type==='grouped_bar'&&tab.chart.datasets) {
+    charts[key]=new Chart(canvas,{
+      type:'bar',
+      data:{
+        labels:tab.chart.labels,
+        datasets:tab.chart.datasets.map((ds,i)=>({
+          label:ds.label, data:ds.values,
+          backgroundColor:palette[i]+'cc', borderColor:palette[i], borderWidth:1.5, borderRadius:4
+        }))
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
+        scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+    });
+  } else if(tab.chart.values) {
+    const isSource=tab.id==='sourcing';
+    charts[key]=new Chart(canvas,{
+      type:'bar',
+      data:{
+        labels:tab.chart.labels,
+        datasets:[{
+          label:tab.chart.title||'',
+          data:tab.chart.values,
+          backgroundColor:isSource?palette:palette[0]+'cc',
+          borderColor:isSource?palette:palette[0],
+          borderWidth:1.5, borderRadius:5
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: true, position: 'right', labels: { font: { size: 11 }, boxWidth: 12, padding: 12 } }
-        },
-        cutout: '60%'
-      }
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
-    return;
-  }
-
-  if (type === 'grouped_bar') {
-    var dsets = [];
-    var colors = ['#1d4ed8','#1d4ed8','#10b981','#8b5cf6'];
-    var ds = ch.datasets || [];
-    for (var i = 0; i < ds.length; i++) {
-      dsets.push({ type: 'bar', label: ds[i].label, data: ds[i].data, backgroundColor: colors[i % colors.length], borderRadius: 4 });
-    }
-    charts[key] = new Chart(ctx, {
-      type: 'bar',
-      data: { labels: ch.labels || [], datasets: dsets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11 }, boxWidth: 12, padding: 16 } } },
-        scales: {
-          x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-          y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } }
-        }
-      }
-    });
-    return;
-  }
-
-  // bar_line (default)
-  var ds2 = ch.datasets || [];
-  var d0 = { type: 'bar', label: ds2[0] ? ds2[0].label : '', data: ds2[0] ? ds2[0].data : [], backgroundColor: '#1d4ed8', borderRadius: 6 };
-  var d1 = null;
-  if (ds2[1]) {
-    d1 = {
-      type: 'line',
-      label: ds2[1].label,
-      data: ds2[1].data,
-      borderColor: '#1d4ed8',
-      backgroundColor: 'transparent',
-      borderWidth: 2,
-      pointBackgroundColor: '#1d4ed8',
-      pointRadius: 3,
-      yAxisID: 'y1',
-      tension: 0.3
-    };
-  }
-  var sc = {
-    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-    y: {
-      grid: { color: '#f1f5f9' },
-      ticks: { font: { size: 10 }, callback: function(v) { return ch.prefix ? ch.prefix + v : v; } },
-      title: { display: !!(ds2[0] && ds2[0].axisLabel), text: ds2[0] ? (ds2[0].axisLabel || '') : '', font: { size: 10 }, color: '#94a3b8' }
-    }
-  };
-  if (d1) {
-    sc.y1 = {
-      position: 'right',
-      grid: { display: false },
-      ticks: { font: { size: 10 }, callback: function(v) { return v + '%'; } },
-      title: { display: !!(ds2[1] && ds2[1].axisLabel), text: ds2[1] ? (ds2[1].axisLabel || '') : '', font: { size: 10 }, color: '#94a3b8' }
-    };
-  }
-  var allDs = [d0];
-  if (d1) allDs.push(d1);
-  charts[key] = new Chart(ctx, {
-    type: 'bar',
-    data: { labels: ch.labels || [], datasets: allDs },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11 }, boxWidth: 12, padding: 16 } } },
-      scales: sc
-    }
-  });
-}
-
-function swTab(cardId, tabId) {
-  var tabContents = document.querySelectorAll('[data-card="' + cardId + '"][data-tab-content]');
-  for (var i = 0; i < tabContents.length; i++) {
-    tabContents[i].style.display = 'none';
-  }
-  var tabBtns = document.querySelectorAll('[data-card="' + cardId + '"].tab-btn');
-  for (var i = 0; i < tabBtns.length; i++) {
-    tabBtns[i].classList.remove('act');
-  }
-  var activeContent = document.querySelector('[data-card="' + cardId + '"][data-tab-content="' + tabId + '"]');
-  if (activeContent) activeContent.style.display = 'block';
-  var activeBtn = document.querySelector('[data-card="' + cardId + '"].tab-btn[data-tab="' + tabId + '"]');
-  if (activeBtn) activeBtn.classList.add('act');
-
-  // Render chart if needed
-  var chartEl = document.getElementById('c-' + cardId + '-' + tabId);
-  if (chartEl && chartEl.dataset.chartJson) {
-    try {
-      var ch = JSON.parse(chartEl.dataset.chartJson);
-      renderC(cardId + '-' + tabId, ch);
-    } catch(e) {}
   }
 }
 
-function addTabCard(p) {
-  cardCount++;
-  var cid = 'card' + cardCount;
-  var tabs = p.tabs || [];
-
-  // Build tab bar
-  var tabBar = '<div style="display:flex;border-bottom:1px solid #e2e8f0;overflow-x:auto">';
-  for (var i = 0; i < tabs.length; i++) {
-    var t = tabs[i];
-    var cls = i === 0 ? 'tab-btn act' : 'tab-btn';
-    tabBar += '<button class="' + cls + '" data-card="' + cid + '" data-tab="' + t.id + '" onclick="swTab(\'' + cid + '\',\'' + t.id + '\')">';
-    if (t.icon) tabBar += '<span style="margin-right:5px">' + esc(t.icon) + '</span>';
-    tabBar += esc(t.label) + '</button>';
-  }
-  tabBar += '</div>';
-
-  // Build tab contents
-  var tabContents = '';
-  for (var i = 0; i < tabs.length; i++) {
-    var t = tabs[i];
-    var display = i === 0 ? 'block' : 'none';
-    tabContents += '<div data-card="' + cid + '" data-tab-content="' + t.id + '" style="padding:16px;display:' + display + '">';
-
-    if (t.insight) {
-      tabContents += '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;font-size:13px;color:#9a3412;margin-bottom:12px;line-height:1.6"><span style="font-weight:700">💡 Insight: </span>' + esc(t.insight) + '</div>';
-    }
-    if (t.text) {
-      tabContents += '<p style="font-size:13px;color:#475569;line-height:1.7;margin:0 0 12px">' + esc(t.text) + '</p>';
-    }
-
-    if (t.stats && t.stats.length) {
-      tabContents += buildStats(t.stats);
-    }
-
-    if (t.chart) {
-      var chartKey = cid + '-' + t.id;
-      tabContents += '<div style="height:220px;margin-top:12px"><canvas id="c-' + chartKey + '" data-chart-json=\'' + JSON.stringify(t.chart).replace(/'/g,'&#39;') + '\'></canvas></div>';
-    }
-
-    if (t.risks && t.risks.length) {
-      tabContents += '<div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">Risk Assessment</div>';
-      tabContents += buildRisks(t.risks);
-    }
-
-    if (t.signals && t.signals.length) {
-      tabContents += '<div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">Market Signals</div>';
-      tabContents += buildSignals(t.signals);
-    }
-
-    if (t.coverage_gaps) {
-      tabContents += '<div style="font-size:12px;color:#94a3b8;padding:10px;background:#f8fafc;border-radius:8px;margin-top:10px"><span style="font-weight:600">Coverage Note: </span>' + esc(t.coverage_gaps) + '</div>';
-    }
-
-    tabContents += '</div>';
-  }
-
-  // Follow-up text + suggested questions
-  var followupHtml = '';
-  if (p.followup_text || (p.questions && p.questions.length)) {
-    var ftxt = p.followup_text ? p.followup_text.replace(/\|([^|]+)\|/g, '<b>$1</b>') : '';
-    var qHtml = '';
-    if (p.questions && p.questions.length) {
-      qHtml = '<div style="margin-top:8px;display:flex;flex-direction:column;gap:4px">';
-      p.questions.forEach(function(q) {
-        qHtml += '<span onclick="sq(' + JSON.stringify(q) + ')" style="font-size:12px;color:#1d4ed8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;line-height:1.5">→ ' + esc(q) + '</span>';
-      });
-      qHtml += '</div>';
-    }
-    followupHtml = '<div class="flw">' + (ftxt ? '<span>' + ftxt + '</span>' : '') + qHtml + '</div>';
-  }
-
-  var summaryHtml = '';
-  if (p.summary) {
-    summaryHtml = '<div style="font-size:13px;color:#475569;padding:12px 16px 0">' + esc(p.summary) + '</div>';
-  }
-
-  var headerHtml = '';
-  if (p.buyer) {
-    headerHtml = '<div style="padding:14px 16px 0;display:flex;align-items:center;gap:10px">';
-    headerHtml += '<div style="width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="color:#fff;font-size:11px;font-weight:700">' + esc(p.buyer.substring(0,2).toUpperCase()) + '</span></div>';
-    headerHtml += '<div><div style="font-size:15px;font-weight:700;color:#1e293b">' + esc(p.buyer) + '</div>';
-    if (p.summary) headerHtml += '<div style="font-size:12px;color:#64748b">' + esc(p.summary) + '</div>';
-    headerHtml += '</div></div>';
-    summaryHtml = '';
-  }
-
-  var cardHtml = '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden">';
-  cardHtml += headerHtml;
-  cardHtml += summaryHtml;
-  cardHtml += tabBar;
-  cardHtml += tabContents;
-  cardHtml += '</div>';
-  cardHtml += followupHtml;
-
-  addMsg('ai', cardHtml);
-
-  // Render first tab chart immediately
-  if (tabs[0] && tabs[0].chart) {
-    setTimeout(function() {
-      var key = cid + '-' + tabs[0].id;
-      var el = document.getElementById('c-' + key);
-      if (el && el.dataset.chartJson) {
-        try { renderC(key, JSON.parse(el.dataset.chartJson)); } catch(e) {}
-      }
-    }, 50);
-  }
+// ── TAB SWITCH ────────────────────────────────────────────────────────────────
+function swTab(cid,tabId) {
+  document.querySelectorAll(`[id^="${cid}-p-"]`).forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll(`[id^="${cid}-b-"]`).forEach(b=>{b.classList.remove('tab-active');b.classList.add('tab-inactive');});
+  document.getElementById(`${cid}-p-${tabId}`)?.classList.remove('hidden');
+  const btn=document.getElementById(`${cid}-b-${tabId}`);
+  if(btn){btn.classList.add('tab-active');btn.classList.remove('tab-inactive');}
 }
 
-function showThinking(steps) {
-  var chat = document.getElementById('chat');
-  var id = 'thinking-' + Date.now();
-  var wrap = document.createElement('div');
-  wrap.id = id;
-  wrap.className = 'fa';
-  wrap.innerHTML =
-    '<div style="display:flex;gap:10px;align-items:flex-start">' +
-    '<div style="width:28px;height:28px;border-radius:8px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><span style="color:#fff;font-size:10px;font-weight:700">A8</span></div>' +
-    '<div style="flex:1;min-width:0"><div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">' +
-    '<div style="padding:10px 14px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:8px;background:#f8faff">' +
-    '<div style="width:10px;height:10px;border:1.5px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></div>' +
-    '<span style="font-size:11px;font-weight:700;color:#1d4ed8">Researching\u2026</span>' +
-    '</div>' +
-    '<div id="' + id + '-steps" style="padding:10px 14px;display:flex;flex-direction:column;gap:7px"></div>' +
-    '</div></div></div>';
-  chat.appendChild(wrap);
-  chat.scrollTop = chat.scrollHeight;
-
-  var TICK = 820;
-  steps.forEach(function(step, i) {
-    setTimeout(function() {
-      var box = document.getElementById(id + '-steps');
-      if (!box) return;
-      // Mark previous step done: spinner \u2192 checkmark
-      var prev = document.getElementById(id + '-s' + (i - 1));
-      if (prev) {
-        var ico = prev.querySelector('.sico');
-        if (ico) ico.innerHTML = '<svg style="width:12px;height:12px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
-        var stxt = prev.querySelector('.stxt');
-        if (stxt) stxt.style.color = '#9ca3af';
-      }
-      // Append new step with spinner
-      var row = document.createElement('div');
-      row.id = id + '-s' + i;
-      row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;animation:fa .2s ease-out';
-      var text = typeof step === 'object' ? step.text : step;
-      var src  = typeof step === 'object' ? step.src  : null;
-      row.innerHTML =
-        '<div class="sico" style="width:14px;height:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">' +
-        '<div style="width:12px;height:12px;border:1.5px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite"></div>' +
-        '</div>' +
-        '<div><div class="stxt" style="font-size:12px;font-weight:500;color:#1e293b;line-height:1.4">' + esc(text) + '</div>' +
-        (src ? '<div style="font-size:10px;color:#1d4ed8;margin-top:2px">\u2192 ' + esc(src) + '</div>' : '') +
-        '</div>';
-      box.appendChild(row);
-      chat.scrollTop = chat.scrollHeight;
-    }, i * TICK);
-  });
-
-  return id;
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function removeEl(id){document.getElementById(id)?.remove();}
+function scrollDown(){const c=document.getElementById('chat');requestAnimationFrame(()=>c.scrollTop=c.scrollHeight);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderMd(md){
+  return md.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^### (.+)$/gm,'<div class="font-semibold text-gray-800 mt-3 mb-1 text-sm">$1</div>')
+    .replace(/^## (.+)$/gm,'<div class="font-bold text-gray-900 mt-3 mb-1">$1</div>')
+    .replace(/^- (.+)$/gm,'<div class="flex gap-1.5 text-sm text-gray-600 mb-1"><span class="text-gray-400 mt-0.5">•</span><span>$1</span></div>')
+    .replace(/\n\n/g,'<br><br>');
 }
-
-function guessSteps(msg) {
-  var m = msg.toLowerCase();
-  if (m.includes('vs') || m.includes('compare') || m.includes('versus')) {
-    return [
-      { text: 'Identifying buyer profiles',      src: 'Air8 Intelligence KB' },
-      { text: 'Pulling financial benchmarks',    src: 'Annual reports / SEC filings' },
-      { text: 'Comparing sourcing patterns',     src: 'Trade data & vendor disclosures' },
-      { text: 'Generating comparison view',      src: 'Air8 scoring model' }
-    ];
-  }
-  if (m.includes('tariff') || m.includes('duty') || m.includes('hts') || m.includes('hs code')) {
-    return [
-      { text: 'Looking up HTS classification',        src: 'USITC Tariff Schedule' },
-      { text: 'Checking Section 301 / AD/CVD lists',  src: 'CBP & USTR databases' },
-      { text: 'Calculating landed cost impact',        src: 'Air8 tariff model' },
-      { text: 'Summarizing tariff exposure',           src: 'Trade Intelligence DB' }
-    ];
-  }
-  if (m.includes('trend') || m.includes('market') || m.includes('outlook') || m.includes('forecast')) {
-    return [
-      { text: 'Scanning market signals',       src: 'Trade publications & news' },
-      { text: 'Reviewing trade volume data',   src: 'Customs & census data' },
-      { text: 'Identifying demand drivers',    src: 'Retail & sourcing reports' },
-      { text: 'Composing market outlook',      src: 'Air8 market model' }
-    ];
-  }
-  if (m.includes('customs') || m.includes('import') || m.includes('clearance') || m.includes('cbp')) {
-    return [
-      { text: 'Checking CBP requirements',     src: 'CBP.gov regulations' },
-      { text: 'Reviewing entry documentation', src: 'Import compliance ruleset' },
-      { text: 'Verifying compliance rules',    src: 'UFLPA / C-TPAT / FTA' },
-      { text: 'Summarizing customs workflow',  src: 'Air8 compliance KB' }
-    ];
-  }
-  if (m.includes('sourcing') || m.includes('supplier') || m.includes('factory') || m.includes('country of origin')) {
-    return [
-      { text: 'Mapping sourcing regions',         src: 'Trade flow data' },
-      { text: 'Reviewing country risk profiles',  src: 'World Bank / OECD indices' },
-      { text: 'Analyzing supply diversity',       src: 'Vendor intelligence DB' },
-      { text: 'Compiling sourcing intelligence',  src: 'Air8 supplier KB' }
-    ];
-  }
-  // Default buyer profile steps
-  return [
-    { text: 'Looking up buyer profile',         src: 'Air8 Intelligence KB' },
-    { text: 'Analyzing financial statements',   src: 'Annual reports / SEC filings' },
-    { text: 'Reviewing sourcing strategy',      src: 'Trade & vendor disclosures' },
-    { text: 'Assessing payment & credit risk',  src: 'Air8 credit model' },
-    { text: 'Generating intelligence report',   src: 'Air8 scoring engine' }
-  ];
-}
-
-function sq(t) {
-  document.getElementById('inp').value = t;
-  send();
-}
-
-function send() {
-  var inp = document.getElementById('inp');
-  var msg = inp.value.trim();
-  if (!msg) return;
-  inp.value = '';
-  inp.style.height = 'auto';
-
-  addMsg('user', msg);
-  msgHist.push({ role: 'user', content: msg });
-
-  var steps = guessSteps(msg);
-  var thinkId = showThinking(steps);
-
-  document.getElementById('sndIco').style.display = 'none';
-  document.getElementById('sndLdr').style.display = 'block';
-  document.getElementById('sndBtn').disabled = true;
-
-  var payload = JSON.stringify({ message: msg, history: msgHist.slice(-6) });
-
-  fetch(W, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: payload
-  })
-  .then(function(r) { return r.text(); })
-  .then(function(raw) {
-    var thinkEl = document.getElementById(thinkId);
-    if (thinkEl) thinkEl.remove();
-
-    var p = null;
-    try {
-      p = JSON.parse(raw);
-    } catch(e) {}
-
-    if (p && p.tabs) {
-      addTabCard(p);
-      msgHist.push({ role: 'assistant', content: p.summary || 'Tabbed intelligence report generated.' });
-    } else {
-      addMarkdown(p && p.text ? p.text : raw);
-      msgHist.push({ role: 'assistant', content: raw.slice(0, 300) });
-    }
-  })
-  .catch(function(err) {
-    var thinkEl = document.getElementById(thinkId);
-    if (thinkEl) thinkEl.remove();
-    addMarkdown('Error connecting to Air8 Intelligence. Please try again.\n\n' + String(err));
-  })
-  .finally(function() {
-    document.getElementById('sndIco').style.display = 'block';
-    document.getElementById('sndLdr').style.display = 'none';
-    document.getElementById('sndBtn').disabled = false;
-  });
-}
-
-function init() {
-  var qs = [
-    'Give me a buyer intelligence report on Walmart',
-    "What is Target's sourcing strategy and key supplier countries?",
-    'Analyze TJX Companies financials and payment terms',
-    'What is the tariff impact on apparel imports from China in 2025?',
-    'Compare Ross Stores vs Burlington Coat Factory as buyers'
-  ];
-
-  var qHtml = '<div style="margin-top:14px;display:flex;flex-direction:column;gap:5px">';
-  for (var i = 0; i < qs.length; i++) {
-    qHtml += '<span onclick="sq(' + JSON.stringify(qs[i]) + ')" style="font-size:12px;color:#1d4ed8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;line-height:1.8">→ ' + esc(qs[i]) + '</span>';
-  }
-  qHtml += '</div>';
-
-  var welcome = '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px">';
-  welcome += '<div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:6px">Welcome to Air8 Intelligence 👋</div>';
-  welcome += '<div style="font-size:13px;color:#64748b;line-height:1.6">Ask about any global buyer, tariff scenario, market trend, or sourcing strategy. I pull financial data, risk signals, and trade intelligence into one structured view.</div>';
-  welcome += qHtml;
-  welcome += '</div>';
-
-  addMsg('ai', welcome);
-}
-
-init();
 </script>
 </body>
 </html>
