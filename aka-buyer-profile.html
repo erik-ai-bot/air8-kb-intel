@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AKA Brands — Buyer Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            air8: { 50:'#fff7ed', 100:'#ffedd5', 200:'#fed7aa', 300:'#fdba74', 400:'#fb923c', 500:'#f97316', 600:'#ea580c', 700:'#c2410c', 800:'#9a3412', 900:'#7c2d12' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .tab-active { border-bottom: 2px solid #f97316; color: #f97316; }
+    .lock-card { background: repeating-linear-gradient(135deg, #f9fafb, #f9fafb 8px, #f3f4f6 8px, #f3f4f6 16px); }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-air8-500 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-sm">A8</span>
+          </div>
+          <span class="text-sm text-gray-500">Air8 Intelligence · Buyer Profile</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-xs text-gray-400">Last updated: Mar 2026</span>
+          <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">Web + Public Sources</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BUYER HERO -->
+  <div class="bg-white border-b border-gray-100">
+    <div class="max-w-6xl mx-auto px-6 py-8">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <h1 class="text-3xl font-bold text-gray-900">a.k.a. Brands</h1>
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">NYSE: AKA</span>
+            <span class="px-2.5 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">Digital-First</span>
+          </div>
+          <p class="text-gray-500 text-sm mb-4">Portfolio holding company · San Francisco, CA · Founded 2018 · IPO 2021</p>
+
+          <!-- KPI Strip -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="bg-gray-50 rounded-xl p-3">
+              <div class="text-xs text-gray-500 mb-1">Revenue (FY2025)</div>
+              <div class="text-xl font-bold text-gray-900">$600M</div>
+              <div class="text-xs text-green-600 mt-0.5">+5.3% YoY</div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-3">
+              <div class="text-xs text-gray-500 mb-1">EBITDA (FY2024)</div>
+              <div class="text-xl font-bold text-gray-900">~$23M</div>
+              <div class="text-xs text-green-600 mt-0.5">vs $13.8M in 2023</div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-3">
+              <div class="text-xs text-gray-500 mb-1">Brands</div>
+              <div class="text-xl font-bold text-gray-900">4</div>
+              <div class="text-xs text-gray-500 mt-0.5">Princess Polly, Culture Kings, Petal & Pup, mnml</div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-3">
+              <div class="text-xs text-gray-500 mb-1">Key Risk</div>
+              <div class="text-lg font-bold text-amber-600">Thin Margins</div>
+              <div class="text-xs text-amber-600 mt-0.5">~4% margin — cost pressure to suppliers</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Company Snapshot Mini Cards -->
+        <div class="flex flex-wrap gap-2 lg:flex-nowrap">
+          <div class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-center min-w-[80px]">
+            <div class="text-xs text-gray-500">Founded</div>
+            <div class="text-sm font-semibold text-gray-800">2018</div>
+          </div>
+          <div class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-center min-w-[80px]">
+            <div class="text-xs text-gray-500">IPO</div>
+            <div class="text-sm font-semibold text-gray-800">2021</div>
+          </div>
+          <div class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-center min-w-[80px]">
+            <div class="text-xs text-gray-500">Markets</div>
+            <div class="text-sm font-semibold text-gray-800">US + AU</div>
+          </div>
+          <div class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-center min-w-[80px]">
+            <div class="text-xs text-gray-500">Model</div>
+            <div class="text-sm font-semibold text-gray-800">DTC / Online</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY TAB BAR -->
+  <div class="bg-white border-b border-gray-200 sticky top-[73px] z-40">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex gap-0 overflow-x-auto scrollbar-hide" id="tabBar">
+        <button onclick="switchTab('overview')" class="tab-btn tab-active px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="overview">Overview</button>
+        <button onclick="switchTab('financials')" class="tab-btn px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="financials">Financials</button>
+        <button onclick="switchTab('products')" class="tab-btn px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="products">Products & Categories</button>
+        <button onclick="switchTab('sourcing')" class="tab-btn px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="sourcing">Sourcing & Supply Chain</button>
+        <button onclick="switchTab('risk')" class="tab-btn px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="risk">Risk & Compliance</button>
+        <button onclick="switchTab('signals')" class="tab-btn px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="signals">Latest Signals</button>
+        <button onclick="switchTab('competitors')" class="tab-btn px-5 py-3.5 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="competitors">Competitors</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- ===== OVERVIEW TAB ===== -->
+    <div id="tab-overview" class="tab-content">
+
+      <!-- Business Summary -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Business Overview</h2>
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+          <p class="text-gray-700 leading-relaxed">a.k.a. Brands is a portfolio holding company that owns four digital-first fashion brands. Founded in 2018 and listed on the NYSE in 2021, the company sells almost exclusively online — no meaningful brick-and-mortar footprint. The business model is built around <strong>social commerce</strong>: influencer-led discovery, trend-speed product drops, and community-driven brand building. Primary markets are the <strong>United States and Australia</strong>, with a target demographic of <strong>Gen Z and Millennial consumers</strong> who shop primarily via mobile and social platforms.</p>
+          <p class="text-gray-700 leading-relaxed mt-3">The company grew through acquisition — Princess Polly (2018), Petal & Pup (2019), Culture Kings (2021), mnml (2021) — and remains in investment mode, prioritising growth over near-term profitability.</p>
+        </div>
+      </div>
+
+      <!-- Brand Portfolio -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Brand Portfolio</h2>
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Brand</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Joined a.k.a.</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Target Customer</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Price Range</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Product Type</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr>
+                <td class="px-5 py-4 font-semibold text-gray-900">Princess Polly</td>
+                <td class="px-5 py-4 text-gray-600">2018</td>
+                <td class="px-5 py-4 text-gray-600">Women 18–30 · Trend-forward, social-first</td>
+                <td class="px-5 py-4 text-gray-600">$20–$80</td>
+                <td class="px-5 py-4 text-gray-600">Women's trend apparel & accessories</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-4 font-semibold text-gray-900">Culture Kings</td>
+                <td class="px-5 py-4 text-gray-600">2021</td>
+                <td class="px-5 py-4 text-gray-600">Men & women 18–30 · Streetwear / sneaker culture</td>
+                <td class="px-5 py-4 text-gray-600">$30–$300</td>
+                <td class="px-5 py-4 text-gray-600">Streetwear, sneakers, sports lifestyle</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-4 font-semibold text-gray-900">Petal & Pup</td>
+                <td class="px-5 py-4 text-gray-600">2019</td>
+                <td class="px-5 py-4 text-gray-600">Women 20–35 · Occasion & event wear</td>
+                <td class="px-5 py-4 text-gray-600">$30–$150</td>
+                <td class="px-5 py-4 text-gray-600">Dresses, going-out wear, special occasion</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-4 font-semibold text-gray-900">mnml</td>
+                <td class="px-5 py-4 text-gray-600">2021</td>
+                <td class="px-5 py-4 text-gray-600">Men 22–38 · Minimalist, basics-oriented</td>
+                <td class="px-5 py-4 text-gray-600">$25–$120</td>
+                <td class="px-5 py-4 text-gray-600">Minimalist menswear, denim, basics</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quick Dimensions Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <!-- Market Position -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-gray-800">Market Position</h3>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">Mid-scale challenger in online fashion. ~$600M places AKA well below ASOS (~$4B) and Revolve (~$1B), but growing faster than both. Positioned between mass-market players (SHEIN) and premium DTC (Revolve). Competes on brand community and product exclusivity, not on price — a distinct lane from SHEIN. Main competitive risk is rising customer acquisition costs in a saturated DTC market.</p>
+          <div class="mt-3 text-xs text-gray-400">Competitors: ASOS, Revolve, Boohoo, SHEIN, Urban Outfitters</div>
+        </div>
+
+        <!-- Sourcing Footprint -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-teal-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-gray-800">Sourcing Footprint</h3>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">Asia-centric supply chain. China and Vietnam are the primary sourcing countries, reflecting price point requirements and turnaround speed. Model favours <strong>agile mid-size manufacturers</strong> over large tier-1 factories — short lead times, frequent small runs, responsive to rapid trend shifts. <em>Specific country volume breakdown and customs data require a deep-dive request.</em></p>
+          <div class="mt-3 text-xs text-gray-400">Model: Fast-turnaround, trend-responsive · Prefer: mid-size agile factories</div>
+        </div>
+
+        <!-- Financial Health -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-gray-800">Financial Health</h3>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">Revenue growing at 5–8% YoY — solid but not exceptional for a DTC challenger. EBITDA improved from $13.8M (2023) to ~$23M (2024) — moving in the right direction, but margins remain thin at ~4%. Company is still reinvesting heavily. <strong>For suppliers: limited margin headroom means cost pressure flows upstream. Payment terms and creditworthiness should be verified before committing large volumes.</strong></p>
+          <div class="mt-3 text-xs text-gray-400">Q2 FY2025: Net sales $160.5M (+7.8% YoY) — positive momentum</div>
+        </div>
+
+        <!-- Risk & Compliance Snapshot -->
+        <div class="bg-white rounded-2xl border border-amber-200 p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-amber-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-amber-800">Risk Snapshot</h3>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">Early-stage profitability under active public investor scrutiny — management faces pressure to demonstrate a path to sustained profitability. Princess Polly holds <strong>B Corp certification</strong> with a formal ethical sourcing framework ("5A's of Ethical Sourcing") — compliance bar is meaningfully higher than typical DTC buyers at this scale. Tariff exposure is a concern given primary sourcing from China.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">Thin margins</span>
+            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">China tariff exposure</span>
+            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">B Corp / ESG bar</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drills Menu -->
+      <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-200 p-6">
+        <h3 class="text-sm font-semibold text-gray-800 mb-3">🔍 Dig Deeper — Ask for a Section</h3>
+        <p class="text-sm text-gray-600 mb-4">Everything above is free from public sources. The sections below contain richer Air8 intelligence — request them when you need to go deeper.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <button onclick="switchTab('financials')" class="text-left p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all">
+            <div class="text-sm font-medium text-gray-800">💰 Financials</div>
+            <div class="text-xs text-gray-500 mt-0.5">Revenue trend, margins, credit profile, DPO</div>
+          </button>
+          <button onclick="switchTab('products')" class="text-left p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all">
+            <div class="text-sm font-medium text-gray-800">📦 Products & Categories</div>
+            <div class="text-xs text-gray-500 mt-0.5">Category mix, volumes, price bands, trend</div>
+          </button>
+          <button onclick="switchTab('sourcing')" class="text-left p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all">
+            <div class="text-sm font-medium text-gray-800">🌍 Sourcing Intel</div>
+            <div class="text-xs text-gray-500 mt-0.5">Country breakdown, customs data, China exposure</div>
+          </button>
+          <button onclick="switchTab('risk')" class="text-left p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all">
+            <div class="text-sm font-medium text-gray-800">⚠️ Risk & Compliance</div>
+            <div class="text-xs text-gray-500 mt-0.5">Payment track, ESG audits, B Corp standards</div>
+          </button>
+          <button onclick="switchTab('signals')" class="text-left p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all">
+            <div class="text-sm font-medium text-gray-800">📰 Latest Signals</div>
+            <div class="text-xs text-gray-500 mt-0.5">Recent news, tariff impact, strategic moves</div>
+          </button>
+          <button onclick="switchTab('competitors')" class="text-left p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all">
+            <div class="text-sm font-medium text-gray-800">🥊 vs Competitors</div>
+            <div class="text-xs text-gray-500 mt-0.5">AKA vs ASOS vs Revolve as a buyer</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FINANCIALS TAB ===== -->
+    <div id="tab-financials" class="tab-content hidden">
+
+      <!-- Available Data -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-5 h-5 bg-blue-100 rounded flex items-center justify-center">
+            <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h2 class="text-lg font-semibold text-gray-900">Financials</h2>
+          <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">Public Data Available</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="bg-blue-50 rounded-xl border border-blue-100 p-4">
+            <div class="text-xs text-blue-500 font-medium mb-1">Revenue FY2025</div>
+            <div class="text-2xl font-bold text-gray-900">$600M</div>
+            <div class="text-xs text-green-600 mt-1">+5.3% YoY</div>
+          </div>
+          <div class="bg-blue-50 rounded-xl border border-blue-100 p-4">
+            <div class="text-xs text-blue-500 font-medium mb-1">Revenue FY2024</div>
+            <div class="text-2xl font-bold text-gray-900">$570M</div>
+            <div class="text-xs text-gray-500 mt-1">FY2023: $549M</div>
+          </div>
+          <div class="bg-blue-50 rounded-xl border border-blue-100 p-4">
+            <div class="text-xs text-blue-500 font-medium mb-1">Adj. EBITDA FY2024</div>
+            <div class="text-2xl font-bold text-gray-900">~$23M</div>
+            <div class="text-xs text-green-600 mt-1">vs $13.8M in 2023</div>
+          </div>
+          <div class="bg-blue-50 rounded-xl border border-blue-100 p-4">
+            <div class="text-xs text-blue-500 font-medium mb-1">Q2 FY2025 Net Sales</div>
+            <div class="text-2xl font-bold text-gray-900">$160.5M</div>
+            <div class="text-xs text-green-600 mt-1">+7.8% YoY</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+          <div class="px-5 py-3 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700">Revenue Trend (Public Filings)</h3>
+          </div>
+          <div class="p-5">
+            <div class="flex items-end gap-3 h-32">
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full bg-blue-400 rounded-t" style="height:58%"></div>
+                <span class="text-xs text-gray-500">FY2023</span>
+                <span class="text-xs font-semibold text-gray-700">$549M</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full bg-blue-400 rounded-t" style="height:66%"></div>
+                <span class="text-xs text-gray-500">FY2024</span>
+                <span class="text-xs font-semibold text-gray-700">$570M</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full bg-air8-500 rounded-t" style="height:75%"></div>
+                <span class="text-xs text-gray-500">FY2025</span>
+                <span class="text-xs font-semibold text-gray-700">$600M</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full bg-blue-200 rounded-t border-2 border-blue-400 border-dashed" style="height:82%"></div>
+                <span class="text-xs text-gray-400">FY2026E</span>
+                <span class="text-xs font-semibold text-gray-400">~$640M</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-3 text-center">Source: a.k.a. Brands public filings · FY2026E = analyst consensus</p>
+          </div>
+        </div>
+
+        <!-- EBITDA & Margin trend -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">EBITDA Progression</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">FY2023</span>
+                <div class="flex items-center gap-2">
+                  <div class="w-32 bg-gray-100 rounded-full h-2"><div class="bg-amber-400 h-2 rounded-full" style="width:28%"></div></div>
+                  <span class="text-xs font-medium text-gray-700">$13.8M</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">FY2024</span>
+                <div class="flex items-center gap-2">
+                  <div class="w-32 bg-gray-100 rounded-full h-2"><div class="bg-green-400 h-2 rounded-full" style="width:47%"></div></div>
+                  <span class="text-xs font-medium text-gray-700">~$23M</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500">FY2025E</span>
+                <div class="flex items-center gap-2">
+                  <div class="w-32 bg-gray-100 rounded-full h-2"><div class="bg-green-300 h-2 rounded-full border-2 border-dashed border-green-400" style="width:58%"></div></div>
+                  <span class="text-xs text-gray-400">~$28M est.</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">Improving trajectory but absolute levels remain thin vs. revenue base.</p>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">Margin Context</h3>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-600">EBITDA margin (FY2024)</span>
+                <span class="text-sm font-semibold text-gray-800">~4%</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-600">Revenue growth (3-yr CAGR)</span>
+                <span class="text-sm font-semibold text-gray-800">~4.5%</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-600">Net income margin</span>
+                <span class="text-sm font-semibold text-amber-600">~2% (thin)</span>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <span class="text-sm text-gray-600">Free cash flow</span>
+                <span class="text-sm font-semibold text-gray-800">~breakeven</span>
+              </div>
+            </div>
+            <p class="text-xs text-amber-600 mt-3 font-medium">⚠️ Thin margins mean limited buffer — cost pressure flows upstream to suppliers.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Dive Gate -->
+      <div class="lock-card rounded-2xl border border-gray-300 p-6 text-center">
+        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-base font-semibold text-gray-700 mb-1">Credit & Payment Intelligence — Locked</h3>
+        <p class="text-sm text-gray-500 mb-4">Air8 internal data: DPO, credit rating, payment track record, actual invoice behaviour, and supplier concentration risk require a deep-dive request.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Credit rating analysis</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Actual DPO vs. standard terms</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Payment behaviour data (weighted)</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Historical扣款率</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">OTIF compliance track record</div>
+        </div>
+        <button class="mt-5 px-6 py-2.5 bg-air8-500 hover:bg-air8-600 text-white text-sm font-medium rounded-xl transition-colors">
+          🔒 Request Credit & Payment Deep Dive
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== PRODUCTS TAB ===== -->
+    <div id="tab-products" class="tab-content hidden">
+
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Products & Categories</h2>
+          <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">Public Data Available</span>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+          <h3 class="text-sm font-semibold text-gray-700 mb-4">Category Mix by Brand</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="border border-gray-100 rounded-xl p-4">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-semibold text-gray-900">Princess Polly</span>
+                <span class="text-xs text-gray-400">largest brand</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Women's dresses & tops</span><span class="font-medium text-gray-700">60%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-purple-400 h-2 rounded-full" style="width:60%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Accessories & footwear</span><span class="font-medium text-gray-700">25%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-purple-300 h-2 rounded-full" style="width:25%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Active & loungewear</span><span class="font-medium text-gray-700">15%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-purple-200 h-2 rounded-full" style="width:15%"></div></div>
+              </div>
+              <div class="mt-3 text-xs text-gray-400">Price band: $20–$80 · Fast trend cycle · New drops weekly</div>
+            </div>
+
+            <div class="border border-gray-100 rounded-xl p-4">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-semibold text-gray-900">Culture Kings</span>
+                <span class="text-xs text-gray-400">highest AOV</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Sneakers & footwear</span><span class="font-medium text-gray-700">40%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-teal-400 h-2 rounded-full" style="width:40%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Streetwear apparel</span><span class="font-medium text-gray-700">35%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-teal-300 h-2 rounded-full" style="width:35%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Sports lifestyle & accessories</span><span class="font-medium text-gray-700">25%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-teal-200 h-2 rounded-full" style="width:25%"></div></div>
+              </div>
+              <div class="mt-3 text-xs text-gray-400">Price band: $30–$300 · Highest AOV of 4 brands</div>
+            </div>
+
+            <div class="border border-gray-100 rounded-xl p-4">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-semibold text-gray-900">Petal & Pup</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Occasion & event dresses</span><span class="font-medium text-gray-700">70%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-pink-400 h-2 rounded-full" style="width:70%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Going-out wear & sets</span><span class="font-medium text-gray-700">20%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-pink-300 h-2 rounded-full" style="width:20%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Accessories</span><span class="font-medium text-gray-700">10%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-pink-200 h-2 rounded-full" style="width:10%"></div></div>
+              </div>
+              <div class="mt-3 text-xs text-gray-400">Price band: $30–$150 · Seasonal cycle · Higher return rates typical</div>
+            </div>
+
+            <div class="border border-gray-100 rounded-xl p-4">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-semibold text-gray-900">mnml</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">T-shirts & tops</span><span class="font-medium text-gray-700">45%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-gray-400 h-2 rounded-full" style="width:45%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Denim & trousers</span><span class="font-medium text-gray-700">30%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-gray-300 h-2 rounded-full" style="width:30%"></div></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">Outerwear & layering</span><span class="font-medium text-gray-700">25%</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-2"><div class="bg-gray-200 h-2 rounded-full" style="width:25%"></div></div>
+              </div>
+              <div class="mt-3 text-xs text-gray-400">Price band: $25–$120 · Basics-oriented · Lower return rates</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Trend Observations -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+          <h3 class="text-sm font-semibold text-gray-700 mb-3">Product & Trend Observations</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex gap-3">
+              <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-800">Culture Kings expanding</div>
+                <div class="text-xs text-gray-500 mt-0.5">Brand opened first US flagship in Las Vegas (2024) — physical retail test for highest-AOV brand. Indicates willingness to invest in physical presence for top brand.</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-800">Princess Polly — B Corp growth</div>
+                <div class="text-xs text-gray-500 mt-0.5">Certified B Corp (July 2025) — positions the flagship brand as sustainability leader in fast fashion. Suppliers should expect ESG audit requests.</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-800">Fast trend cycles</div>
+                <div class="text-xs text-gray-500 mt-0.5">All brands operate on rapid micro-drop model — new styles weekly. Requires suppliers with fast replenishment capability. Not a traditional seasonal buying cycle.</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-800">High return rates</div>
+                <div class="text-xs text-gray-500 mt-0.5">DTC fashion typically sees 20–35% return rates — particularly Petal & Pup (occasion wear) and Princess Polly (online fit). Suppliers should factor return logistics into margin expectations.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Dive Gate -->
+      <div class="lock-card rounded-2xl border border-gray-300 p-6 text-center">
+        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-base font-semibold text-gray-700 mb-1">Volume & Customs Data — Locked</h3>
+        <p class="text-sm text-gray-500 mb-4">Air8 internal data: product-level import volumes from customs records, supplier concentration by category, exact HS code breakdown, and volume trend by origin country.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Import volume by HS code</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Supplier concentration risk</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Category trend by quarter</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">MOQ requirements per brand</div>
+        </div>
+        <button class="mt-5 px-6 py-2.5 bg-air8-500 hover:bg-air8-600 text-white text-sm font-medium rounded-xl transition-colors">
+          🔒 Request Volume & Customs Deep Dive
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== SOURCING TAB ===== -->
+    <div id="tab-sourcing" class="tab-content hidden">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Sourcing & Supply Chain</h2>
+          <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">Limited Public Data</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+          <h3 class="text-sm font-semibold text-gray-700 mb-4">Known Sourcing Profile</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <div class="text-sm font-medium text-gray-800 mb-3">Sourcing Model</div>
+              <div class="space-y-3">
+                <div class="flex gap-3">
+                  <div class="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3 h-3 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <p class="text-sm text-gray-600">Asia-centric supply chain — <strong>China and Vietnam</strong> are primary sourcing countries based on product type and price point requirements</p>
+                </div>
+                <div class="flex gap-3">
+                  <div class="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3 h-3 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <p class="text-sm text-gray-600">Model favours <strong>agile mid-size manufacturers</strong> over large tier-1 factories — short lead times, frequent small runs, responsive to rapid trend shifts</p>
+                </div>
+                <div class="flex gap-3">
+                  <div class="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3 h-3 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <p class="text-sm text-gray-600">Typical of DTC fashion: <strong>6–10 week lead times</strong> for standard replenishment; faster for trend items (4–6 weeks)</p>
+                </div>
+                <div class="flex gap-3">
+                  <div class="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  </div>
+                  <p class="text-sm text-gray-600"><strong>China tariff exposure</strong>: Primary sourcing from China means US tariff layers directly impact cost of goods — 25% Section 301 tariffs apply to most apparel categories</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-sm font-medium text-gray-800 mb-3">Supply Chain Characteristics</div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-600">Preferred factory size</span>
+                  <span class="text-sm font-medium text-gray-800">Mid-size, agile</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-600">Typical lead time</span>
+                  <span class="text-sm font-medium text-gray-800">6–10 weeks</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-600">Run size</span>
+                  <span class="text-sm font-medium text-gray-800">Small, frequent</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-600">Trend responsiveness</span>
+                  <span class="text-sm font-medium text-green-600">High requirement</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-sm text-gray-600">China exposure</span>
+                  <span class="text-sm font-medium text-amber-600">High (~majority)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-50 rounded-2xl border border-amber-200 p-5 mb-6">
+          <div class="flex gap-3">
+            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-amber-800 mb-1">Limited sourcing data available from public sources</div>
+              <p class="text-sm text-amber-700">Specific country-of-origin volume breakdown, customs data, and factory-level supplier lists require Air8 customs records and internal sourcing intelligence. The above profile is based on product type inference and general DTC industry knowledge. <strong>Request a sourcing deep dive</strong> for customs-validated origin data.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Dive Gate -->
+      <div class="lock-card rounded-2xl border border-gray-300 p-6 text-center">
+        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-base font-semibold text-gray-700 mb-1">Sourcing Intelligence — Locked</h3>
+        <p class="text-sm text-gray-500 mb-4">Air8 customs data: origin country volume breakdown, China vs. Vietnam vs. other country trends, HS code-level import data, supplier concentration, and year-over-year sourcing shift analysis.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Country breakdown (validated)</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">China exposure % by category</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Volume trend by origin (YoY)</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Supplier concentration risk</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Near-shoring signals</div>
+        </div>
+        <button class="mt-5 px-6 py-2.5 bg-air8-500 hover:bg-air8-600 text-white text-sm font-medium rounded-xl transition-colors">
+          🔒 Request Sourcing Intelligence Deep Dive
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== RISK TAB ===== -->
+    <div id="tab-risk" class="tab-content hidden">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Risk & Compliance</h2>
+          <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">Partial Data Available</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <!-- ESG / Compliance -->
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              </div>
+              <h3 class="text-sm font-semibold text-gray-800">ESG & Compliance Bar</h3>
+            </div>
+            <p class="text-sm text-gray-600 leading-relaxed">Princess Polly is a <strong>certified B Corp</strong> (July 2025) — the highest formal ethical sourcing certification in the DTC fashion space. The "5A's of Ethical Sourcing" framework goes beyond basic compliance: it requires suppliers to demonstrate labour standards, environmental impact, and supply chain transparency.</p>
+            <div class="mt-3 p-3 bg-green-50 rounded-lg">
+              <div class="text-xs font-medium text-green-800 mb-1">What this means for suppliers:</div>
+              <ul class="text-xs text-green-700 space-y-0.5">
+                <li>• Third-party social compliance audits (BSCI, SEDEX, or equivalent) likely required</li>
+                <li>• Environmental standards: wastewater, chemical management (ZDHC/MRSL)</li>
+                <li>• Supply chain transparency: fabric origin traceability expected</li>
+                <li>• Child labour / forced labour zero-tolerance policy</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Financial Risk -->
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <h3 class="text-sm font-semibold text-gray-800">Financial Risk to Suppliers</h3>
+            </div>
+            <p class="text-sm text-gray-600 leading-relaxed">Thin EBITDA margins (~4%) and early-stage profitability mean the company has limited internal buffer to absorb cost increases. In practice, this translates to:</p>
+            <div class="mt-3 space-y-2">
+              <div class="flex gap-2">
+                <div class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                <p class="text-xs text-gray-600">Active cost negotiation at contract renewal — particularly for China-origin goods affected by tariffs</p>
+              </div>
+              <div class="flex gap-2">
+                <div class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                <p class="text-xs text-gray-600">Inventory risk shared with suppliers — fast-cycle model means excess stock may be returned or refused</p>
+              </div>
+              <div class="flex gap-2">
+                <div class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                <p class="text-xs text-gray-600">Public company under investor scrutiny — any revenue miss could trigger sudden payment term tightening</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tariff Risk -->
+        <div class="bg-white rounded-2xl border border-amber-200 p-5 mb-6">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-amber-800">China Tariff Exposure</h3>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed mb-3">Given primary sourcing from China, AKA Brands faces direct exposure to US Section 301 tariffs (25% on most apparel categories). The company has limited ability to absorb these costs given ~4% EBITDA margins. The likely paths are:</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-amber-50 rounded-lg p-3">
+              <div class="text-xs font-semibold text-amber-800 mb-1">Path 1: Raise prices</div>
+              <div class="text-xs text-gray-600">Pass costs to consumers — viable for premium-positioned brands, less so for mid-price point</div>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3">
+              <div class="text-xs font-semibold text-amber-800 mb-1">Path 2: Sourcing shift</div>
+              <div class="text-xs text-gray-600">Move production to Vietnam, Bangladesh, or other lower-tariff countries — typical 18–24 month transition</div>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3">
+              <div class="text-xs font-semibold text-amber-800 mb-1">Path 3: Supplier concession</div>
+              <div class="text-xs text-gray-600">Negotiate lower FOB prices from existing China suppliers — the path that most directly impacts factory margins</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Dive Gate -->
+      <div class="lock-card rounded-2xl border border-gray-300 p-6 text-center">
+        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-base font-semibold text-gray-700 mb-1">Payment & Credit Intelligence — Locked</h3>
+        <p class="text-sm text-gray-500 mb-4">Air8 internal data: actual payment track record (DPO, on-time % from settled invoices), credit rating, supplier feedback, OTIF compliance history, and confirmed account terms from the field.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Actual DPO vs. stated terms</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">On-time payment rate (weighted)</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">Supplier satisfaction survey</div>
+          <div class="px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500">OTIF penalty track record</div>
+        </div>
+        <button class="mt-5 px-6 py-2.5 bg-air8-500 hover:bg-air8-600 text-white text-sm font-medium rounded-xl transition-colors">
+          🔒 Request Payment & Credit Deep Dive
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== SIGNALS TAB ===== -->
+    <div id="tab-signals" class="tab-content hidden">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Latest Signals</h2>
+          <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">Public Sources</span>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <div class="flex items-start gap-3">
+              <div class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-lg flex-shrink-0">Jul 2025</div>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">Princess Polly achieves B Corp certification</div>
+                <p class="text-sm text-gray-600 mt-1">Formal ethical sourcing framework ("5A's") now in place across the flagship brand. Compliance bar is meaningfully higher than most DTC buyers at this scale. Suppliers should expect ESG audit requests as standard practice.</p>
+                <div class="mt-2 text-xs text-gray-400">Source: a.k.a. Brands press release</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <div class="flex items-start gap-3">
+              <div class="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-lg flex-shrink-0">Q2 2025</div>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">Revenue +7.8% YoY — growth trajectory sustained</div>
+                <p class="text-sm text-gray-600 mt-1">Net sales of $160.5M in the quarter. Sequential improvement from FY2025 full-year +5.3% — momentum is positive. However, margin expansion remains the key challenge; the path to sustainable profitability is not yet proven.</p>
+                <div class="mt-2 text-xs text-gray-400">Source: a.k.a. Brands earnings release</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <div class="flex items-start gap-3">
+              <div class="px-2.5 py-1 bg-teal-100 text-teal-700 text-xs font-semibold rounded-lg flex-shrink-0">2024</div>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">Culture Kings Las Vegas flagship opens — physical retail test</div>
+                <p class="text-sm text-gray-600 mt-1">First owned physical store for Culture Kings, opened in Las Vegas. Highest-AOV brand getting a physical presence test — signals the portfolio is mature enough to start exploring beyond pure DTC. Watch for expansion signals.</p>
+                <div class="mt-2 text-xs text-gray-400">Source: Industry media</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-amber-200 p-5">
+            <div class="flex items-start gap-3">
+              <div class="px-2.5 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded-lg flex-shrink-0">Ongoing</div>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">US tariff exposure remains a structural headwind</div>
+                <p class="text-sm text-gray-600 mt-1">China-origin sourcing means 25% Section 301 tariffs apply to most categories. With ~4% EBITDA margins, AKA cannot absorb these costs without either price increases or supplier concessions. Near-term renegotiation risk is elevated for China-based suppliers.</p>
+                <div class="mt-2 text-xs text-gray-400">Source: Public filings / trade policy analysis</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <div class="flex items-start gap-3">
+              <div class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg flex-shrink-0">2024</div>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">mnml brand — potential consolidation target</div>
+                <p class="text-sm text-gray-600 mt-1">Smallest brand in the portfolio. As a pure basics/menswear label, mnml is the most commoditised of the four — and the one most exposed to SHEIN and mass-market competition. Monitor whether AKA continues to invest or begins to wind it down.</p>
+                <div class="mt-2 text-xs text-gray-400">Source: Industry analysis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COMPETITORS TAB ===== -->
+    <div id="tab-competitors" class="tab-content hidden">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Competitor Comparison</h2>
+          <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">Public Sources</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+          <div class="px-5 py-3 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700">Direct Competitors in Online Fashion Space</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Company</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Revenue</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Position</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Target Demo</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Sourcing Model</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Supplier Bar</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-air8-50">
+                  <td class="px-5 py-4 font-semibold text-air8-700">AKA Brands <span class="text-xs text-air8-500 font-normal">(subject)</span></td>
+                  <td class="px-5 py-4 text-gray-700">~$600M</td>
+                  <td class="px-5 py-4 text-gray-700">Mid-scale DTC challenger</td>
+                  <td class="px-5 py-4 text-gray-700">Gen Z / Millennial · US + AU</td>
+                  <td class="px-5 py-4 text-gray-700">China/Vietnam · Fast-turn</td>
+                  <td class="px-5 py-4"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">High (B Corp)</span></td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-semibold text-gray-900">ASOS</td>
+                  <td class="px-5 py-4 text-gray-700">~$4B (FY2024)</td>
+                  <td class="px-5 py-4 text-gray-700">Large-scale global DTC</td>
+                  <td class="px-5 py-4 text-gray-700">20-somethings · Global</td>
+                  <td class="px-5 py-4 text-gray-700">Global mix · Fast fashion</td>
+                  <td class="px-5 py-4"><span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">Medium</span></td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-semibold text-gray-900">Revolve</td>
+                  <td class="px-5 py-4 text-gray-700">~$1B</td>
+                  <td class="px-5 py-4 text-gray-700">Premium DTC fashion</td>
+                  <td class="px-5 py-4 text-gray-700">25–40 · Higher income</td>
+                  <td class="px-5 py-4 text-gray-700">Selective · Higher quality</td>
+                  <td class="px-5 py-4"><span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">Medium-High</span></td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-semibold text-gray-900">Boohoo</td>
+                  <td class="px-5 py-4 text-gray-700">~$1.5B</td>
+                  <td class="px-5 py-4 text-gray-700">Ultra-fast fashion</td>
+                  <td class="px-5 py-4 text-gray-700">16–30 · Value-driven</td>
+                  <td class="px-5 py-4 text-gray-700">UK/China · Ultra-fast</td>
+                  <td class="px-5 py-4"><span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">Low-Medium</span></td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-semibold text-gray-900">SHEIN</td>
+                  <td class="px-5 py-4 text-gray-700">Est. ~$30B+</td>
+                  <td class="px-5 py-4 text-gray-700">Mass-market ultra-fast fashion</td>
+                  <td class="px-5 py-4 text-gray-700">All ages · Price-first global</td>
+                  <td class="px-5 py-4 text-gray-700">China · Speed-optimised</td>
+                  <td class="px-5 py-4"><span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">Low</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Competitive Analysis Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-800 mb-3">AKA vs ASOS</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">ASOS is ~7x the size of AKA and operates globally. AKA's advantage is specificity of community — ASOS casts wide nets; AKA builds dedicated brand tribes. ASOS has suffered from brand fatigue and inventory problems; AKA's brand separation reduces cross-contamination risk if one brand misfires. ASOS is a harder buyer to land as a new supplier given scale and existing vendor relationships.</p>
+            <div class="mt-3 flex gap-2">
+              <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">AKA more accessible to new suppliers</span>
+              <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">ASOS = higher barriers</span>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-800 mb-3">AKA vs Revolve</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Revolve targets a slightly older, higher-income demographic than AKA's core brands. Both are community-driven DTC models, but Revolve has proven profitability (Revolve is cash-generative) while AKA is still proving its model. Revolve's supplier standards are higher — more exclusive collaborations, curated product, and premium positioning. AKA is a better fit for suppliers who can deliver trend-speed product at mid-price points.</p>
+            <div class="mt-3 flex gap-2">
+              <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">Revolve = higher quality bar</span>
+              <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">AKA = more volume opportunity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TAB SWITCHER SCRIPT -->
+  <script>
+    function switchTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      // Show target tab content
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      // Update tab button styles
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === tabName) {
+          btn.classList.add('tab-active');
+          btn.classList.remove('text-gray-500');
+          btn.classList.add('text-gray-900');
+        } else {
+          btn.classList.remove('tab-active');
+          btn.classList.remove('text-gray-900');
+          btn.classList.add('text-gray-500');
+        }
+      });
+      // Scroll tab into view on mobile
+      document.getElementById('tab-' + tabName).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>
