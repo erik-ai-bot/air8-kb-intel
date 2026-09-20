@@ -242,6 +242,77 @@ function extractJSON(text) {
   return null;
 }
 
+// ── TAB-ON-DEMAND LOADER ──────────────────────────────────────────────────────
+window._tabCache = {}; // {cardId_tabId: content}
+window._cardBuyer = {}; // {cardId: buyer name from overview}
+
+function loadTab(cardId, tabId, msgForContext) {
+  var cacheKey = cardId + '_' + tabId;
+  if(window._tabCache[cacheKey]) {
+    renderTabContent(cardId, tabId, window._tabCache[cacheKey]);
+    return;
+  }
+
+  // Show loading state
+  var panel = document.getElementById(cardId + '-p-' + tabId);
+  if(!panel) return;
+  panel.innerHTML = '<div style="padding:20px;text-align:center;color:#64748b">' +
+    '<div style="width:20px;height:20px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px"></div>' +
+    '<div style="font-size:12px">正在加载 ' + tabId + ' 数据...</div></div>';
+
+  var buyer = window._cardBuyer[cardId] || msgForContext || '';
+  var payload = {
+    message: buyer,
+    context: hist.slice(-4),
+    tab_id: tabId
+  };
+
+  var fullText = '';
+  fetch(WORKER, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).then(function(r) {
+    var reader = r.body.getReader();
+    var decoder = new TextDecoder();
+    function pump() {
+      return reader.read().then(function(res) {
+        if(res.done) {
+          window._tabCache[cacheKey] = fullText;
+          renderTabContent(cardId, tabId, fullText);
+          return;
+        }
+        var chunk = decoder.decode(res.value, {stream:true});
+        chunk.split('\n').forEach(function(line) {
+          if(!line.startsWith('data: ')) return;
+          try {
+            var ev = JSON.parse(line.slice(6));
+            if(ev.delta) fullText += ev.delta;
+            if(ev.done) fullText = ev.text || fullText;
+          } catch(e) {}
+        });
+        return pump();
+      });
+    }
+    return pump();
+  }).catch(function(e) {
+    if(panel) panel.innerHTML = '<div style="padding:16px;color:#be123c;font-size:12px">⚠️ 加载失败，请重试。</div>';
+  });
+}
+
+function renderTabContent(cardId, tabId, text) {
+  var panel = document.getElementById(cardId + '-p-' + tabId);
+  if(!panel) return;
+  panel.innerHTML = '<div class="px-5 py-4 markdown-body">' + parseMarkdown(text) + '</div>';
+  // Wire explore-chip clicks
+  panel.querySelectorAll('.explore-chip').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.getElementById('inp').value = btn.dataset.query;
+      send();
+    });
+  });
+}
+
 // ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
 function guessSteps(msg) {
   const m = msg.toLowerCase();
@@ -514,7 +585,7 @@ function addTabCard(data) {
 
   const panels=data.tabs.map((t,i)=>`
     <div id="${cid}-p-${t.id}" class="${i===0?'':'hidden'}">
-      ${buildPanel(t,cid)}
+      ${t.content ? buildPanel(t,cid) : (i===0 ? buildPanel(t,cid) : '<div style="padding:24px;text-align:center"><button onclick="loadTab(\''+cid+'\',\''+t.id+'\',window._cardBuyer[\''+cid+'\']||\'\')" style="padding:8px 20px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;color:#1d4ed8;font-size:13px;cursor:pointer">点击加载 '+t.icon+' '+t.label+'</button></div>')}
     </div>`).join('');
 
   // Store followups in global map to avoid onclick escaping issues
@@ -564,6 +635,7 @@ function addTabCard(data) {
 
   chat.appendChild(el);
   // Render charts after DOM insert
+  window._cardBuyer[cid] = data.buyer || '';
   data.tabs.forEach(t => { if(t.chart) renderChart(t,cid); });
   scrollDown();
 }
