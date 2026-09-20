@@ -915,14 +915,14 @@
 
   </main>
 
-  <!-- TAB SWITCHER SCRIPT -->
+  <!-- TAB SWITCHER + LIVE CHAT SCRIPT -->
   <script>
+    const WORKER_URL = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
+    let chatHistory = [];
+
     function switchTab(tabName) {
-      // Hide all tab contents
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      // Show target tab content
       document.getElementById('tab-' + tabName).classList.remove('hidden');
-      // Update tab button styles
       document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.dataset.tab === tabName) {
           btn.classList.add('tab-active');
@@ -934,10 +934,178 @@
           btn.classList.add('text-gray-500');
         }
       });
-      // Scroll tab into view on mobile
       document.getElementById('tab-' + tabName).scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    // ── Live Chat Widget ────────────────────────────────────────────────────
+    function toggleChat() {
+      const panel = document.getElementById('chatPanel');
+      panel.classList.toggle('hidden');
+    }
+
+    function appendMessage(role, text) {
+      const box = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = role === 'user'
+        ? 'flex justify-end mb-3'
+        : 'flex justify-start mb-3';
+
+      const bubble = document.createElement('div');
+      bubble.className = role === 'user'
+        ? 'bg-orange-500 text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] whitespace-pre-wrap'
+        : 'bg-white border border-gray-200 text-gray-800 text-sm rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[85%] whitespace-pre-wrap shadow-sm';
+
+      bubble.textContent = text;
+      div.appendChild(bubble);
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function showTyping() {
+      const box = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.id = 'typingIndicator';
+      div.className = 'flex justify-start mb-3';
+      div.innerHTML = `<div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+        <div class="flex gap-1">
+          <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0ms"></div>
+          <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:150ms"></div>
+          <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:300ms"></div>
+        </div>
+      </div>`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function removeTyping() {
+      const el = document.getElementById('typingIndicator');
+      if (el) el.remove();
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      input.value = '';
+      input.disabled = true;
+
+      appendMessage('user', msg);
+      chatHistory.push({ role: 'user', content: msg });
+
+      showTyping();
+
+      try {
+        const resp = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg, context: chatHistory.slice(-10) })
+        });
+
+        const data = await resp.json();
+        removeTyping();
+
+        if (data.reply) {
+          appendMessage('assistant', data.reply);
+          chatHistory.push({ role: 'assistant', content: data.reply });
+        } else if (data.error) {
+          appendMessage('assistant', '⚠️ Error: ' + data.error);
+        }
+      } catch (err) {
+        removeTyping();
+        appendMessage('assistant', '⚠️ Connection error. Please try again.');
+      } finally {
+        input.disabled = false;
+        input.focus();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('chatInput');
+      if (input) {
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+      }
+    });
   </script>
+
+  <!-- ── CHAT WIDGET ───────────────────────────────────────────────────── -->
+  <!-- Floating button -->
+  <button onclick="toggleChat()"
+    class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-air8-500 hover:bg-air8-600 text-white rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+    </svg>
+  </button>
+
+  <!-- Chat panel -->
+  <div id="chatPanel" class="hidden fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col" style="height:520px">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-3 bg-slate-950 rounded-t-2xl">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-air8-500 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-xs">A8</span>
+        </div>
+        <div>
+          <div class="text-white text-sm font-semibold">Air8 Intelligence</div>
+          <div class="text-slate-400 text-xs">Ask me about any buyer</div>
+        </div>
+      </div>
+      <button onclick="toggleChat()" class="text-slate-400 hover:text-white transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chatMessages" class="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-1">
+      <!-- Welcome message -->
+      <div class="flex justify-start mb-3">
+        <div class="bg-white border border-gray-200 text-gray-800 text-sm rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[85%] shadow-sm">
+          👋 Hi! Ask me about any buyer — Walmart, Target, ASOS, H&M, or any other. I can cover their financials, sourcing, products, compliance bar, and latest signals.
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick prompts -->
+    <div class="px-3 py-2 border-t border-gray-100 bg-white">
+      <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+        <button onclick="document.getElementById('chatInput').value='Tell me about Walmart'; sendMessage();"
+          class="flex-shrink-0 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">
+          Walmart
+        </button>
+        <button onclick="document.getElementById('chatInput').value='Tell me about SHEIN'; sendMessage();"
+          class="flex-shrink-0 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">
+          SHEIN
+        </button>
+        <button onclick="document.getElementById('chatInput').value='What about AKA financials?'; sendMessage();"
+          class="flex-shrink-0 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">
+          AKA financials
+        </button>
+        <button onclick="document.getElementById('chatInput').value='US tariff on apparel from China 2025'; sendMessage();"
+          class="flex-shrink-0 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">
+          Apparel tariffs
+        </button>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="flex items-end gap-2 p-3 border-t border-gray-200 bg-white rounded-b-2xl">
+      <textarea id="chatInput" rows="1"
+        placeholder="Ask about any buyer..."
+        class="flex-1 resize-none border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+        style="max-height:80px"></textarea>
+      <button onclick="sendMessage()"
+        class="w-9 h-9 bg-air8-500 hover:bg-air8-600 text-white rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+      </button>
+    </div>
+  </div>
 
 </body>
 </html>
