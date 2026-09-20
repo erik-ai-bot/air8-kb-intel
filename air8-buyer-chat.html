@@ -95,6 +95,28 @@ let hist = [], charts = {};
 function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
 function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
 function sq(t) { document.getElementById('inp').value=t; send(); }
+
+// Add a real (data-driven) step to the thinking animation
+function addRealStep(thinkId, text, src) {
+  const box = document.getElementById(thinkId+'-steps');
+  if(!box) return;
+  // Mark previous step as done (✓)
+  box.querySelectorAll('.step-row').forEach(r => {
+    const icon = r.querySelector('.step-icon');
+    if(icon && icon.querySelector('.spinner')) {
+      icon.innerHTML = '<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+      const txt = r.querySelector('.step-text');
+      if(txt) txt.style.color='#6b7280';
+    }
+  });
+  // Add new step
+  const row = document.createElement('div');
+  row.className='flex items-start gap-2.5 step-row';
+  row.style.animation='stepIn .2s ease-out forwards';
+  row.innerHTML=`<div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px"><div class="spinner" style="width:12px;height:12px"></div></div><div class="flex-1 min-w-0"><div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(text)}</div>${src?`<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(src)}</div>`:''}</div>`;
+  box.appendChild(row);
+  scrollDown();
+}
 function fqClick(cid, idx) {
   const q = window._fq && window._fq[cid] && window._fq[cid][idx];
   if(q) sq(q);
@@ -134,7 +156,7 @@ async function send() {
         else { addMarkdown(reply); hist.push({role:'assistant',content:reply}); }
       }
     } else {
-      // SSE streaming
+      // SSE — step/done events (buyer) + legacy delta/done (drill-downs)
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buf='', fullText='', done_received=false;
@@ -149,17 +171,26 @@ async function send() {
           if(!raw || raw==='[DONE]') continue;
           try {
             const ev = JSON.parse(raw);
+            if(ev.type==='step') { addRealStep(thinkId, ev.text||'', ev.src||''); continue; }
+            if(ev.type==='done' && ev.json) {
+              removeEl(thinkId); addTabCard(ev.json);
+              hist.push({role:'assistant', content: ev.json.summary||ev.json.buyer||'Buyer report'});
+              done_received=true; break outer;
+            }
+            if(ev.type==='done' && ev.text) {
+              removeEl(thinkId); addMarkdown(ev.text);
+              hist.push({role:'assistant', content: ev.text}); done_received=true; break outer;
+            }
             if(ev.delta) fullText += ev.delta;
             if(ev.error) { removeEl(thinkId); addText('⚠️ '+ev.error); done_received=true; break outer; }
             if(ev.done) {
-              fullText = ev.text || fullText;
-              removeEl(thinkId);
-              addMarkdown(fullText);
-              hist.push({role:'assistant',content:fullText});
+              fullText = ev.text||fullText; removeEl(thinkId);
+              addMarkdown(fullText); hist.push({role:'assistant',content:fullText});
               done_received=true; break outer;
             }
           } catch(e) {}
         }
+        if(done_received) break;
       }
       if(!done_received && fullText) {
         removeEl(thinkId); addMarkdown(fullText); hist.push({role:'assistant',content:fullText});
