@@ -174,7 +174,7 @@ async function send() {
             if(ev.type==='step') { addRealStep(thinkId, ev.text||'', ev.src||''); continue; }
             if(ev.type==='done' && ev.json) {
               removeEl(thinkId); addTabCard(ev.json);
-              hist.push({role:'assistant', content: ev.json.summary||ev.json.buyer||'Buyer report'});
+              hist.push({role:'assistant', content: `Buyer intelligence report for: ${ev.json.buyer||''}. Summary: ${ev.json.summary||''}. Tabs covered: Overview, Financials, Products, Sourcing, Risk, Signals, Competitors.`});
               done_received=true; break outer;
             }
             if(ev.type==='done' && ev.text) {
@@ -186,7 +186,7 @@ async function send() {
                     const p = JSON.parse(t[0]);
                     if(p.tabs) {
                       removeEl(thinkId); addTabCard(p);
-                      hist.push({role:'assistant', content: p.summary||p.buyer||'Buyer report'});
+                      hist.push({role:'assistant', content: `Buyer intelligence report for: ${p.buyer||''}. Summary: ${p.summary||''}. Tabs covered: Overview, Financials, Products, Sourcing, Risk, Signals, Competitors.`});
                       done_received=true; break outer;
                     }
                   }
