@@ -114,32 +114,22 @@ async function send() {
   const thinkId = addThinking(intentSteps);
 
   try {
-    const res = await fetch(WORKER.replace('/chat','/chat-stream'), {
+    const res = await fetch(WORKER, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({message:msg, context:hist.slice(-10)})
     });
+    const data = await res.json();
+    removeEl(thinkId);
 
-    if(!res.ok || !res.body) throw new Error('Stream failed');
-
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '';
-
-    while(true) {
-      const {done, value} = await reader.read();
-      if(done) break;
-      buf += dec.decode(value, {stream:true});
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for(const line of lines) {
-        if(!line.startsWith('data: ')) continue;
-        try {
-          const ev = JSON.parse(line.slice(6));
-          handleStreamEvent(ev, thinkId, msg);
-        } catch{}
-      }
+    const raw = data.reply || '';
+    const parsed = extractJSON(raw);
+    if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
+      addTabCard(parsed);
+    } else {
+      addText(raw || '⚠️ '+(data.error||'No response.'));
     }
+    hist.push({role:'assistant', content:raw});
   } catch(err) {
     removeEl(thinkId);
     addText('⚠️ Connection error — please try again.');
