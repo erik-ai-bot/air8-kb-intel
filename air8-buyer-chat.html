@@ -11,11 +11,10 @@
   :root { --blue: #1d4ed8; --blue-light: #eff6ff; --blue-mid: #bfdbfe; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
   .fade-in { animation: fadeUp .25s ease-out; }
-  @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
-  .dot { display:inline-block; width:6px; height:6px; background:#94a3b8; border-radius:50%; animation:blink 1.2s ease-in-out infinite; }
-  .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
-  @keyframes stepIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
-  .step-in { animation: stepIn .3s ease-out forwards; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .spinner { width:12px;height:12px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0; }
+  @keyframes stepIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+  .step-row { animation: stepIn .2s ease-out forwards; opacity:0; }
   textarea { resize:none; }
   ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:4px}
   .tab-active { border-bottom:2px solid #1d4ed8; color:#1d4ed8; font-weight:600; }
@@ -151,65 +150,92 @@ function extractJSON(text) {
 // ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
 function guessSteps(msg) {
   const m = msg.toLowerCase();
-  const steps = [];
+  const buyer = msg.replace(/tell me (sth |something )?(about|more about)|查|了解|分析|compare|vs\s/gi,'').replace(/\?/,'').trim().slice(0,35);
+  
   if(/compare|vs /i.test(msg)) {
-    steps.push('🔍 Identifying buyers for comparison');
-    steps.push('📊 Pulling financial profiles');
-    steps.push('🌍 Cross-referencing sourcing data');
-    steps.push('🥊 Composing side-by-side analysis');
+    const parts = msg.match(/([A-Za-z &.]+)\s+vs\.?\s+([A-Za-z &.]+)/i);
+    const a = parts?.[1]?.trim()||'Buyer A', b = parts?.[2]?.trim()||'Buyer B';
+    return [
+      { text: `Searching buyer database: ${a}`, src: 'Air8 PulseLink' },
+      { text: `Searching buyer database: ${b}`, src: 'Air8 PulseLink' },
+      { text: 'Pulling financial profiles & DPO data', src: 'Public filings' },
+      { text: 'Cross-referencing sourcing & customs records', src: 'Customs DB' },
+      { text: 'Composing side-by-side analysis', src: null },
+    ];
   } else if(/tariff|duty|hts/i.test(m)) {
-    steps.push('📋 Querying tariff schedule');
-    steps.push('🔍 Checking HTS classifications');
-    steps.push('📊 Calculating rate differentials');
+    return [
+      { text: 'Querying HTS tariff schedule', src: 'USITC' },
+      { text: 'Checking Section 301 / de minimis rules', src: 'CBP.gov' },
+      { text: 'Calculating rate differentials by origin', src: 'Air8 Tariff DB' },
+    ];
   } else if(/trend|market|industry/i.test(m)) {
-    steps.push('🌐 Scanning market signals');
-    steps.push('📈 Analysing sourcing shift data');
-    steps.push('💡 Identifying key implications');
+    return [
+      { text: 'Scanning trade news & signals', src: 'Web search' },
+      { text: 'Pulling sourcing shift data', src: 'Customs records' },
+      { text: 'Identifying supply chain implications', src: 'Air8 KB' },
+    ];
   } else {
-    // Extract buyer name
-    const b = msg.replace(/tell me (about|more about|sth about)|查|了解|分析/gi,'').trim();
-    steps.push(`🔍 Fetching profile: ${b.slice(0,30)}`);
-    steps.push('📊 Pulling financial & sourcing data');
-    steps.push('⚠️ Assessing supplier risk signals');
-    steps.push('📋 Composing intelligence report');
+    return [
+      { text: `Searching buyer database: ${buyer}`, src: 'Air8 PulseLink' },
+      { text: 'Retrieving financial statements & DPO', src: 'Public filings / IR' },
+      { text: 'Pulling customs & sourcing records', src: 'Customs DB' },
+      { text: 'Running web search for latest signals', src: 'Brave Search' },
+      { text: 'Compiling intelligence report', src: null },
+    ];
   }
-  return steps;
 }
 
-// ── THINKING INDICATOR WITH STEPS ────────────────────────────────────────────
+// ── THINKING INDICATOR — spinner→checkmark sequence ──────────────────────────
 function addThinking(steps) {
   const chat=document.getElementById('chat');
   const id='think-'+Date.now();
   const el=document.createElement('div');
   el.id=id; el.className='flex justify-start gap-2.5 fade-in';
 
-  const stepsHtml=steps.map((s,i)=>
-    `<div id="${id}-step-${i}" class="flex items-center gap-2 py-1 opacity-0">
-      <div class="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style="background:#eff6ff">
-        <div class="w-1.5 h-1.5 rounded-full" style="background:#1d4ed8"></div>
-      </div>
-      <span class="text-xs text-gray-500">${esc(s)}</span>
-    </div>`).join('');
-
   el.innerHTML=`
-    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#eff6ff">
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
       <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
     </div>
-    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm min-w-[220px]">
-      <div class="space-y-0.5" id="${id}-steps">${stepsHtml}</div>
-      <div class="flex gap-1 mt-3">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden" style="min-width:290px;max-width:380px">
+      <div class="px-4 py-2 border-b border-gray-100 flex items-center gap-2" style="background:#f8faff">
+        <div class="spinner" style="width:10px;height:10px;border-width:1.5px"></div>
+        <span class="text-[11px] font-semibold" style="color:#1d4ed8">Researching…</span>
       </div>
+      <div class="px-4 py-3 space-y-2" id="${id}-steps"></div>
     </div>`;
   chat.appendChild(el);
   scrollDown();
 
-  // Animate steps in sequence
-  steps.forEach((_,i) => {
-    setTimeout(()=>{
-      const s=document.getElementById(`${id}-step-${i}`);
-      if(s){s.classList.add('step-in');s.style.opacity='1';}
-    }, i*400);
+  const TICK = 850;
+  steps.forEach((step,i) => {
+    setTimeout(() => {
+      const box=document.getElementById(`${id}-steps`);
+      if(!box) return;
+
+      // Mark previous step done
+      const prev=document.getElementById(`${id}-step-${i-1}`);
+      if(prev) {
+        const icon=prev.querySelector('.step-icon');
+        if(icon) icon.innerHTML=`<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+        const txt=prev.querySelector('.step-text');
+        if(txt) txt.style.color='#6b7280';
+      }
+
+      // New step
+      const row=document.createElement('div');
+      row.id=`${id}-step-${i}`;
+      row.className='flex items-start gap-2.5 step-row';
+      row.innerHTML=`
+        <div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px">
+          <div class="spinner" style="width:12px;height:12px"></div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(step.text)}</div>
+          ${step.src ? `<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(step.src)}</div>` : ''}
+        </div>`;
+      box.appendChild(row);
+      scrollDown();
+    }, i * TICK);
   });
 
   return id;
