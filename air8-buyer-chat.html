@@ -1,508 +1,493 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Air8 Intelligence</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
-    .fade-in { animation: fadeUp .2s ease-out; }
-    @keyframes pulse { 0%,80%,100%{transform:scale(0)}40%{transform:scale(1)} }
-    .dot { animation: pulse 1.2s ease-in-out infinite; width:7px; height:7px; background:#94a3b8; border-radius:50%; display:inline-block; }
-    .dot:nth-child(2){animation-delay:.16s} .dot:nth-child(3){animation-delay:.32s}
-    textarea { resize:none; }
-    ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:3px}
-    .tab-active { border-bottom: 2px solid #f97316; color: #f97316; font-weight:600; }
-    .tab-inactive { border-bottom: 2px solid transparent; color: #64748b; }
-    .tab-inactive:hover { color: #1e293b; }
-    .risk-low { background:#f0fdf4; color:#15803d; border-color:#bbf7d0; }
-    .risk-medium { background:#fffbeb; color:#b45309; border-color:#fde68a; }
-    .risk-high { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air8 Intelligence</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  :root { --blue: #1d4ed8; --blue-light: #eff6ff; --blue-mid: #bfdbfe; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation: fadeUp .25s ease-out; }
+  @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+  .dot { display:inline-block; width:6px; height:6px; background:#94a3b8; border-radius:50%; animation:blink 1.2s ease-in-out infinite; }
+  .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+  @keyframes stepIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+  .step-in { animation: stepIn .3s ease-out forwards; }
+  textarea { resize:none; }
+  ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:4px}
+  .tab-active { border-bottom:2px solid #1d4ed8; color:#1d4ed8; font-weight:600; }
+  .tab-inactive { border-bottom:2px solid transparent; color:#64748b; }
+  .tab-inactive:hover { color:#1e293b; background:#f8fafc; }
+  .risk-low  { background:#f0fdf4; color:#15803d; border-color:#bbf7d0; }
+  .risk-med  { background:#fffbeb; color:#b45309; border-color:#fde68a; }
+  .risk-high { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
+  .chip { padding:7px 16px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px; border-radius:999px; cursor:pointer; transition:all .15s; white-space:nowrap; }
+  .chip:hover { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
+</style>
 </head>
 <body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
 
-  <!-- HEADER -->
-  <header class="bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between flex-shrink-0 shadow-sm">
-    <div class="flex items-center gap-2.5">
-      <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-sm">
-        <span class="text-white font-bold text-sm">A8</span>
-      </div>
-      <div>
-        <div class="text-sm font-semibold text-gray-900">Air8 Intelligence</div>
-        <div class="text-xs text-gray-400">Buyer · Product · Market · Tariff</div>
-      </div>
+<!-- HEADER -->
+<header class="bg-white border-b border-gray-200 px-5 py-3.5 flex items-center justify-between flex-shrink-0">
+  <div class="flex items-center gap-2.5">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#1d4ed8">
+      <span class="text-white font-bold text-sm">A8</span>
     </div>
-    <div class="flex items-center gap-1.5">
-      <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-      <span class="text-xs text-gray-500">Live</span>
-    </div>
-  </header>
-
-  <!-- CHAT AREA -->
-  <div id="chatArea" class="flex-1 overflow-y-auto px-4 py-5 space-y-5 max-w-4xl mx-auto w-full">
-    <!-- Welcome -->
-    <div class="flex justify-center fade-in">
-      <div class="bg-white rounded-2xl border border-gray-200 p-5 max-w-lg w-full text-center shadow-sm">
-        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
-        <p class="text-sm font-semibold text-gray-800 mb-1">Ask me about any buyer or market</p>
-        <p class="text-xs text-gray-500 mb-4">Get structured intelligence — financials, sourcing, products, risk signals</p>
-        <div class="flex flex-wrap justify-center gap-2">
-          <button onclick="sendQuick('Tell me about Walmart')" class="chip">Walmart</button>
-          <button onclick="sendQuick('Tell me about SHEIN')" class="chip">SHEIN</button>
-          <button onclick="sendQuick('Compare AKA Brands vs REVOLVE')" class="chip">AKA vs REVOLVE</button>
-          <button onclick="sendQuick('US tariff on apparel from China 2025')" class="chip">US Tariff</button>
-          <button onclick="sendQuick('Vietnam fast fashion sourcing trend 2026')" class="chip">Vietnam Trend</button>
-        </div>
-      </div>
+    <div>
+      <div class="text-sm font-bold text-gray-900">Air8 Intelligence</div>
+      <div class="text-[11px] text-gray-400">Buyer · Market · Tariff · Sourcing</div>
     </div>
   </div>
+  <div class="flex items-center gap-1.5">
+    <div class="w-2 h-2 bg-emerald-400 rounded-full"></div>
+    <span class="text-xs text-gray-500">Live</span>
+  </div>
+</header>
 
-  <!-- INPUT -->
-  <div class="bg-white border-t border-gray-200 px-4 pt-3 pb-4 flex-shrink-0 shadow-lg">
-    <div class="flex items-end gap-2 max-w-4xl mx-auto">
-      <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 focus-within:border-orange-400 focus-within:ring-1 focus-within:ring-orange-300 transition-all">
-        <textarea id="userInput" rows="1"
-          placeholder="Ask about any buyer, product category, tariff, or market trend..."
-          class="w-full bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none leading-relaxed"
-          style="max-height:80px"
-          oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
-      </div>
-      <button onclick="sendMessage()"
-        class="w-10 h-10 bg-orange-500 hover:bg-orange-600 text-white rounded-xl flex items-center justify-center flex-shrink-0 transition-colors shadow-sm">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+<!-- CHAT -->
+<div id="chat" class="flex-1 overflow-y-auto px-4 py-6 space-y-5" style="max-width:860px;margin:0 auto;width:100%">
+
+  <!-- Welcome -->
+  <div class="flex justify-center fade-in">
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 max-w-lg w-full shadow-sm text-center">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3" style="background:#eff6ff">
+        <svg class="w-6 h-6" style="color:#1d4ed8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-      </button>
+      </div>
+      <p class="text-sm font-semibold text-gray-900 mb-1">Ask about any buyer, product, or market</p>
+      <p class="text-xs text-gray-500 mb-5">Get structured intelligence with financials, sourcing, products & risk signals</p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <button onclick="sq('Tell me about Walmart')" class="chip">Walmart</button>
+        <button onclick="sq('Tell me about SHEIN')" class="chip">SHEIN</button>
+        <button onclick="sq('Compare AKA Brands vs REVOLVE')" class="chip">AKA vs REVOLVE</button>
+        <button onclick="sq('US tariff on apparel from China 2025')" class="chip">US Tariff</button>
+        <button onclick="sq('Vietnam fast fashion sourcing trend 2026')" class="chip">Vietnam Trend</button>
+      </div>
     </div>
-    <p class="text-center text-[10px] text-gray-400 mt-2">Air8 Intelligence · AI may make mistakes — verify key data</p>
   </div>
 
-<style>
-  .chip { padding:6px 14px; background:#f1f5f9; color:#475569; font-size:12px; border-radius:999px; border:1px solid #e2e8f0; transition:all .15s; cursor:pointer; }
-  .chip:hover { background:#fff7ed; color:#ea580c; border-color:#fed7aa; }
-</style>
+</div>
+
+<!-- INPUT -->
+<div class="bg-white border-t border-gray-200 px-4 pt-3.5 pb-4 flex-shrink-0">
+  <div class="flex items-end gap-2" style="max-width:860px;margin:0 auto">
+    <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 transition-all focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-200">
+      <textarea id="inp" rows="1" placeholder="Ask about any buyer, tariff, product or market trend..."
+        class="w-full bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none leading-relaxed"
+        style="max-height:80px" oninput="ar(this)" onkeydown="hk(event)"></textarea>
+    </div>
+    <button onclick="send()" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white transition-colors shadow-sm" style="background:#1d4ed8" onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1d4ed8'">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+      </svg>
+    </button>
+  </div>
+  <p class="text-center text-[10px] text-gray-400 mt-2">Air8 Intelligence · Verify key data before decisions</p>
+</div>
 
 <script>
-const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
-let history = [];
-let chartInstances = {};
+const W = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
+let hist = [], charts = {};
 
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
-}
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-function sendQuick(text) {
-  document.getElementById('userInput').value = text;
-  sendMessage();
-}
+function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
+function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
+function sq(t) { document.getElementById('inp').value=t; send(); }
 
 // ── SEND ─────────────────────────────────────────────────────────────────────
-async function sendMessage() {
-  const input = document.getElementById('userInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = ''; input.style.height = 'auto';
+async function send() {
+  const inp=document.getElementById('inp'), msg=inp.value.trim();
+  if(!msg) return;
+  inp.value=''; inp.style.height='auto';
 
-  appendUser(msg);
-  history.push({ role: 'user', content: msg });
-  const typingId = appendTyping();
+  addUser(msg);
+  hist.push({role:'user',content:msg});
+
+  // Detect intent for chain-of-thought
+  const intentSteps = guessSteps(msg);
+  const thinkId = addThinking(intentSteps);
 
   try {
-    const res = await fetch(WORKER, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: msg, context: history.slice(-10) })
+    const res = await fetch(W, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({message:msg, context:hist.slice(-10)})
     });
     const data = await res.json();
-    removeEl(typingId);
+    removeEl(thinkId);
 
-    const reply = data.reply || '';
-    let parsed = null;
-    try {
-      // Strip markdown code fences if present
-      const clean = reply.replace(/^```(?:json)?\s*/,'').replace(/\s*```\s*$/,'').trim();
-      parsed = JSON.parse(clean);
-    } catch {}
+    const raw = data.reply || '';
+    const parsed = extractJSON(raw);
 
-    if (parsed && parsed.type === 'tabbed' && Array.isArray(parsed.tabs)) {
-      appendTabbedCard(parsed);
+    if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
+      addTabCard(parsed);
     } else {
-      appendTextBubble(reply || '⚠️ ' + (data.error || 'No response.'));
+      addText(raw || '⚠️ '+(data.error||'No response.'));
     }
-    history.push({ role: 'assistant', content: reply });
-  } catch (err) {
-    removeEl(typingId);
-    appendTextBubble('⚠️ Connection error — please try again.');
+    hist.push({role:'assistant', content:raw});
+  } catch(err) {
+    removeEl(thinkId);
+    addText('⚠️ Connection error — please try again.');
   }
 }
 
-// ── USER BUBBLE ───────────────────────────────────────────────────────────────
-function appendUser(text) {
-  const area = document.getElementById('chatArea');
-  const el = document.createElement('div');
-  el.className = 'flex justify-end fade-in';
-  el.innerHTML = `<div class="max-w-[70%] bg-orange-500 text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 leading-relaxed shadow-sm">${esc(text)}</div>`;
-  area.appendChild(el);
-  scrollDown();
+// ── EXTRACT JSON (robust) ────────────────────────────────────────────────────
+function extractJSON(text) {
+  if(!text) return null;
+  // 1. direct parse
+  try { return JSON.parse(text.trim()); } catch{}
+  // 2. strip code fences (any variant)
+  const stripped = text.replace(/^[\s\S]*?```(?:json)?\s*/,'').replace(/```[\s\S]*$/,'').trim();
+  try { return JSON.parse(stripped); } catch{}
+  // 3. find first { ... } block
+  const m = text.match(/\{[\s\S]*\}/);
+  if(m) { try { return JSON.parse(m[0]); } catch{} }
+  return null;
 }
 
-// ── TYPING ────────────────────────────────────────────────────────────────────
-function appendTyping() {
-  const area = document.getElementById('chatArea');
-  const id = 'typ-' + Date.now();
-  const el = document.createElement('div');
-  el.id = id;
-  el.className = 'flex justify-start gap-2.5 fade-in';
-  el.innerHTML = `
-    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-      <span class="text-orange-600 font-bold text-xs">A8</span>
+// ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
+function guessSteps(msg) {
+  const m = msg.toLowerCase();
+  const steps = [];
+  if(/compare|vs /i.test(msg)) {
+    steps.push('🔍 Identifying buyers for comparison');
+    steps.push('📊 Pulling financial profiles');
+    steps.push('🌍 Cross-referencing sourcing data');
+    steps.push('🥊 Composing side-by-side analysis');
+  } else if(/tariff|duty|hts/i.test(m)) {
+    steps.push('📋 Querying tariff schedule');
+    steps.push('🔍 Checking HTS classifications');
+    steps.push('📊 Calculating rate differentials');
+  } else if(/trend|market|industry/i.test(m)) {
+    steps.push('🌐 Scanning market signals');
+    steps.push('📈 Analysing sourcing shift data');
+    steps.push('💡 Identifying key implications');
+  } else {
+    // Extract buyer name
+    const b = msg.replace(/tell me (about|more about|sth about)|查|了解|分析/gi,'').trim();
+    steps.push(`🔍 Fetching profile: ${b.slice(0,30)}`);
+    steps.push('📊 Pulling financial & sourcing data');
+    steps.push('⚠️ Assessing supplier risk signals');
+    steps.push('📋 Composing intelligence report');
+  }
+  return steps;
+}
+
+// ── THINKING INDICATOR WITH STEPS ────────────────────────────────────────────
+function addThinking(steps) {
+  const chat=document.getElementById('chat');
+  const id='think-'+Date.now();
+  const el=document.createElement('div');
+  el.id=id; el.className='flex justify-start gap-2.5 fade-in';
+
+  const stepsHtml=steps.map((s,i)=>
+    `<div id="${id}-step-${i}" class="flex items-center gap-2 py-1 opacity-0">
+      <div class="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style="background:#eff6ff">
+        <div class="w-1.5 h-1.5 rounded-full" style="background:#1d4ed8"></div>
+      </div>
+      <span class="text-xs text-gray-500">${esc(s)}</span>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
     </div>
-    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm flex items-center gap-1">
-      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm min-w-[220px]">
+      <div class="space-y-0.5" id="${id}-steps">${stepsHtml}</div>
+      <div class="flex gap-1 mt-3">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
     </div>`;
-  area.appendChild(el);
+  chat.appendChild(el);
   scrollDown();
+
+  // Animate steps in sequence
+  steps.forEach((_,i) => {
+    setTimeout(()=>{
+      const s=document.getElementById(`${id}-step-${i}`);
+      if(s){s.classList.add('step-in');s.style.opacity='1';}
+    }, i*400);
+  });
+
   return id;
 }
 
-// ── PLAIN TEXT BUBBLE ─────────────────────────────────────────────────────────
-function appendTextBubble(md) {
-  const area = document.getElementById('chatArea');
-  const el = document.createElement('div');
-  el.className = 'flex justify-start gap-2.5 fade-in';
-  el.innerHTML = `
-    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-      <span class="text-orange-600 font-bold text-xs">A8</span>
+// ── USER BUBBLE ───────────────────────────────────────────────────────────────
+function addUser(text) {
+  const chat=document.getElementById('chat');
+  const el=document.createElement('div');
+  el.className='flex justify-end fade-in';
+  el.innerHTML=`<div class="max-w-[72%] text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 leading-relaxed shadow-sm" style="background:#1d4ed8">${esc(text)}</div>`;
+  chat.appendChild(el);
+  scrollDown();
+}
+
+// ── PLAIN TEXT RESPONSE ───────────────────────────────────────────────────────
+function addText(md) {
+  const chat=document.getElementById('chat');
+  const el=document.createElement('div');
+  el.className='flex justify-start gap-2.5 fade-in';
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
     </div>
-    <div class="flex-1 max-w-[85%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm text-sm text-gray-700 leading-relaxed prose-sm">
+    <div class="flex-1 max-w-[85%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm text-sm text-gray-700 leading-relaxed">
       ${renderMd(md)}
     </div>`;
-  area.appendChild(el);
+  chat.appendChild(el);
   scrollDown();
 }
 
 // ── TABBED CARD ───────────────────────────────────────────────────────────────
-function appendTabbedCard(data) {
-  const area = document.getElementById('chatArea');
-  const cardId = 'card-' + Date.now();
-  const el = document.createElement('div');
-  el.className = 'flex justify-start gap-2.5 fade-in';
+function addTabCard(data) {
+  const chat=document.getElementById('chat');
+  const cid='c'+Date.now();
+  const el=document.createElement('div');
+  el.className='flex justify-start gap-2.5 fade-in';
 
-  // Build tab buttons
-  const tabBtns = data.tabs.map((t, i) => `
-    <button onclick="switchTab('${cardId}','${t.id}')"
-      id="${cardId}-btn-${t.id}"
-      class="tab-btn flex items-center gap-1 px-4 py-2.5 text-xs whitespace-nowrap transition-colors ${i===0?'tab-active':'tab-inactive'}">
-      <span>${t.icon}</span> ${esc(t.label)}
+  const tabBtns=data.tabs.map((t,i)=>`
+    <button onclick="swTab('${cid}','${t.id}')" id="${cid}-b-${t.id}"
+      class="tab-btn flex items-center gap-1.5 px-4 py-3 text-xs whitespace-nowrap transition-all ${i===0?'tab-active':'tab-inactive'}">
+      <span>${t.icon||''}</span>${esc(t.label)}
     </button>`).join('');
 
-  // Build tab panels
-  const tabPanels = data.tabs.map((t, i) => `
-    <div id="${cardId}-panel-${t.id}" class="${i===0?'':'hidden'}">
-      ${buildTabPanel(t, cardId)}
+  const panels=data.tabs.map((t,i)=>`
+    <div id="${cid}-p-${t.id}" class="${i===0?'':'hidden'}">
+      ${buildPanel(t,cid)}
     </div>`).join('');
 
-  el.innerHTML = `
-    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-      <span class="text-orange-600 font-bold text-xs">A8</span>
+  const followupHtml = data.followups && data.followups.length ? `
+    <div class="px-5 pb-4 pt-3 border-t border-gray-100">
+      <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Suggested questions</div>
+      <div class="flex flex-wrap gap-2">
+        ${data.followups.map(q=>`<button onclick="sq(${JSON.stringify(q)})"
+          class="text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 transition-all"
+          onmouseover="this.style.background='#eff6ff';this.style.color='#1d4ed8';this.style.borderColor='#bfdbfe'"
+          onmouseout="this.style.background='#f8fafc';this.style.color='#4b5563';this.style.borderColor='#e2e8f0'"
+          >${esc(q)}</button>`).join('')}
+      </div>
+    </div>` : '';
+
+  el.innerHTML=`
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
     </div>
-    <div class="flex-1 min-w-0 max-w-[90%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
-      <!-- CARD HEADER -->
-      <div class="px-5 pt-4 pb-3 border-b border-gray-100">
-        <div class="flex items-start justify-between gap-3">
+    <div class="flex-1 min-w-0 max-w-[92%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
+      <!-- Card header -->
+      <div class="px-5 pt-4 pb-3 border-b border-gray-100" style="background:linear-gradient(to right,#f8faff,#fff)">
+        <div class="flex items-center justify-between">
           <div>
-            <div class="text-base font-bold text-gray-900">${esc(data.buyer || '')}</div>
-            ${data.summary ? `<p class="text-xs text-gray-500 mt-0.5 leading-relaxed">${esc(data.summary)}</p>` : ''}
+            <div class="text-base font-black text-gray-900">${esc(data.buyer||'')}</div>
+            ${data.summary?`<p class="text-xs text-gray-500 mt-0.5">${esc(data.summary)}</p>`:''}
           </div>
-          <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center flex-shrink-0">
-            <span class="text-lg">${data.tabs && data.tabs[0] ? data.tabs[0].icon : '🏢'}</span>
-          </div>
+          <div class="text-2xl">${data.tabs&&data.tabs[0]?data.tabs[0].icon:''}</div>
         </div>
       </div>
-      <!-- TAB BAR -->
-      <div class="flex gap-0 border-b border-gray-200 overflow-x-auto px-2 scrollbar-hide">
+      <!-- Tab bar -->
+      <div class="flex gap-0 border-b border-gray-100 overflow-x-auto px-2" style="scrollbar-width:none">
         ${tabBtns}
-      <!-- PANELS -->
-      <div class="p-5">
-        ${tabPanels}
       </div>
-      ${data.followups && data.followups.length ? `
-      <!-- SUGGESTED QUESTIONS -->
-      <div class="px-5 pb-4 border-t border-gray-100 pt-3">
-        <div class="text-[10px] text-gray-400 font-medium mb-2 uppercase tracking-wider">Suggested questions</div>
-        <div class="flex flex-wrap gap-2">
-          ${data.followups.map(q => `<button onclick="sendQuick('${q.replace(/'/g,"\\'")}')"
-            class="text-left px-3 py-1.5 bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-300 text-gray-600 hover:text-orange-700 text-xs rounded-xl transition-all">
-            ${esc(q)}
-          </button>`).join('')}
-        </div>
-      </div>` : ''}
+      <!-- Panels -->
+      <div class="p-5">${panels}</div>
+      <!-- Suggested questions -->
+      ${followupHtml}
     </div>`;
 
-  area.appendChild(el);
-
-  // Render charts after DOM insertion
-  data.tabs.forEach(t => {
-    if (t.chart) renderChart(t.chart, `${cardId}-chart-${t.id}`);
-    if (t.chart && t.chart.type === 'grouped_bar') renderGroupedChart(t.chart, `${cardId}-chart-${t.id}`);
-  });
-
+  chat.appendChild(el);
+  // Render charts after DOM insert
+  data.tabs.forEach(t => { if(t.chart) renderChart(t,cid); });
   scrollDown();
 }
 
-// Country flag map
-const FLAGS = {
-  china:'🇨🇳', vietnam:'🇻🇳', bangladesh:'🇧🇩', india:'🇮🇳', cambodia:'🇰🇭',
-  indonesia:'🇮🇩', turkey:'🇹🇷', morocco:'🇲🇦', 'sri lanka':'🇱🇰', pakistan:'🇵🇰',
-  mexico:'🇲🇽', us:'🇺🇸', usa:'🇺🇸', uk:'🇬🇧', germany:'🇩🇪', france:'🇫🇷',
-  other:'🌐'
-};
-function countryFlag(name) {
-  const key = (name||'').toLowerCase().replace(/[^a-z ]/g,'');
-  return FLAGS[key] || '';
-}
+// ── PANEL BUILDER ─────────────────────────────────────────────────────────────
+const FLAGS={'china':'🇨🇳','vietnam':'🇻🇳','bangladesh':'🇧🇩','india':'🇮🇳','cambodia':'🇰🇭','indonesia':'🇮🇩','turkey':'🇹🇷','pakistan':'🇵🇰','morocco':'🇲🇦','sri lanka':'🇱🇰','other':'🌐','mexico':'🇲🇽','us':'🇺🇸','usa':'🇺🇸'};
+function flag(n){return FLAGS[(n||'').toLowerCase().replace(/[^a-z ]/g,'')]||'';}
 
-function buildTabPanel(tab, cardId) {
-  let html = '';
+function buildPanel(tab, cid) {
+  let h='';
 
   // Insight box
-  if (tab.insight) {
-    html += `<div class="flex gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl mb-4">
-      <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-        <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <p class="text-xs text-blue-900 leading-relaxed font-medium">${esc(tab.insight)}</p>
+  if(tab.insight) h+=`
+    <div class="flex gap-3 p-4 rounded-2xl mb-4 border" style="background:#eff6ff;border-color:#bfdbfe">
+      <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#1d4ed8" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+      </svg>
+      <p class="text-xs leading-relaxed font-medium" style="color:#1e3a8a">${esc(tab.insight)}</p>
     </div>`;
-  }
 
-  // Stats pills — bigger, bolder
-  if (tab.stats && tab.stats.length) {
-    html += `<div class="grid grid-cols-2 gap-3 mb-4">`;
-    tab.stats.forEach(s => {
-      html += `<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+  // Stats
+  if(tab.stats&&tab.stats.length) {
+    h+=`<div class="grid grid-cols-2 gap-3 mb-4">`;
+    tab.stats.forEach(s=>{
+      h+=`<div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm">
         <div class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mb-1">${esc(s.label)}</div>
-        <div class="text-xl font-black text-gray-900 leading-tight">${esc(s.value)}</div>
-        ${s.delta ? `<div class="text-xs text-emerald-600 font-semibold mt-1">${esc(s.delta)}</div>` : ''}
+        <div class="text-xl font-black text-gray-900">${esc(s.value)}</div>
+        ${s.delta?`<div class="text-xs font-semibold mt-1" style="color:#16a34a">${esc(s.delta)}</div>`:''}
       </div>`;
     });
-    html += `</div>`;
+    h+=`</div>`;
   }
 
   // Free text
-  if (tab.text) {
-    html += `<p class="text-sm text-gray-600 leading-relaxed mb-4">${esc(tab.text)}</p>`;
-  }
+  if(tab.text) h+=`<p class="text-sm text-gray-600 leading-relaxed mb-4">${esc(tab.text)}</p>`;
 
-  // Chart canvas — with section label
-  if (tab.chart && tab.chart.type !== 'grouped_bar') {
-    const h = tab.id === 'sourcing' ? 180 : 160;
-    html += `<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-      ${tab.chart.title ? `<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>` : ''}
-      <div style="height:${h}px"><canvas id="${cardId}-chart-${tab.id}"></canvas></div>
-    </div>`;
-  }
-  if (tab.chart && tab.chart.type === 'grouped_bar') {
-    html += `<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-      ${tab.chart.title ? `<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>` : ''}
-      <div style="height:190px"><canvas id="${cardId}-chart-${tab.id}"></canvas></div>
+  // Chart placeholder
+  if(tab.chart) {
+    h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+      ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>`:''}
+      <div style="height:${tab.chart.type==='grouped_bar'?190:160}px">
+        <canvas id="${cid}-chart-${tab.id}"></canvas>
+      </div>
     </div>`;
   }
 
-  // Sourcing: country list with flags
-  if (tab.id === 'sourcing' && tab.chart && tab.chart.labels) {
-    const total = tab.chart.values.reduce((a,b)=>a+b,0);
-    html += `<div class="grid grid-cols-2 gap-2 mb-4">`;
-    tab.chart.labels.forEach((label, i) => {
-      const pct = tab.chart.values[i];
-      const flag = countryFlag(label);
-      const barW = total > 0 ? Math.round((pct/total)*100) : 0;
-      html += `<div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
-        <div class="flex items-center gap-1.5 mb-1.5">
-          <span class="text-base">${flag}</span>
-          <span class="text-xs font-semibold text-gray-800">${esc(label)}</span>
-          <span class="ml-auto text-xs font-bold text-orange-600">${pct}%</span>
+  // Country tiles for sourcing
+  if(tab.id==='sourcing'&&tab.chart&&tab.chart.labels) {
+    const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
+    h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
+    tab.chart.labels.forEach((lbl,i)=>{
+      const pct=tab.chart.values[i]||0, bar=Math.round(pct/total*100);
+      h+=`<div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+        <div class="flex items-center gap-1.5 mb-2">
+          <span class="text-base">${flag(lbl)}</span>
+          <span class="text-xs font-semibold text-gray-800">${esc(lbl)}</span>
+          <span class="ml-auto text-xs font-black" style="color:#1d4ed8">${pct}%</span>
         </div>
         <div class="w-full bg-gray-100 rounded-full h-1.5">
-          <div class="bg-orange-400 h-1.5 rounded-full" style="width:${barW}%"></div>
+          <div class="h-1.5 rounded-full" style="width:${bar}%;background:#1d4ed8"></div>
         </div>
       </div>`;
     });
-    html += `</div>`;
+    h+=`</div>`;
   }
 
   // Table
-  if (tab.table) {
-    html += buildTable(tab.table);
-  }
+  if(tab.table) h+=buildTable(tab.table);
 
-  // Risk badges — richer
-  if (tab.risks && tab.risks.length) {
-    html += `<div class="grid grid-cols-2 gap-3 mb-4">`;
-    tab.risks.forEach(r => {
-      const dot = r.level === 'Low' ? 'bg-emerald-400' : r.level === 'High' ? 'bg-red-400' : 'bg-amber-400';
-      const cls = r.level === 'Low' ? 'risk-low' : r.level === 'High' ? 'risk-high' : 'risk-medium';
-      html += `<div class="p-3 rounded-2xl border ${cls}">
+  // Risk grid
+  if(tab.risks&&tab.risks.length) {
+    h+=`<div class="grid grid-cols-2 gap-3 mb-4">`;
+    tab.risks.forEach(r=>{
+      const lv=r.level||'';
+      const cls=lv==='Low'?'risk-low':lv==='High'?'risk-high':'risk-med';
+      const dot=lv==='Low'?'#16a34a':lv==='High'?'#be123c':'#b45309';
+      h+=`<div class="p-3 rounded-2xl border ${cls}">
         <div class="flex items-center gap-1.5 mb-1.5">
-          <div class="w-2 h-2 rounded-full ${dot}"></div>
+          <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${dot}"></div>
           <span class="text-[11px] font-bold">${esc(r.label)}</span>
-          <span class="ml-auto text-[10px] font-black uppercase">${esc(r.level)}</span>
+          <span class="ml-auto text-[10px] font-black uppercase">${esc(lv)}</span>
         </div>
-        <div class="text-[11px] leading-relaxed opacity-90">${esc(r.note || '')}</div>
+        <div class="text-[11px] leading-relaxed opacity-80">${esc(r.note||'')}</div>
       </div>`;
     });
-    html += `</div>`;
+    h+=`</div>`;
   }
 
-  // Signals — richer
-  if (tab.signals && tab.signals.length) {
-    html += `<div class="space-y-3">`;
-    tab.signals.forEach(s => {
-      const typeMap = {
-        COMPANY:    { bg:'bg-blue-50', border:'border-blue-100', tag:'bg-blue-100 text-blue-700', icon:'🏢' },
-        REGULATORY: { bg:'bg-purple-50', border:'border-purple-100', tag:'bg-purple-100 text-purple-700', icon:'⚖️' },
-        MARKET:     { bg:'bg-amber-50', border:'border-amber-100', tag:'bg-amber-100 text-amber-700', icon:'📈' },
-      };
-      const t = typeMap[s.type] || typeMap.MARKET;
-      html += `<div class="${t.bg} border ${t.border} rounded-2xl p-4">
+  // Signals
+  if(tab.signals&&tab.signals.length) {
+    h+=`<div class="space-y-3">`;
+    const tmap={COMPANY:{bg:'#eff6ff',border:'#bfdbfe',tag:'#1d4ed8',ico:'🏢'},REGULATORY:{bg:'#faf5ff',border:'#e9d5ff',tag:'#7e22ce',ico:'⚖️'},MARKET:{bg:'#fffbeb',border:'#fde68a',tag:'#b45309',ico:'📈'}};
+    tab.signals.forEach(s=>{
+      const t=tmap[s.type]||tmap.MARKET;
+      h+=`<div class="rounded-2xl border p-4" style="background:${t.bg};border-color:${t.border}">
         <div class="flex items-center gap-2 mb-2">
-          <span class="text-sm">${t.icon}</span>
-          <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold ${t.tag}">${esc(s.type)}</span>
-          <span class="text-[10px] text-gray-400 ml-auto">${esc(s.date || '')}</span>
+          <span>${t.ico}</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold text-white" style="background:${t.tag}">${esc(s.type)}</span>
+          <span class="ml-auto text-[10px] text-gray-400">${esc(s.date||'')}</span>
         </div>
-        <div class="text-xs font-semibold text-gray-900 mb-1.5">${esc(s.title)}</div>
-        <div class="text-[11px] text-gray-600 leading-relaxed border-t border-white/60 pt-1.5">${esc(s.impact || '')}</div>
+        <div class="text-xs font-semibold text-gray-900 mb-1.5">${esc(s.title||'')}</div>
+        <div class="text-[11px] text-gray-600 leading-relaxed pt-1.5 border-t" style="border-color:${t.border}">${esc(s.impact||'')}</div>
       </div>`;
     });
-    html += `</div>`;
+    h+=`</div>`;
   }
 
-  return html;
+  return h;
 }
 
+// ── TABLE ────────────────────────────────────────────────────────────────────
 function buildTable(t) {
-  if (!t || !t.headers) return '';
-  const heads = t.headers.map((h,i) => `<th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider ${i===0?'bg-slate-50':'bg-slate-50'} border-b border-gray-200">${esc(h)}</th>`).join('');
-  const rows = (t.rows || []).map((r, ri) =>
-    `<tr class="${ri%2===0?'bg-white':'bg-slate-50/40'} hover:bg-orange-50/40 transition-colors">${
-      r.map((c,ci) => {
-        const isUp = String(c).startsWith('↑');
-        const isDown = String(c).startsWith('↓');
-        const cls = isUp ? 'text-emerald-600 font-semibold' : isDown ? 'text-red-500 font-semibold' : ci===0 ? 'font-medium text-gray-800' : 'text-gray-600';
+  if(!t||!t.headers) return '';
+  const heads=t.headers.map(h=>`<th class="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-slate-50 border-b border-gray-200">${esc(h)}</th>`).join('');
+  const rows=(t.rows||[]).map((r,ri)=>
+    `<tr class="${ri%2===0?'bg-white':'bg-slate-50/60'} hover:bg-blue-50/30 transition-colors">
+      ${r.map((c,ci)=>{
+        const up=String(c).startsWith('↑'), dn=String(c).startsWith('↓');
+        const cls=up?'font-semibold" style="color:#16a34a':dn?'font-semibold" style="color:#be123c':ci===0?'font-medium text-gray-800':'text-gray-600';
         return `<td class="px-4 py-2.5 text-xs ${cls} border-b border-gray-100">${esc(c)}</td>`;
-      }).join('')
-    }</tr>`).join('');
-  return `<div class="overflow-hidden rounded-2xl border border-gray-200 mt-3 shadow-sm">
+      }).join('')}
+    </tr>`).join('');
+  return `<div class="overflow-hidden rounded-2xl border border-gray-200 shadow-sm mt-3">
     <table class="w-full"><thead><tr>${heads}</tr></thead><tbody>${rows}</tbody></table>
   </div>`;
 }
 
-// ── CHART RENDERING ───────────────────────────────────────────────────────────
-function renderChart(chart, canvasId) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function renderChart(tab, cid) {
+  const canvas=document.getElementById(`${cid}-chart-${tab.id}`);
+  if(!canvas||!tab.chart) return;
+  const key=`${cid}-${tab.id}`;
+  if(charts[key]) charts[key].destroy();
 
-  if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); }
+  const blue='#1d4ed8', palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
 
-  const colors = ['#f97316','#3b82f6','#10b981','#8b5cf6','#f59e0b','#ef4444'];
-  const bgColors = chart.labels.map((_, i) => colors[i % colors.length]);
-
-  chartInstances[canvasId] = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: chart.labels,
-      datasets: [{
-        label: chart.title || '',
-        data: chart.values,
-        backgroundColor: bgColors.map(c => c + 'cc'),
-        borderColor: bgColors,
-        borderWidth: 1.5,
-        borderRadius: 4,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, color: '#94a3b8' } },
-        x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#64748b' } }
-      }
-    }
-  });
+  if(tab.chart.type==='grouped_bar'&&tab.chart.datasets) {
+    charts[key]=new Chart(canvas,{
+      type:'bar',
+      data:{
+        labels:tab.chart.labels,
+        datasets:tab.chart.datasets.map((ds,i)=>({
+          label:ds.label, data:ds.values,
+          backgroundColor:palette[i]+'cc', borderColor:palette[i], borderWidth:1.5, borderRadius:4
+        }))
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
+        scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+    });
+  } else if(tab.chart.values) {
+    const isSource=tab.id==='sourcing';
+    charts[key]=new Chart(canvas,{
+      type:'bar',
+      data:{
+        labels:tab.chart.labels,
+        datasets:[{
+          label:tab.chart.title||'',
+          data:tab.chart.values,
+          backgroundColor:isSource?palette:palette[0]+'cc',
+          borderColor:isSource?palette:palette[0],
+          borderWidth:1.5, borderRadius:5
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+    });
+  }
 }
 
-function renderGroupedChart(chart, canvasId) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas || !chart.datasets) return;
-  if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
-
-  const palette = ['#f97316','#3b82f6','#10b981','#8b5cf6'];
-  chartInstances[canvasId] = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: chart.labels,
-      datasets: chart.datasets.map((ds, i) => ({
-        label: ds.label,
-        data: ds.values,
-        backgroundColor: palette[i % palette.length] + 'cc',
-        borderColor: palette[i % palette.length],
-        borderWidth: 1.5,
-        borderRadius: 4,
-      }))
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { font: { size: 11 }, color: '#475569', boxWidth: 12 } } },
-      scales: {
-        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, color: '#94a3b8' } },
-        x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#64748b' } }
-      }
-    }
-  });
+// ── TAB SWITCH ────────────────────────────────────────────────────────────────
+function swTab(cid,tabId) {
+  document.querySelectorAll(`[id^="${cid}-p-"]`).forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll(`[id^="${cid}-b-"]`).forEach(b=>{b.classList.remove('tab-active');b.classList.add('tab-inactive');});
+  document.getElementById(`${cid}-p-${tabId}`)?.classList.remove('hidden');
+  const btn=document.getElementById(`${cid}-b-${tabId}`);
+  if(btn){btn.classList.add('tab-active');btn.classList.remove('tab-inactive');}
 }
 
-// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
-function switchTab(cardId, tabId) {
-  // Hide all panels in this card
-  document.querySelectorAll(`[id^="${cardId}-panel-"]`).forEach(p => p.classList.add('hidden'));
-  document.querySelectorAll(`[id^="${cardId}-btn-"]`).forEach(b => {
-    b.classList.remove('tab-active'); b.classList.add('tab-inactive');
-  });
-  document.getElementById(`${cardId}-panel-${tabId}`)?.classList.remove('hidden');
-  const btn = document.getElementById(`${cardId}-btn-${tabId}`);
-  if (btn) { btn.classList.add('tab-active'); btn.classList.remove('tab-inactive'); }
-}
-
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-function removeEl(id) { document.getElementById(id)?.remove(); }
-function scrollDown() {
-  const area = document.getElementById('chatArea');
-  requestAnimationFrame(() => area.scrollTop = area.scrollHeight);
-}
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function renderMd(md) {
-  return md
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/^### (.+)$/gm,'<h3 class="font-semibold text-gray-800 mt-3 mb-1 text-sm">$1</h3>')
-    .replace(/^## (.+)$/gm,'<h2 class="font-bold text-gray-900 mt-3 mb-1">$1</h2>')
-    .replace(/^- (.+)$/gm,'<li class="ml-4 list-disc">$1</li>')
-    .replace(/\n\n/g,'</p><p class="mt-2">')
-    .replace(/^(<li)/,'<ul>$1').replace(/(<\/li>)$/,'$1</ul>');
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function removeEl(id){document.getElementById(id)?.remove();}
+function scrollDown(){const c=document.getElementById('chat');requestAnimationFrame(()=>c.scrollTop=c.scrollHeight);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderMd(md){
+  return md.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^### (.+)$/gm,'<div class="font-semibold text-gray-800 mt-3 mb-1 text-sm">$1</div>')
+    .replace(/^## (.+)$/gm,'<div class="font-bold text-gray-900 mt-3 mb-1">$1</div>')
+    .replace(/^- (.+)$/gm,'<div class="flex gap-1.5 text-sm text-gray-600 mb-1"><span class="text-gray-400 mt-0.5">•</span><span>$1</span></div>')
+    .replace(/\n\n/g,'<br><br>');
 }
 </script>
 </body>
