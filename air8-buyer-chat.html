@@ -399,11 +399,11 @@ function parseMarkdown(md) {
         const labelMatch = item.match(/\*\*(.+?)\*\*/);
         const label = labelMatch ? labelMatch[1] : item.replace(/^[💰📦🌍⚠️📰🥊]\s*/,'').split('—')[0].trim();
         const qMap = {
-          'Financials':'Tell me more about their financials and credit profile',
-          'Products':'Tell me about their products and categories',
-          'Sourcing':'Tell me about their sourcing and supply chain strategy',
-          'Risk':'What are their compliance and risk requirements for suppliers',
-          'Signals':'What are the latest news and market signals',
+          'Financials':'Deep dive: financials, DPO, credit rating, and payment reliability',
+          'Products':'What products and categories do they source from Asia — breakdown and trends',
+          'Sourcing':'Tell me about their sourcing strategy and country diversification',
+          'Risk':'What are the compliance and risk requirements for suppliers — RSL, audits, UFLPA',
+          'Signals':'What are the latest news and signals affecting suppliers',
           'Competitors':'Compare them to their main competitors',
           'Rates & Codes':'What are the current HTS tariff rates for this product?',
           'China Exposure':'How exposed is my supply chain to Section 301 tariffs?',
@@ -719,6 +719,31 @@ function renderChart(tab, cid) {
   if(charts[key]) charts[key].destroy();
 
   const blue='#1d4ed8', palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
+
+  // Donut / pie chart
+  if(tab.chart.type==='donut' && tab.chart.values) {
+    charts[key]=new Chart(canvas,{
+      type:'doughnut',
+      data:{
+        labels:tab.chart.labels||[],
+        datasets:[{
+          data:tab.chart.values,
+          backgroundColor:['#1d4ed8','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4'],
+          borderColor:'#fff',
+          borderWidth:2
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        cutout:'60%',
+        plugins:{
+          legend:{display:true,position:'right',labels:{font:{size:11},boxWidth:12,padding:10}}
+        }
+      }
+    });
+    return;
+  }
 
   if(tab.chart.type==='grouped_bar'&&tab.chart.datasets) {
     charts[key]=new Chart(canvas,{
