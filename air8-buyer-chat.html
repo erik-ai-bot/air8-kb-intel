@@ -109,32 +109,105 @@ async function send() {
   addUser(msg);
   hist.push({role:'user',content:msg});
 
-  // Detect intent for chain-of-thought
+  // Use SSE streaming for real chain-of-thought
   const intentSteps = guessSteps(msg);
   const thinkId = addThinking(intentSteps);
 
   try {
-    const res = await fetch(W, {
+    const res = await fetch(WORKER.replace('/chat','/chat-stream'), {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({message:msg, context:hist.slice(-10)})
     });
-    const data = await res.json();
-    removeEl(thinkId);
 
-    const raw = data.reply || '';
-    const parsed = extractJSON(raw);
+    if(!res.ok || !res.body) throw new Error('Stream failed');
 
-    if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
-      addTabCard(parsed);
-    } else {
-      addText(raw || '⚠️ '+(data.error||'No response.'));
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+
+    while(true) {
+      const {done, value} = await reader.read();
+      if(done) break;
+      buf += dec.decode(value, {stream:true});
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for(const line of lines) {
+        if(!line.startsWith('data: ')) continue;
+        try {
+          const ev = JSON.parse(line.slice(6));
+          handleStreamEvent(ev, thinkId, msg);
+        } catch{}
+      }
     }
-    hist.push({role:'assistant', content:raw});
   } catch(err) {
     removeEl(thinkId);
     addText('⚠️ Connection error — please try again.');
   }
+}
+
+function handleStreamEvent(ev, thinkId, msg) {
+  if(ev.type === 'step') {
+    updateThinkingStep(thinkId, ev);
+  } else if(ev.type === 'done_prev') {
+    markPrevStepDone(thinkId);
+  } else if(ev.type === 'result') {
+    removeEl(thinkId);
+    const raw = ev.reply || '';
+    const parsed = extractJSON(raw);
+    if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
+      addTabCard(parsed);
+    } else {
+      addText(raw || '⚠️ No response.');
+    }
+    hist.push({role:'assistant', content:raw});
+  } else if(ev.type === 'error') {
+    removeEl(thinkId);
+    addText('⚠️ ' + (ev.message||'Error'));
+  }
+}
+
+// ── STREAM STEP HELPERS ──────────────────────────────────────────────────────
+function updateThinkingStep(thinkId, ev) {
+  // The addThinking function already handles this via intervals
+  // For SSE, we add steps directly
+  const box = document.getElementById(thinkId+'-steps');
+  if(!box) return;
+  const row = document.createElement('div');
+  row.className = 'flex items-start gap-2.5 step-row';
+  row.innerHTML = `
+    <div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px">
+      <div class="spinner" style="width:12px;height:12px"></div>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(ev.text||'')}</div>
+      ${ev.src ? `<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(ev.src)}</div>` : ''}
+    </div>`;
+  // Mark previous as done first
+  const rows = box.querySelectorAll('.step-row');
+  rows.forEach(r => {
+    const icon = r.querySelector('.step-icon');
+    if(icon && icon.querySelector('.spinner')) {
+      icon.innerHTML = `<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+      const txt = r.querySelector('.step-text');
+      if(txt) txt.style.color='#6b7280';
+    }
+  });
+  box.appendChild(row);
+  scrollDown();
+}
+
+function markPrevStepDone(thinkId) {
+  const box = document.getElementById(thinkId+'-steps');
+  if(!box) return;
+  box.querySelectorAll('.step-row').forEach(r => {
+    const icon = r.querySelector('.step-icon');
+    if(icon && icon.querySelector('.spinner')) {
+      icon.innerHTML = `<svg style="width:13px;height:13px;color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+      const txt = r.querySelector('.step-text');
+      if(txt) txt.style.color='#6b7280';
+    }
+  });
 }
 
 // ── EXTRACT JSON (robust) ────────────────────────────────────────────────────
@@ -327,6 +400,11 @@ function addTabCard(data) {
       <div class="p-5">${panels}</div>
       <!-- Suggested questions -->
       ${followupHtml}
+      ${data.sources ? `<div class="px-5 pb-3 pt-0">
+        <div class="text-[10px] text-gray-400 leading-relaxed">
+          <span class="font-semibold">Sources:</span> ${esc(data.sources)}
+        </div>
+      </div>` : ''}
     </div>`;
 
   chat.appendChild(el);
@@ -436,6 +514,34 @@ function buildPanel(tab, cid) {
       </div>`;
     });
     h+=`</div>`;
+  }
+
+
+  // Key Takeaways bullets
+  if(tab.bullets && tab.bullets.length) {
+    h+=`<div class="space-y-2.5 mb-4">`;
+    tab.bullets.forEach(b=>{
+      h+=`<div class="flex gap-3 p-3 rounded-xl" style="background:#f8faff;border:1px solid #e0e7ff">
+        <div class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center" style="background:#1d4ed8">
+          <svg style="width:8px;height:8px;color:white" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>
+        </div>
+        <p class="text-xs text-gray-700 leading-relaxed">${esc(b)}</p>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  // Coverage gaps
+  if(tab.coverage_gaps) {
+    h+=`<div class="flex gap-2.5 p-3 rounded-xl border" style="background:#fffbeb;border-color:#fde68a">
+      <svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:#b45309" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <div class="text-[10px] font-bold text-amber-700 mb-0.5 uppercase tracking-wide">Data coverage note</div>
+        <p class="text-[11px] text-amber-800 leading-relaxed">${esc(tab.coverage_gaps)}</p>
+      </div>
+    </div>`;
   }
 
   return h;
