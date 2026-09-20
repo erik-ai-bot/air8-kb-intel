@@ -115,25 +115,48 @@ async function send() {
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({message:msg, context:hist.slice(-8)})
     });
-    const data = await res.json();
-    removeEl(thinkId);
-    // Handle new worker ({tabs} or {text}) and old worker ({reply})
-    if(data.tabs && Array.isArray(data.tabs)) {
-      addTabCard(data);
-      hist.push({role:'assistant', content: data.summary || ''});
-    } else {
-      const reply = data.text || data.reply || '';
-      if(data.error || !reply) {
-        addText('⚠️ '+(data.error||'No response. Please try again.'));
-      } else {
-        const parsed = extractJSON(reply);
-        if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
-          addTabCard(parsed);
-        } else {
-          addMarkdown(reply);
+    // SSE streaming: accumulate deltas, render on done
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    const processSSE = async () => {
+      while(true) {
+        const {done, value} = await reader.read();
+        if(done) break;
+        const chunk = decoder.decode(value, {stream:true});
+        for(const line of chunk.split('\n')) {
+          if(!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if(!data) continue;
+          try {
+            const ev = JSON.parse(data);
+            if(ev.done) {
+              fullText = ev.text || fullText;
+            } else if(ev.delta) {
+              fullText += ev.delta;
+            } else if(ev.error) {
+              throw new Error(ev.error);
+            }
+          } catch(e) { if(e.message !== 'JSON') throw e; }
         }
-        hist.push({role:'assistant', content:reply});
       }
+    };
+
+    await processSSE();
+    removeEl(thinkId);
+
+    if(!fullText) {
+      addText('⚠️ No response. Please try again.');
+    } else {
+      // Try as tabbed JSON first (for comparison responses that still return JSON)
+      const parsed = extractJSON(fullText);
+      if(parsed && parsed.type==='tabbed' && Array.isArray(parsed.tabs)) {
+        addTabCard(parsed);
+      } else {
+        addMarkdown(fullText);
+      }
+      hist.push({role:'assistant', content:fullText.slice(0,400)});
     }
   } catch(err) {
     removeEl(thinkId);
