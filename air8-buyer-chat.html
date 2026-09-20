@@ -95,6 +95,10 @@ let hist = [], charts = {};
 function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
 function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
 function sq(t) { document.getElementById('inp').value=t; send(); }
+function fqClick(cid, idx) {
+  const q = window._fq && window._fq[cid] && window._fq[cid][idx];
+  if(q) sq(q);
+}
 
 // ── SEND ─────────────────────────────────────────────────────────────────────
 async function send() {
@@ -285,14 +289,17 @@ function addTabCard(data) {
       ${buildPanel(t,cid)}
     </div>`).join('');
 
+  // Store followups in global map to avoid onclick escaping issues
+  if(!window._fq) window._fq = {};
+  const fqKey = cid;
+  window._fq[fqKey] = data.followups || [];
+
   const followupHtml = data.followups && data.followups.length ? `
     <div class="px-5 pb-4 pt-3 border-t border-gray-100">
       <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Suggested questions</div>
       <div class="flex flex-wrap gap-2">
-        ${data.followups.map(q=>`<button onclick="sq(${JSON.stringify(q)})"
-          class="text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 transition-all"
-          onmouseover="this.style.background='#eff6ff';this.style.color='#1d4ed8';this.style.borderColor='#bfdbfe'"
-          onmouseout="this.style.background='#f8fafc';this.style.color='#4b5563';this.style.borderColor='#e2e8f0'"
+        ${data.followups.map((q,qi)=>`<button onclick="fqClick('${cid}',${qi})"
+          class="text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 transition-all hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200"
           >${esc(q)}</button>`).join('')}
       </div>
     </div>` : '';
