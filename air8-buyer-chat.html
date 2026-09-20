@@ -391,7 +391,7 @@ function parseMarkdown(md) {
   const flushList = () => {
     if(!listItems.length) return;
     // Check if these are "Explore further" items
-    const isExplore = listItems.some(l => /💰|📦|🌍|⚠️|📰|🥊/.test(l));
+    const isExplore = listItems.some(l => /💰|📦|🌍|⚠️|📰|🥊|📈|📊|🏭|🔮|📋|⏱️|💡|🗓️/.test(l));
     if(isExplore) {
       const chips = listItems.map(item => {
         const iconMatch = item.match(/^(💰|📦|🌍|⚠️|📰|🥊)/);
@@ -400,17 +400,32 @@ function parseMarkdown(md) {
         const label = labelMatch ? labelMatch[1] : item.replace(/^[💰📦🌍⚠️📰🥊]\s*/,'').split('—')[0].trim();
         const qMap = {
           'Financials':'Tell me more about their financials and credit profile',
-          '财务':'能否深入介绍他们的财务情况',
           'Products':'Tell me about their products and categories',
-          '产品':'能否深入介绍他们的产品品类',
-          'Sourcing':'Tell me about their sourcing and supply chain',
-          '采购':'能否深入介绍他们的采购来源',
+          'Sourcing':'Tell me about their sourcing and supply chain strategy',
           'Risk':'What are their compliance and risk requirements for suppliers',
-          '风险':'能否详细介绍他们对供应商的合规要求',
-          'Signals':'What are the latest news and signals',
-          '信号':'最近有什么动态',
+          'Signals':'What are the latest news and market signals',
           'Competitors':'Compare them to their main competitors',
-          '竞争':'和主要竞争对手相比如何',
+          'Rates & Codes':'What are the current HTS tariff rates for this product?',
+          'China Exposure':'How exposed is my supply chain to Section 301 tariffs?',
+          'Product Impact':'Which product categories face the highest tariff burden?',
+          'Mitigation':'What FTA or country-switching options reduce tariff costs?',
+          'Cost Calc':'What is the landed cost difference for China vs Vietnam?',
+          'Timeline':'What upcoming tariff changes should I plan for?',
+          'Trends':'What are the key market trends affecting this sector?',
+          'Regional':'How do regional dynamics impact sourcing strategy?',
+          'Trade Data':'What trade volume shifts signal buyer behavior changes?',
+          'Sourcing Shifts':'Where are major buyers shifting their sourcing?',
+          'Outlook':'What is the 12-month outlook for this market?',
+          'Documentation':'What documents are required for this import?',
+          'Compliance':'What UFLPA or C-TPAT requirements apply?',
+          'Timeline & Cost':'How long does customs clearance take and what does it cost?',
+          'Recommendations':'What are the top steps to improve trade compliance?',
+          'Country Comparison':'Which country offers the best cost-quality-risk balance?',
+          'Sourcing Hubs':'What factory hubs should I consider?',
+          'MOQ & Terms':'What are typical MOQs and payment terms?',
+          'Risk Factors':'What are the top sourcing risks in this region?',
+          'Diversification':'How do I reduce China concentration safely?',
+          'Financing Angle':'How does Air8 financing help with this sourcing shift?',
         };
         const q = qMap[label.split(' &')[0].trim()] || `Tell me more about ${label.toLowerCase()}`;
         return `<button class="explore-chip text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all" data-query="${esc(q)}">${icon} ${esc(label)}</button>`;
