@@ -178,6 +178,20 @@ async function send() {
               done_received=true; break outer;
             }
             if(ev.type==='done' && ev.text) {
+              // Try to parse as tab card JSON even if it came through text field
+              if(ev.text.trim().startsWith('{')) {
+                try {
+                  const t = ev.text.match(/\{[\s\S]*\}/);
+                  if(t) {
+                    const p = JSON.parse(t[0]);
+                    if(p.tabs) {
+                      removeEl(thinkId); addTabCard(p);
+                      hist.push({role:'assistant', content: p.summary||p.buyer||'Buyer report'});
+                      done_received=true; break outer;
+                    }
+                  }
+                } catch(e2) {}
+              }
               removeEl(thinkId); addMarkdown(ev.text);
               hist.push({role:'assistant', content: ev.text}); done_received=true; break outer;
             }
