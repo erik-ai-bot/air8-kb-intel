@@ -683,47 +683,60 @@ function flag(n){return FLAGS[(n||'').toLowerCase().replace(/[^a-z ]/g,'')]||'';
 
 function renderAnalysisText(txt) {
   if(!txt) return '';
-  // Support both newline-separated AND inline-bullet (•) formats
+  // Strip markdown bold for processing, preserve for display
+  var raw = txt;
+  // Step 1: determine split mode
+  var hasBullet = raw.includes('\u2022') || /\n\s*[-•]/.test(raw);
   var parts;
-  if(txt.includes('\n')) {
-    parts = txt.split(/\n/).map(s=>s.trim()).filter(s=>s);
+  if(raw.includes('\n')) {
+    parts = raw.split(/\n/).map(s=>s.trim()).filter(s=>s);
+    if(!hasBullet) {
+      // Newlines but no bullets — flatten then sentence-split
+      var flat = parts.join(' ');
+      parts = sentenceSplit(flat);
+    }
+  } else if(hasBullet) {
+    // Inline bullets: split on •
+    parts = raw.split(/\s*\u2022\s*/).map(s=>s.trim()).filter(s=>s);
   } else {
-    // Single-line inline bullets: split on • keeping first chunk as headline
-    parts = txt.split(/\s*•\s*/).map(s=>s.trim()).filter(s=>s);
+    // Plain paragraph — sentence split
+    parts = sentenceSplit(raw);
   }
   var headline='', bullets=[], actionLine='';
   var isFirst=true;
   parts.forEach(function(part){
     var line=part.trim();
     if(!line) return;
-    var isBullet = line.charAt(0)==='\u2022'||line.startsWith('- ');
-    var clean = isBullet ? line.replace(/^[\u2022\-]\s*/,'').trim() : line;
+    var isBullet=line.charAt(0)==='\u2022'||line.startsWith('- ');
+    var clean=isBullet?line.replace(/^[\u2022\-]\s*/,'').trim():line;
     if(/^(SUPPLIER ACTION|AIR8 RECOMMENDATION|RECOMMENDED|AIR8行动):/i.test(clean)){
       actionLine=clean; isFirst=false; return;
     }
-    if(isFirst && !isBullet){ headline=clean; isFirst=false; return; }
+    if(isFirst&&!isBullet){ headline=clean; isFirst=false; return; }
     isFirst=false;
     if(clean) bullets.push(clean);
   });
+  // If only one "bullet" and it's long — it's actually the headline
+  if(!headline && bullets.length===1 && bullets[0].length>80) {
+    headline=bullets[0]; bullets=[];
+  }
   var h='';
-  // Headline — small bold section title
-  if(headline) h+='<div class="text-[11px] font-bold text-gray-700 mb-2.5 pb-1.5 border-b border-gray-100 leading-snug">'+esc(headline)+'</div>';
-  // Bullets — detect "Label: content" format and bold the label
+  if(headline) h+='<div class="text-[11px] font-bold text-gray-700 mb-2.5 pb-1.5 border-b border-gray-100 leading-snug">'+renderBold(headline)+'</div>';
   if(bullets.length){
     h+='<div class="space-y-1.5 mb-3">';
     bullets.forEach(function(b){
       var ci=b.indexOf(':');
-      var hasLabel=ci>0&&ci<50&&!/https?:\/\//.test(b.slice(0,ci));
+      var hasLabel=ci>0&&ci<55&&!/https?:\/\//.test(b.slice(0,ci));
       if(hasLabel){
         var lbl=b.slice(0,ci).trim();
         var body=b.slice(ci+1).trim();
         h+='<div class="p-2.5 rounded-xl text-xs leading-relaxed" style="background:#f8faff;border:1px solid #e0e7ff">'
-          +'<span class="font-bold text-gray-800">'+esc(lbl)+'</span>'
-          +'<span class="text-gray-600"> '+esc(body)+'</span></div>';
+          +'<span class="font-bold text-gray-800">'+esc(lbl)+':</span>'
+          +' <span class="text-gray-600">'+renderBold(body)+'</span></div>';
       } else {
         h+='<div class="flex gap-2 items-start p-2.5 rounded-xl text-xs text-gray-600 leading-relaxed" style="background:#f8faff;border:1px solid #e0e7ff">'
           +'<span class="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1.5" style="background:#1d4ed8"></span>'
-          +'<span>'+esc(b)+'</span></div>';
+          +'<span>'+renderBold(b)+'</span></div>';
       }
     });
     h+='</div>';
@@ -731,12 +744,29 @@ function renderAnalysisText(txt) {
   if(actionLine){
     var cleaned=actionLine.replace(/^(SUPPLIER ACTION|AIR8 RECOMMENDATION|RECOMMENDED|AIR8行动):\s*/i,'').trim();
     h+='<div class="flex gap-2.5 p-3 rounded-xl mb-2" style="background:#fff7ed;border:1px solid #fed7aa">'
-      +'<span style="font-size:15px;flex-shrink:0">⚡</span>'
+      +'<span style="font-size:15px;flex-shrink:0">\u26a1</span>'
       +'<div><div class="text-[10px] font-bold mb-0.5" style="color:#c2410c">SUPPLIER ACTION</div>'
-      +'<div class="text-xs leading-relaxed" style="color:#92400e">'+esc(cleaned)+'</div></div></div>';
+      +'<div class="text-xs leading-relaxed" style="color:#92400e">'+renderBold(cleaned)+'</div></div></div>';
   }
-  return h || '<p class="text-xs text-gray-600 leading-relaxed mb-3">'+esc(txt)+'</p>';
+  return h || '<p class="text-xs text-gray-600 leading-relaxed mb-3">'+renderBold(txt)+'</p>';
 }
+
+// Split a paragraph into sentences, skipping common abbreviations
+function sentenceSplit(text) {
+  // Split on '. ' or '.' at end, avoiding U.S. / e.g. / Dr. etc.
+  var parts = text.split(/(?<=[^A-Z][.!?])\s+(?=[A-Z\u4e00-\u9fff])/);
+  if(parts.length < 2) {
+    // Fallback: split on ' — ' or '; '
+    parts = text.split(/\s+[—–]\s+|\s*;\s+/);
+  }
+  return parts.map(s=>s.trim()).filter(s=>s.length>15);
+}
+
+// Render **bold** markdown within escaped text
+function renderBold(s) {
+  return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+}
+
 function buildTreemap(chart) {
   if(!chart || !Array.isArray(chart.values) || chart.values.length===0) return '';
   var BPAL=['#3b5fe0','#e53e3e','#dd6b20','#38a169','#6d28d9','#0891b2','#dc2626','#059669','#d97706'];
