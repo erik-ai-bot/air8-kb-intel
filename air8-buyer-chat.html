@@ -87,11 +87,35 @@ const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
 let hist = [], charts = {}, _bypassDirectionCheck = false;
 let layer1Buyers = new Set(); // buyers that have had a Layer 1 tab card shown
 
-function hasSeenLayer1(buyerName) {
-  const norm = (buyerName || '').toLowerCase().trim();
-  if(!norm) return false;
+function registerLayer1Buyer(buyerName) {
+  if(!buyerName) return;
+  const norm = buyerName.toLowerCase().trim();
+  layer1Buyers.add(norm);
+  // Also store just the first meaningful word ("Ross" from "Ross Stores")
+  const words = norm.split(/\s+/).filter(w => w.length > 2);
+  if(words[0]) layer1Buyers.add(words[0]);
+}
+
+// Pass the FULL user message — we check if any stored buyer name appears in it
+// Also scans hist so it works even with other questions in between
+function hasSeenLayer1(fullMsg) {
+  const norm = (fullMsg || '').toLowerCase();
+  // Check in-memory Set
   for(const b of layer1Buyers) {
-    if(b.includes(norm) || norm.includes(b)) return true;
+    if(norm.includes(b)) return true;
+  }
+  // Scan conversation history (last 40 messages) for Layer 1 responses
+  const recent = hist.slice(-40);
+  for(const msg of recent) {
+    if(msg.role !== 'assistant') continue;
+    try {
+      const data = JSON.parse(msg.content);
+      if(data.buyer) {
+        const b = data.buyer.toLowerCase().trim();
+        const firstWord = b.split(/\s+/).find(w => w.length > 2) || '';
+        if(norm.includes(b) || (firstWord && norm.includes(firstWord))) return true;
+      }
+    } catch(e) {}
   }
   return false;
 }
@@ -171,11 +195,10 @@ async function send() {
 
   // ── DIRECTION PICKER: only intercept if buyer Layer 1 already shown ──
   if(!_bypassDirectionCheck && isGenericBuyerQuery(msg)) {
-    const buyer = extractBuyerName(msg);
-    if(hasSeenLayer1(buyer)) {
+    if(hasSeenLayer1(msg)) {  // pass full msg — checks hist + Set for buyer substrings
       addUser(msg);
       hist.push({role:'user', content: msg});
-      showDirectionPicker(msg, buyer);
+      showDirectionPicker(msg, extractBuyerName(msg));
       return;
     }
     // First time for this buyer → fall through to Layer 1 normally
@@ -200,8 +223,12 @@ async function send() {
     if(ct.includes('application/json')) {
       const data = await res.json();
       removeEl(thinkId);
-      if(data.tabs && Array.isArray(data.tabs)) {
-        // Layer 1 tab card response
+      if(data.type === 'clarify') {
+        // Disambiguation / clarification card
+        addClarifyCard(data);
+        hist.push({role:'assistant', content: JSON.stringify({clarify: true, question: data.question||''})});
+      } else if(data.tabs && Array.isArray(data.tabs)) {
+        // Tab card response (Layer 1 or drill-down)
         addTabCard(data);
         hist.push({role:'assistant', content: JSON.stringify({buyer:data.buyer||'',tab_ids:(data.tabs||[]).map(t=>t.id),summary:data.summary||''})});
       } else {
@@ -228,8 +255,14 @@ async function send() {
             const ev = JSON.parse(raw);
             if(ev.type==='step') { addRealStep(thinkId, ev.text||'', ev.src||''); continue; }
             if(ev.type==='done' && ev.json) {
-              removeEl(thinkId); addTabCard(ev.json);
-              hist.push({role:'assistant', content: JSON.stringify({buyer:ev.json.buyer||'',tab_ids:(ev.json.tabs||[]).map(t=>t.id),summary:ev.json.summary||''})});
+              removeEl(thinkId);
+              if(ev.json.type === 'clarify') {
+                addClarifyCard(ev.json);
+                hist.push({role:'assistant', content: JSON.stringify({clarify: true, question: ev.json.question||''})});
+              } else {
+                addTabCard(ev.json);
+                hist.push({role:'assistant', content: JSON.stringify({buyer:ev.json.buyer||'',tab_ids:(ev.json.tabs||[]).map(t=>t.id),summary:ev.json.summary||''})});
+              }
               done_received=true; break outer;
             }
             if(ev.type==='done' && ev.text) {
@@ -350,6 +383,64 @@ function extractJSON(text) {
   const m = text.match(/\{[\s\S]*\}/);
   if(m) { try { return JSON.parse(m[0]); } catch{} }
   return null;
+}
+
+// ── CLARIFY CARD (worker 返回 type:"clarify" 时出此卡) ─────────────────────────
+function addClarifyCard(data) {
+  const chat = document.getElementById('chat');
+  const cid = 'clr-' + Date.now();
+  const el = document.createElement('div');
+  el.className = 'flex justify-start gap-2.5 fade-in';
+
+  const opts = Array.isArray(data.options) ? data.options : [];
+  const optHtml = opts.map((o, i) =>
+    `<button onclick="clrPick('${cid}',${i})" class="w-full text-left flex items-start gap-3 p-3.5 rounded-2xl border transition-all hover:bg-blue-50 hover:border-blue-300" style="border-color:#e0e7ff;background:#f8faff">
+      <span class="text-lg flex-shrink-0">${o.icon || '🏢'}</span>
+      <div><div class="text-xs font-bold text-gray-900">${esc(o.label || '')}</div>
+      <div class="text-[11px] text-gray-500 mt-0.5">${esc(o.desc || '')}</div></div>
+    </button>`
+  ).join('');
+
+  const sugHtml = Array.isArray(data.followups) && data.followups.length
+    ? `<div class="px-5 pb-4 pt-2 border-t border-gray-100">
+        <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Or try these</div>
+        <div class="flex flex-wrap gap-2">
+          ${data.followups.map(q => `<button onclick="sq('${esc(q)}')" class="text-xs px-3 py-1.5 rounded-xl border border-gray-200 text-gray-600 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all">${esc(q)}</button>`).join('')}
+        </div></div>` : '';
+
+  el.innerHTML = `
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
+    </div>
+    <div class="flex-1 min-w-0 max-w-[92%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
+      <div class="px-5 pt-4 pb-3 border-b border-gray-100" style="background:linear-gradient(to right,#fffbeb,#fff)">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-base">❓</span>
+          <span class="text-sm font-bold text-gray-900">Need a little more info</span>
+        </div>
+        <p class="text-xs text-gray-500">${esc(data.question || 'Which company or topic did you mean?')}</p>
+      </div>
+      <div class="p-4 space-y-2" id="clr-opts-${cid}">${optHtml}</div>
+      ${sugHtml}
+    </div>`;
+
+  // Store option queries for click handler
+  if(!window._clrOpts) window._clrOpts = {};
+  window._clrOpts[cid] = opts;
+
+  chat.appendChild(el);
+  scrollDown();
+}
+
+function clrPick(cid, idx) {
+  const opts = window._clrOpts && window._clrOpts[cid];
+  const opt = opts && opts[idx];
+  if(!opt) return;
+  // Disable options after pick
+  document.getElementById('clr-opts-'+cid)?.querySelectorAll('button').forEach(b => b.style.pointerEvents='none');
+  const query = opt.query || opt.label || '';
+  document.getElementById('inp').value = query;
+  send();
 }
 
 // ── DIRECTION PICKER ────────────────────────────────────────────────────────
@@ -759,7 +850,7 @@ function addTabCard(data) {
     return;
   }
   // Register buyer as having seen Layer 1
-  if(data.buyer) layer1Buyers.add(data.buyer.toLowerCase().trim());
+  if(data.buyer) registerLayer1Buyer(data.buyer);
   const chat=document.getElementById('chat');
   const cid='c'+Date.now();
   const el=document.createElement('div');
