@@ -271,6 +271,7 @@ async function send() {
           if(!raw || raw==='[DONE]') continue;
           try {
             const ev = JSON.parse(raw);
+            if(ev.type==='ping') continue; // heartbeat — ignore, keeps connection alive
             if(ev.type==='step') { addRealStep(thinkId, ev.text||'', ev.src||''); continue; }
             if(ev.type==='done' && ev.json) {
               removeEl(thinkId);
