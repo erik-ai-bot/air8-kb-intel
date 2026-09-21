@@ -159,6 +159,7 @@
     <button class="tab-btn" onclick="showTab(5)">采购来源</button>
     <button class="tab-btn" onclick="showTab(6)">竞争对手&amp;供应商</button>
     <button class="tab-btn" onclick="showTab(7)">信号&amp;诉讼</button>
+    <button class="tab-btn" onclick="showTab(8)">门店&amp;网络</button>
   </div>
 </div>
 
@@ -247,6 +248,63 @@
           <div style="font-size:10px; color:#9ca3af; margin-top:3px;">提前回款成本（供应商承担）</div>
         </div>
       </div>
+    </div>
+
+    <!-- Revenue Segment Breakdown FY2024 vs FY2025 -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">D. 收入分部结构——FY2024 vs FY2025</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:22px;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>业务分部</th><th>FY2024（$bn）</th><th>FY2025（$bn）</th><th>收入占比</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600; color:#374151;">自营线上商店</td>
+            <td>$247bn</td>
+            <td><span style="font-weight:700; color:#1d4ed8;">$269bn</span></td>
+            <td>37.6%</td>
+            <td style="font-size:11px; color:#6b7280;">1P供货方的主要开票对象</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">第三方卖家服务</td>
+            <td>$156bn</td>
+            <td><span style="font-weight:700; color:#1d4ed8;">$172bn</span></td>
+            <td>24.0%</td>
+            <td style="font-size:11px; color:#6b7280;">增速超自营；1P占比结构性下降</td>
+          </tr>
+          <tr style="background:#eff6ff;">
+            <td style="font-weight:600; color:#1d4ed8;">AWS云服务</td>
+            <td>$108bn</td>
+            <td><span style="font-weight:700; color:#1d4ed8;">$129bn</span></td>
+            <td style="font-weight:700; color:#1d4ed8;">18.0%</td>
+            <td style="font-size:11px; color:#1d4ed8;">贡献57%集团经营利润；供应商不在这里开票</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">广告服务</td>
+            <td>$56bn</td>
+            <td><span style="font-weight:700; color:#1d4ed8;">$69bn</span></td>
+            <td>9.6%</td>
+            <td style="font-size:11px; color:#6b7280;">增速最快；不涉及实体货物</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">订阅服务</td>
+            <td>$44bn</td>
+            <td><span style="font-weight:700;">$50bn</span></td>
+            <td>6.9%</td>
+            <td style="font-size:11px; color:#6b7280;">含Prime会员、Kindle等；不涉及实体货物</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">线下门店</td>
+            <td>$21bn</td>
+            <td><span style="font-weight:700;">$22.6bn</span></td>
+            <td>3.1%</td>
+            <td style="font-size:11px; color:#6b7280;">主要是Whole Foods；Fresh/Go 2026年2月关闭</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:12px 14px; font-size:12px; color:#7f1d1d; margin-bottom:22px; line-height:1.6;">
+      🔴 <strong>供应商应关注的利润结构：</strong>北美+国际分部（即供应商开票的分部）合计利润率仅 <strong>5.8%</strong>（北美6.9%、国际2.9%）。集团层面11.2%的亮眼数字，是被AWS拉高的——你的发票面对的是那个5.8%的业务。
     </div>
 
     <!-- Combo Chart: Revenue + Margin -->
@@ -512,33 +570,249 @@
     </div>
   </div>
 
+    <!-- Cross-reference gap analysis -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px; margin-top:24px;">与公司自身披露的交叉核对——为何各口径不一致</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:14px;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>口径</th><th>覆盖范围</th><th>结构特征</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600; color:#374151;">海关提取（品类构成）</td>
+            <td style="font-size:11px; color:#6b7280;">仅含海运进口，按数量计，~5.8万件</td>
+            <td style="font-size:11px; color:#6b7280;">棉制床品+木制品合计约88%——这只是一条很窄的进口通道</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">海关提取（来源国分布）</td>
+            <td style="font-size:11px; color:#6b7280;">仅含标注HS章节的海运进口，按票数计</td>
+            <td style="font-size:11px; color:#6b7280;">电子电气21–26%、机械设备14–16%——与上行是不同口径、不同区间</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">亚马逊2025财年10-K，按收入构成</td>
+            <td style="font-size:11px; color:#6b7280;">全公司口径，按美元计</td>
+            <td style="font-size:11px; color:#6b7280;">自营零售37.6% · 3P服务24.0% · AWS 18.0% · 广告9.6% · 订阅6.9% · 线下3.1% · 其他0.8%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; font-size:12px; color:#374151; margin-bottom:20px; line-height:1.7;">
+      <strong>根本原因：</strong>海关记录上写的是「进口记录人（IOR）」，而亚马逊只对很窄一部分商品担任IOR。<br/>
+      • <strong>3P卖家</strong>占平台销售单量 <strong>60%</strong>，以卖家自己名义报关<br/>
+      • <strong>苹果/三星/Anker</strong>等品牌自行进口后在美境内供货，不出现在亚马逊名下<br/>
+      • <strong>AWS+广告+订阅</strong>合计占2025财年收入<strong>34.5%</strong>，完全不涉及实体货物<br/>
+      • 真正以亚马逊名义进口的：自有品牌商品、全食超市食材、仓储自动化设备（机械设备单票金额27–39万美元）
+    </div>
+
+    <!-- Top product lines table -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">可追踪货量最大的产品线（数量口径 · 2025年9月–2026年9月，滚动12个月）</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>产品族</th><th>品类</th><th>记录条数</th><th>数量（件）</th><th>占比</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight:600;">棉制床单</td><td>家纺织品</td><td>29</td><td>24,267</td><td><span style="color:#1d4ed8; font-weight:700;">41.6%</span></td></tr>
+          <tr><td style="font-weight:600;">棉制枕套</td><td>家纺织品</td><td>16</td><td>8,986</td><td><span style="color:#1d4ed8; font-weight:700;">15.4%</span></td></tr>
+          <tr><td style="font-weight:600;">手工木制件</td><td>木制品</td><td>2</td><td>5,017</td><td>8.6%</td></tr>
+          <tr><td style="font-weight:600;">陶瓷拉手</td><td>陶瓷制品</td><td>4</td><td>2,806</td><td>4.8%</td></tr>
+          <tr><td style="font-weight:600;">全棉床品</td><td>家纺织品</td><td>3</td><td>1,990</td><td>3.4%</td></tr>
+          <tr><td style="font-weight:600;">铜及金属碗</td><td>铜制品</td><td>12</td><td>1,158</td><td>2.0%</td></tr>
+          <tr><td style="font-weight:600;">印度黄檀木制品</td><td>木制品</td><td>8</td><td>983</td><td>1.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:10px; color:#9ca3af; margin-top:8px;">同一产品族的多条记录已合并。可追踪总量约5.8万件，按件计数。数据来源：海关货运数据（内部提取），更新时间2026年9月15日。</div>
+
 </div><!-- /tab-4 -->
 
 <!-- ═══════════════════════════════════════ TAB 5: 采购来源 ═══ -->
 <div class="tab-section" id="tab-5">
 
   <div class="section-block">
-    <div class="section-header">§05 采购来源</div>
+    <div class="section-header">§05 采购来源与采购量趋势</div>
 
-    <!-- Doughnut: source country -->
+    <div class="info-box">
+      📊 <strong>本节使用三个独立口径，不可叠加：</strong>① Marketplace Pulse平台卖家调查（描述谁在亚马逊平台上卖货）② Panjiva/海关数据（亚马逊自营进口，按票数）③ 亚马逊官方10-K披露（仅"相当大比例"表述，无数值）。亚马逊CFO 2026年Q2电话会明确：「我们并非绝大多数商品的进口记录人。」
+    </div>
+
+    <!-- Sub A: Platform seller structure -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">A. 平台卖家结构（第三方卖家 · Marketplace Pulse 2026年7月）</div>
+    <div style="font-size:11px; color:#6b7280; margin-bottom:14px; line-height:1.6;">以下为亚马逊美国市场前10,000名第三方卖家的地区分布，<strong>描述谁在平台上卖货，而非亚马逊自营采购。</strong></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+      <div style="background:#f8fafc; border-radius:12px; padding:18px; border:1px solid #e2e8f0;">
+        <div style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:14px;">按卖家数量</div>
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;"><span>🇨🇳 中国</span><span style="font-weight:800; color:#1d4ed8;">55.9%</span></div>
+        <div style="height:14px; background:#e5e7eb; border-radius:3px; overflow:hidden; margin-bottom:10px;"><div style="width:55.9%; height:100%; background:#1d4ed8; border-radius:3px;"></div></div>
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;"><span>🇺🇸 美国</span><span style="font-weight:800; color:#0ea5e9;">40.5%</span></div>
+        <div style="height:14px; background:#e5e7eb; border-radius:3px; overflow:hidden; margin-bottom:10px;"><div style="width:40.5%; height:100%; background:#0ea5e9; border-radius:3px;"></div></div>
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;"><span>其他</span><span style="font-weight:700; color:#6b7280;">3.6%</span></div>
+        <div style="height:14px; background:#e5e7eb; border-radius:3px; overflow:hidden;"><div style="width:3.6%; height:100%; background:#64748b; border-radius:3px;"></div></div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:10px;">中国2020年7月占比为42.5%，六年持续上升</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:12px; padding:18px; border:1px solid #e2e8f0;">
+        <div style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:14px;">按GMV（同一群体）</div>
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;"><span>🇺🇸 美国</span><span style="font-weight:800; color:#0ea5e9;">65.3%</span></div>
+        <div style="height:14px; background:#e5e7eb; border-radius:3px; overflow:hidden; margin-bottom:10px;"><div style="width:65.3%; height:100%; background:#0ea5e9; border-radius:3px;"></div></div>
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;"><span>🇨🇳 中国</span><span style="font-weight:800; color:#1d4ed8;">28.6%</span></div>
+        <div style="height:14px; background:#e5e7eb; border-radius:3px; overflow:hidden; margin-bottom:10px;"><div style="width:28.6%; height:100%; background:#1d4ed8; border-radius:3px;"></div></div>
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;"><span>其他</span><span style="font-weight:700; color:#6b7280;">6.1%</span></div>
+        <div style="height:14px; background:#e5e7eb; border-radius:3px; overflow:hidden;"><div style="width:6.1%; height:100%; background:#64748b; border-radius:3px;"></div></div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:10px;">中国数量多但单店体量小；美国卖家人均GMV更高</div>
+      </div>
+    </div>
+    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:10px 14px; font-size:12px; color:#92400e; margin-bottom:24px;">
+      💡 中国卖家占数量55.9%，GMV仅28.6%；美国卖家虽40.5%，GMV达65.3%——反映单个中国卖家体量更小。
+    </div>
+
+    <!-- Sub B: Data source attribution table -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">B. 数据口径汇总与Gap分析</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:20px;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>口径</th><th>数值</th><th>来源与说明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600; color:#374151;">中国卖家占美国前10,000名卖家（数量）</td>
+            <td><span style="color:#1d4ed8; font-weight:700;">55.9%</span></td>
+            <td style="font-size:11px; color:#6b7280;">Marketplace Pulse 2026年7月；2020年7月为42.5%</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">同一群体，美国卖家占GMV</td>
+            <td><span style="color:#0ea5e9; font-weight:700;">65.3%（中国28.6%）</span></td>
+            <td style="font-size:11px; color:#6b7280;">Marketplace Pulse 2026年7月；描述平台3P卖家，非自营采购</td>
+          </tr>
+          <tr style="background:#fffbeb;">
+            <td style="font-weight:600; color:#374151;">亚马逊是否为进口记录人（IOR）</td>
+            <td><span style="color:#f59e0b; font-weight:700;">仅少数商品</span></td>
+            <td style="font-size:11px; color:#6b7280;">CFO 2026年Q2电话会（2026年7月30日）：「我们并非店内绝大多数商品的进口记录人，进口通常由供应商处理」</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">中国占美国集装箱进口总量</td>
+            <td><span style="font-weight:700;">34.0%</span></td>
+            <td style="font-size:11px; color:#6b7280;">Descartes 2026年8月；2,603,709 TEU中884,318 TEU；市场背景，非亚马逊口径</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">亚马逊自营进口在中国港口装货</td>
+            <td><span style="color:#1d4ed8; font-weight:700;">79.8%</span></td>
+            <td style="font-size:11px; color:#6b7280;">Panjiva 2025年Q2；盐田/宁波/上海，61,862票中49,378票；仅亚马逊自营进口口径</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">亚马逊自身国别披露</td>
+            <td><span style="color:#9ca3af; font-weight:700;">未披露具体比例</span></td>
+            <td style="font-size:11px; color:#6b7280;">2025财年10-K仅表述：中国卖家与供应商占「相当大比例」（原文：a significant proportion）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sub C: Labeled customs doughnut -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">C. 已标注海关记录来源国（仅占总量8%）</div>
     <div class="chart-wrap">
-      <div class="chart-title">2025年自营进口来源国（已标注记录，票数口径）</div>
+      <div class="chart-title">2025全年自营进口来源国——已标注HS章节记录（票数口径 · 29,751条）</div>
       <div style="height:260px; position:relative;">
         <canvas id="sourceCountryChart"></canvas>
       </div>
     </div>
-
     <div class="warning-box">
-      ⚠️ <strong>注：</strong>上图为已标注HS章节的海运记录（约占总量8%），未标注部分 <strong>92%全部为中国来源</strong>；若计入则中国实际占比约94.3%，印度/越南等来源主要为标注记录中的可见数据。<br/>
-      <span style="display:block; margin-top:8px;">📊 <strong>数量 vs GMV 差异：</strong>中国占已标注票数 <strong>55.9%</strong>，但因商品单价偏低，GMV口径贡献仅 <strong>28.6%</strong>——反映中国来源以中低单价品为主；印度等来源单价更高，贡献了更大比例的GMV。</span>
+      ⚠️ <strong>Gap分析：为何中国在图中仅9.6%，但实际占比约94.3%</strong><br/>
+      上图仅含已标注HS章节的海关记录（8%覆盖率）。2026年至今：已标注记录6,092条，未标注记录<strong>70,252条</strong>——未标注部分92%全部为中国来源。若计入，中国实际占比升至<strong>94.3%</strong>（已标注口径下仅29.1%）。<br/>
+      <span style="display:block; margin-top:8px;">📌 <strong>根本原因：</strong>① 3P卖家占平台单量60%，以自己名义报关，不计入亚马逊名下 ② 苹果/三星/Anker等品牌在美境内供货，亦不记录为亚马逊进口 ③ 已标注记录主要是自有品牌商品、全食食材、和仓储自动化设备（机械设备单票金额27–39万美元）</span>
     </div>
 
-    <!-- Quarterly batches bar chart -->
+    <!-- Sub D: Category × Country matrix (2 years) -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px; margin-top:22px;">D. 品类 × 来源国——两年结构对比（已标注记录）</div>
+    <div style="font-size:11px; color:#6b7280; margin-bottom:12px;">同口径：标注了HS章节的海运记录票数。两年度可直接对比，但须注意已标注部分约占总量8%，其余92%全为中国来源。</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+      <div style="background:#eff6ff; border-radius:10px; padding:16px; border:1px solid #bfdbfe;">
+        <div style="font-size:11px; font-weight:700; color:#1d4ed8; margin-bottom:12px;">📅 2025全年 · 29,751条已标注记录</div>
+        <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">品类构成（票数）</div>
+        <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px; margin-bottom:10px;">
+          <span style="color:#374151; font-weight:600;">电子电器</span><span style="color:#1d4ed8; font-weight:700;">21.1%</span>
+          <span style="color:#374151; font-weight:600;">家纺织品</span><span style="color:#1d4ed8; font-weight:700;">18.4%</span>
+          <span style="color:#374151; font-weight:600;">机械设备</span><span style="color:#1d4ed8; font-weight:700;">14.2%</span>
+          <span style="color:#374151; font-weight:600;">针织服装</span><span style="color:#1d4ed8; font-weight:700;">13.2%</span>
+          <span style="color:#374151; font-weight:600;">梭织服装</span><span style="color:#1d4ed8; font-weight:700;">12.8%</span>
+          <span style="color:#374151; font-weight:600;">生鲜水果</span><span style="color:#1d4ed8; font-weight:700;">6.4%</span>
+          <span style="color:#6b7280;">木制品/箱包/其他</span><span style="color:#6b7280;">13.9%</span>
+        </div>
+        <div style="border-top:1px solid #bfdbfe; padding-top:8px;">
+          <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">来源国（票数）</div>
+          <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px;">
+            <span>🇮🇳 印度</span><span style="font-weight:700; color:#1d4ed8;">35.9%</span>
+            <span>🇻🇳 越南</span><span style="font-weight:700; color:#1d4ed8;">33.9%</span>
+            <span>🇨🇳 中国</span><span style="font-weight:700; color:#1d4ed8;">9.6%</span>
+            <span>🇵🇪 秘鲁</span><span style="color:#6b7280;">6.4%</span>
+            <span>🇳🇱 荷兰</span><span style="color:#6b7280;">4.3%</span>
+            <span>🇱🇰 斯里兰卡</span><span style="color:#6b7280;">3.8%</span>
+            <span>其他</span><span style="color:#6b7280;">6.1%</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#f5f3ff; border-radius:10px; padding:16px; border:1px solid #ddd6fe;">
+        <div style="font-size:11px; font-weight:700; color:#7c3aed; margin-bottom:12px;">📅 2026年至今 · 6,092条已标注记录</div>
+        <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">品类构成（票数）</div>
+        <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px; margin-bottom:10px;">
+          <span style="color:#374151; font-weight:600;">电子电气</span><span style="color:#7c3aed; font-weight:700;">25.8%</span>
+          <span style="color:#374151; font-weight:600;">香料化妆</span><span style="color:#7c3aed; font-weight:700;">18.6%</span>
+          <span style="color:#374151; font-weight:600;">机械设备</span><span style="color:#7c3aed; font-weight:700;">16.4%</span>
+          <span style="color:#374151; font-weight:600;">针织服装</span><span style="color:#7c3aed; font-weight:700;">9.2%</span>
+          <span style="color:#374151; font-weight:600;">塑料制品</span><span style="color:#7c3aed; font-weight:700;">8.9%</span>
+          <span style="color:#374151; font-weight:600;">家纺织品</span><span style="color:#7c3aed; font-weight:700;">6.3%</span>
+          <span style="color:#6b7280;">涂层纺织/水果/其他</span><span style="color:#6b7280;">14.8%</span>
+        </div>
+        <div style="border-top:1px solid #ddd6fe; padding-top:8px;">
+          <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">来源国（票数）</div>
+          <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px;">
+            <span>🇻🇳 越南</span><span style="font-weight:700; color:#7c3aed;">31.7%</span>
+            <span>🇨🇳 中国</span><span style="font-weight:700; color:#7c3aed;">29.1%</span>
+            <span>🇮🇳 印度</span><span style="font-weight:700; color:#7c3aed;">24.9%</span>
+            <span>🇸🇬 新加坡</span><span style="color:#6b7280;">4.6%</span>
+            <span>🇦🇪 阿联酋</span><span style="color:#6b7280;">3.2%</span>
+            <span>🇲🇽 墨西哥</span><span style="color:#6b7280;">3.0%</span>
+            <span>其他</span><span style="color:#6b7280;">3.5%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-size:12px; color:#14532d; margin-bottom:22px;">
+      📈 <strong>结构变化（2025→2026）：</strong>已标注口径中，中国从9.6%升至29.1%，印度从35.9%降至24.9%，越南小幅下滑。品类方面家纺减少，电子电气上升，香料化妆品类新增（18.6%）。注：此变化部分反映2026年数据覆盖尚未完整，建议结合数量规模（29,751 vs 6,092条）判断趋势可靠性。
+    </div>
+
+    <!-- Sub E: Volume trend -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">E. 采购量趋势</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div style="background:#f8fafc; border-radius:8px; padding:12px; text-align:center; border:1px solid #e2e8f0;">
+        <div style="font-size:15px; font-weight:800; color:#1d4ed8; line-height:1.1;">124,409</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">批次总计</div>
+        <div style="font-size:9px; color:#9ca3af;">2024/8–2026/7</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:8px; padding:12px; text-align:center; border:1px solid #e2e8f0;">
+        <div style="font-size:15px; font-weight:800; color:#1d4ed8; line-height:1.1;">72,129</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">批次（2025全年）</div>
+        <div style="font-size:9px; color:#9ca3af;">上一完整年度</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:8px; padding:12px; text-align:center; border:1px solid #e2e8f0;">
+        <div style="font-size:15px; font-weight:800; color:#1d4ed8; line-height:1.1;">16,470</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">批次（2026年至今）</div>
+        <div style="font-size:9px; color:#9ca3af;">1–7月</div>
+      </div>
+      <div style="background:#fffbeb; border-radius:8px; padding:12px; text-align:center; border:1px solid #fde68a;">
+        <div style="font-size:15px; font-weight:800; color:#f59e0b; line-height:1.1;">~28,234</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">批次（2026年化）</div>
+        <div style="font-size:9px; color:#9ca3af;">按直线推算</div>
+      </div>
+    </div>
     <div class="chart-wrap">
-      <div class="chart-title">季度可追踪到港批次（票数）</div>
+      <div class="chart-title">季度可追踪到港批次（票数，非金额）</div>
       <div style="height:200px; position:relative;">
         <canvas id="quarterlyBatchChart"></canvas>
       </div>
+    </div>
+    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:10px 14px; font-size:12px; color:#7f1d1d;">
+      ⚠️ <strong>数据滞后提示：</strong>每月不同发货方数量由2024年月均约1,020家降至2026年约150家，但同期亚马逊收入增长12%。近期批次下降<strong>反映海关记录回补滞后，而非实际供应商基础萎缩</strong>。以2024–2025年中段数据作为供应商广度的可靠参照。
     </div>
   </div>
 
@@ -553,7 +827,7 @@
     <!-- Sub A: Peer comparison -->
     <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 同赛道零售商收入对比</div>
     <div class="chart-wrap">
-      <div class="chart-title">主要数字平台及零售商收入对比（十亿美元，最新财年）</div>
+      <div class="chart-title">主要数字平台及零售商收入对比（十亿美元）——财年不同，均为最新完整年度</div>
       <div style="height:280px; position:relative;">
         <canvas id="peerRevenueChart"></canvas>
       </div>
@@ -563,82 +837,93 @@
     <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:24px;">
       <table class="table-styled">
         <thead>
-          <tr><th>零售商</th><th>收入</th><th>推算DPO</th><th>信用评级</th><th>Air8视角</th></tr>
+          <tr><th>竞争对手</th><th>市场/收入</th><th>财务期间</th><th>推算DPO</th><th>信用评级</th><th>核心差异化</th></tr>
         </thead>
         <tbody>
           <tr style="background:#eff6ff;">
             <td style="font-weight:700; color:#1d4ed8;">亚马逊 ★</td>
-            <td>$716.9bn</td>
+            <td>$716.9bn<br/><span style="font-size:10px; color:#6b7280;">全球综合</span></td>
+            <td style="font-size:10px; color:#6b7280;">2025财年<br/>（25年12月）</td>
             <td><span style="color:#ef4444; font-weight:700;">~125天</span></td>
             <td><span class="badge badge-green">AA/A1</span></td>
-            <td style="font-size:11px;">账期最长，体量最大，信用最优</td>
+            <td style="font-size:11px;">账期最长，体量最大，信用最优；AWS撑起57%集团利润</td>
           </tr>
           <tr>
             <td style="font-weight:600;">沃尔玛</td>
-            <td>$713.2bn</td>
+            <td>$713.2bn<br/><span style="font-size:10px; color:#6b7280;">全球，美国主导</span></td>
+            <td style="font-size:10px; color:#6b7280;">2026财年<br/>（26年1月）</td>
             <td>~45天</td>
             <td><span class="badge badge-green">AA</span></td>
-            <td style="font-size:11px;">账期短，付款快，量大稳定</td>
-          </tr>
-          <tr>
-            <td style="font-weight:600;">Target</td>
-            <td>$104.8bn</td>
-            <td>~50天</td>
-            <td><span class="badge badge-blue">A/Stable</span></td>
-            <td style="font-size:11px;">中高端，付款相对快</td>
+            <td style="font-size:11px;">~4,600家美国门店同时作为自提与配送节点；账期短付款快</td>
           </tr>
           <tr>
             <td style="font-weight:600;">京东</td>
-            <td>$187.2bn</td>
+            <td>$187.2bn<br/><span style="font-size:10px; color:#6b7280;">中国，5.8亿活跃用户</span></td>
+            <td style="font-size:10px; color:#6b7280;">2025财年<br/>（25年12月）</td>
             <td>—</td>
             <td><span class="badge badge-amber">BBB+</span></td>
-            <td style="font-size:11px;">中国市场，类Amazon自营模式</td>
+            <td style="font-size:11px;">自建全国物流+自营库存，正品保障；类Amazon 1P模式</td>
           </tr>
           <tr>
             <td style="font-weight:600;">阿里巴巴</td>
-            <td>$148.4bn</td>
+            <td>$148.4bn<br/><span style="font-size:10px; color:#6b7280;">中国最大零售平台</span></td>
+            <td style="font-size:10px; color:#6b7280;">2026财年<br/>（26年3月）</td>
             <td>—</td>
             <td><span class="badge badge-blue">A+/Stable</span></td>
-            <td style="font-size:11px;">平台模式，非直接采购方</td>
+            <td style="font-size:11px;">轻资产平台模式，非直接采购方；跨境商家入口</td>
           </tr>
           <tr>
-            <td style="font-weight:600;">Best Buy</td>
-            <td>$42.0bn</td>
-            <td>~45天</td>
-            <td><span class="badge badge-blue">BBB</span></td>
-            <td style="font-size:11px;">电子零售商，直接采购方，付款相对快</td>
+            <td style="font-weight:600;">Target</td>
+            <td>$104.8bn<br/><span style="font-size:10px; color:#6b7280;">仅美国</span></td>
+            <td style="font-size:10px; color:#6b7280;">2025财年<br/>（26年1月）</td>
+            <td>~50天</td>
+            <td><span class="badge badge-blue">A/Stable</span></td>
+            <td style="font-size:11px;">中高端郊区消费者；自有品牌设计与服饰策展；无国际业务</td>
           </tr>
           <tr>
             <td style="font-weight:600;">Netflix</td>
-            <td>$43.0bn</td>
+            <td>$45.2bn<br/><span style="font-size:10px; color:#6b7280;">全球流媒体</span></td>
+            <td style="font-size:10px; color:#6b7280;">2025财年<br/>（25年12月）</td>
             <td>—</td>
             <td><span class="badge badge-blue">BBB+</span></td>
-            <td style="font-size:11px;">流媒体平台，内容采购方，非实物供应商</td>
+            <td style="font-size:11px;">纯内容业务，仅通过Prime Video与亚马逊重叠；非实物供应商</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">Best Buy</td>
+            <td>$41.7bn<br/><span style="font-size:10px; color:#6b7280;">美国+加拿大</span></td>
+            <td style="font-size:10px; color:#6b7280;">2026财年<br/>（26年1月）</td>
+            <td>~45天</td>
+            <td><span class="badge badge-blue">BBB</span></td>
+            <td style="font-size:11px;">Geek Squad安装与技术服务；现场咨询差异化；电子零售直接采购方</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">乐天 Rakuten</td>
+            <td>24,966亿日元<br/><span style="font-size:10px; color:#6b7280;">日本，电商+金融</span></td>
+            <td style="font-size:10px; color:#6b7280;">2025财年<br/>（25年12月）</td>
+            <td>—</td>
+            <td><span class="badge badge-amber">BBB</span></td>
+            <td style="font-size:11px;">横跨电商/金融/通信的积分生态；乐天生态内会员忠诚度高</td>
           </tr>
           <tr>
             <td style="font-weight:600;">eBay</td>
-            <td>$10.3bn</td>
+            <td>$11.1bn<br/><span style="font-size:10px; color:#6b7280;">全球，以美国为主</span></td>
+            <td style="font-size:10px; color:#6b7280;">2025财年<br/>（25年12月）</td>
             <td>—</td>
             <td><span class="badge badge-amber">BBB+</span></td>
-            <td style="font-size:11px;">纯平台模式，类3P结构，不持有库存</td>
-          </tr>
-          <tr>
-            <td style="font-weight:600;">Rakuten</td>
-            <td>$16.0bn</td>
-            <td>—</td>
-            <td><span class="badge badge-amber">BBB</span></td>
-            <td style="font-size:11px;">日本电商平台，亚洲市场布局</td>
+            <td style="font-size:11px;">纯平台模式，无自有库存；收藏者与二手市场核心玩家</td>
           </tr>
           <tr>
             <td style="font-weight:600;">Flipkart</td>
-            <td>~$8.0bn</td>
+            <td>2,050亿卢比<br/><span style="font-size:10px; color:#6b7280;">印度，Walmart旗下</span></td>
+            <td style="font-size:10px; color:#6b7280;">截至25年<br/>3月财年</td>
             <td>~60天</td>
             <td><span class="badge" style="background:#f1f5f9;color:#475569;">私有</span></td>
-            <td style="font-size:11px;">印度市场，Walmart旗下，增长潜力大</td>
+            <td style="font-size:11px;">本土物流与货到付款；注重性价比的印度消费者；增长潜力大</td>
           </tr>
         </tbody>
       </table>
     </div>
+    <div style="font-size:10px; color:#9ca3af; margin-bottom:24px;">注：财年结束日各公司不一致——沃尔玛/Best Buy将截至2026年1月31日称为2026财年，Target将同一结束日称为2025财年。Flipkart未单独上市，收入为其印度平台主体备案数据，并非集团口径。</div>
 
     <!-- Sub B: Major suppliers -->
     <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">B. 平台主要供应商分析</div>
@@ -819,12 +1104,113 @@
 
 </div><!-- /tab-7 -->
 
+<!-- ═══════════════════════════════════════ TAB 8: 门店&网络 ═══ -->
+<div class="tab-section" id="tab-8">
+
+  <div class="section-block">
+    <div class="section-header">§06 门店与网络</div>
+
+    <div style="font-size:12px; color:#6b7280; line-height:1.7; margin-bottom:18px;">
+      相对其收入规模，亚马逊的线下门店体量很小，且在2026年出现收缩。核心网络是履约中心，而非零售卖场。
+    </div>
+
+    <!-- KPI strip -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:22px;">
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0; text-align:center;">
+        <div style="font-size:22px; font-weight:800; color:#1d4ed8; line-height:1;">550+</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">Whole Foods门店</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">2026年1月官方数字</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0; text-align:center;">
+        <div style="font-size:22px; font-weight:800; color:#1d4ed8; line-height:1;">$22.6bn</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">线下门店收入</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">占2025财年总收入3.1%</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0; text-align:center;">
+        <div style="font-size:22px; font-weight:800; color:#1d4ed8; line-height:1;">7.42亿</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">租赁面积（平方英尺）</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">自有7,810万，以履约中心为主</div>
+      </div>
+      <div style="background:#fef2f2; border-radius:10px; padding:14px; border:1px solid #fecaca; text-align:center;">
+        <div style="font-size:22px; font-weight:800; color:#ef4444; line-height:1;">72家</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">Fresh+Go关闭门店数</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">2026年2月已全部关停</div>
+      </div>
+    </div>
+
+    <!-- Store type breakdown -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">门店业态现状</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:20px;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>业态</th><th>门店数</th><th>状态</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600; color:#374151;">Whole Foods Market</td>
+            <td><span style="color:#16a34a; font-weight:700;">550+</span></td>
+            <td><span class="badge badge-green">运营中</span></td>
+            <td style="font-size:11px; color:#6b7280;">唯一持续扩张的线下业态；计划未来数年新开100+家</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">Whole Foods Daily Shop</td>
+            <td><span style="color:#16a34a; font-weight:700;">5家</span></td>
+            <td><span class="badge badge-green">扩张中</span></td>
+            <td style="font-size:11px; color:#6b7280;">计划2026年底增至约10家</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">Amazon Fresh</td>
+            <td><span style="color:#9ca3af; font-weight:700;">已关停</span></td>
+            <td><span class="badge badge-red">2026/02关闭</span></td>
+            <td style="font-size:11px; color:#6b7280;">共58家，2026年1月宣布关闭，2月完成</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">Amazon Go（无人便利店）</td>
+            <td><span style="color:#9ca3af; font-weight:700;">已关停</span></td>
+            <td><span class="badge badge-red">2026/02关闭</span></td>
+            <td style="font-size:11px; color:#6b7280;">共16家，与Fresh同批次关闭；生鲜业务回归Whole Foods</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Business distribution by country -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">各区域净销售额分布（2025财年，百万美元）</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:16px;">
+      <div style="background:#eff6ff; border-radius:10px; padding:14px; text-align:center; border:1px solid #bfdbfe;">
+        <div style="font-size:20px; font-weight:800; color:#1d4ed8; line-height:1;">$448.9bn</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">🇺🇸 美国</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">占集团收入62.6%</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; text-align:center; border:1px solid #e2e8f0;">
+        <div style="font-size:20px; font-weight:800; color:#374151; line-height:1;">$45.9bn</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">🇩🇪 德国</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">欧洲最大单市场</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; text-align:center; border:1px solid #e2e8f0;">
+        <div style="font-size:20px; font-weight:800; color:#374151; line-height:1;">$43.2bn</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">🇬🇧 英国</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">欧洲第二</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; text-align:center; border:1px solid #e2e8f0;">
+        <div style="font-size:20px; font-weight:800; color:#374151; line-height:1;">$30.7bn</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">🇯🇵 日本</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">亚洲最大单市场</div>
+      </div>
+    </div>
+    <div style="font-size:11px; color:#6b7280; background:#f8fafc; border-radius:8px; padding:10px 14px; line-height:1.6;">
+      "其他地区"$107.5bn涵盖亚马逊未单独列示的全部市场（含印度、法国、意大利等）。亚马逊仅披露面积，不披露履约中心或配送站的具体数量。
+    </div>
+  </div>
+
+</div><!-- /tab-8 -->
+
 <!-- ═══════════════════════════════════════════════════════ FOOTER ═══ -->
 <div style="background:#1e293b; border-radius:14px; padding:20px 24px; margin-bottom:24px; text-align:center;">
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.0（Tab版）
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.1（含采购来源重建）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · Air8 PulseLink · 行业媒体（逐条标注）
   </div>
 </div>
 
@@ -1077,7 +1463,7 @@ document.addEventListener('DOMContentLoaded', () => {
       labels: ['亚马逊','沃尔玛','京东','阿里巴巴','Target','Netflix','Best Buy','Rakuten','eBay','Flipkart'],
       datasets: [{
         label: '收入（$bn）',
-        data: [716.9, 713.2, 187.2, 148.4, 104.8, 43.0, 42.0, 16.0, 10.3, 8.0],
+        data: [716.9, 713.2, 187.2, 148.4, 104.8, 45.2, 41.7, 16.6, 11.1, 2.4],
         backgroundColor: ['#1d4ed8','#0ea5e9','#8b5cf6','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#6366f1','#06b6d4'],
         borderRadius: 6,
         datalabels: {
