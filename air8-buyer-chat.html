@@ -583,6 +583,11 @@ function inlineFormat(s) {
 
 // ── TABBED CARD ───────────────────────────────────────────────────────────────
 function addTabCard(data) {
+  // Guard: must have tabs array
+  if(!data || !Array.isArray(data.tabs) || data.tabs.length===0) {
+    addMarkdown('⚠️ Could not render response card. Please try again.');
+    return;
+  }
   const chat=document.getElementById('chat');
   const cid='c'+Date.now();
   const el=document.createElement('div');
@@ -733,6 +738,7 @@ function renderAnalysisText(txt) {
   return h || '<p class="text-xs text-gray-600 leading-relaxed mb-3">'+esc(txt)+'</p>';
 }
 function buildTreemap(chart) {
+  if(!chart || !Array.isArray(chart.values) || chart.values.length===0) return '';
   var BPAL=['#3b5fe0','#e53e3e','#dd6b20','#38a169','#6d28d9','#0891b2','#dc2626','#059669','#d97706'];
   var vals=chart.values||[], lbls=chart.labels||[];
   var total=vals.reduce(function(a,b){return a+b;},0)||100;
@@ -758,6 +764,7 @@ function buildTreemap(chart) {
 }
 
 function buildPanel(tab, cid) {
+  try {
   let h='';
 
   // Insight box
@@ -927,6 +934,7 @@ function buildPanel(tab, cid) {
   }
 
   return h;
+  } catch(e) { console.error("buildPanel error:", e); return "<p class='text-xs text-red-400 p-3'>Card render error — check console</p>"; }
 }
 
 // ── TABLE ────────────────────────────────────────────────────────────────────
@@ -951,11 +959,13 @@ function buildTable(t) {
 // Rule 1: country/origin/distribution → ALWAYS doughnut
 // Rule 2: trend/revenue/time-series   → ALWAYS bar_line (bar + line overlay)
 function enforceChartType(c) {
+  if(!c || typeof c !== 'object') return c || {};
   const t = (c.title||'').toLowerCase();
+  const labels = Array.isArray(c.labels) ? c.labels : [];
   const isCountry = /country|origin|sourcing.mix|import.mix|distribution|by country|by region/.test(t)
-    || (c.labels||[]).filter(l=>/^(china|vietnam|bangladesh|india|usa|us|cambodia|mexico|turkey|indonesia|pakistan|other|eu|europe)$/i.test(String(l).trim())).length >= 2;
+    || labels.filter(l=>/^(china|vietnam|bangladesh|india|usa|us|cambodia|mexico|turkey|indonesia|pakistan|other|eu|europe)$/i.test(String(l).trim())).length >= 2;
   const isTrend = /trend|fy20|q[1-4].*20[12]|revenue.*\$|annual.*\$/.test(t)
-    || (c.labels||[]).filter(l=>/^(FY|Q)\d|^20\d\d/.test(String(l))).length >= 2;
+    || labels.filter(l=>/^(FY|Q)\d|^20\d\d/.test(String(l))).length >= 2;
   if(isCountry && c.type!=='grouped_bar') return Object.assign({},c,{type:'doughnut'});
   if(isTrend && c.type==='bar') return Object.assign({},c,{type:'bar_line'});
   return c;
@@ -1002,6 +1012,7 @@ function barLineCfg(c) {
 function renderChartObj(rawData, canvasId) {
   const canvas = document.getElementById(canvasId);
   if(!canvas || !rawData) return;
+  if(!rawData.values && !rawData.datasets) return; // nothing to render
   if(charts[canvasId]) charts[canvasId].destroy();
   const c = enforceChartType(rawData);
   if(c.type==='grouped_bar' && c.datasets) {
