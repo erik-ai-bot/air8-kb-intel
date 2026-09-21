@@ -795,54 +795,62 @@ function buildTreemap(chart) {
 
 function buildStoreMap(pts) {
   if(!Array.isArray(pts)||pts.length===0) return '';
-  const W=560,H=280;
-  // Mercator-ish: x=(lon+180)/360*W, y=(90-lat)/180*H
-  function proj(lat,lon){return{x:(lon+180)/360*W,y:(90-lat)/180*H};}
-  const max=Math.max(...pts.map(p=>p.count||1));
-  const PAL=['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#64748b','#f97316'];
-  // Simplified continent paths (Mercator approx)
-  const lands=[
-    // North America
-    'M 70,55 L 60,65 L 65,90 L 75,100 L 100,105 L 115,95 L 120,80 L 110,65 L 95,55 Z',
-    // South America
-    'M 95,110 L 90,120 L 92,145 L 105,165 L 115,160 L 120,140 L 115,115 L 105,108 Z',
-    // Europe
-    'M 215,45 L 210,55 L 220,65 L 240,63 L 248,55 L 242,45 Z',
-    // Africa
-    'M 220,72 L 215,85 L 218,115 L 228,130 L 240,128 L 248,110 L 245,85 L 238,72 Z',
-    // Asia
-    'M 255,40 L 250,55 L 260,75 L 290,80 L 340,70 L 360,55 L 350,40 L 310,35 L 275,38 Z',
-    // Australia
-    'M 350,145 L 345,158 L 358,168 L 375,165 L 382,152 L 372,143 Z',
-    // Greenland
-    'M 135,30 L 130,38 L 140,42 L 150,38 L 148,30 Z',
-  ];
-  const landPaths = lands.map(d=>`<path d="${d}" fill="#d1e8d0" stroke="#b8d4b6" stroke-width="0.8"/>`).join('');
-  const bubbles = pts.map((p,i)=>{
-    const {x,y}=proj(p.lat,p.lon);
-    const r=Math.max(8,Math.min(42,Math.sqrt(p.count/max)*42));
-    const col=PAL[i%PAL.length];
-    const pct=p.pct?p.pct+'%':'';
+  // Sort by count desc
+  var sorted=[...pts].sort((a,b)=>(b.count||0)-(a.count||0));
+  var max=sorted[0].count||1;
+  var PAL=['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#64748b','#f97316'];
+
+  // Mercator projection onto 560×270 canvas
+  // Background: use a clean world map image from wikimedia
+  const W=560, H=270;
+  function proj(lat,lon){
+    return {
+      x: Math.round((lon+180)/360*W),
+      y: Math.round((90-lat)/180*H)
+    };
+  }
+
+  var circles = sorted.map((p,i)=>{
+    var {x,y}=proj(p.lat||0, p.lon||0);
+    var r=Math.max(10, Math.min(55, Math.sqrt((p.count||1)/max)*55));
+    var col=PAL[i%PAL.length];
+    var label=p.label||'';
+    var pctTxt=p.pct?p.pct+'%':(p.count||(sorted[0].count||1));
+    // Label below circle, keeping within bounds
+    var lx=Math.max(30,Math.min(W-30,x));
+    var ly=Math.min(H-8, y+r+12);
     return `<g>
-      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" fill-opacity="0.82" stroke="white" stroke-width="1.5"/>
-      <text x="${x.toFixed(1)}" y="${(y+1.5).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="${r>14?10:8}" font-weight="700" font-family="-apple-system,sans-serif">${pct||p.count}</text>
-      <text x="${x.toFixed(1)}" y="${(y+r+9).toFixed(1)}" text-anchor="middle" fill="#374151" font-size="8.5" font-weight="600" font-family="-apple-system,sans-serif">${esc(p.label)}</text>
+      <circle cx="${x}" cy="${y}" r="${r}" fill="${col}" fill-opacity="0.85" stroke="rgba(255,255,255,0.9)" stroke-width="2"/>
+      <text x="${x}" y="${y+1}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="${r>18?12:9}" font-weight="800" font-family="-apple-system,sans-serif">${pctTxt}</text>
+      <text x="${lx}" y="${ly}" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="700" font-family="-apple-system,sans-serif" paint-order="stroke" stroke="rgba(255,255,255,0.9)" stroke-width="3">${esc(label)}</text>
     </g>`;
   }).join('');
-  return `<div class="mb-4 rounded-2xl overflow-hidden border border-gray-100 shadow-sm" style="background:#e8f4fb">
-    <svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;background:linear-gradient(180deg,#c8e6f5 0%,#d4eff7 60%,#c0dff0 100%)">
-      ${landPaths}
-      ${bubbles}
-    </svg>
-    <div class="flex flex-wrap gap-2 px-3 py-2" style="background:#f8fcff;border-top:1px solid #e0effa">
-      ${pts.map((p,i)=>`<div class="flex items-center gap-1.5 text-[10px] text-gray-600">
-        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${PAL[i%PAL.length]}"></span>
-        <span class="font-semibold">${esc(p.label)}</span>
-        <span class="text-gray-400">${p.count?.toLocaleString?.()||p.count}${p.pct?' ('+p.pct+'%)':''}</span>
-      </div>`).join('')}
+
+  // Use Natural Earth simple world map as background image
+  // Fallback gradient if image fails
+  var mapBg = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Winkel_triple_projection_SW.jpg/1280px-Winkel_triple_projection_SW.jpg';
+
+  // Legend
+  var legend = sorted.map((p,i)=>`
+    <span class="inline-flex items-center gap-1 text-[10px] text-gray-600">
+      <span class="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${PAL[i%PAL.length]}"></span>
+      <span class="font-semibold">${esc(p.label||'')}</span>
+      <span class="text-gray-400">${(p.count||0).toLocaleString?.()??p.count}${p.pct?' ('+p.pct+'%)':''}</span>
+    </span>`).join('');
+
+  return `<div class="mb-4 rounded-2xl overflow-hidden shadow-sm" style="border:1px solid #e0eaf5">
+    <div style="position:relative;width:100%;background:#c8e6f5">
+      <img src="${mapBg}" alt="world map" style="width:100%;height:auto;display:block;opacity:0.55;object-fit:cover;max-height:270px" onerror="this.style.display='none'">
+      <svg viewBox="0 0 ${W} ${H}" width="100%" style="position:absolute;top:0;left:0;width:100%;height:100%">
+        ${circles}
+      </svg>
+    </div>
+    <div class="flex flex-wrap gap-x-4 gap-y-1.5 px-3 py-2.5" style="background:#f0f7ff;border-top:1px solid #dbeafe">
+      ${legend}
     </div>
   </div>`;
 }
+
 
 function buildPanel(tab, cid) {
   try {
