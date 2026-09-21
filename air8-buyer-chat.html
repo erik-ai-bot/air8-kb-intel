@@ -25,6 +25,11 @@
   .risk-high { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
   .chip { padding:7px 16px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px; border-radius:999px; cursor:pointer; transition:all .15s; white-space:nowrap; }
   .chip:hover { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
+  /* Source-Ready insight text card */
+  .itc { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; margin-bottom:16px; }
+  .itc-headline { font-size:11px; font-weight:700; color:#0f172a; margin-bottom:8px; padding-bottom:7px; border-bottom:1px dashed #e2e8f0; line-height:1.5; }
+  .itc-bullet { display:flex; gap:6px; margin-bottom:5px; align-items:flex-start; font-size:11px; color:#334155; line-height:1.6; }
+  .itc-dot { flex-shrink:0; font-weight:700; color:#1d4ed8; margin-top:1px; }
 </style>
 </head>
 <body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
@@ -625,6 +630,38 @@ function addTabCard(data) {
   scrollDown();
 }
 
+// ── SOURCE-READY INSIGHT TEXT RENDERER ──────────────────────────────────────
+function renderInsightText(text) {
+  if (!text) return '';
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length);
+  if (!lines.length) return '';
+
+  // Detect Source-Ready format: first non-bullet line is headline, rest are bullets
+  const isSRFormat = lines.some(l => /^[•\-\u2013\u25aa\u25b8]/.test(l));
+
+  if (!isSRFormat) {
+    // Plain text fallback — render as a simple card
+    return `<div class="itc"><p style="font-size:11.5px;color:#334155;line-height:1.7;margin:0">${esc(text)}</p></div>`;
+  }
+
+  let html = '<div class="itc">';
+  let headlineDone = false;
+  lines.forEach(line => {
+    const isBullet = /^[•\-\u2013\u25aa\u25b8\u2192]/.test(line);
+    const clean = line.replace(/^[•\-\u2013\u25aa\u25b8\u2192]\s*/, '');
+    if (isBullet) {
+      html += `<div class="itc-bullet"><span class="itc-dot">•</span><span>${esc(clean)}</span></div>`;
+    } else if (!headlineDone) {
+      html += `<div class="itc-headline">${esc(clean)}</div>`;
+      headlineDone = true;
+    } else {
+      html += `<div class="itc-bullet"><span class="itc-dot" style="color:#64748b">›</span><span>${esc(clean)}</span></div>`;
+    }
+  });
+  html += '</div>';
+  return html;
+}
+
 // ── PANEL BUILDER ─────────────────────────────────────────────────────────────
 const FLAGS={'china':'🇨🇳','vietnam':'🇻🇳','bangladesh':'🇧🇩','india':'🇮🇳','cambodia':'🇰🇭','indonesia':'🇮🇩','turkey':'🇹🇷','pakistan':'🇵🇰','morocco':'🇲🇦','sri lanka':'🇱🇰','other':'🌐','mexico':'🇲🇽','us':'🇺🇸','usa':'🇺🇸'};
 function flag(n){return FLAGS[(n||'').toLowerCase().replace(/[^a-z ]/g,'')]||'';}
@@ -654,8 +691,8 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-  // Free text
-  if(tab.text) h+=`<p class="text-sm text-gray-600 leading-relaxed mb-4">${esc(tab.text)}</p>`;
+  // Free text — Source Ready insight card
+  if(tab.text) h+=renderInsightText(tab.text);
 
   // Chart placeholder
   if(tab.chart) {
