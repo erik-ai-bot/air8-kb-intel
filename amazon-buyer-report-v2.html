@@ -772,13 +772,13 @@
     <!-- Sub C: Labeled customs doughnut -->
     <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">C. 已标注海关记录来源国（仅占总量8%）</div>
     <div class="chart-wrap">
-      <div class="chart-title">2025全年自营进口来源国——已标注HS章节记录（票数口径 · 29,751条）</div>
+      <div class="chart-title">2026年至今自营进口来源国——已标注HS章节记录（票数口径 · 6,092条）</div>
       <div style="height:260px; position:relative;">
         <canvas id="sourceCountryChart"></canvas>
       </div>
     </div>
     <div class="warning-box">
-      ⚠️ <strong>为何图中中国仅9.6%，实际约94.3%？</strong> 上图仅含已标注HS章节记录（总量8%）；未标注的70,252条记录中92%全为中国来源，合并后中国实际占比约94.3%。<br/>
+      ⚠️ <strong>为何图中中国仅29.1%，实际约94.3%？</strong> 上图仅含已标注HS章节记录（6,092条，占总量约8%）；未标注的70,252条记录中92%全为中国来源，合并后中国实际占比约94.3%。<br/>
       <span style="display:block; margin-top:6px; color:#92400e;">根本原因：3P卖家以自己名义报关（占平台单量60%）；Apple/Samsung等品牌在美境内直接供货，均不记录为Amazon进口。</span>
     </div>
 
@@ -1304,7 +1304,7 @@
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.9（Tab4加品类增速表+结论卡，删除重复GMV柱图）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v3.0（来源国Doughnut换2026数据，gap说明更新9.6%→29.1%）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
   </div>
 </div>
 
@@ -1518,14 +1518,14 @@ document.addEventListener('DOMContentLoaded', () => {
   new Chart(document.getElementById('sourceCountryChart'), {
     type: 'doughnut',
     data: {
-      labels: ['印度','越南','中国','秘鲁','荷兰','斯里兰卡','孟加拉','新加坡'],
+      labels: ['越南','中国','印度','新加坡','阿联酋','墨西哥','其他'],
       datasets: [{
-        data: [35.9, 33.9, 9.6, 6.4, 4.3, 3.8, 3.1, 2.8],
-        backgroundColor: CHART_PAL,
+        data: [31.7, 29.1, 24.9, 4.6, 3.2, 3.0, 3.5],
+        backgroundColor: ['#ef4444','#f97316','#14b8a6','#6366f1','#d97706','#10b981','#94a3b8'],
         borderWidth: 2,
         borderColor: '#fff',
         datalabels: {
-          display: ctx => ctx.dataset.data[ctx.dataIndex] >= 4,
+          display: ctx => ctx.dataset.data[ctx.dataIndex] >= 3,
           color: '#fff',
           font: { size: 11, weight: '700' },
           formatter: v => v.toFixed(1) + '%'
