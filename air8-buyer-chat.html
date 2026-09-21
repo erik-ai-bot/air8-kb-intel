@@ -204,17 +204,27 @@ async function send() {
     // First time for this buyer → fall through to Layer 1 normally
   }
   _bypassDirectionCheck = false;
+  window._lastTopicHints = null; // consumed; clear after use
 
   addUser(msg);
   hist.push({role:'user',content:msg});
   const thinkId = addThinking(guessSteps(msg));
 
   try {
-    const res = await fetch(WORKER, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({message:msg, context:hist.slice(-8)})
-    });
+    let res, _retries = 0;
+    while(true) {
+      try {
+        res = await fetch(WORKER, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({message:msg, context:hist.slice(-8), topicHints: window._lastTopicHints||null})
+        });
+        break;
+      } catch(fetchErr) {
+        if(++_retries > 1) throw fetchErr;
+        await new Promise(r => setTimeout(r, 1200));
+      }
+    }
 
     if(!res.ok) { removeEl(thinkId); addText('⚠️ Server error: '+res.status); return; }
 
@@ -519,11 +529,14 @@ function continueDirection(cid) {
     sourcing: 'sourcing and supply chain',
     risk: 'risk and compliance requirements',
     signals: 'latest news and market signals',
-    competitors: 'competitive landscape and positioning'
+    competitors: 'competitive landscape and positioning',
+    supply_chain: 'supply chain intelligence'
   };
   var selected = [...container.querySelectorAll('[data-dir][data-selected="1"]')].map(el => dirMap[el.dataset.dir] || el.dataset.dir);
   if(!selected.length) return;
   var topicStr = selected.length === 1 ? selected[0] : selected.slice(0,-1).join(', ') + ' and ' + selected[selected.length-1];
+  // Store selected direction IDs so send() can pass them as topicHints to the worker
+  window._lastTopicHints = [...container.querySelectorAll('[data-dir][data-selected="1"]')].map(el => el.dataset.dir);
   container.querySelectorAll('label').forEach(l => l.style.pointerEvents='none');
   _bypassDirectionCheck = true; // prevent direction picker re-triggering on this specific query
   document.getElementById('inp').value = 'Tell me about ' + buyer + "'s " + topicStr;
@@ -536,12 +549,13 @@ function showDirectionPicker(originalMsg, buyer) {
   if(!window._dirPickers) window._dirPickers = {};
   window._dirPickers[cid] = { buyer, originalMsg };
   const directions = [
-    { id:'financials',  icon:'💰', title:'Financials',  desc:'Revenue, DPO, credit profile, payment terms' },
-    { id:'products',    icon:'📦', title:'Products',    desc:'Category mix, price points, buying approach' },
-    { id:'sourcing',    icon:'🌍', title:'Sourcing',    desc:'Country breakdown, import trends, supplier requirements' },
-    { id:'risk',        icon:'⚠️', title:'Risk',        desc:'Compliance requirements, payment risk, supplier risks' },
-    { id:'signals',     icon:'📰', title:'Signals',     desc:'Latest news, market moves, strategic shifts' },
-    { id:'competitors', icon:'🥊', title:'Competitors', desc:'Market positioning, competitive landscape' },
+    { id:'financials',    icon:'💰', title:'Financials',        desc:'Revenue, DPO, credit profile, payment terms' },
+    { id:'products',      icon:'📦', title:'Products',          desc:'Category mix, price points, buying approach' },
+    { id:'sourcing',      icon:'🌍', title:'Sourcing',          desc:'Country breakdown, import trends, supplier requirements' },
+    { id:'risk',          icon:'⚠️', title:'Risk',              desc:'Compliance requirements, payment risk, supplier risks' },
+    { id:'signals',       icon:'📰', title:'Signals',           desc:'Latest news, market moves, strategic shifts' },
+    { id:'competitors',   icon:'🥊', title:'Competitors',       desc:'Market positioning, competitive landscape' },
+    { id:'supply_chain',  icon:'🔗', title:'Supply Chain',      desc:'Chain structure, sourcing countries, product trends, buyer positioning' },
   ];
   const optHtml = directions.map(d =>
     `<label class="flex gap-3 items-start p-3 rounded-xl cursor-pointer hover:bg-blue-50 transition-all" style="border:1px solid #e0e7ff;background:#f8faff" onclick="toggleDirectionOpt(this)">
@@ -858,6 +872,11 @@ function addTabCard(data) {
   }
   // Register buyer as having seen Layer 1
   if(data.buyer) registerLayer1Buyer(data.buyer);
+  // Deduplicate tabs by id (LLM sometimes generates duplicates)
+  if(data.tabs) {
+    const _seen = new Set();
+    data.tabs = data.tabs.filter(t => { if(_seen.has(t.id)) return false; _seen.add(t.id); return true; });
+  }
   const chat=document.getElementById('chat');
   const cid='c'+Date.now();
   const el=document.createElement('div');
