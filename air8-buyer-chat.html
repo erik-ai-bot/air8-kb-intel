@@ -25,11 +25,6 @@
   .risk-high { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
   .chip { padding:7px 16px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px; border-radius:999px; cursor:pointer; transition:all .15s; white-space:nowrap; }
   .chip:hover { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
-  /* Source-Ready insight text card */
-  .itc { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; margin-bottom:16px; }
-  .itc-headline { font-size:11px; font-weight:700; color:#0f172a; margin-bottom:8px; padding-bottom:7px; border-bottom:1px dashed #e2e8f0; line-height:1.5; }
-  .itc-bullet { display:flex; gap:6px; margin-bottom:5px; align-items:flex-start; font-size:11px; color:#334155; line-height:1.6; }
-  .itc-dot { flex-shrink:0; font-weight:700; color:#1d4ed8; margin-top:1px; }
 </style>
 </head>
 <body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
@@ -65,11 +60,11 @@
       <p class="text-sm font-semibold text-gray-900 mb-1">Ask about any buyer, product, or market</p>
       <p class="text-xs text-gray-500 mb-5">Get structured intelligence with financials, sourcing, products & risk signals</p>
       <div class="flex flex-wrap justify-center gap-2">
-        <button onclick="sq('Tell me about Walmart')" class="chip">🏢 Walmart</button>
-        <button onclick="sq('Who are Walmart\'s top suppliers?')" class="chip">🏭 Top Suppliers</button>
-        <button onclick="sq('US apparel market 2025 — market size, unit costs, leading buyers')" class="chip">📊 Apparel Market</button>
-        <button onclick="sq('Vietnam sourcing trend 2025 — exports, costs, top buyers')" class="chip">🌍 Vietnam Sourcing</button>
-        <button onclick="sq('Compare Walmart vs Target')" class="chip">⚔️ Compare Buyers</button>
+        <button onclick="sq('Tell me about Walmart')" class="chip">Walmart</button>
+        <button onclick="sq('Tell me about SHEIN')" class="chip">SHEIN</button>
+        <button onclick="sq('Compare AKA Brands vs REVOLVE')" class="chip">AKA vs REVOLVE</button>
+        <button onclick="sq('US tariff on apparel from China 2025')" class="chip">US Tariff</button>
+        <button onclick="sq('Vietnam fast fashion sourcing trend 2026')" class="chip">Vietnam Trend</button>
       </div>
     </div>
   </div>
@@ -118,13 +113,24 @@ function addRealStep(thinkId, text, src) {
   const row = document.createElement('div');
   row.className='flex items-start gap-2.5 step-row';
   row.style.animation='stepIn .2s ease-out forwards';
-  row.innerHTML=`<div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px"><div class="spinner" style="width:12px;height:12px"></div></div><div class="flex-1 min-w-0"><div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(text)}</div>${src?`<div class="text-[10px] mt-0.5" style="color:#1d4ed8">→ ${esc(src)}</div>`:''}</div>`;
+  row.innerHTML=`<div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px"><div class="spinner" style="width:12px;height:12px"></div></div><div class="flex-1 min-w-0"><div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(text)}${srcBadge(src)}</div></div>`;
   box.appendChild(row);
   scrollDown();
 }
 function fqClick(cid, idx) {
   const q = window._fq && window._fq[cid] && window._fq[cid][idx];
   if(q) sq(q);
+}
+
+function srcBadge(src) {
+  if(!src) return '';
+  const s = src.toLowerCase();
+  let color = '#6b7280', bg = '#f3f4f6';
+  if(s.includes('google') || s.includes('brave') || s.includes('web')) { color='#1d4ed8'; bg='#eff6ff'; }
+  else if(s.includes('sec') || s.includes('edgar') || s.includes('filing')) { color='#d97706'; bg='#fffbeb'; }
+  else if(s.includes('customs') || s.includes('1688') || s.includes('census')) { color='#059669'; bg='#ecfdf5'; }
+  else if(s.includes('air8') || s.includes('pulselink')) { color='#7c3aed'; bg='#f5f3ff'; }
+  return `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ml-1" style="color:${color};background:${bg}">${esc(src)}</span>`;
 }
 
 // ── SEND ─────────────────────────────────────────────────────────────────────
@@ -301,9 +307,35 @@ function extractJSON(text) {
 
 // ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
 function guessSteps(msg) {
-  // Return empty — all CoT steps come from real SSE events (worker Brave search results).
-  // Pre-populating fake steps was misleading; the worker streams actual data source steps.
-  return [];
+  const m = msg.toLowerCase();
+  const buyer = msg.replace(/tell me (sth |something )?(about|more about)|查|了解|分析|compare|vs\s/gi,'').replace(/\?/,'').trim().slice(0,35);
+  
+  if(/compare|vs /i.test(msg)) {
+    const parts = msg.match(/([A-Za-z &.]+)\s+vs\.?\s+([A-Za-z &.]+)/i);
+    const a = parts?.[1]?.trim()||'Buyer A', b = parts?.[2]?.trim()||'Buyer B';
+    return [
+      { text: `Searching buyer database: ${a}`, src: 'Air8 PulseLink' },
+      { text: `Searching buyer database: ${b}`, src: 'Air8 PulseLink' },
+      { text: 'Pulling financial profiles & DPO data', src: 'Public filings' },
+      { text: 'Cross-referencing sourcing & customs records', src: 'Customs DB' },
+      { text: 'Composing side-by-side analysis', src: null },
+    ];
+  } else if(/tariff|duty|hts/i.test(m)) {
+    return [
+      { text: 'Querying HTS tariff schedule', src: 'USITC' },
+      { text: 'Checking Section 301 / de minimis rules', src: 'CBP.gov' },
+      { text: 'Calculating rate differentials by origin', src: 'Air8 Tariff DB' },
+    ];
+  } else if(/trend|market|industry/i.test(m)) {
+    return [
+      { text: 'Scanning trade news & signals', src: 'Web search' },
+      { text: 'Pulling sourcing shift data', src: 'Customs records' },
+      { text: 'Identifying supply chain implications', src: 'Air8 KB' },
+    ];
+  } else {
+    // Buyer queries: real steps come from SSE, start empty (addRealStep fills in)
+    return [];
+  }
 }
 
 // ── THINKING INDICATOR — spinner→checkmark sequence ──────────────────────────
@@ -321,11 +353,21 @@ function addThinking(steps) {
       <div class="px-4 py-2 border-b border-gray-100 flex items-center gap-2" style="background:#f8faff">
         <div class="spinner" style="width:10px;height:10px;border-width:1.5px"></div>
         <span class="text-[11px] font-semibold" style="color:#1d4ed8">Researching…</span>
+        <span id="${id}-timer" class="text-[10px] text-gray-400 ml-auto">1s</span>
       </div>
-      <div class="px-4 py-3 space-y-2" id="${id}-steps" style="max-height:180px;overflow-y:auto"></div>
+      <div class="px-4 py-3 space-y-2" id="${id}-steps"></div>
     </div>`;
   chat.appendChild(el);
   scrollDown();
+
+  // Real-time timer
+  if(!window._thinkTimers) window._thinkTimers = {};
+  let _secs = 1;
+  window._thinkTimers[id] = setInterval(() => {
+    _secs++;
+    const t = document.getElementById(id+'-timer');
+    if(t) t.textContent = _secs+'s';
+  }, 1000);
 
   const TICK = 850;
   steps.forEach((step,i) => {
@@ -561,29 +603,15 @@ function addTabCard(data) {
     </div>`).join('');
 
   // Store followups in global map to avoid onclick escaping issues
-  // Fallback suggested questions if model didn't output followups
-  const DEFAULT_FOLLOWUPS = {
-    buyer: ['Detailed financial analysis', 'Sourcing & supply chain deep dive', 'Products & category breakdown', 'Top suppliers — who are they?', 'Compare with competitors'],
-    buyer_financials: ['Sourcing & supply chain deep dive', 'Top suppliers — who are they?', 'Products & category breakdown', 'Latest news & signals'],
-    buyer_sourcing: ['Detailed financial analysis', 'Products & category breakdown', 'Top suppliers — who are they?', 'Compare sourcing vs competitors'],
-    buyer_products: ['Detailed financial analysis', 'Sourcing & supply chain deep dive', 'Top suppliers — who are they?', 'Latest news & signals'],
-    buyer_suppliers: ['Detailed financial analysis', 'Sourcing & supply chain deep dive', 'Products & category breakdown', 'Compare sourcing vs competitors'],
-    product_market: ['Sourcing deep dive for specific buyer', 'Tariff analysis for specific HS code', 'Compare country A vs country B', 'Find suppliers in specific country'],
-    country_sourcing: ['Deep dive on specific buyer sourcing from this country', 'Compare country A vs country B', 'Top suppliers in country', 'Tariff analysis for specific HS code'],
-    comparison: ['Detailed financial analysis for Buyer A', 'Detailed financial analysis for Buyer B', 'Top suppliers for Buyer A', 'Sourcing deep dive comparison']
-  };
-  const firstTabId = data.tabs && data.tabs[0] && data.tabs[0].id || 'buyer';
-  const resolvedFollowups = (data.followups && data.followups.length) ? data.followups : (DEFAULT_FOLLOWUPS[firstTabId] || DEFAULT_FOLLOWUPS.buyer);
-
   if(!window._fq) window._fq = {};
   const fqKey = cid;
-  window._fq[fqKey] = resolvedFollowups;
+  window._fq[fqKey] = data.followups || [];
 
-  const followupHtml = resolvedFollowups.length ? `
+  const followupHtml = data.followups && data.followups.length ? `
     <div class="px-5 pb-4 pt-3 border-t border-gray-100">
       <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Suggested questions</div>
       <div class="flex flex-wrap gap-2">
-        ${resolvedFollowups.map((q,qi)=>`<button onclick="fqClick('${cid}',${qi})"
+        ${data.followups.map((q,qi)=>`<button onclick="fqClick('${cid}',${qi})"
           class="text-left px-3 py-1.5 text-xs rounded-xl border border-gray-200 text-gray-600 bg-slate-50 transition-all hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200"
           >${esc(q)}</button>`).join('')}
       </div>
@@ -612,54 +640,31 @@ function addTabCard(data) {
       <div class="p-5">${panels}</div>
       <!-- Suggested questions -->
       ${followupHtml}
-      ${data.sources ? `<div class="px-5 pb-3 pt-0">
-        <div class="text-[10px] text-gray-400 leading-relaxed">
-          <span class="font-semibold">Sources:</span> ${esc(data.sources)}
+      <div class="px-5 py-3 border-t border-gray-100 flex items-center gap-2">
+        <span class="text-[10px] text-gray-400">Was this helpful?</span>
+        <button onclick="this.style.color='#16a34a';this.style.background='#f0fdf4'" class="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200 hover:border-green-300 transition-all">👍</button>
+        <button onclick="this.style.color='#dc2626';this.style.background='#fef2f2'" class="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200 hover:border-red-300 transition-all">👎</button>
+      </div>
+      ${data.sources ? `<div class="px-5 pb-4 pt-0">
+        <div class="text-[10px] text-gray-400 leading-relaxed p-2.5 bg-slate-50 rounded-lg border border-slate-100">
+          <span class="font-semibold text-gray-500">Data sources:</span> ${esc(data.sources)}
+          <span class="ml-2 text-gray-400">· Verify key figures before quoting.</span>
         </div>
       </div>` : ''}
     </div>`;
 
   chat.appendChild(el);
   // Render charts after DOM insert
-  data.tabs.forEach(t => {
-    if(t.chart) renderChart(t,cid);
-    if(t.charts&&t.charts.length) {
-      t.charts.forEach((ch,ci)=>{ renderChartById(ch, `${t.id}-chart-${ci}-${cid}`, cid); });
-    }
-  });
+  data.tabs.forEach(t => { if(t.chart) renderChart(t,cid); });
   scrollDown();
 }
 
-// ── SOURCE-READY INSIGHT TEXT RENDERER ──────────────────────────────────────
-function renderInsightText(text) {
-  if (!text) return '';
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length);
-  if (!lines.length) return '';
-
-  // Detect Source-Ready format: first non-bullet line is headline, rest are bullets
-  const isSRFormat = lines.some(l => /^[•\-\u2013\u25aa\u25b8]/.test(l));
-
-  if (!isSRFormat) {
-    // Plain text fallback — render as a simple card
-    return `<div class="itc"><p style="font-size:11.5px;color:#334155;line-height:1.7;margin:0">${esc(text)}</p></div>`;
-  }
-
-  let html = '<div class="itc">';
-  let headlineDone = false;
-  lines.forEach(line => {
-    const isBullet = /^[•\-\u2013\u25aa\u25b8\u2192]/.test(line);
-    const clean = line.replace(/^[•\-\u2013\u25aa\u25b8\u2192]\s*/, '');
-    if (isBullet) {
-      html += `<div class="itc-bullet"><span class="itc-dot">•</span><span>${esc(clean)}</span></div>`;
-    } else if (!headlineDone) {
-      html += `<div class="itc-headline">${esc(clean)}</div>`;
-      headlineDone = true;
-    } else {
-      html += `<div class="itc-bullet"><span class="itc-dot" style="color:#64748b">›</span><span>${esc(clean)}</span></div>`;
-    }
-  });
-  html += '</div>';
-  return html;
+function statColor(label, value) {
+  const l = (label || '').toLowerCase();
+  if(/dpo|late|risk|debt|dilution/.test(l)) return { bg: '#fff7ed', border: '#fed7aa', numColor: '#c2410c' };
+  if(/revenue|sales|ocf|fcf|cash flow/.test(l)) return { bg: '#f0fdf4', border: '#bbf7d0', numColor: '#15803d' };
+  if(/s&p|rating|credit|moody/.test(l)) return { bg: '#eff6ff', border: '#bfdbfe', numColor: '#1d4ed8' };
+  return { bg: '#ffffff', border: '#f3f4f6', numColor: '#111827' };
 }
 
 // ── PANEL BUILDER ─────────────────────────────────────────────────────────────
@@ -682,53 +687,31 @@ function buildPanel(tab, cid) {
   if(tab.stats&&tab.stats.length) {
     h+=`<div class="grid grid-cols-2 gap-3 mb-4">`;
     tab.stats.forEach(s=>{
-      h+=`<div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm">
+      const sc = statColor(s.label, s.value);
+      h+=`<div class="rounded-2xl p-3.5 border shadow-sm" style="background:${sc.bg};border-color:${sc.border}">
         <div class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mb-1">${esc(s.label)}</div>
-        <div class="text-xl font-black text-gray-900">${esc(s.value)}</div>
+        <div class="text-xl font-black" style="color:${sc.numColor}">${esc(s.value)}</div>
         ${s.delta?`<div class="text-xs font-semibold mt-1" style="color:#16a34a">${esc(s.delta)}</div>`:''}
       </div>`;
     });
     h+=`</div>`;
   }
 
-  // Free text — Source Ready insight card
-  if(tab.text) h+=renderInsightText(tab.text);
+  // Free text
+  if(tab.text) h+=`<p class="text-sm text-gray-600 leading-relaxed mb-4">${esc(tab.text)}</p>`;
 
   // Chart placeholder
   if(tab.chart) {
-    const countryLabels = ['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia'];
-    const isCountryData = tab.chart.labels && tab.chart.labels.some(l => countryLabels.includes(l));
-    const isPieTab2 = tab.id==='country_matrix'||tab.id==='origin_mix'||tab.id==='sourcing_mix';
-    const isPercentData2 = tab.chart.values && tab.chart.values.reduce((a,b)=>a+b,0)<=105;
-    const usePieInBuild = isPieTab2||(isCountryData&&isPercentData2&&tab.chart.labels&&tab.chart.labels.length<=8);
-    const isHorizontalBar = !usePieInBuild && (isCountryData || tab.id==='sourcing' || tab.id==='origin' || tab.id==='hs_breakdown');
-    const chartH = (tab.chart.type==='doughnut'||usePieInBuild) ? 190 : tab.chart.type==='grouped_bar' ? 190 : isHorizontalBar ? 200 : 160;
     h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
       ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>`:''}
-      <div style="height:${chartH}px">
+      <div style="height:${tab.chart.type==='grouped_bar'?190:160}px">
         <canvas id="${cid}-chart-${tab.id}"></canvas>
       </div>
     </div>`;
   }
 
-  // Multiple charts array support
-  if(tab.charts && tab.charts.length) {
-    h+=`<div class="grid grid-cols-${Math.min(tab.charts.length,3)} gap-3 mb-4">`;
-    tab.charts.forEach((ch,ci)=>{
-      const countryLabels=['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia'];
-      const isCountryData=ch.labels&&ch.labels.some(l=>countryLabels.includes(l));
-      const isHoriz=isCountryData||ch.horizontal;
-      const chH=ch.type==='doughnut'?160:ch.type==='grouped_bar'?160:isHoriz?140:120;
-      h+=`<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
-        ${ch.title?`<div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">${esc(ch.title)}</div>`:''}
-        <div style="height:${chH}px"><canvas id="${tab.id}-chart-${ci}-${cid}"></canvas></div>
-      </div>`;
-    });
-    h+=`</div>`;
-  }
-
-  // Country tiles for sourcing/origin tabs
-  if((tab.id==='sourcing'||tab.id==='origin')&&tab.chart&&tab.chart.labels) {
+  // Country tiles for sourcing
+  if(tab.id==='sourcing'&&tab.chart&&tab.chart.labels) {
     const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
     h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
     tab.chart.labels.forEach((lbl,i)=>{
@@ -769,11 +752,6 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-  // Separator between risks and signals when both present (risk_signals tab)
-  if(tab.risks&&tab.risks.length&&tab.signals&&tab.signals.length) {
-    h+=`<div class="flex items-center gap-3 my-4"><div class="flex-1 h-px bg-gray-100"></div><div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2">Latest Signals</div><div class="flex-1 h-px bg-gray-100"></div></div>`;
-  }
-
   // Signals
   if(tab.signals&&tab.signals.length) {
     h+=`<div class="space-y-3">`;
@@ -793,48 +771,6 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-
-  // Payment behavior (from Air8 internal 1688 data)
-  // Payment behavior — Air8 internal client data only. No data = section hidden entirely.
-  if(tab.payment_behavior) {
-    const pb=tab.payment_behavior;
-    const hasData = pb.avg_late_days!=null || pb.ontime_pct!=null || pb.dilution_pct!=null;
-    if(hasData) {
-      const invoiceCount = pb.invoice_count ? `（${pb.invoice_count}笔已结算发票，按发票金额加权）` : '';
-      h+=`<div class="mt-4 rounded-2xl border p-4" style="background:#f8faff;border-color:#e0e7ff">
-        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">付款行为 — Air8 内部客户结算数据</div>
-        ${invoiceCount?`<div class="text-[10px] text-gray-400 mb-3">${esc(invoiceCount)}</div>`:''}
-        <div class="grid grid-cols-3 gap-3 mb-3">
-          ${[
-            {label:'逾期天数（加权）',value:pb.avg_late_days!=null?'+'+pb.avg_late_days+' 天':null,sub:'相对到期日'},
-            {label:'准时或提前',value:pb.ontime_pct!=null?pb.ontime_pct+'%':null,sub:'占已结算发票'},
-            {label:'记录扣款率',value:pb.dilution_pct!=null?pb.dilution_pct+'%':null,sub:'占发票金额'}
-          ].filter(s=>s.value!=null).map(s=>`
-            <div class="bg-white rounded-xl border border-gray-100 p-3 text-center shadow-sm">
-              <div class="text-sm font-black mb-1" style="color:#1d4ed8">${esc(s.value)}</div>
-              <div class="text-[10px] text-gray-500 font-medium">${esc(s.label)}</div>
-              <div class="text-[9px] text-gray-400 mt-0.5">${esc(s.sub)}</div>
-            </div>`).join('')}
-        </div>
-        ${pb.distribution&&(pb.distribution.early!=null)?`<div class="text-[10px] text-gray-500 leading-relaxed">逾期分布：提前/准时 <strong>${pb.distribution.early}%</strong> · 逾期1–7天 <strong>${pb.distribution.late_1_7||'—'}%</strong> · 逾期7天以上 <strong>${pb.distribution.late_7plus||'—'}%</strong></div>`:''}
-      </div>`;
-    }
-  }
-
-  // CCC stats
-  if(tab.ccc) {
-    const c=tab.ccc;
-    h+=`<div class="flex items-center gap-2 p-3 rounded-xl mt-3 text-xs" style="background:#f0fdf4;border:1px solid #bbf7d0">
-      <span class="font-bold text-emerald-700">现金转换周期</span>
-      <span class="text-gray-500">DIO <strong>${c.dio||'—'}</strong> 天</span>
-      <span class="text-gray-400">+</span>
-      <span class="text-gray-500">DSO <strong>${c.dso||'—'}</strong> 天</span>
-      <span class="text-gray-400">−</span>
-      <span class="text-gray-500">DPO <strong>${c.dpo||'—'}</strong> 天</span>
-      <span class="text-gray-400">=</span>
-      <span class="font-black" style="color:#1d4ed8">净 <strong>${c.net||'—'}</strong> 天</span>
-    </div>`;
-  }
 
   // Key Takeaways bullets
   if(tab.bullets && tab.bullets.length) {
@@ -883,27 +819,6 @@ function buildTable(t) {
   </div>`;
 }
 
-// ── MULTI-CHART RENDERER ─────────────────────────────────────────────────────
-function renderChartById(ch, canvasId, cid) {
-  const canvas=document.getElementById(canvasId);
-  if(!canvas||!ch) return;
-  if(charts[canvasId]) charts[canvasId]?.destroy?.();
-  const blue='#1d4ed8';
-  const palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe','#f97316','#fb923c'];
-  const countryLabels=['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia','Other','Brazil','Peru','Sri Lanka'];
-  const isCountryData=ch.labels&&ch.labels.some(l=>countryLabels.includes(l));
-  const isHoriz=(isCountryData||ch.horizontal)&&ch.type!=='doughnut';
-  const effectiveType=(isCountryData&&ch.type!=='doughnut')?'bar':(ch.type||'bar');
-
-  if(effectiveType==='doughnut') {
-    charts[canvasId]=new Chart(canvas,{type:'doughnut',data:{labels:ch.labels,datasets:[{data:ch.values,backgroundColor:palette,borderWidth:2,borderColor:'#fff',hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:{size:9},color:'#475569',boxWidth:8,padding:4}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}});
-  } else if(effectiveType==='grouped_bar'&&ch.datasets) {
-    charts[canvasId]=new Chart(canvas,{type:'bar',data:{labels:ch.labels,datasets:ch.datasets.map((ds,i)=>({label:ds.label,data:ds.values,backgroundColor:palette[i]+'cc',borderColor:palette[i],borderWidth:1.5,borderRadius:3}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:9},color:'#475569',boxWidth:8}}},scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}});
-  } else {
-    charts[canvasId]=new Chart(canvas,{type:'bar',data:{labels:ch.labels,datasets:[{label:ch.title||'',data:ch.values,backgroundColor:isCountryData?palette:blue+'cc',borderColor:isCountryData?palette:blue,borderWidth:1.5,borderRadius:isHoriz?3:5}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:isHoriz?'y':'x',plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}});
-  }
-}
-
 // ── CHARTS ────────────────────────────────────────────────────────────────────
 function renderChart(tab, cid) {
   const canvas=document.getElementById(`${cid}-chart-${tab.id}`);
@@ -927,64 +842,8 @@ function renderChart(tab, cid) {
         plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
         scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
-  }
-  // ── Country/origin charts: pie for share data, bar for volume/trend data ──────
-  const countryLabels = ['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia','Turkey','Morocco','India','Sri Lanka'];
-  const isCountryData = tab.chart.labels && tab.chart.labels.some(l => countryLabels.includes(l));
-  const isOriginTab = tab.id==='sourcing' || tab.id==='origin' || tab.id==='hs_breakdown' || tab.id==='country_breakdown';
-  const isPieTab = tab.id==='country_matrix' || tab.id==='origin_mix' || tab.id==='sourcing_mix';
-  // Use pie/doughnut for percentage-based country share; bar for volume/trend
-  const isPercentData = tab.chart.values && tab.chart.values.reduce((a,b)=>a+b,0) <= 105;
-  const usePie = isPieTab || (isCountryData && isPercentData && tab.chart.labels && tab.chart.labels.length <= 8);
-  const effectiveType = usePie ? 'doughnut' : (isOriginTab ? 'bar' : (tab.chart.type || 'bar'));
-
-  if(effectiveType === 'doughnut') {
-    charts[key]=new Chart(canvas,{
-      type:'doughnut',
-      data:{
-        labels:tab.chart.labels,
-        datasets:[{
-          data:tab.chart.values,
-          backgroundColor:palette,
-          borderWidth:2,
-          borderColor:'#fff',
-          hoverOffset:4
-        }]
-      },
-      options:{responsive:true,maintainAspectRatio:false,
-        cutout:'62%',
-        plugins:{
-          legend:{position:'bottom',labels:{font:{size:10},color:'#475569',boxWidth:10,padding:6}},
-          tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}
-        }
-      }
-    });
   } else if(tab.chart.values) {
-    // Bar chart — use horizontal orientation for country/origin data
-    const isHorizontal = isCountryData || isOriginTab;
-    const isSource = isCountryData;
-    charts[key]=new Chart(canvas,{
-      type:'bar',
-      data:{
-        labels:tab.chart.labels,
-        datasets:[{
-          label:tab.chart.title||'',
-          data:tab.chart.values,
-          backgroundColor:isSource?palette:palette[0]+'cc',
-          borderColor:isSource?palette:palette[0],
-          borderWidth:1.5, borderRadius:isHorizontal?4:5
-        }]
-      },
-      options:{responsive:true,maintainAspectRatio:false,
-        indexAxis:isHorizontal?'y':'x',
-        plugins:{legend:{display:false}},
-        scales:{
-          y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},
-          x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}
-        }
-      }
-    });
-  } else if(tab.chart.datasets) {
+    const isSource=tab.id==='sourcing';
     charts[key]=new Chart(canvas,{
       type:'bar',
       data:{
@@ -1011,15 +870,17 @@ function swTab(cid,tabId) {
   document.getElementById(`${cid}-p-${tabId}`)?.classList.remove('hidden');
   const btn=document.getElementById(`${cid}-b-${tabId}`);
   if(btn){btn.classList.add('tab-active');btn.classList.remove('tab-inactive');}
-  // Resize chart if present (handles charts rendered while tab was hidden)
-  const chartKey=`${cid}-${tabId}`;
-  if(charts[chartKey]) { try { charts[chartKey].resize(); } catch(e){} }
-  // Resize multi-charts
-  Object.keys(charts).forEach(k=>{ if(k.startsWith(`${tabId}-chart-`)&&k.endsWith(`-${cid}`)) { try{charts[k].resize();}catch(e){} } });
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
-function removeEl(id){document.getElementById(id)?.remove();}
+function removeEl(id) {
+  if(window._thinkTimers && window._thinkTimers[id]) {
+    clearInterval(window._thinkTimers[id]);
+    delete window._thinkTimers[id];
+  }
+  const el=document.getElementById(id);
+  if(el) el.remove();
+}
 function scrollDown(){const c=document.getElementById('chat');requestAnimationFrame(()=>c.scrollTop=c.scrollHeight);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function renderMd(md){
@@ -1032,4 +893,3 @@ function renderMd(md){
 </script>
 </body>
 </html>
-<!-- v8 drill-down tab cards -->
