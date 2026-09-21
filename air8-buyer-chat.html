@@ -296,65 +296,9 @@ function extractJSON(text) {
 
 // ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
 function guessSteps(msg) {
-  const m = msg.toLowerCase();
-  const buyer = msg.replace(/tell me (sth |something )?(about|more about)|查|了解|分析|compare|vs\s/gi,'').replace(/\?/,'').trim().slice(0,35);
-  
-  if(/compare|vs /i.test(msg)) {
-    const parts = msg.match(/([A-Za-z &.]+)\s+vs\.?\s+([A-Za-z &.]+)/i);
-    const a = parts?.[1]?.trim()||'Buyer A', b = parts?.[2]?.trim()||'Buyer B';
-    return [
-      { text: `Searching buyer database: ${a}`, src: 'Air8 PulseLink' },
-      { text: `Searching buyer database: ${b}`, src: 'Air8 PulseLink' },
-      { text: 'Pulling financial profiles & DPO data', src: 'Public filings' },
-      { text: 'Cross-referencing sourcing & customs records', src: 'Customs DB' },
-      { text: 'Composing side-by-side analysis', src: null },
-    ];
-  } else if(/tariff|duty|hts/i.test(m)) {
-    return [
-      { text: 'Querying HTS tariff schedule', src: 'USITC' },
-      { text: 'Checking Section 301 / de minimis rules', src: 'CBP.gov' },
-      { text: 'Calculating rate differentials by origin', src: 'Air8 Tariff DB' },
-    ];
-  } else if(/trend|market|industry/i.test(m)) {
-    return [
-      { text: 'Scanning trade news & signals', src: 'Web search' },
-      { text: 'Pulling sourcing shift data', src: 'Customs records' },
-      { text: 'Identifying supply chain implications', src: 'Air8 KB' },
-    ];
-  } else if(/top supplier/i.test(m)) {
-    return [
-      { text: 'Querying Air8 Customs DB for supplier records', src: 'Air8 1688 DB' },
-      { text: 'Searching ImportGenius for shipper/consignee data', src: 'ImportGenius' },
-      { text: 'Cross-referencing with Census trade records', src: 'Census API' },
-      { text: 'Building supplier concentration analysis', src: 'Air8 Intelligence' },
-    ];
-  } else if(/market.*size|apparel.*market|furniture.*market|market.*trend/i.test(m) && !/walmart|target|costco|amazon|ross/i.test(m)) {
-    return [
-      { text: 'Querying US Census Trade API for import volumes', src: 'Census API' },
-      { text: 'Checking UN Comtrade for global trade data', src: 'UN Comtrade' },
-      { text: 'Searching for market size and unit cost data', src: 'Web search' },
-      { text: 'Building market analysis', src: 'Air8 Intelligence' },
-    ];
-  } else if(/vietnam|bangladesh|india|cambodia|indonesia.*sourcing|sourcing.*vietnam|sourcing.*bangladesh/i.test(m) && !/walmart|target|costco|amazon|ross/i.test(m)) {
-    return [
-      { text: 'Querying Census Trade API for country export data', src: 'Census API' },
-      { text: 'Checking Eurostat for EU sourcing from this country', src: 'Eurostat' },
-      { text: 'Searching for cost competitiveness and tariff data', src: 'Web search' },
-      { text: 'Building country sourcing analysis', src: 'Air8 Intelligence' },
-    ];
-  } else if(/compare|vs |versus/i.test(m)) {
-    const parts = msg.match(/([A-Za-z &.'-]+)\s+(vs\.?|versus|against)\s+([A-Za-z &.'-]+)/i);
-    const a = parts?.[1]?.trim()||'Buyer A', b = parts?.[3]?.trim()||'Buyer B';
-    return [
-      { text: `Searching SEC filings: ${a}`, src: 'SEC EDGAR' },
-      { text: `Searching SEC filings: ${b}`, src: 'SEC EDGAR' },
-      { text: 'Cross-referencing sourcing and customs data', src: 'Census API' },
-      { text: 'Building side-by-side comparison', src: 'Air8 Intelligence' },
-    ];
-  } else {
-    // Buyer queries: real steps come from SSE, start empty (addRealStep fills in)
-    return [];
-  }
+  // Return empty — all CoT steps come from real SSE events (worker Brave search results).
+  // Pre-populating fake steps was misleading; the worker streams actual data source steps.
+  return [];
 }
 
 // ── THINKING INDICATOR — spinner→checkmark sequence ──────────────────────────
