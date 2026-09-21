@@ -931,41 +931,87 @@ function buildTable(t) {
 }
 
 // ── CHARTS ────────────────────────────────────────────────────────────────────
+// ── CHART TYPE RULES (HARD) ─────────────────────────────────────────────────
+// Rule 1: country/origin/distribution → ALWAYS doughnut
+// Rule 2: trend/revenue/time-series   → ALWAYS bar_line (bar + line overlay)
+function enforceChartType(c) {
+  const t = (c.title||'').toLowerCase();
+  const isCountry = /country|origin|sourcing.mix|import.mix|distribution|by country|by region/.test(t)
+    || (c.labels||[]).filter(l=>/^(china|vietnam|bangladesh|india|usa|us|cambodia|mexico|turkey|indonesia|pakistan|other|eu|europe)$/i.test(String(l).trim())).length >= 2;
+  const isTrend = /trend|fy20|q[1-4].*20[12]|revenue.*\$|annual.*\$/.test(t)
+    || (c.labels||[]).filter(l=>/^(FY|Q)\d|^20\d\d/.test(String(l))).length >= 2;
+  if(isCountry && c.type!=='grouped_bar') return Object.assign({},c,{type:'doughnut'});
+  if(isTrend && c.type==='bar') return Object.assign({},c,{type:'bar_line'});
+  return c;
+}
+
+const DPAL=['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#64748b'];
+
+function doughnutCfg(c) {
+  return {
+    type:'doughnut',
+    data:{labels:c.labels,datasets:[{data:c.values,backgroundColor:DPAL.slice(0,c.values.length),borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{
+        legend:{position:'bottom',labels:{font:{size:11},color:'#475569',boxWidth:12,padding:12,usePointStyle:true}},
+        tooltip:{backgroundColor:'#1e293b',callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}},
+        datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]>=4,color:'#fff',font:{size:11,weight:'bold'},formatter:v=>v+'%'}
+      }}
+  };
+}
+
+function barLineCfg(c) {
+  const bkg=c.values.map((_,i)=>DPAL[i%DPAL.length]+'99');
+  return {
+    type:'bar',
+    data:{labels:c.labels,datasets:[
+      {type:'bar',label:c.title||'',data:c.values,backgroundColor:bkg,borderWidth:0,borderRadius:7,borderSkipped:false},
+      {type:'line',label:'Trend',data:c.values,borderColor:'#1d4ed8',borderWidth:2.5,
+       pointBackgroundColor:'#fff',pointBorderColor:'#1d4ed8',pointBorderWidth:2,pointRadius:4,pointHoverRadius:6,
+       tension:0.35,fill:false,yAxisID:'y'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},datalabels:{display:false},
+        tooltip:{backgroundColor:'#1e293b',callbacks:{
+          label:ctx=>ctx.dataset.type==='line'?null:`${ctx.formattedValue}`
+        }}},
+      scales:{
+        y:{grid:{color:'#f1f5f9'},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},
+        x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}
+      }}
+  };
+}
+
 // Render a chart object onto a specific canvas element by ID
-function renderChartObj(chartData, canvasId) {
+function renderChartObj(rawData, canvasId) {
   const canvas = document.getElementById(canvasId);
-  if(!canvas || !chartData) return;
+  if(!canvas || !rawData) return;
   if(charts[canvasId]) charts[canvasId].destroy();
-  const palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
-  if(chartData.type==='grouped_bar' && chartData.datasets) {
+  const c = enforceChartType(rawData);
+  if(c.type==='grouped_bar' && c.datasets) {
     charts[canvasId]=new Chart(canvas,{
       type:'bar',
-      data:{labels:chartData.labels,datasets:chartData.datasets.map((ds,i)=>({
+      data:{labels:c.labels,datasets:c.datasets.map((ds,i)=>({
         label:ds.label, data:ds.values,
-        backgroundColor:palette[i]+'cc', borderColor:palette[i], borderWidth:1.5, borderRadius:4
+        backgroundColor:DPAL[i%DPAL.length]+'cc', borderColor:DPAL[i%DPAL.length], borderWidth:0, borderRadius:5, borderSkipped:false
       }))},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{font:{size:10},color:'#475569',boxWidth:10}}},
-        scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+        plugins:{legend:{labels:{font:{size:10},color:'#475569',boxWidth:10}},datalabels:{display:false}},
+        scales:{y:{grid:{color:'#f1f5f9'},border:{display:false},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
-  } else if(chartData.type==='doughnut' && chartData.values) {
-    charts[canvasId]=new Chart(canvas,{
-      type:'doughnut',
-      data:{labels:chartData.labels,datasets:[{data:chartData.values,backgroundColor:palette.slice(0,chartData.values.length),borderWidth:2,borderColor:'#fff'}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
-        plugins:{legend:{position:'right',labels:{font:{size:10},color:'#475569',boxWidth:10,padding:8}},
-        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}
-    });
-  } else if(chartData.values) {
-    var barPal=['#4361ee','#3f86ed','#56b4d3','#38c9b9','#2ebcb3','#52d9c3','#7b61ff'];
-    var bkgColors=chartData.values.map(function(_,i){return barPal[i%barPal.length]+'cc';});
-    var brdColors=chartData.values.map(function(_,i){return barPal[i%barPal.length];});
+  } else if(c.type==='doughnut' && c.values) {
+    charts[canvasId]=new Chart(canvas, doughnutCfg(c));
+  } else if(c.type==='bar_line' && c.values) {
+    charts[canvasId]=new Chart(canvas, barLineCfg(c));
+  } else if(c.values) {
+    const bkg=c.values.map((_,i)=>DPAL[i%DPAL.length]+'99');
+    const brd=c.values.map((_,i)=>DPAL[i%DPAL.length]);
     charts[canvasId]=new Chart(canvas,{
       type:'bar',
-      data:{labels:chartData.labels,datasets:[{label:chartData.title||'',data:chartData.values,backgroundColor:bkgColors,borderColor:brdColors,borderWidth:0,borderRadius:8,borderSkipped:false}]},
+      data:{labels:c.labels,datasets:[{label:c.title||'',data:c.values,backgroundColor:bkg,borderColor:brd,borderWidth:0,borderRadius:8,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false}},
-        scales:{y:{grid:{color:'#f8fafc',lineWidth:1},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}
+        plugins:{legend:{display:false},datalabels:{display:false}},
+        scales:{y:{grid:{color:'#f8fafc'},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}
     });
   }
 }
@@ -975,39 +1021,30 @@ function renderChart(tab, cid) {
   if(!canvas||!tab.chart) return;
   const key=`${cid}-${tab.id}`;
   if(charts[key]) charts[key].destroy();
-
-  const blue='#1d4ed8', palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe'];
-
-  if(tab.chart.type==='grouped_bar'&&tab.chart.datasets) {
+  const c = enforceChartType(tab.chart);
+  if(c.type==='grouped_bar'&&c.datasets) {
     charts[key]=new Chart(canvas,{
       type:'bar',
-      data:{
-        labels:tab.chart.labels,
-        datasets:tab.chart.datasets.map((ds,i)=>({
-          label:ds.label, data:ds.values,
-          backgroundColor:palette[i]+'cc', borderColor:palette[i], borderWidth:1.5, borderRadius:4
-        }))
-      },
+      data:{labels:c.labels,datasets:c.datasets.map((ds,i)=>({
+        label:ds.label, data:ds.values,
+        backgroundColor:DPAL[i%DPAL.length]+'cc', borderColor:DPAL[i%DPAL.length], borderWidth:0, borderRadius:5, borderSkipped:false
+      }))},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
-        scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+        plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}},datalabels:{display:false}},
+        scales:{y:{grid:{color:'#f1f5f9'},border:{display:false},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
-  } else if(tab.chart.type==='doughnut'&&tab.chart.values) {
-    charts[key]=new Chart(canvas,{
-      type:'doughnut',
-      data:{labels:tab.chart.labels,datasets:[{data:tab.chart.values,backgroundColor:palette.slice(0,tab.chart.values.length),borderWidth:2,borderColor:'#fff'}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
-        plugins:{legend:{position:'right',labels:{font:{size:10},color:'#475569',boxWidth:10,padding:8}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}
-    });
-  } else if(tab.chart.values) {
-    var bPal2=['#4361ee','#3f86ed','#56b4d3','#38c9b9','#2ebcb3','#52d9c3','#7b61ff'];
-    var bkg2=tab.chart.values.map(function(_,i){return bPal2[i%bPal2.length]+'cc';});
-    var brd2=tab.chart.values.map(function(_,i){return bPal2[i%bPal2.length];});
+  } else if(c.type==='doughnut'&&c.values) {
+    charts[key]=new Chart(canvas, doughnutCfg(c));
+  } else if(c.type==='bar_line'&&c.values) {
+    charts[key]=new Chart(canvas, barLineCfg(c));
+  } else if(c.values) {
+    const bkg=c.values.map((_,i)=>DPAL[i%DPAL.length]+'99');
+    const brd=c.values.map((_,i)=>DPAL[i%DPAL.length]);
     charts[key]=new Chart(canvas,{type:'bar',
-      data:{labels:tab.chart.labels,datasets:[{label:tab.chart.title||'',data:tab.chart.values,backgroundColor:bkg2,borderColor:brd2,borderWidth:0,borderRadius:8,borderSkipped:false}]},
+      data:{labels:c.labels,datasets:[{label:c.title||'',data:c.values,backgroundColor:bkg,borderColor:brd,borderWidth:0,borderRadius:8,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false}},
-        scales:{y:{grid:{color:'#f8fafc',lineWidth:1},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}
+        plugins:{legend:{display:false},datalabels:{display:false}},
+        scales:{y:{grid:{color:'#f8fafc'},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}
     });
   }
 }
