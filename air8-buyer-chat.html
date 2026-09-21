@@ -204,7 +204,8 @@ async function send() {
     // First time for this buyer → fall through to Layer 1 normally
   }
   _bypassDirectionCheck = false;
-  window._lastTopicHints = null; // consumed; clear after use
+  const _topicHints = window._lastTopicHints || null; // capture BEFORE clearing
+  window._lastTopicHints = null;
 
   addUser(msg);
   hist.push({role:'user',content:msg});
@@ -212,15 +213,21 @@ async function send() {
 
   try {
     let res, _retries = 0;
+    const controller = new AbortController();
+    const _fetchTimer = setTimeout(() => controller.abort(), 55000); // 55s hard timeout
     while(true) {
       try {
         res = await fetch(WORKER, {
           method:'POST',
           headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({message:msg, context:hist.slice(-8), topicHints: window._lastTopicHints||null})
+          body: JSON.stringify({message:msg, context:hist.slice(-8), topicHints: _topicHints}),
+          signal: controller.signal
         });
+        clearTimeout(_fetchTimer);
         break;
       } catch(fetchErr) {
+        clearTimeout(_fetchTimer);
+        if(fetchErr.name === 'AbortError') throw new Error('请求超时，请重试。');
         if(++_retries > 1) throw fetchErr;
         await new Promise(r => setTimeout(r, 1200));
       }
@@ -307,13 +314,21 @@ async function send() {
         }
         if(done_received) break;
       }
-      if(!done_received && fullText) {
-        removeEl(thinkId); addMarkdown(fullText); hist.push({role:'assistant',content:fullText});
+      // Always clean up spinner when stream closes — even without a done event
+      if(!done_received) {
+        removeEl(thinkId);
+        if(fullText) {
+          addMarkdown(fullText);
+          hist.push({role:'assistant', content: fullText});
+        } else {
+          addText('⚠️ 响应中断，请重试。');
+        }
       }
     }
   } catch(err) {
     removeEl(thinkId);
-    addText('⚠️ Error: '+String(err));
+    const msg2 = String(err);
+    addText('⚠️ ' + (msg2.includes('超时') ? msg2 : '请求失败，请重试。'));
   }
 }
 
