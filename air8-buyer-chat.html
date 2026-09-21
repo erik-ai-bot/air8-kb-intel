@@ -657,9 +657,9 @@ function addTabCard(data) {
   // Render charts after DOM insert
   data.tabs.forEach(t => {
     if(t.chart && t.chart.type !== 'block') renderChart(t, cid);
-    // Handle charts array (used by financial drill-down)
+    // Handle charts array (used by financial drill-down) — skip block type (CSS rendered)
     if(t.charts && Array.isArray(t.charts)) {
-      t.charts.forEach((c,ci) => renderChartObj(c, `${cid}-chart-${t.id}-${ci}`));
+      t.charts.forEach((c,ci) => { if(c.type !== 'block') renderChartObj(c, `${cid}-chart-${t.id}-${ci}`); });
     }
   });
   scrollDown();
@@ -709,12 +709,29 @@ function buildPanel(tab, cid) {
   // Charts array (multiple charts per tab, e.g. financial drill-down)
   if(tab.charts && Array.isArray(tab.charts)) {
     tab.charts.forEach((c, ci) => {
-      const canvasId = `${cid}-chart-${tab.id}-${ci}`;
-      const h2 = Math.round(c.type === 'grouped_bar' ? 190 : 160);
-      h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-        ${c.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(c.title)}</div>`:''}
-        <div style="height:${h2}px"><canvas id="${canvasId}"></canvas></div>
-      </div>`;
+      if(c.type === 'block') {
+        // 方块图 — CSS treemap, no canvas
+        const BPAL=['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#64748b','#e11d48'];
+        const tot=(c.values||[]).reduce((a,b)=>a+b,0)||100;
+        const blks=(c.labels||[]).map((lb,i)=>{
+          const pct=Math.round(((c.values||[])[i]||0)/tot*100);
+          return `<div style="flex:${pct};min-width:36px;background:${BPAL[i%BPAL.length]};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;color:#fff" title="${esc(lb)}: ${pct}%">
+            <span style="font-size:13px;font-weight:800;line-height:1">${pct}%</span>
+            <span style="font-size:9px;opacity:0.85;text-align:center;max-width:100%">${esc(lb)}</span>
+          </div>`;
+        }).join('');
+        h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          ${c.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">${esc(c.title)}</div>`:''}
+          <div style="display:flex;height:100px;border-radius:10px;overflow:hidden;gap:2px">${blks}</div>
+        </div>`;
+      } else {
+        const canvasId = `${cid}-chart-${tab.id}-${ci}`;
+        const h2 = Math.round(c.type === 'grouped_bar' ? 190 : 160);
+        h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          ${c.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(c.title)}</div>`:''}
+          <div style="height:${h2}px"><canvas id="${canvasId}"></canvas></div>
+        </div>`;
+      }
     });
   }
 
@@ -766,8 +783,24 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-  // Table
+  // Table (main)
   if(tab.table) h+=buildTable(tab.table);
+
+  // Segment table (revenue breakdown by segment, e.g. P&L tab)
+  if(tab.segment_table) {
+    h+=`<div class="mb-4">
+      ${tab.segment_table.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">${esc(tab.segment_table.title)}</div>`:''}
+    </div>`;
+    h+=buildTable(tab.segment_table);
+  }
+
+  // Category table (products tab — growth rates, price points, supply chain notes)
+  if(tab.category_table) {
+    h+=`<div class="mb-4">
+      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Category Detail</div>
+    </div>`;
+    h+=buildTable(tab.category_table);
+  }
 
   // Risk grid
   if(tab.risks&&tab.risks.length) {
