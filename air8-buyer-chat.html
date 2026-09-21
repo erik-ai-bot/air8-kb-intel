@@ -811,21 +811,30 @@ function buildPanel(tab, cid) {
 
 
   // Payment behavior (from Air8 internal 1688 data)
+  // Payment behavior — Air8 internal client data only. No data = section hidden entirely.
   if(tab.payment_behavior) {
     const pb=tab.payment_behavior;
-    h+=`<div class="mt-4 rounded-2xl border p-4" style="background:#f8faff;border-color:#e0e7ff">
-      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">付款行为 — Air8 内部结算数据</div>
-      <div class="grid grid-cols-3 gap-3 mb-3">
-        ${[{label:'逾期天数（加权）',value:pb.avg_late_days!=null?'+'+pb.avg_late_days+' 天':'—',sub:'相对到期日',pending:pb.avg_late_days==null},{label:'准时或提前',value:pb.ontime_pct!=null?pb.ontime_pct+'%':'—',sub:'占已结算发票',pending:pb.ontime_pct==null},{label:'记录扣款率',value:pb.dilution_pct!=null?pb.dilution_pct+'%':'—',sub:'占发票金额',pending:pb.dilution_pct==null}].map(s=>`
-          <div class="bg-white rounded-xl border border-gray-100 p-3 text-center shadow-sm">
-            <div class="text-xs font-bold mb-1" style="color:${s.pending?'#94a3b8':'#1d4ed8'}">${esc(s.value)}</div>
-            <div class="text-[10px] text-gray-500 font-medium">${esc(s.label)}</div>
-            <div class="text-[9px] text-gray-400 mt-0.5">${s.pending?'列1688数据连接':''+esc(s.sub)}</div>
-          </div>`).join('')}
-      </div>
-      ${pb.distribution?`<div class="text-[10px] text-gray-500 leading-relaxed">分布：提前/准时 ${pb.distribution.early||'—'}% · 逾東1–7天 ${pb.distribution.late_1_7||'—'}% · 逾東7天以上 ${pb.distribution.late_7plus||'—'}%</div>`:''}
-      ${pb.note?`<div class="text-[10px] text-gray-400 mt-2 italic">${esc(pb.note)}</div>`:''}
-    </div>`;
+    const hasData = pb.avg_late_days!=null || pb.ontime_pct!=null || pb.dilution_pct!=null;
+    if(hasData) {
+      const invoiceCount = pb.invoice_count ? `（${pb.invoice_count}笔已结算发票，按发票金额加权）` : '';
+      h+=`<div class="mt-4 rounded-2xl border p-4" style="background:#f8faff;border-color:#e0e7ff">
+        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">付款行为 — Air8 内部客户结算数据</div>
+        ${invoiceCount?`<div class="text-[10px] text-gray-400 mb-3">${esc(invoiceCount)}</div>`:''}
+        <div class="grid grid-cols-3 gap-3 mb-3">
+          ${[
+            {label:'逾期天数（加权）',value:pb.avg_late_days!=null?'+'+pb.avg_late_days+' 天':null,sub:'相对到期日'},
+            {label:'准时或提前',value:pb.ontime_pct!=null?pb.ontime_pct+'%':null,sub:'占已结算发票'},
+            {label:'记录扣款率',value:pb.dilution_pct!=null?pb.dilution_pct+'%':null,sub:'占发票金额'}
+          ].filter(s=>s.value!=null).map(s=>`
+            <div class="bg-white rounded-xl border border-gray-100 p-3 text-center shadow-sm">
+              <div class="text-sm font-black mb-1" style="color:#1d4ed8">${esc(s.value)}</div>
+              <div class="text-[10px] text-gray-500 font-medium">${esc(s.label)}</div>
+              <div class="text-[9px] text-gray-400 mt-0.5">${esc(s.sub)}</div>
+            </div>`).join('')}
+        </div>
+        ${pb.distribution&&(pb.distribution.early!=null)?`<div class="text-[10px] text-gray-500 leading-relaxed">逾期分布：提前/准时 <strong>${pb.distribution.early}%</strong> · 逾期1–7天 <strong>${pb.distribution.late_1_7||'—'}%</strong> · 逾期7天以上 <strong>${pb.distribution.late_7plus||'—'}%</strong></div>`:''}
+      </div>`;
+    }
   }
 
   // CCC stats
