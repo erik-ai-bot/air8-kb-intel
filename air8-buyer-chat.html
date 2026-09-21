@@ -183,15 +183,18 @@ async function send() {
               done_received=true; break outer;
             }
             if(ev.type==='done' && ev.text) {
-              // Try to parse as tab card JSON even if it came through text field
-              if(ev.text.trim().startsWith('{')) {
+              // Robust fallback: try to parse as tab card JSON even if it came through text field
+              // Handles code fences + trailing commas
+              const _raw = ev.text.replace(/```(?:json)?\s*/g,'').replace(/```\s*/g,'').trim();
+              if(_raw.startsWith('{') || _raw.includes('"tabs"')) {
                 try {
-                  const t = ev.text.match(/\{[\s\S]*\}/);
-                  if(t) {
-                    const p = JSON.parse(t[0]);
-                    if(p.tabs) {
+                  const _m = _raw.match(/\{[\s\S]*\}/);
+                  if(_m) {
+                    const _s = _m[0].replace(/,(?:\s*[}\]])/g, x=>x.slice(1));
+                    const p = JSON.parse(_s);
+                    if(p && p.tabs) {
                       removeEl(thinkId); addTabCard(p);
-                      hist.push({role:'assistant', content: `Buyer intelligence report for: ${p.buyer||''}. Summary: ${p.summary||''}. Tabs covered: Overview, Financials, Products, Sourcing, Risk, Signals, Competitors.`});
+                      hist.push({role:'assistant', content: `Buyer intelligence report for: ${p.buyer||''}. Summary: ${p.summary||''}.`});
                       done_received=true; break outer;
                     }
                   }
