@@ -222,6 +222,33 @@
       </div>
     </div>
 
+    <!-- AWS + Supplier-facing metrics -->
+    <div style="background:#f0f6ff; border-radius:10px; padding:16px; margin-bottom:22px; border:1px solid #bfdbfe;">
+      <div style="font-size:11px; font-weight:700; color:#1d4ed8; margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">AWS结构与供应商视角关键指标</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px;">
+        <div style="background:white; border-radius:8px; padding:12px; text-align:center; border:1px solid #dbeafe;">
+          <div style="font-size:18px; font-weight:800; color:#1d4ed8; line-height:1;">18%</div>
+          <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">AWS收入占比</div>
+          <div style="font-size:10px; font-weight:700; color:#22c55e; margin-top:3px;">→ 贡献57%总利润</div>
+        </div>
+        <div style="background:white; border-radius:8px; padding:12px; text-align:center; border:1px solid #fecaca;">
+          <div style="font-size:18px; font-weight:800; color:#ef4444; line-height:1;">5.8%</div>
+          <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">零售业务经营利润率</div>
+          <div style="font-size:10px; color:#9ca3af; margin-top:3px;">供应商实际对接业务</div>
+        </div>
+        <div style="background:white; border-radius:8px; padding:12px; text-align:center; border:1px solid #ddd6fe;">
+          <div style="font-size:18px; font-weight:800; color:#7c3aed; line-height:1;">-51.1天</div>
+          <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">现金转换周期（CCC）</div>
+          <div style="font-size:10px; color:#9ca3af; margin-top:3px;">先收消费者款再付供应商</div>
+        </div>
+        <div style="background:white; border-radius:8px; padding:12px; text-align:center; border:1px solid #fed7aa;">
+          <div style="font-size:18px; font-weight:800; color:#f97316; line-height:1;">1–3%</div>
+          <div style="font-size:10px; color:#6b7280; margin-top:4px; font-weight:600;">Quick Pay 贴现率</div>
+          <div style="font-size:10px; color:#9ca3af; margin-top:3px;">提前回款成本（供应商承担）</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Combo Chart: Revenue + Margin -->
     <div class="chart-wrap">
       <div class="chart-title">营业收入（十亿美元）与经营利润率趋势</div>
@@ -423,7 +450,11 @@
         <div class="treemap-label" style="font-size:9px;">其他 3.2%</div>
       </div>
     </div>
-    <div style="font-size:10px; color:#9ca3af; margin-bottom:20px;">* 基于已标注海运记录，家纺含床品、浴巾、毯子等品类</div>
+    <div style="font-size:10px; color:#9ca3af; margin-bottom:12px;">* 基于已标注海运记录，家纺含床品、浴巾、毯子等品类</div>
+    <div class="info-box" style="margin-bottom:20px;">
+      📌 <strong>海关数据 ≠ 全貌说明：</strong>以上品类构成仅来自已标注HS章节的海运提单，约占自营进口总量 <strong>8%</strong>。剩余92%记录未标注品类细节，但地理来源可追踪（全部为中国来源），实际品类分布远比图示更广。<br/>
+      <span style="display:block; margin-top:6px;">📦 <strong>79.8%</strong> 的亚马逊自营进口货物在中国港口完成装货（已标注记录口径），是最大单一装货地。</span>
+    </div>
 
     <!-- Bar chart: category growth -->
     <div class="chart-wrap">
@@ -498,7 +529,8 @@
     </div>
 
     <div class="warning-box">
-      ⚠️ <strong>注：</strong>上图为已标注HS章节的海运记录（约占总量8%），未标注部分92%全部为中国来源。若计入则<strong>中国实际占比约94.3%</strong>，印度/越南等来源主要为标注记录中的可见数据。
+      ⚠️ <strong>注：</strong>上图为已标注HS章节的海运记录（约占总量8%），未标注部分 <strong>92%全部为中国来源</strong>；若计入则中国实际占比约94.3%，印度/越南等来源主要为标注记录中的可见数据。<br/>
+      <span style="display:block; margin-top:8px;">📊 <strong>数量 vs GMV 差异：</strong>中国占已标注票数 <strong>55.9%</strong>，但因商品单价偏低，GMV口径贡献仅 <strong>28.6%</strong>——反映中国来源以中低单价品为主；印度等来源单价更高，贡献了更大比例的GMV。</span>
     </div>
 
     <!-- Quarterly batches bar chart -->
@@ -521,8 +553,8 @@
     <!-- Sub A: Peer comparison -->
     <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 同赛道零售商收入对比</div>
     <div class="chart-wrap">
-      <div class="chart-title">主要零售商收入对比（十亿美元，最新财年）</div>
-      <div style="height:220px; position:relative;">
+      <div class="chart-title">主要数字平台及零售商收入对比（十亿美元，最新财年）</div>
+      <div style="height:280px; position:relative;">
         <canvas id="peerRevenueChart"></canvas>
       </div>
     </div>
@@ -568,6 +600,41 @@
             <td>—</td>
             <td><span class="badge badge-blue">A+/Stable</span></td>
             <td style="font-size:11px;">平台模式，非直接采购方</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">Best Buy</td>
+            <td>$42.0bn</td>
+            <td>~45天</td>
+            <td><span class="badge badge-blue">BBB</span></td>
+            <td style="font-size:11px;">电子零售商，直接采购方，付款相对快</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">Netflix</td>
+            <td>$43.0bn</td>
+            <td>—</td>
+            <td><span class="badge badge-blue">BBB+</span></td>
+            <td style="font-size:11px;">流媒体平台，内容采购方，非实物供应商</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">eBay</td>
+            <td>$10.3bn</td>
+            <td>—</td>
+            <td><span class="badge badge-amber">BBB+</span></td>
+            <td style="font-size:11px;">纯平台模式，类3P结构，不持有库存</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">Rakuten</td>
+            <td>$16.0bn</td>
+            <td>—</td>
+            <td><span class="badge badge-amber">BBB</span></td>
+            <td style="font-size:11px;">日本电商平台，亚洲市场布局</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">Flipkart</td>
+            <td>~$8.0bn</td>
+            <td>~60天</td>
+            <td><span class="badge" style="background:#f1f5f9;color:#475569;">私有</span></td>
+            <td style="font-size:11px;">印度市场，Walmart旗下，增长潜力大</td>
           </tr>
         </tbody>
       </table>
@@ -1007,11 +1074,11 @@ document.addEventListener('DOMContentLoaded', () => {
   new Chart(document.getElementById('peerRevenueChart'), {
     type: 'bar',
     data: {
-      labels: ['亚马逊','沃尔玛','京东','阿里巴巴','Target'],
+      labels: ['亚马逊','沃尔玛','京东','阿里巴巴','Target','Netflix','Best Buy','Rakuten','eBay','Flipkart'],
       datasets: [{
         label: '收入（$bn）',
-        data: [716.9, 713.2, 187.2, 148.4, 104.8],
-        backgroundColor: ['#1d4ed8','#0ea5e9','#8b5cf6','#f59e0b','#ef4444'],
+        data: [716.9, 713.2, 187.2, 148.4, 104.8, 43.0, 42.0, 16.0, 10.3, 8.0],
+        backgroundColor: ['#1d4ed8','#0ea5e9','#8b5cf6','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#6366f1','#06b6d4'],
         borderRadius: 6,
         datalabels: {
           display: true,
@@ -1034,7 +1101,7 @@ document.addEventListener('DOMContentLoaded', () => {
           grid: { color: '#f1f5f9' },
           ticks: { font: { size: 10 }, callback: v => '$'+v+'bn' }
         },
-        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        x: { grid: { display: false }, ticks: { font: { size: 9 } } }
       }
     }
   });
