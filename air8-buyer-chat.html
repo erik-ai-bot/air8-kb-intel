@@ -887,6 +887,7 @@ function renderChart(tab, cid) {
         plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
         scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
+  }
   // ── Force origin/sourcing data to always render as bar chart ──────────────────
   const countryLabels = ['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia','Turkey','Morocco'];
   const isCountryData = tab.chart.labels && tab.chart.labels.some(l => countryLabels.includes(l));
