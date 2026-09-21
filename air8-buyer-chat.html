@@ -1205,7 +1205,7 @@ function barLineDualCfg(c) {
 function renderChartObj(rawData, canvasId) {
   const canvas = document.getElementById(canvasId);
   if(!canvas || !rawData) return;
-  if(!rawData.values && !rawData.datasets) return; // nothing to render
+  if(!rawData.values && !rawData.datasets && !rawData.bar_values) return; // nothing to render
   if(charts[canvasId]) charts[canvasId].destroy();
   const c = enforceChartType(rawData);
   if(c.type==='grouped_bar' && c.datasets) {
