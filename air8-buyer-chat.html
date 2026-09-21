@@ -128,6 +128,32 @@ function srcBadge(src) {
 }
 
 // ── SEND ─────────────────────────────────────────────────────────────────────
+function toggleExplore(label) {
+  var dot = label.querySelector('[data-check]');
+  if(!dot) return;
+  var on = dot.dataset.selected==='1';
+  dot.dataset.selected = on?'0':'1';
+  label.style.background = on?'#f8faff':'#eff6ff';
+  label.style.borderColor = on?'#c7d2fe':'#1d4ed8';
+  dot.style.background = on?'':'#1d4ed8';
+  dot.innerHTML = on?'':'<svg width="10" height="10" viewBox="0 0 10 10" fill="white"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>';
+}
+function skipExplore() { /* do nothing */ }
+function continueExplore(cid) {
+  var container = document.getElementById('explore-opts-'+cid);
+  if(!container) return;
+  var selected = [...container.querySelectorAll('[data-check][data-selected="1"]')].map(el=>el.dataset.check);
+  if(!selected.length) return;
+  // Build a natural language query from selected option titles
+  var labels = [...container.querySelectorAll('[data-check][data-selected="1"]')].map(el=>{
+    var lbl = el.closest('label')?.querySelector('.font-bold')?.textContent||'';
+    return lbl;
+  });
+  var q = labels.length===1 ? labels[0] : labels.slice(0,-1).join(', ')+' and '+labels[labels.length-1];
+  document.getElementById('inp').value = q;
+  send();
+}
+
 async function send() {
   const inp=document.getElementById('inp'), msg=inp.value.trim();
   if(!msg) return;
@@ -901,9 +927,6 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-  // Store map (geographic bubble map)
-  if(tab.store_map) h+=buildStoreMap(tab.store_map);
-
   // Free text
   if(tab.text) h+=renderAnalysisText(tab.text);
 
@@ -1032,6 +1055,24 @@ function buildPanel(tab, cid) {
       </div>`;
     });
     h+=`</div>`;
+  }
+
+  // Direction picker (explore_options)
+  if(tab.explore_options && tab.explore_options.length) {
+    var opts = tab.explore_options;
+    h += '<div class="space-y-2 mb-4" id="explore-opts-'+cid+'">';
+    opts.forEach(function(o,i){
+      h += '<label class="flex gap-3 items-start p-3 rounded-xl cursor-pointer hover:bg-blue-50 transition-all" style="border:1px solid #e0e7ff;background:#f8faff" onclick="toggleExplore(this)">'
+        + '<span class="mt-0.5 w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all" style="border-color:#c7d2fe" data-check="'+esc(o.id)+'">​</span>'
+        + '<div><div class="text-xs font-bold text-gray-800">'+esc(o.title||'')+'</div>'
+        + '<div class="text-[11px] text-gray-500 mt-0.5">'+esc(o.desc||'')+'</div></div>'
+        + '</label>';
+    });
+    h += '</div>';
+    h += '<div class="flex justify-end gap-3 mt-2">'
+      + '<button onclick="skipExplore()" class="text-xs text-gray-400 px-4 py-2 rounded-xl hover:text-gray-600">Skip</button>'
+      + '<button onclick="continueExplore(''+cid+'')" class="text-xs font-semibold text-white px-5 py-2 rounded-xl transition-all" style="background:#1d4ed8">Continue →</button>'
+      + '</div>';
   }
 
   // Coverage gaps
