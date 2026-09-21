@@ -6,6 +6,7 @@
 <title>Air8 Intelligence</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   :root { --blue: #1d4ed8; --blue-light: #eff6ff; --blue-mid: #bfdbfe; }
@@ -61,11 +62,11 @@
       <p class="text-sm font-semibold text-gray-900 mb-1">Ask about any buyer, product, or market</p>
       <p class="text-xs text-gray-500 mb-5">Get structured intelligence with financials, sourcing, products & risk signals</p>
       <div class="flex flex-wrap justify-center gap-2">
-        <button onclick="sq('Tell me about Walmart')" class="chip">Walmart</button>
-        <button onclick="sq('Tell me about SHEIN')" class="chip">SHEIN</button>
-        <button onclick="sq('Compare AKA Brands vs REVOLVE')" class="chip">AKA vs REVOLVE</button>
-        <button onclick="sq('US tariff on apparel from China 2025')" class="chip">US Tariff</button>
-        <button onclick="sq('Vietnam fast fashion sourcing trend 2026')" class="chip">Vietnam Trend</button>
+        <button onclick="sq('Tell me about Walmart')" class="chip">🏪 Walmart</button>
+        <button onclick="sq('Tell me about SHEIN')" class="chip">📊 SHEIN</button>
+        <button onclick="sq('Compare Target vs TJX')" class="chip">⚔️ Target vs TJX</button>
+        <button onclick="sq('US tariff on apparel from China 2025')" class="chip">🌍 US Tariff</button>
+        <button onclick="sq('Ross Stores’ position in the toys category')" class="chip">🧸 Buyer in Category</button>
       </div>
     </div>
   </div>
@@ -92,6 +93,8 @@
 <script>
 const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
 let hist = [], charts = {};
+// Register datalabels globally for pie/doughnut only — opt-in per chart
+Chart.register(ChartDataLabels);
 
 function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
 function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
@@ -693,17 +696,17 @@ function buildPanel(tab, cid) {
   // Stats
   if(tab.stats&&tab.stats.length) {
     const n=tab.stats.length;
-    const colCls = n<=2?'grid-cols-2':n===3?'grid-cols-3':n===4?'grid-cols-4':'grid-cols-3';
+    const colCls = n<=2?'grid-cols-2':n===3?'grid-cols-3':n>=4?'grid-cols-4':'grid-cols-3';
     h+=`<div class="grid ${colCls} gap-2.5 mb-5">`;
     tab.stats.forEach(s=>{
       const sc = statColor(s.label, s.value);
       const dUp=s.delta&&(s.delta.includes('+')||s.delta.includes('↑'));
       const dDn=s.delta&&(s.delta.includes('-')||s.delta.includes('↓'));
       const dCol=dUp?'#16a34a':dDn?'#dc2626':'#6b7280';
-      const dArrow=dUp?'▲':dDn?'▼':'';
-      h+=`<div class="rounded-2xl p-4 bg-white shadow-sm" style="border-left:3px solid ${sc.numColor};border:1px solid #f1f5f9;border-left:3px solid ${sc.numColor}">
-        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2 truncate">${esc(s.label)}</div>
-        <div class="text-2xl font-black leading-none mb-1.5" style="color:${sc.numColor}">${esc(s.value)}</div>
+      const dArrow=dUp?'↑':dDn?'↓':'';
+      h+=`<div class="rounded-2xl p-4 bg-white" style="border:1px solid #e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wide mb-2 truncate">${esc(s.label)}</div>
+        <div class="text-[26px] font-black leading-none mb-2" style="color:${sc.numColor}">${esc(s.value)}</div>
         ${s.delta?`<div class="text-[11px] font-semibold" style="color:${dCol}">${dArrow} ${esc(s.delta)}</div>`:''}
       </div>`;
     });
@@ -862,15 +865,51 @@ function buildPanel(tab, cid) {
   }
 
 
-  // Key Takeaways bullets
+  // Key Takeaways bullets — numbered feature cards (matching reference UI)
   if(tab.bullets && tab.bullets.length) {
-    h+=`<div class="space-y-2.5 mb-4">`;
-    tab.bullets.forEach(b=>{
-      h+=`<div class="flex gap-3 p-3 rounded-xl" style="background:#f8faff;border:1px solid #e0e7ff">
-        <div class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center" style="background:#1d4ed8">
-          <svg style="width:8px;height:8px;color:white" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>
+    const NUM=['①','②','③','④','⑤','⑥'];
+    // Detect title:description format (colon within first 50 chars)
+    const hasTitle = tab.bullets.every(b=>{ const ci=b.indexOf(':'); return ci>0&&ci<55; });
+    if(hasTitle && tab.bullets.length>=2 && tab.bullets.length<=6) {
+      const gc=tab.bullets.length===2?'grid-cols-2':tab.bullets.length===3?'grid-cols-3':'grid-cols-2';
+      h+=`<div class="grid ${gc} gap-3 mb-4">`;
+      tab.bullets.forEach((b,i)=>{
+        const ci=b.indexOf(':');
+        const title=b.slice(0,ci).trim().replace(/^\*+|\*+$/g,'');
+        const desc=b.slice(ci+1).trim();
+        h+=`<div class="p-4 rounded-2xl" style="background:#eff6ff;border:1px solid #c7d7fd">
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="text-xl font-black" style="color:#1d4ed8">${NUM[i]}</span>
+            <span class="text-[12px] font-bold text-gray-900 leading-tight">${esc(title)}</span>
+          </div>
+          <p class="text-[11px] text-gray-600 leading-relaxed">${esc(desc)}</p>
+        </div>`;
+      });
+      h+=`</div>`;
+    } else {
+      h+=`<div class="space-y-2 mb-4">`;
+      tab.bullets.forEach((b,i)=>{
+        h+=`<div class="flex gap-3 p-3 rounded-xl" style="background:#f8faff;border:1px solid #e0e7ff">
+          <span class="text-sm font-black flex-shrink-0 mt-0.5" style="color:#1d4ed8">${NUM[i]||'•'}</span>
+          <p class="text-xs text-gray-700 leading-relaxed">${esc(b)}</p>
+        </div>`;
+      });
+      h+=`</div>`;
+    }
+  }
+
+  // Feature cards (from worker features array — numbered cards with title + text)
+  if(tab.features && tab.features.length) {
+    const NUM2=['①','②','③','④','⑤','⑥'];
+    const gc2=tab.features.length===2?'grid-cols-2':tab.features.length===3?'grid-cols-3':'grid-cols-2';
+    h+=`<div class="grid ${gc2} gap-3 mb-4">`;
+    tab.features.forEach((f,i)=>{
+      h+=`<div class="p-4 rounded-2xl" style="background:#eff6ff;border:1px solid #c7d7fd">
+        <div class="flex items-center gap-2 mb-2.5">
+          <span class="text-xl font-black" style="color:#1d4ed8">${NUM2[i]}</span>
+          <span class="text-[12px] font-bold text-gray-900 leading-tight">${esc(f.title||'')}</span>
         </div>
-        <p class="text-xs text-gray-700 leading-relaxed">${esc(b)}</p>
+        <p class="text-[11px] text-gray-600 leading-relaxed">${esc(f.text||f.desc||'')}</p>
       </div>`;
     });
     h+=`</div>`;
@@ -917,7 +956,8 @@ const CHART_OPTS = {
   responsive:true, maintainAspectRatio:false,
   plugins:{
     legend:{labels:{font:{size:11,family:'-apple-system,sans-serif'},color:'#475569',boxWidth:12,padding:12}},
-    tooltip:{backgroundColor:'#1e293b',titleFont:{size:12},bodyFont:{size:11},padding:10,cornerRadius:8,callbacks:{}}
+    tooltip:{backgroundColor:'#1e293b',titleFont:{size:12},bodyFont:{size:11},padding:10,cornerRadius:8,callbacks:{}},
+    datalabels:{display:false}  // disabled for bar charts; doughnut enables per-chart
   },
   scales:{
     y:{grid:{color:'#f1f5f9',drawBorder:false},border:{display:false},ticks:{font:{size:11},color:'#94a3b8',maxTicksLimit:5}},
@@ -942,10 +982,13 @@ function renderChartObj(chartData, canvasId) {
   } else if(chartData.type==='doughnut' && chartData.values) {
     charts[canvasId]=new Chart(canvas,{
       type:'doughnut',
-      data:{labels:chartData.labels,datasets:[{data:chartData.values,backgroundColor:CHART_PAL.slice(0,chartData.values.length),borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-        plugins:{legend:{position:'right',labels:{font:{size:11},color:'#475569',boxWidth:12,padding:10,usePointStyle:true}},
-        tooltip:{backgroundColor:'#1e293b',callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}
+      data:{labels:chartData.labels,datasets:[{data:chartData.values,backgroundColor:CHART_PAL.slice(0,chartData.values.length),borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+        plugins:{
+          legend:{position:'bottom',labels:{font:{size:11},color:'#475569',boxWidth:12,padding:14,usePointStyle:true}},
+          tooltip:{backgroundColor:'#1e293b',callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}},
+          datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]>=4,color:'#fff',font:{size:11,weight:'bold'},formatter:(v,ctx)=>v+'%'}
+        }}
     });
   } else if(chartData.values) {
     const barCfg = JSON.parse(JSON.stringify(CHART_OPTS));
@@ -982,10 +1025,13 @@ function renderChart(tab, cid) {
   } else if(tab.chart.type==='doughnut'&&tab.chart.values) {
     charts[key]=new Chart(canvas,{
       type:'doughnut',
-      data:{labels:tab.chart.labels,datasets:[{data:tab.chart.values,backgroundColor:CHART_PAL.slice(0,tab.chart.values.length),borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-        plugins:{legend:{position:'right',labels:{font:{size:11},color:'#475569',boxWidth:12,padding:10,usePointStyle:true}},
-        tooltip:{backgroundColor:'#1e293b',callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}
+      data:{labels:tab.chart.labels,datasets:[{data:tab.chart.values,backgroundColor:CHART_PAL.slice(0,tab.chart.values.length),borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+        plugins:{
+          legend:{position:'bottom',labels:{font:{size:11},color:'#475569',boxWidth:12,padding:14,usePointStyle:true}},
+          tooltip:{backgroundColor:'#1e293b',callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}},
+          datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]>=4,color:'#fff',font:{size:11,weight:'bold'},formatter:(v,ctx)=>v+'%'}
+        }}
     });
   } else if(tab.chart.values) {
     charts[key]=new Chart(canvas,{
