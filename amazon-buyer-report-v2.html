@@ -600,20 +600,13 @@
     </div>
     <div style="font-size:10px; color:#9ca3af; margin-top:8px; margin-bottom:20px;">Source: ECDB Amazon Marketplace Report（2026年7月）· Sellerite Amazon Market Share by Category（2025–26）· eMarketer US Amazon Retail Ecommerce by Category · As of 2025–2026</div>
 
-    <!-- Category YoY growth CHART (primary) -->
+    <!-- Segment YoY trend line chart (primary) -->
     <div class="chart-wrap" style="margin-bottom:16px;">
-      <div class="chart-title">品类增速（2025 YoY）— 参考线：平台均值 ~12%</div>
+      <div class="chart-title">Amazon 各收入板块 YoY增速趋势（FY2022–FY2025）</div>
       <div style="height:340px; position:relative;">
         <canvas id="categoryGrowthBarChart"></canvas>
       </div>
-      <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:10px; color:#6b7280; margin-top:8px;">
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#22c55e;margin-right:3px;vertical-align:middle;"></span>高于均值</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3b82f6;margin-right:3px;vertical-align:middle;"></span>持平均值</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#94a3b8;margin-right:3px;vertical-align:middle;"></span>低于均值</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f59e0b;margin-right:3px;vertical-align:middle;"></span>明显落后</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ef4444;margin-right:3px;vertical-align:middle;"></span>负增长</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;margin-right:3px;vertical-align:middle;"></span>★ 平台引擎（非零售GMV）</span>
-      </div>
+      <div style="font-size:10px; color:#9ca3af; margin-top:6px;">数据来源：Amazon 10-K FY2022–FY2025（SEC EDGAR）· 各年度收入增速均由官方披露数据计算</div>
     </div>
 
     <!-- Category YoY growth table -->
@@ -1321,7 +1314,7 @@
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v3.1（品类增速加水平条形图，以图为主）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v3.2（换多年趋势线图，6条分部线，FY2022-FY2025）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
   </div>
 </div>
 
@@ -1533,73 +1526,90 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ══ Category Growth Bar Chart (horizontal, primary) ═════════════════════
   Chart.register(window['chartjs-plugin-annotation']);
+  // ── Amazon segment YoY trend data (from 10-K, FY2022–FY2025) ─────────────
+  // Calculated from official revenue figures: FY21→FY22→FY23→FY24→FY25
   new Chart(document.getElementById('categoryGrowthBarChart'), {
-    type: 'bar',
+    type: 'line',
     data: {
-      labels: [
-        '广告服务 ★','宠物用品','AWS云服务 ★','美妆个护',
-        '健康家居','杂货食品','电子产品','家居家具','服装鞋靴','玩具游戏'
-      ],
-      datasets: [{
-        data: [22, 21, 20, 19, 15, 12, 10, 8, 5, -2],
-        backgroundColor: [
-          '#8b5cf6','#22c55e','#8b5cf6','#22c55e',
-          '#22c55e','#3b82f6','#94a3b8','#94a3b8','#f59e0b','#ef4444'
-        ],
-        borderRadius: 4,
-        borderSkipped: false,
-        datalabels: {
-          display: true,
-          anchor: 'end',
-          align: 'end',
-          color: ctx => {
-            const v = ctx.dataset.data[ctx.dataIndex];
-            return v < 0 ? '#b91c1c' : v < 5 ? '#b45309' : '#374151';
-          },
-          font: { size: 11, weight: '700' },
-          formatter: v => (v >= 0 ? '+' : '') + v + '%'
+      labels: ['FY2022','FY2023','FY2024','FY2025'],
+      datasets: [
+        {
+          label: '广告服务 Advertising',
+          data: [19, 24, 19, 23],
+          borderColor: '#1d4ed8', backgroundColor: 'rgba(29,78,216,0.08)',
+          borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#1d4ed8',
+          tension: 0.3, fill: false
+        },
+        {
+          label: 'AWS 云服务',
+          data: [29, 14, 19, 19],
+          borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.08)',
+          borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#22c55e',
+          tension: 0.3, fill: false
+        },
+        {
+          label: '第三方卖家服务 3P',
+          data: [14, 20, 11, 10],
+          borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.08)',
+          borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#f59e0b',
+          tension: 0.3, fill: false
+        },
+        {
+          label: '订阅服务 Subscription',
+          data: [9, 14, 10, 14],
+          borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.08)',
+          borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#ef4444',
+          tension: 0.3, fill: false
+        },
+        {
+          label: '线上自营商店 Online Stores',
+          data: [-1, 6, 7, 9],
+          borderColor: '#0ea5e9', backgroundColor: 'rgba(14,165,233,0.08)',
+          borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#0ea5e9',
+          tension: 0.3, fill: false
+        },
+        {
+          label: '线下门店 Physical Stores',
+          data: [8, 7, 5, 7],
+          borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,0.08)',
+          borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#8b5cf6',
+          tension: 0.3, fill: false, borderDash: [4, 3]
         }
-      }]
+      ]
     },
     options: {
-      indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display: false },
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 10 }, boxWidth: 24, padding: 12, usePointStyle: true }
+        },
         datalabels: { display: false },
         annotation: {
           annotations: {
-            avgLine: {
+            zeroLine: {
               type: 'line',
-              xMin: 12, xMax: 12,
-              borderColor: '#374151',
-              borderWidth: 1.5,
-              borderDash: [4, 4],
-              label: {
-                display: true,
-                content: '均值 12%',
-                position: 'start',
-                yAdjust: -8,
-                color: '#374151',
-                font: { size: 10, weight: '600' },
-                backgroundColor: 'transparent',
-                padding: 0
-              }
+              yMin: 0, yMax: 0,
+              borderColor: '#d1d5db',
+              borderWidth: 1,
+              borderDash: [3, 3]
             }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y}%`
           }
         }
       },
       scales: {
-        x: {
-          min: -6, max: 27,
+        y: {
           grid: { color: '#f1f5f9' },
           ticks: { font: { size: 10 }, callback: v => v + '%' }
         },
-        y: {
-          grid: { display: false },
-          ticks: { font: { size: 11 } }
-        }
+        x: { grid: { display: false }, ticks: { font: { size: 11, weight: '600' } } }
       }
     }
   });
