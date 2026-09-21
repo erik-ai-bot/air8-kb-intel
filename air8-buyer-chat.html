@@ -1163,6 +1163,44 @@ function barLineCfg(c) {
   };
 }
 
+// Dual-axis bar+line chart: bars = primary metric ($BN), line = secondary metric (%)
+// JSON: {type:"bar_line_dual", labels:[...], bar_values:[...], bar_label:"Net Profit ($BN)", line_values:[...], line_label:"Operating Margin (%)"}
+function barLineDualCfg(c) {
+  const bkg = (c.bar_values||c.values||[]).map((_,i)=>DPAL[i%DPAL.length]+'aa');
+  const bvals = c.bar_values || c.values || [];
+  const lvals = c.line_values || [];
+  const isPercent = (c.line_label||'').includes('%') || (c.line_unit||'') === '%';
+  return {
+    type:'bar',
+    data:{labels:c.labels||[],datasets:[
+      {type:'bar',label:c.bar_label||c.title||'',data:bvals,
+       backgroundColor:bkg,borderWidth:0,borderRadius:8,borderSkipped:false,yAxisID:'y'},
+      {type:'line',label:c.line_label||'Margin',data:lvals,
+       borderColor:'#1d4ed8',borderWidth:2.5,
+       pointBackgroundColor:'#fff',pointBorderColor:'#1d4ed8',pointBorderWidth:2,
+       pointRadius:4,pointHoverRadius:6,tension:0.35,fill:false,yAxisID:'y1'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{font:{size:10},color:'#475569',boxWidth:10,padding:12,usePointStyle:true}},
+        datalabels:{display:false},
+        tooltip:{backgroundColor:'#1e293b',callbacks:{
+          label:ctx=>{
+            if(ctx.dataset.yAxisID==='y1') return `${ctx.dataset.label}: ${ctx.formattedValue}%`;
+            return `${ctx.dataset.label}: ${ctx.formattedValue}`;
+          }
+        }}
+      },
+      scales:{
+        y:{type:'linear',position:'left',grid:{color:'#f1f5f9'},border:{display:false},
+          ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},
+        y1:{type:'linear',position:'right',grid:{drawOnChartArea:false},border:{display:false},
+          ticks:{font:{size:9},color:'#1d4ed8',maxTicksLimit:5,callback:v=>v+'%'}},
+        x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}
+      }}
+  };
+}
+
 // Render a chart object onto a specific canvas element by ID
 function renderChartObj(rawData, canvasId) {
   const canvas = document.getElementById(canvasId);
@@ -1183,6 +1221,8 @@ function renderChartObj(rawData, canvasId) {
     });
   } else if(c.type==='doughnut' && c.values) {
     charts[canvasId]=new Chart(canvas, doughnutCfg(c));
+  } else if(c.type==='bar_line_dual') {
+    charts[canvasId]=new Chart(canvas, barLineDualCfg(c));
   } else if(c.type==='bar_line' && c.values) {
     charts[canvasId]=new Chart(canvas, barLineCfg(c));
   } else if(c.values) {
@@ -1217,6 +1257,8 @@ function renderChart(tab, cid) {
     });
   } else if(c.type==='doughnut'&&c.values) {
     charts[key]=new Chart(canvas, doughnutCfg(c));
+  } else if(c.type==='bar_line_dual') {
+    charts[key]=new Chart(canvas, barLineDualCfg(c));
   } else if(c.type==='bar_line'&&c.values) {
     charts[key]=new Chart(canvas, barLineCfg(c));
   } else if(c.values) {
