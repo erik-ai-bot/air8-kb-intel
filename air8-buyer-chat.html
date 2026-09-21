@@ -84,7 +84,7 @@
 
 <script>
 const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
-let hist = [], charts = {};
+let hist = [], charts = {}, _bypassDirectionCheck = false;
 
 function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
 function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
@@ -158,6 +158,16 @@ async function send() {
   const inp=document.getElementById('inp'), msg=inp.value.trim();
   if(!msg) return;
   inp.value=''; inp.style.height='auto';
+
+  // ── DIRECTION PICKER: intercept generic buyer queries ──
+  if(!_bypassDirectionCheck && isGenericBuyerQuery(msg)) {
+    addUser(msg);
+    hist.push({role:'user', content: msg});
+    showDirectionPicker(msg, extractBuyerName(msg));
+    return;
+  }
+  _bypassDirectionCheck = false;
+
   addUser(msg);
   hist.push({role:'user',content:msg});
   const thinkId = addThinking(guessSteps(msg));
@@ -326,6 +336,126 @@ function extractJSON(text) {
   const m = text.match(/\{[\s\S]*\}/);
   if(m) { try { return JSON.parse(m[0]); } catch{} }
   return null;
+}
+
+// ── DIRECTION PICKER ────────────────────────────────────────────────────────
+function isGenericBuyerQuery(msg) {
+  const m = msg.toLowerCase().trim();
+  const specificTopics = [
+    'financial','revenue','sales','dpo','payment','credit','profit','income','margin',
+    'sourcing','import','supply','supplier','country','origin','factory','vendor',
+    'product','categor','buying','merchandise','assortment',
+    'risk','compliance','requirement','standard',
+    'news','signal','announcement','report','strateg','trend','overview',
+    'compare','vs ','competitor','store','market cap','stock',
+    '财务','收入','采购','风险','产品','新闻','竞争','概况'
+  ];
+  const genericPatterns = [
+    /^tell me (more |something |sth )?(about|regarding)\s+\S/i,
+    /^(what|who) (is|are|do you know about)\s+\S/i,
+    /^(查|了解|介绍|分析|研究)\s*\S/,
+    /^(give me|show me|get me) (some |more )?(info|information|intelligence|data|detail)(s)? (about|on|for|of)\s+\S/i,
+    /^(research|look up|lookup)\s+\S/i,
+    /^(what can you tell me about)\s+\S/i,
+  ];
+  if(!genericPatterns.some(p => p.test(msg))) return false;
+  return !specificTopics.some(t => m.includes(t));
+}
+
+function extractBuyerName(msg) {
+  let name = msg
+    .replace(/^tell me (more |something |sth )?(about|regarding)\s*/i, '')
+    .replace(/^(what|who) (is|are|do you know about)\s*/i, '')
+    .replace(/^(查|了解|介绍|分析|研究)\s*/i, '')
+    .replace(/^(give me|show me|get me) (some |more )?(info|information|intelligence|data|detail)(s)? (about|on|for|of)\s*/i, '')
+    .replace(/^(research|look up|lookup)\s*/i, '')
+    .replace(/^(what can you tell me about)\s*/i, '')
+    .replace(/\?+$/, '')
+    .trim();
+  return name || msg.trim();
+}
+
+function toggleDirectionOpt(label) {
+  var check = label.querySelector('[data-dir]');
+  if(!check) return;
+  var on = check.dataset.selected === '1';
+  check.dataset.selected = on ? '0' : '1';
+  label.style.background = on ? '#f8faff' : '#eff6ff';
+  label.style.borderColor = on ? '#e0e7ff' : '#1d4ed8';
+  check.style.background = on ? '' : '#1d4ed8';
+  check.style.borderColor = on ? '#c7d2fe' : '#1d4ed8';
+  check.innerHTML = on ? '' : '<svg width="10" height="10" viewBox="0 0 10 10" fill="white"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>';
+}
+
+function skipDirection(cid) {
+  var picker = window._dirPickers && window._dirPickers[cid];
+  if(!picker) return;
+  var opts = document.getElementById('dir-opts-'+cid);
+  if(opts) opts.querySelectorAll('label').forEach(l => l.style.pointerEvents='none');
+  _bypassDirectionCheck = true;
+  document.getElementById('inp').value = picker.originalMsg;
+  send();
+}
+
+function continueDirection(cid) {
+  var container = document.getElementById('dir-opts-'+cid);
+  if(!container) return;
+  var picker = window._dirPickers && window._dirPickers[cid];
+  var buyer = picker ? picker.buyer : '';
+  const dirMap = {
+    financials: 'financials and credit profile',
+    products: 'products and category mix',
+    sourcing: 'sourcing and supply chain',
+    risk: 'risk and compliance requirements',
+    signals: 'latest news and market signals',
+    competitors: 'competitive landscape and positioning'
+  };
+  var selected = [...container.querySelectorAll('[data-dir][data-selected="1"]')].map(el => dirMap[el.dataset.dir] || el.dataset.dir);
+  if(!selected.length) return;
+  var topicStr = selected.length === 1 ? selected[0] : selected.slice(0,-1).join(', ') + ' and ' + selected[selected.length-1];
+  container.querySelectorAll('label').forEach(l => l.style.pointerEvents='none');
+  document.getElementById('inp').value = 'Tell me about ' + buyer + "'s " + topicStr;
+  send();
+}
+
+function showDirectionPicker(originalMsg, buyer) {
+  const chat = document.getElementById('chat');
+  const cid = 'dir-' + Date.now();
+  if(!window._dirPickers) window._dirPickers = {};
+  window._dirPickers[cid] = { buyer, originalMsg };
+  const directions = [
+    { id:'financials',  icon:'💰', title:'Financials',  desc:'Revenue, DPO, credit profile, payment terms' },
+    { id:'products',    icon:'📦', title:'Products',    desc:'Category mix, price points, buying approach' },
+    { id:'sourcing',    icon:'🌍', title:'Sourcing',    desc:'Country breakdown, import trends, supplier requirements' },
+    { id:'risk',        icon:'⚠️', title:'Risk',        desc:'Compliance requirements, payment risk, supplier risks' },
+    { id:'signals',     icon:'📰', title:'Signals',     desc:'Latest news, market moves, strategic shifts' },
+    { id:'competitors', icon:'🥊', title:'Competitors', desc:'Market positioning, competitive landscape' },
+  ];
+  const optHtml = directions.map(d =>
+    `<label class="flex gap-3 items-start p-3 rounded-xl cursor-pointer hover:bg-blue-50 transition-all" style="border:1px solid #e0e7ff;background:#f8faff" onclick="toggleDirectionOpt(this)">
+      <span class="mt-0.5 w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all" style="border-color:#c7d2fe;min-width:16px;min-height:16px" data-dir="${esc(d.id)}"></span>
+      <div><div class="text-xs font-bold text-gray-800">${d.icon} ${esc(d.title)}</div><div class="text-[11px] text-gray-500 mt-0.5">${esc(d.desc)}</div></div>
+    </label>`
+  ).join('');
+  const el = document.createElement('div');
+  el.className = 'flex justify-start gap-2.5 fade-in';
+  el.innerHTML = `
+    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
+      <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
+    </div>
+    <div class="flex-1 min-w-0 max-w-[92%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
+      <div class="px-5 pt-4 pb-3 border-b border-gray-100" style="background:linear-gradient(to right,#f8faff,#fff)">
+        <div class="text-sm font-bold text-gray-900">What would you like to know about <span style="color:#1d4ed8">${esc(buyer)}</span>?</div>
+        <div class="text-xs text-gray-400 mt-0.5">Select one or more topics to explore</div>
+      </div>
+      <div class="p-4 space-y-2" id="dir-opts-${cid}">${optHtml}</div>
+      <div class="px-5 pb-4 flex justify-end gap-3">
+        <button onclick="skipDirection('${cid}')" class="text-xs text-gray-400 px-4 py-2 rounded-xl hover:text-gray-600 transition-all">Skip (Full Overview)</button>
+        <button onclick="continueDirection('${cid}')" class="text-xs font-semibold text-white px-5 py-2 rounded-xl transition-all" style="background:#1d4ed8" onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1d4ed8'">Continue →</button>
+      </div>
+    </div>`;
+  chat.appendChild(el);
+  scrollDown();
 }
 
 // ── GUESS CHAIN-OF-THOUGHT STEPS ─────────────────────────────────────────────
