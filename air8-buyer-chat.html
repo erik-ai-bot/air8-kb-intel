@@ -672,7 +672,12 @@ function addTabCard(data) {
 
   chat.appendChild(el);
   // Render charts after DOM insert
-  data.tabs.forEach(t => { if(t.chart) renderChart(t,cid); });
+  data.tabs.forEach(t => {
+    if(t.chart) renderChart(t,cid);
+    if(t.charts&&t.charts.length) {
+      t.charts.forEach((ch,ci)=>{ renderChartById(ch, `${t.id}-chart-${ci}-${cid}`, cid); });
+    }
+  });
   scrollDown();
 }
 
@@ -720,6 +725,22 @@ function buildPanel(tab, cid) {
         <canvas id="${cid}-chart-${tab.id}"></canvas>
       </div>
     </div>`;
+  }
+
+  // Multiple charts array support
+  if(tab.charts && tab.charts.length) {
+    h+=`<div class="grid grid-cols-${Math.min(tab.charts.length,3)} gap-3 mb-4">`;
+    tab.charts.forEach((ch,ci)=>{
+      const countryLabels=['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia'];
+      const isCountryData=ch.labels&&ch.labels.some(l=>countryLabels.includes(l));
+      const isHoriz=isCountryData||ch.horizontal;
+      const chH=ch.type==='doughnut'?160:ch.type==='grouped_bar'?160:isHoriz?140:120;
+      h+=`<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
+        ${ch.title?`<div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">${esc(ch.title)}</div>`:''}
+        <div style="height:${chH}px"><canvas id="${tab.id}-chart-${ci}-${cid}"></canvas></div>
+      </div>`;
+    });
+    h+=`</div>`;
   }
 
   // Country tiles for sourcing/origin tabs
@@ -789,6 +810,39 @@ function buildPanel(tab, cid) {
   }
 
 
+  // Payment behavior (from Air8 internal 1688 data)
+  if(tab.payment_behavior) {
+    const pb=tab.payment_behavior;
+    h+=`<div class="mt-4 rounded-2xl border p-4" style="background:#f8faff;border-color:#e0e7ff">
+      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">付款行为 — Air8 内部结算数据</div>
+      <div class="grid grid-cols-3 gap-3 mb-3">
+        ${[{label:'逾期天数（加权）',value:pb.avg_late_days!=null?'+'+pb.avg_late_days+' 天':'—',sub:'相对到期日',pending:pb.avg_late_days==null},{label:'准时或提前',value:pb.ontime_pct!=null?pb.ontime_pct+'%':'—',sub:'占已结算发票',pending:pb.ontime_pct==null},{label:'记录扣款率',value:pb.dilution_pct!=null?pb.dilution_pct+'%':'—',sub:'占发票金额',pending:pb.dilution_pct==null}].map(s=>`
+          <div class="bg-white rounded-xl border border-gray-100 p-3 text-center shadow-sm">
+            <div class="text-xs font-bold mb-1" style="color:${s.pending?'#94a3b8':'#1d4ed8'}">${esc(s.value)}</div>
+            <div class="text-[10px] text-gray-500 font-medium">${esc(s.label)}</div>
+            <div class="text-[9px] text-gray-400 mt-0.5">${s.pending?'列1688数据连接':''+esc(s.sub)}</div>
+          </div>`).join('')}
+      </div>
+      ${pb.distribution?`<div class="text-[10px] text-gray-500 leading-relaxed">分布：提前/准时 ${pb.distribution.early||'—'}% · 逾東1–7天 ${pb.distribution.late_1_7||'—'}% · 逾東7天以上 ${pb.distribution.late_7plus||'—'}%</div>`:''}
+      ${pb.note?`<div class="text-[10px] text-gray-400 mt-2 italic">${esc(pb.note)}</div>`:''}
+    </div>`;
+  }
+
+  // CCC stats
+  if(tab.ccc) {
+    const c=tab.ccc;
+    h+=`<div class="flex items-center gap-2 p-3 rounded-xl mt-3 text-xs" style="background:#f0fdf4;border:1px solid #bbf7d0">
+      <span class="font-bold text-emerald-700">现金转换周期</span>
+      <span class="text-gray-500">DIO <strong>${c.dio||'—'}</strong> 天</span>
+      <span class="text-gray-400">+</span>
+      <span class="text-gray-500">DSO <strong>${c.dso||'—'}</strong> 天</span>
+      <span class="text-gray-400">−</span>
+      <span class="text-gray-500">DPO <strong>${c.dpo||'—'}</strong> 天</span>
+      <span class="text-gray-400">=</span>
+      <span class="font-black" style="color:#1d4ed8">净 <strong>${c.net||'—'}</strong> 天</span>
+    </div>`;
+  }
+
   // Key Takeaways bullets
   if(tab.bullets && tab.bullets.length) {
     h+=`<div class="space-y-2.5 mb-4">`;
@@ -834,6 +888,27 @@ function buildTable(t) {
   return `<div class="overflow-hidden rounded-2xl border border-gray-200 shadow-sm mt-3">
     <table class="w-full"><thead><tr>${heads}</tr></thead><tbody>${rows}</tbody></table>
   </div>`;
+}
+
+// ── MULTI-CHART RENDERER ─────────────────────────────────────────────────────
+function renderChartById(ch, canvasId, cid) {
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||!ch) return;
+  if(charts[canvasId]) charts[canvasId]?.destroy?.();
+  const blue='#1d4ed8';
+  const palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#dbeafe','#f97316','#fb923c'];
+  const countryLabels=['China','Vietnam','Bangladesh','India','Mexico','Cambodia','Pakistan','Indonesia','Other','Brazil','Peru','Sri Lanka'];
+  const isCountryData=ch.labels&&ch.labels.some(l=>countryLabels.includes(l));
+  const isHoriz=(isCountryData||ch.horizontal)&&ch.type!=='doughnut';
+  const effectiveType=(isCountryData&&ch.type!=='doughnut')?'bar':(ch.type||'bar');
+
+  if(effectiveType==='doughnut') {
+    charts[canvasId]=new Chart(canvas,{type:'doughnut',data:{labels:ch.labels,datasets:[{data:ch.values,backgroundColor:palette,borderWidth:2,borderColor:'#fff',hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:{size:9},color:'#475569',boxWidth:8,padding:4}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}});
+  } else if(effectiveType==='grouped_bar'&&ch.datasets) {
+    charts[canvasId]=new Chart(canvas,{type:'bar',data:{labels:ch.labels,datasets:ch.datasets.map((ds,i)=>({label:ds.label,data:ds.values,backgroundColor:palette[i]+'cc',borderColor:palette[i],borderWidth:1.5,borderRadius:3}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:9},color:'#475569',boxWidth:8}}},scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}});
+  } else {
+    charts[canvasId]=new Chart(canvas,{type:'bar',data:{labels:ch.labels,datasets:[{label:ch.title||'',data:ch.values,backgroundColor:isCountryData?palette:blue+'cc',borderColor:isCountryData?palette:blue,borderWidth:1.5,borderRadius:isHoriz?3:5}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:isHoriz?'y':'x',plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}});
+  }
 }
 
 // ── CHARTS ────────────────────────────────────────────────────────────────────
@@ -942,6 +1017,8 @@ function swTab(cid,tabId) {
   // Resize chart if present (handles charts rendered while tab was hidden)
   const chartKey=`${cid}-${tabId}`;
   if(charts[chartKey]) { try { charts[chartKey].resize(); } catch(e){} }
+  // Resize multi-charts
+  Object.keys(charts).forEach(k=>{ if(k.startsWith(`${tabId}-chart-`)&&k.endsWith(`-${cid}`)) { try{charts[k].resize();}catch(e){} } });
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
