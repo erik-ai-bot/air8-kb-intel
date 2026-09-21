@@ -797,68 +797,77 @@ function buildStoreMap(pts) {
   if(!Array.isArray(pts)||pts.length===0) return '';
   var sorted=[...pts].sort((a,b)=>(b.count||0)-(a.count||0));
   var max=sorted[0].count||1;
-  var PAL=['#2563eb','#0891b2','#7c3aed','#059669','#d97706','#dc2626','#db2777','#475569'];
+  var PAL=['#2563eb','#1d9bcf','#6d28d9','#0f766e','#b45309','#dc2626','#be185d','#475569'];
   const W=560,H=270;
-  // Mercator: x=(lon+180)/360*W, y=(90-lat)/180*H
-  function p(lat,lon){return[(( lon+180)/360*W).toFixed(1),((90-lat)/180*H).toFixed(1)];}
+  function px(lat,lon){return[(( lon+180)/360*W).toFixed(1),((90-lat)/180*H).toFixed(1)];}
 
-  // Continent paths — verified using key city coordinates
-  // Each point listed as [lat, lon]
-  var continents = [
-    // North America
-    {fill:'#d4e6c3', d:`M ${p(70,-140)} L ${p(72,-95)} L ${p(63,-64)} L ${p(48,-53)} L ${p(25,-80)} L ${p(15,-90)} L ${p(20,-105)} L ${p(32,-117)} L ${p(60,-140)} Z`},
+  // Continent + island paths — gray fill, white ocean background
+  // Coordinates verified against Mercator projection
+  var lands = [
+    // North America (main body)
+    `M ${px(72,-95)} L ${px(63,-64)} L ${px(48,-53)} L ${px(43,-65)} L ${px(25,-80)} L ${px(15,-85)} L ${px(20,-105)} L ${px(30,-117)} L ${px(50,-128)} L ${px(60,-137)} L ${px(70,-140)} Z`,
     // South America
-    {fill:'#d4e6c3', d:`M ${p(12,-72)} L ${p(5,-52)} L ${p(-5,-35)} L ${p(-20,-40)} L ${p(-35,-58)} L ${p(-55,-68)} L ${p(-45,-75)} L ${p(-18,-70)} L ${p(0,-78)} Z`},
-    // Europe + Scandinavia
-    {fill:'#d4e6c3', d:`M ${p(71,26)} L ${p(60,30)} L ${p(55,24)} L ${p(48,22)} L ${p(36,28)} L ${p(36,-6)} L ${p(44,-10)} L ${p(51,-5)} L ${p(58,5)} L ${p(62,5)} L ${p(71,26)} Z`},
+    `M ${px(12,-72)} L ${px(5,-52)} L ${px(-5,-35)} L ${px(-22,-42)} L ${px(-35,-58)} L ${px(-55,-68)} L ${px(-47,-75)} L ${px(-18,-70)} L ${px(0,-78)} Z`,
+    // Europe
+    `M ${px(71,26)} L ${px(60,30)} L ${px(55,24)} L ${px(48,22)} L ${px(36,28)} L ${px(36,-6)} L ${px(44,-10)} L ${px(51,-5)} L ${px(58,5)} L ${px(62,5)} Z`,
+    // Scandinavia ext
+    `M ${px(58,5)} L ${px(71,26)} L ${px(68,18)} L ${px(62,10)} Z`,
     // Africa
-    {fill:'#d4e6c3', d:`M ${p(37,10)} L ${p(37,36)} L ${p(22,38)} L ${p(11,44)} L ${p(0,42)} L ${p(-12,40)} L ${p(-35,26)} L ${p(-34,18)} L ${p(-22,14)} L ${p(0,8)} L ${p(15,-17)} L ${p(22,-17)} L ${p(37,-2)} Z`},
+    `M ${px(37,10)} L ${px(37,36)} L ${px(22,38)} L ${px(11,44)} L ${px(0,42)} L ${px(-12,40)} L ${px(-35,26)} L ${px(-34,18)} L ${px(-22,14)} L ${px(0,8)} L ${px(15,-17)} L ${px(22,-17)} L ${px(37,-2)} Z`,
     // Asia (main)
-    {fill:'#d4e6c3', d:`M ${p(72,140)} L ${p(62,165)} L ${p(52,142)} L ${p(35,138)} L ${p(22,120)} L ${p(1,104)} L ${p(8,78)} L ${p(22,72)} L ${p(28,48)} L ${p(38,26)} L ${p(42,42)} L ${p(52,60)} L ${p(68,68)} L ${p(72,100)} Z`},
+    `M ${px(72,140)} L ${px(62,165)} L ${px(50,140)} L ${px(35,138)} L ${px(22,120)} L ${px(1,104)} L ${px(8,78)} L ${px(22,72)} L ${px(28,48)} L ${px(38,26)} L ${px(42,42)} L ${px(52,60)} L ${px(68,68)} L ${px(72,100)} Z`,
     // Indian subcontinent
-    {fill:'#c8ddb5', d:`M ${p(28,72)} L ${p(28,90)} L ${p(22,92)} L ${p(8,78)} L ${p(14,74)} Z`},
-    // Southeast Asia/Indonesia (simplified)
-    {fill:'#d4e6c3', d:`M ${p(20,100)} L ${p(16,106)} L ${p(5,104)} L ${p(1,108)} L ${p(-8,118)} L ${p(-8,104)} L ${p(5,100)} Z`},
+    `M ${px(28,72)} L ${px(24,90)} L ${px(8,78)} L ${px(14,74)} Z`,
+    // SE Asia
+    `M ${px(20,100)} L ${px(14,106)} L ${px(5,104)} L ${px(1,108)} L ${px(-8,118)} L ${px(-8,104)} L ${px(5,100)} Z`,
     // Australia
-    {fill:'#d4e6c3', d:`M ${p(-12,130)} L ${p(-12,152)} L ${p(-24,154)} L ${p(-38,146)} L ${p(-38,128)} L ${p(-22,114)} Z`},
+    `M ${px(-12,130)} L ${px(-12,152)} L ${px(-24,154)} L ${px(-38,146)} L ${px(-38,128)} L ${px(-22,114)} Z`,
     // Greenland
-    {fill:'#dde8d0', d:`M ${p(76,-45)} L ${p(84,-30)} L ${p(80,-18)} L ${p(68,-24)} L ${p(68,-42)} Z`},
+    `M ${px(76,-45)} L ${px(84,-30)} L ${px(80,-18)} L ${px(68,-24)} L ${px(68,-42)} Z`,
     // Japan
-    {fill:'#c8ddb5', d:`M ${p(40,140)} L ${p(36,136)} L ${p(31,130)} L ${p(32,132)} L ${p(38,141)} Z`},
+    `M ${px(40,140)} L ${px(36,136)} L ${px(31,130)} L ${px(32,132)} L ${px(38,141)} Z`,
     // UK
-    {fill:'#c8ddb5', d:`M ${p(58,-4)} L ${p(51,-5)} L ${p(51,1)} L ${p(56,0)} Z`},
+    `M ${px(58,-4)} L ${px(51,-5)} L ${px(51,1)} L ${px(56,0)} Z`,
     // New Zealand
-    {fill:'#c8ddb5', d:`M ${p(-34,172)} L ${p(-40,174)} L ${p(-46,168)} L ${p(-36,172)} Z`},
-  ].map(c=>`<path d="${c.d.replace(/,/g,' ')}" fill="${c.fill}" stroke="#b8d4a8" stroke-width="0.7" stroke-linejoin="round"/>`).join('');
+    `M ${px(-34,172)} L ${px(-40,174)} L ${px(-46,168)} L ${px(-36,172)} Z`,
+    // Iceland
+    `M ${px(64,-24)} L ${px(66,-14)} L ${px(63,-13)} L ${px(63,-24)} Z`,
+    // Madagascar
+    `M ${px(-12,44)} L ${px(-18,47)} L ${px(-26,44)} L ${px(-18,43)} Z`,
+  ].map(d=>`<path d="${d.replace(/,/g,' ')}" fill="#d9d9d9" stroke="#c0c0c0" stroke-width="0.5" stroke-linejoin="round"/>`).join('');
 
-  var circles = sorted.map((p2,i)=>{
-    if(!p2.lat||!p2.lon) return '';
-    var x2=((p2.lon+180)/360*W);
-    var y2=((90-p2.lat)/180*H);
-    var r=Math.max(9,Math.min(52,Math.sqrt((p2.count||1)/max)*52));
+  // Graticule (subtle lat/lon grid lines)
+  var grid = '';
+  for(var lon=-180;lon<=180;lon+=60){var[gx]=px(0,lon);grid+=`<line x1="${gx}" y1="0" x2="${gx}" y2="${H}" stroke="#e8e8e8" stroke-width="0.5"/>`;}
+  for(var lat=-60;lat<=60;lat+=30){var[,gy]=px(lat,0);grid+=`<line x1="0" y1="${gy}" x2="${W}" y2="${gy}" stroke="#e8e8e8" stroke-width="0.5"/>`;}
+
+  var circles = sorted.map((p,i)=>{
+    if(p.lat==null||p.lon==null) return '';
+    var [x,y]=px(p.lat,p.lon).map(Number);
+    var r=Math.max(10,Math.min(50,Math.sqrt((p.count||1)/max)*50));
     var col=PAL[i%PAL.length];
-    var pctTxt=p2.pct?p2.pct+'%':(p2.count||'');
-    // Keep label inside bounds
-    var ly=Math.min(H-6, y2+r+11);
+    var pctTxt=p.pct?p.pct+'%':(p.count||'');
+    var ly=Math.min(H-6, y+r+11);
     return `<g>
-      <circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" fill-opacity="0.88" stroke="white" stroke-width="2"/>
-      <text x="${x2.toFixed(1)}" y="${y2.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="${r>17?11:9}" font-weight="800" font-family="-apple-system,sans-serif">${pctTxt}</text>
-      <text x="${x2.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="700" font-family="-apple-system,sans-serif" paint-order="stroke" stroke="rgba(255,255,255,0.85)" stroke-width="3">${esc(p2.label||'')}</text>
+      <circle cx="${x}" cy="${y}" r="${r}" fill="${col}" fill-opacity="0.82" stroke="white" stroke-width="2"/>
+      <text x="${x}" y="${y+1}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="${r>17?11:9}" font-weight="800" font-family="-apple-system,sans-serif">${pctTxt}</text>
+      <text x="${x}" y="${ly}" text-anchor="middle" fill="#374151" font-size="9" font-weight="700" font-family="-apple-system,sans-serif" paint-order="stroke" stroke="rgba(255,255,255,0.9)" stroke-width="3">${esc(p.label||'')}</text>
     </g>`;
   }).join('');
 
-  var legend = sorted.map((p2,i)=>`<span class="inline-flex items-center gap-1.5 text-[10px] text-gray-600">
-    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:${PAL[i%PAL.length]}"></span>
-    <span class="font-semibold text-gray-700">${esc(p2.label||'')}</span>
-    <span class="text-gray-400">${p2.count?.toLocaleString?.()??p2.count}${p2.pct?' · '+p2.pct+'%':''}</span>
+  var legend = sorted.map((p,i)=>`<span class="inline-flex items-center gap-1.5 text-[10px] text-gray-600">
+    <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${PAL[i%PAL.length]}"></span>
+    <span class="font-semibold text-gray-700">${esc(p.label||'')}</span>
+    <span class="text-gray-400">${p.count?.toLocaleString?.()??p.count}${p.pct?' ('+p.pct+'%)':''}</span>
   </span>`).join('');
 
-  return `<div class="mb-4 rounded-2xl overflow-hidden" style="border:1px solid #cbd5e1">
-    <svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;background:linear-gradient(180deg,#daeef7 0%,#c5e8f3 50%,#b8e2ef 100%)">
-      ${continents}
+  return `<div class="mb-4 rounded-2xl overflow-hidden" style="border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;background:#f9fafb">
+      ${grid}
+      ${lands}
       ${circles}
     </svg>
-    <div class="flex flex-wrap gap-x-4 gap-y-1 px-3 py-2" style="background:#f8fbff;border-top:1px solid #e2ecf8">
+    <div class="flex flex-wrap gap-x-4 gap-y-1 px-3 py-2" style="background:#fff;border-top:1px solid #f1f5f9">
       ${legend}
     </div>
   </div>`;
