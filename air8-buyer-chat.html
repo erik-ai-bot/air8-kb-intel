@@ -85,6 +85,16 @@
 <script>
 const WORKER = 'https://air8-buyer-chat.erik-ai-bot-001.workers.dev/chat';
 let hist = [], charts = {}, _bypassDirectionCheck = false;
+let layer1Buyers = new Set(); // buyers that have had a Layer 1 tab card shown
+
+function hasSeenLayer1(buyerName) {
+  const norm = (buyerName || '').toLowerCase().trim();
+  if(!norm) return false;
+  for(const b of layer1Buyers) {
+    if(b.includes(norm) || norm.includes(b)) return true;
+  }
+  return false;
+}
 
 function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
 function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
@@ -159,12 +169,16 @@ async function send() {
   if(!msg) return;
   inp.value=''; inp.style.height='auto';
 
-  // ── DIRECTION PICKER: intercept generic buyer queries ──
+  // ── DIRECTION PICKER: only intercept if buyer Layer 1 already shown ──
   if(!_bypassDirectionCheck && isGenericBuyerQuery(msg)) {
-    addUser(msg);
-    hist.push({role:'user', content: msg});
-    showDirectionPicker(msg, extractBuyerName(msg));
-    return;
+    const buyer = extractBuyerName(msg);
+    if(hasSeenLayer1(buyer)) {
+      addUser(msg);
+      hist.push({role:'user', content: msg});
+      showDirectionPicker(msg, buyer);
+      return;
+    }
+    // First time for this buyer → fall through to Layer 1 normally
   }
   _bypassDirectionCheck = false;
 
@@ -744,6 +758,8 @@ function addTabCard(data) {
     addMarkdown('⚠️ Could not render response card. Please try again.');
     return;
   }
+  // Register buyer as having seen Layer 1
+  if(data.buyer) layer1Buyers.add(data.buyer.toLowerCase().trim());
   const chat=document.getElementById('chat');
   const cid='c'+Date.now();
   const el=document.createElement('div');
