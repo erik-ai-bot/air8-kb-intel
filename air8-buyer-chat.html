@@ -681,41 +681,60 @@ function flag(n){return FLAGS[(n||'').toLowerCase().replace(/[^a-z ]/g,'')]||'';
 
 function renderAnalysisText(txt) {
   if(!txt) return '';
-  var lines=txt.split(/\n/);
+  // Support both newline-separated AND inline-bullet (•) formats
+  var parts;
+  if(txt.includes('\n')) {
+    parts = txt.split(/\n/).map(s=>s.trim()).filter(s=>s);
+  } else {
+    // Single-line inline bullets: split on • keeping first chunk as headline
+    parts = txt.split(/\s*•\s*/).map(s=>s.trim()).filter(s=>s);
+  }
   var headline='', bullets=[], actionLine='';
-  lines.forEach(function(raw){
-    var line=raw.trim();
+  var isFirst=true;
+  parts.forEach(function(part){
+    var line=part.trim();
     if(!line) return;
-    if(line.charAt(0)==='\u2022'||line.startsWith('- ')){
-      var clean=line.replace(/^[\u2022\-]\s*/,'').trim();
-      if(/^(SUPPLIER ACTION|AIR8 RECOMMENDATION|RECOMMENDED):/i.test(clean)){
-        actionLine=clean;
-      } else {
-        bullets.push(clean);
-      }
-    } else if(!headline){
-      headline=line;
+    var isBullet = line.charAt(0)==='\u2022'||line.startsWith('- ');
+    var clean = isBullet ? line.replace(/^[\u2022\-]\s*/,'').trim() : line;
+    if(/^(SUPPLIER ACTION|AIR8 RECOMMENDATION|RECOMMENDED|AIR8行动):/i.test(clean)){
+      actionLine=clean; isFirst=false; return;
     }
+    if(isFirst && !isBullet){ headline=clean; isFirst=false; return; }
+    isFirst=false;
+    if(clean) bullets.push(clean);
   });
   var h='';
-  if(headline) h+='<div class="text-xs font-bold text-gray-800 mb-2 leading-snug pb-1 border-b border-gray-100">'+esc(headline)+'</div>';
+  // Headline — small bold section title
+  if(headline) h+='<div class="text-[11px] font-bold text-gray-700 mb-2.5 pb-1.5 border-b border-gray-100 leading-snug">'+esc(headline)+'</div>';
+  // Bullets — detect "Label: content" format and bold the label
   if(bullets.length){
-    h+='<ul class="space-y-1.5 mb-3">';
+    h+='<div class="space-y-1.5 mb-3">';
     bullets.forEach(function(b){
-      h+='<li class="flex gap-2 text-xs text-gray-600 leading-relaxed"><span class="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5"></span><span>'+esc(b)+'</span></li>';
+      var ci=b.indexOf(':');
+      var hasLabel=ci>0&&ci<50&&!/https?:\/\//.test(b.slice(0,ci));
+      if(hasLabel){
+        var lbl=b.slice(0,ci).trim();
+        var body=b.slice(ci+1).trim();
+        h+='<div class="p-2.5 rounded-xl text-xs leading-relaxed" style="background:#f8faff;border:1px solid #e0e7ff">'
+          +'<span class="font-bold text-gray-800">'+esc(lbl)+'</span>'
+          +'<span class="text-gray-600"> '+esc(body)+'</span></div>';
+      } else {
+        h+='<div class="flex gap-2 items-start p-2.5 rounded-xl text-xs text-gray-600 leading-relaxed" style="background:#f8faff;border:1px solid #e0e7ff">'
+          +'<span class="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1.5" style="background:#1d4ed8"></span>'
+          +'<span>'+esc(b)+'</span></div>';
+      }
     });
-    h+='</ul>';
+    h+='</div>';
   }
   if(actionLine){
-    var cleaned=actionLine.replace(/^(SUPPLIER ACTION|AIR8 RECOMMENDATION|RECOMMENDED):\s*/i,'').trim();
-    h+='<div class="flex gap-2.5 p-3 rounded-xl mb-3" style="background:#fff7ed;border:1px solid #fed7aa">'
-      +'<span style="font-size:16px;flex-shrink:0">\u26a1</span>'
+    var cleaned=actionLine.replace(/^(SUPPLIER ACTION|AIR8 RECOMMENDATION|RECOMMENDED|AIR8行动):\s*/i,'').trim();
+    h+='<div class="flex gap-2.5 p-3 rounded-xl mb-2" style="background:#fff7ed;border:1px solid #fed7aa">'
+      +'<span style="font-size:15px;flex-shrink:0">⚡</span>'
       +'<div><div class="text-[10px] font-bold mb-0.5" style="color:#c2410c">SUPPLIER ACTION</div>'
       +'<div class="text-xs leading-relaxed" style="color:#92400e">'+esc(cleaned)+'</div></div></div>';
   }
   return h || '<p class="text-xs text-gray-600 leading-relaxed mb-3">'+esc(txt)+'</p>';
 }
-
 function buildTreemap(chart) {
   var BPAL=['#3b5fe0','#e53e3e','#dd6b20','#38a169','#6d28d9','#0891b2','#dc2626','#059669','#d97706'];
   var vals=chart.values||[], lbls=chart.labels||[];
