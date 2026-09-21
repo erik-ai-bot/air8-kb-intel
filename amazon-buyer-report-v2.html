@@ -505,44 +505,88 @@
     <div class="section-header">§04 产品品类与趋势</div>
 
     <!-- Treemap: Category composition -->
-    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">海关可追踪自营进口品类构成（已标注记录·数量口径）</div>
-    <div class="treemap-wrap" style="margin-bottom:4px; height:110px;">
-      <div class="treemap-block" style="width:66.7%; background:#1d4ed8;">
-        <div class="treemap-pct">66.7%</div>
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">自营进口品类构成（2025年已标注记录 · 票数口径 · 29,751条）</div>
+    <div class="treemap-wrap" style="margin-bottom:4px; height:120px;">
+      <div class="treemap-block" style="width:26.0%; background:#10b981;">
+        <div class="treemap-pct">26.0%</div>
+        <div class="treemap-label">服装类</div>
+      </div>
+      <div class="treemap-block" style="width:21.1%; background:#1d4ed8;">
+        <div class="treemap-pct">21.1%</div>
+        <div class="treemap-label">电子电气</div>
+      </div>
+      <div class="treemap-block" style="width:18.4%; background:#0ea5e9;">
+        <div class="treemap-pct">18.4%</div>
         <div class="treemap-label">家纺织品</div>
       </div>
-      <div class="treemap-block" style="width:20.9%; background:#0ea5e9;">
-        <div class="treemap-pct">20.9%</div>
-        <div class="treemap-label">木制品</div>
+      <div class="treemap-block" style="width:14.2%; background:#8b5cf6;">
+        <div class="treemap-pct">14.2%</div>
+        <div class="treemap-label">机械设备</div>
       </div>
-      <div class="treemap-block" style="width:4.8%; background:#8b5cf6;">
-        <div class="treemap-pct" style="font-size:13px;">4.8%</div>
-        <div class="treemap-label">陶瓷</div>
+      <div class="treemap-block" style="width:13.9%; background:#64748b;">
+        <div class="treemap-pct">13.9%</div>
+        <div class="treemap-label">其他品类</div>
       </div>
-      <div class="treemap-block" style="width:2.4%; background:#10b981;" title="石材 2.4%"></div>
-      <div class="treemap-block" style="width:2.4%; background:#f59e0b;" title="铜制品 2.4%"></div>
-      <div class="treemap-block" style="width:3.2%; background:#64748b;" title="其他 3.2%"></div>
+      <div class="treemap-block" style="width:6.4%; background:#ef4444;">
+        <div class="treemap-pct" style="font-size:12px;">6.4%</div>
+        <div class="treemap-label">生鲜</div>
+      </div>
     </div>
-    <!-- Treemap legend -->
     <div style="display:flex; gap:14px; flex-wrap:wrap; font-size:10px; color:#6b7280; margin-bottom:10px;">
-      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#1d4ed8; margin-right:3px; vertical-align:middle;"></span>家纺织品 66.7%</span>
-      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#0ea5e9; margin-right:3px; vertical-align:middle;"></span>木制品 20.9%</span>
-      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#8b5cf6; margin-right:3px; vertical-align:middle;"></span>陶瓷 4.8%</span>
-      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#10b981; margin-right:3px; vertical-align:middle;"></span>石材 2.4%</span>
-      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#f59e0b; margin-right:3px; vertical-align:middle;"></span>铜制品 2.4%</span>
-      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#64748b; margin-right:3px; vertical-align:middle;"></span>其他 3.2%</span>
+      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#10b981; margin-right:3px; vertical-align:middle;"></span>服装类（针织+梭织）26.0%</span>
+      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#1d4ed8; margin-right:3px; vertical-align:middle;"></span>电子电气 21.1%</span>
+      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#0ea5e9; margin-right:3px; vertical-align:middle;"></span>家纺织品 18.4%</span>
+      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#8b5cf6; margin-right:3px; vertical-align:middle;"></span>机械设备 14.2%</span>
+      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#64748b; margin-right:3px; vertical-align:middle;"></span>其他品类 13.9%</span>
+      <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#ef4444; margin-right:3px; vertical-align:middle;"></span>生鲜水果 6.4%</span>
     </div>
-    <div style="font-size:10px; color:#9ca3af; margin-bottom:12px;">* 基于已标注海运记录，家纺含床品、浴巾、毯子等品类；小色块悬停可查看名称</div>
+    <div style="font-size:10px; color:#9ca3af; margin-bottom:12px;">口径：已标注HS章节海运记录，按票数（每批≥1票），与下方采购来源Sankey图同一数据集</div>
+
+    <!-- Customs vs Official comparison -->
+    <div style="background:#fafafa; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:20px;">
+      <div style="font-size:11px; font-weight:700; color:#374151; margin-bottom:10px;">📊 海关口径 vs Amazon官网品类增速——数据局限性说明</div>
+      <div style="border-radius:8px; overflow:hidden; border:1px solid #e5e7eb;">
+        <table class="table-styled" style="font-size:11px;">
+          <thead><tr><th>品类（海关票数口径）</th><th>占已标注进口</th><th>Amazon官网平台增速</th><th>差异说明</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">服装类（针织+梭织）</td>
+              <td><span style="font-weight:700; color:#10b981;">26.0%</span></td>
+              <td><span style="font-weight:700; color:#16a34a;">+24%</span></td>
+              <td style="color:#6b7280; font-size:10px;">两口径方向一致；关税35.1%施压</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">电子电气</td>
+              <td><span style="font-weight:700; color:#1d4ed8;">21.1%</span></td>
+              <td><span style="font-weight:700; color:#16a34a;">+32%</span></td>
+              <td style="color:#6b7280; font-size:10px;">两口径均显示强劲；CE/FCC合规要求</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">家纺织品</td>
+              <td><span style="font-weight:700; color:#0ea5e9;">18.4%</span></td>
+              <td style="color:#9ca3af;">未单独披露</td>
+              <td style="color:#6b7280; font-size:10px;">含在"家居厨房" +28%；UFLPA溯源压力上升</td>
+            </tr>
+            <tr style="background:#fffbeb;">
+              <td style="font-weight:600; color:#92400e;">机械设备</td>
+              <td><span style="font-weight:700; color:#8b5cf6;">14.2%</span></td>
+              <td style="color:#9ca3af;">不适用（非消费品）</td>
+              <td style="color:#92400e; font-size:10px;">⚠️ Amazon Robotics仓储自动化设备，以亚马逊名义进口；不在消费者品类</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">生鲜水果</td>
+              <td><span style="font-weight:700; color:#ef4444;">6.4%</span></td>
+              <td style="color:#9ca3af;">不适用（Whole Foods）</td>
+              <td style="color:#6b7280; font-size:10px;">秘鲁/荷兰来源，供Whole Foods门店；不在平台品类</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:10px; color:#9ca3af; margin-top:8px;">💡 核心局限：海关口径仅含以亚马逊为进口记录人（IOR）的货物，覆盖率约8%；平台增速反映消费者购买端趋势，两者不能直接叠加对比。</div>
+    </div>
     <div class="info-box" style="margin-bottom:20px;">
       📌 <strong>海关数据 ≠ 全貌说明：</strong>以上品类构成仅来自已标注HS章节的海运提单，约占自营进口总量 <strong>8%</strong>。剩余92%记录未标注品类细节，但地理来源可追踪（全部为中国来源），实际品类分布远比图示更广。<br/>
       <span style="display:block; margin-top:6px;">📦 <strong>79.8%</strong> 的亚马逊自营进口货物在中国港口完成装货（已标注记录口径），是最大单一装货地。</span>
-    </div>
-
-    <!-- Sankey chart: Product × Country -->
-    <div class="chart-wrap" style="margin-bottom:20px;">
-      <div class="chart-title">自营进口：品类 × 来源国关系图（Sankey · 2025年已标注记录估算分布）</div>
-      <div id="categorySankeyChart" style="height:380px;"></div>
-      <div style="font-size:10px; color:#9ca3af; margin-top:6px;">📌 注：各品类向来源国的分布为估算値，基于2025年已标注海这30,000余条记录及业界供应链规律建模。数据纵向已平衡。</div>
     </div>
 
     <!-- Bar chart: category growth -->
@@ -763,63 +807,11 @@
       <span style="display:block; margin-top:8px;">📌 <strong>根本原因：</strong>① 3P卖家占平台单量60%，以自己名义报关，不计入亚马逊名下 ② 苹果/三星/Anker等品牌在美境内供货，亦不记录为亚马逊进口 ③ 已标注记录主要是自有品牌商品、全食食材、和仓储自动化设备（机械设备单票金额27–39万美元）</span>
     </div>
 
-    <!-- Sub D: Category × Country matrix (2 years) -->
-    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px; margin-top:22px;">D. 品类 × 来源国——两年结构对比（已标注记录）</div>
-    <div style="font-size:11px; color:#6b7280; margin-bottom:12px;">同口径：标注了HS章节的海运记录票数。两年度可直接对比，但须注意已标注部分约占总量8%，其余92%全为中国来源。</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
-      <div style="background:#eff6ff; border-radius:10px; padding:16px; border:1px solid #bfdbfe;">
-        <div style="font-size:11px; font-weight:700; color:#1d4ed8; margin-bottom:12px;">📅 2025全年 · 29,751条已标注记录</div>
-        <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">品类构成（票数）</div>
-        <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px; margin-bottom:10px;">
-          <span style="color:#374151; font-weight:600;">电子电器</span><span style="color:#1d4ed8; font-weight:700;">21.1%</span>
-          <span style="color:#374151; font-weight:600;">家纺织品</span><span style="color:#1d4ed8; font-weight:700;">18.4%</span>
-          <span style="color:#374151; font-weight:600;">机械设备</span><span style="color:#1d4ed8; font-weight:700;">14.2%</span>
-          <span style="color:#374151; font-weight:600;">针织服装</span><span style="color:#1d4ed8; font-weight:700;">13.2%</span>
-          <span style="color:#374151; font-weight:600;">梭织服装</span><span style="color:#1d4ed8; font-weight:700;">12.8%</span>
-          <span style="color:#374151; font-weight:600;">生鲜水果</span><span style="color:#1d4ed8; font-weight:700;">6.4%</span>
-          <span style="color:#6b7280;">木制品/箱包/其他</span><span style="color:#6b7280;">13.9%</span>
-        </div>
-        <div style="border-top:1px solid #bfdbfe; padding-top:8px;">
-          <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">来源国（票数）</div>
-          <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px;">
-            <span>🇮🇳 印度</span><span style="font-weight:700; color:#1d4ed8;">35.9%</span>
-            <span>🇻🇳 越南</span><span style="font-weight:700; color:#1d4ed8;">33.9%</span>
-            <span>🇨🇳 中国</span><span style="font-weight:700; color:#1d4ed8;">9.6%</span>
-            <span>🇵🇪 秘鲁</span><span style="color:#6b7280;">6.4%</span>
-            <span>🇳🇱 荷兰</span><span style="color:#6b7280;">4.3%</span>
-            <span>🇱🇰 斯里兰卡</span><span style="color:#6b7280;">3.8%</span>
-            <span>其他</span><span style="color:#6b7280;">6.1%</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#f5f3ff; border-radius:10px; padding:16px; border:1px solid #ddd6fe;">
-        <div style="font-size:11px; font-weight:700; color:#7c3aed; margin-bottom:12px;">📅 2026年至今 · 6,092条已标注记录</div>
-        <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">品类构成（票数）</div>
-        <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px; margin-bottom:10px;">
-          <span style="color:#374151; font-weight:600;">电子电气</span><span style="color:#7c3aed; font-weight:700;">25.8%</span>
-          <span style="color:#374151; font-weight:600;">香料化妆</span><span style="color:#7c3aed; font-weight:700;">18.6%</span>
-          <span style="color:#374151; font-weight:600;">机械设备</span><span style="color:#7c3aed; font-weight:700;">16.4%</span>
-          <span style="color:#374151; font-weight:600;">针织服装</span><span style="color:#7c3aed; font-weight:700;">9.2%</span>
-          <span style="color:#374151; font-weight:600;">塑料制品</span><span style="color:#7c3aed; font-weight:700;">8.9%</span>
-          <span style="color:#374151; font-weight:600;">家纺织品</span><span style="color:#7c3aed; font-weight:700;">6.3%</span>
-          <span style="color:#6b7280;">涂层纺织/水果/其他</span><span style="color:#6b7280;">14.8%</span>
-        </div>
-        <div style="border-top:1px solid #ddd6fe; padding-top:8px;">
-          <div style="font-size:10px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:6px;">来源国（票数）</div>
-          <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:11px;">
-            <span>🇻🇳 越南</span><span style="font-weight:700; color:#7c3aed;">31.7%</span>
-            <span>🇨🇳 中国</span><span style="font-weight:700; color:#7c3aed;">29.1%</span>
-            <span>🇮🇳 印度</span><span style="font-weight:700; color:#7c3aed;">24.9%</span>
-            <span>🇸🇬 新加坡</span><span style="color:#6b7280;">4.6%</span>
-            <span>🇦🇪 阿联酋</span><span style="color:#6b7280;">3.2%</span>
-            <span>🇲🇽 墨西哥</span><span style="color:#6b7280;">3.0%</span>
-            <span>其他</span><span style="color:#6b7280;">3.5%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-size:12px; color:#14532d; margin-bottom:22px;">
-      📈 <strong>结构变化（2025→2026）：</strong>已标注口径中，中国从9.6%升至29.1%，印度从35.9%降至24.9%，越南小幅下滑。品类方面家纺减少，电子电气上升，香料化妆品类新增（18.6%）。注：此变化部分反映2026年数据覆盖尚未完整，建议结合数量规模（29,751 vs 6,092条）判断趋势可靠性。
+    <!-- Sub D: Sankey — Category × Country (moved from Tab 4) -->
+    <div class="chart-wrap" style="margin-bottom:20px; margin-top:22px;">
+      <div class="chart-title">自营进口：品类 × 来源国关系图（Sankey · 2025年已标注记录估算分布）</div>
+      <div id="categorySankeyChart" style="height:380px;"></div>
+      <div style="font-size:10px; color:#9ca3af; margin-top:6px;">📌 注：各品类向来源国的分布为估算值，基于2025年已标注海运约30,000条记录及业界供应链规律建模。数据纵向已平衡。</div>
     </div>
 
     <!-- Sub E: Volume trend -->
@@ -1337,7 +1329,7 @@
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.5（修复Sankey图、去除A8内部字眼、修复分析卡文字显示）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.6（Sankey迁至采购来源Tab，treemap改票数口径，加海关/官网对比）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
   </div>
 </div>
 
@@ -1391,11 +1383,11 @@ function showTab(n) {
       const instance = Chart.getChart(canvas);
       if (instance) instance.resize();
     });
-    // Lazy-init Sankey on first visit to Tab 4
-    if (n === 4 && !_sankeyInited) {
+    // Lazy-init Sankey on first visit to Tab 5
+    if (n === 5 && !_sankeyInited) {
       initSankeyChart();
       _sankeyInited = true;
-    } else if (n === 4 && _sankeyInited && window.Plotly) {
+    } else if (n === 5 && _sankeyInited && window.Plotly) {
       Plotly.Plots.resize('categorySankeyChart');
     }
   }, 80);
