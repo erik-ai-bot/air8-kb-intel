@@ -477,6 +477,12 @@ function extractBuyerName(msg) {
     .replace(/^(what can you tell me about)\s*/i, '')
     .replace(/\?+$/, '')
     .trim();
+  // Stop at possessive ('s ...) — buyer names don't include topic phrases
+  name = name.replace(/'s\s+.+$/i, '').trim();
+  name = name.replace(/\s+(and|with|vs\.?|versus|including)\s+.+$/i, '').trim();
+  // Cap at 3 words max
+  const words = name.split(/\s+/);
+  if(words.length > 3) name = words.slice(0, 3).join(' ');
   return name || msg.trim();
 }
 
@@ -519,6 +525,7 @@ function continueDirection(cid) {
   if(!selected.length) return;
   var topicStr = selected.length === 1 ? selected[0] : selected.slice(0,-1).join(', ') + ' and ' + selected[selected.length-1];
   container.querySelectorAll('label').forEach(l => l.style.pointerEvents='none');
+  _bypassDirectionCheck = true; // prevent direction picker re-triggering on this specific query
   document.getElementById('inp').value = 'Tell me about ' + buyer + "'s " + topicStr;
   send();
 }
