@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -598,6 +599,22 @@
       </table>
     </div>
     <div style="font-size:10px; color:#9ca3af; margin-top:8px; margin-bottom:20px;">Source: ECDB Amazon Marketplace Report（2026年7月）· Sellerite Amazon Market Share by Category（2025–26）· eMarketer US Amazon Retail Ecommerce by Category · As of 2025–2026</div>
+
+    <!-- Category YoY growth CHART (primary) -->
+    <div class="chart-wrap" style="margin-bottom:16px;">
+      <div class="chart-title">品类增速（2025 YoY）— 参考线：平台均值 ~12%</div>
+      <div style="height:340px; position:relative;">
+        <canvas id="categoryGrowthBarChart"></canvas>
+      </div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:10px; color:#6b7280; margin-top:8px;">
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#22c55e;margin-right:3px;vertical-align:middle;"></span>高于均值</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3b82f6;margin-right:3px;vertical-align:middle;"></span>持平均值</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#94a3b8;margin-right:3px;vertical-align:middle;"></span>低于均值</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f59e0b;margin-right:3px;vertical-align:middle;"></span>明显落后</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ef4444;margin-right:3px;vertical-align:middle;"></span>负增长</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;margin-right:3px;vertical-align:middle;"></span>★ 平台引擎（非零售GMV）</span>
+      </div>
+    </div>
 
     <!-- Category YoY growth table -->
     <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">品类增速（2025 YoY）</div>
@@ -1304,7 +1321,7 @@
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v3.0（来源国Doughnut换2026数据，gap说明更新9.6%→29.1%）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v3.1（品类增速加水平条形图，以图为主）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
   </div>
 </div>
 
@@ -1513,6 +1530,79 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // GMV bar chart removed (treemap used instead)
+
+  // ══ Category Growth Bar Chart (horizontal, primary) ═════════════════════
+  Chart.register(window['chartjs-plugin-annotation']);
+  new Chart(document.getElementById('categoryGrowthBarChart'), {
+    type: 'bar',
+    data: {
+      labels: [
+        '广告服务 ★','宠物用品','AWS云服务 ★','美妆个护',
+        '健康家居','杂货食品','电子产品','家居家具','服装鞋靴','玩具游戏'
+      ],
+      datasets: [{
+        data: [22, 21, 20, 19, 15, 12, 10, 8, 5, -2],
+        backgroundColor: [
+          '#8b5cf6','#22c55e','#8b5cf6','#22c55e',
+          '#22c55e','#3b82f6','#94a3b8','#94a3b8','#f59e0b','#ef4444'
+        ],
+        borderRadius: 4,
+        borderSkipped: false,
+        datalabels: {
+          display: true,
+          anchor: 'end',
+          align: 'end',
+          color: ctx => {
+            const v = ctx.dataset.data[ctx.dataIndex];
+            return v < 0 ? '#b91c1c' : v < 5 ? '#b45309' : '#374151';
+          },
+          font: { size: 11, weight: '700' },
+          formatter: v => (v >= 0 ? '+' : '') + v + '%'
+        }
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: { display: false },
+        annotation: {
+          annotations: {
+            avgLine: {
+              type: 'line',
+              xMin: 12, xMax: 12,
+              borderColor: '#374151',
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                content: '均值 12%',
+                position: 'start',
+                yAdjust: -8,
+                color: '#374151',
+                font: { size: 10, weight: '600' },
+                backgroundColor: 'transparent',
+                padding: 0
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: -6, max: 27,
+          grid: { color: '#f1f5f9' },
+          ticks: { font: { size: 10 }, callback: v => v + '%' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { size: 11 } }
+        }
+      }
+    }
+  });
 
   // ══ 4. Source Country Doughnut ══════════════════════════════════════════
   new Chart(document.getElementById('sourceCountryChart'), {
