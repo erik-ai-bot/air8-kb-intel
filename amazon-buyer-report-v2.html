@@ -616,13 +616,12 @@
   <div class="section-block">
     <div class="section-header">§05 采购来源与采购量趋势</div>
 
-    <div class="info-box">
-      📊 <strong>本节使用三个独立口径，不可叠加：</strong>① Marketplace Pulse平台卖家调查（描述谁在亚马逊平台上卖货）② Panjiva/海关数据（亚马逊自营进口，按票数）③ 亚马逊官方10-K披露（仅"相当大比例"表述，无数值）。亚马逊CFO 2026年Q2电话会明确：「我们并非绝大多数商品的进口记录人。」
+    <div class="info-box" style="margin-bottom:20px;">
+      📊 <strong>本节三个口径独立，不可叠加：</strong>① Marketplace Pulse——描述谁在平台卖货（3P卖家，非自营采购）；② Panjiva/海关——亚马逊自营进口票数，约覆盖总量8%；③ 10-K官方披露——仅定性描述"significant proportion"。
     </div>
 
     <!-- Sub A: Platform seller structure -->
-    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">A. 平台卖家结构（第三方卖家 · Marketplace Pulse 2026年7月）</div>
-    <div style="font-size:11px; color:#6b7280; margin-bottom:14px; line-height:1.6;">以下为亚马逊美国市场前10,000名第三方卖家的地区分布，<strong>描述谁在平台上卖货，而非亚马逊自营采购。</strong></div>
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 平台3P卖家结构（美国前10,000名 · Marketplace Pulse 2026年7月）</div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
       <div style="background:#f8fafc; border-radius:12px; padding:18px; border:1px solid #e2e8f0;">
@@ -650,43 +649,33 @@
       💡 中国卖家占数量55.9%，GMV仅28.6%；美国卖家虽40.5%，GMV达65.3%——反映单个中国卖家体量更小。
     </div>
 
-    <!-- Sub B: Data source attribution table -->
-    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">B. 数据口径汇总与Gap分析</div>
+    <!-- Sub B: Key data points (compact) -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">B. 关键数据节点</div>
     <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:20px;">
       <table class="table-styled">
         <thead>
-          <tr><th>口径</th><th>数值</th><th>来源与说明</th></tr>
+          <tr><th>指标</th><th>数值</th><th>来源 · 口径说明</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td style="font-weight:600; color:#374151;">中国卖家占美国前10,000名卖家（数量）</td>
+            <td style="font-weight:600; color:#374151;">中国3P卖家占平台数量</td>
             <td><span style="color:#1d4ed8; font-weight:700;">55.9%</span></td>
-            <td style="font-size:11px; color:#6b7280;">Marketplace Pulse 2026年7月；2020年7月为42.5%</td>
+            <td style="font-size:11px; color:#6b7280;">Marketplace Pulse 2026/7；美国前10,000名3P卖家；六年前仅42.5%</td>
           </tr>
           <tr>
-            <td style="font-weight:600; color:#374151;">同一群体，美国卖家占GMV</td>
-            <td><span style="color:#0ea5e9; font-weight:700;">65.3%（中国28.6%）</span></td>
-            <td style="font-size:11px; color:#6b7280;">Marketplace Pulse 2026年7月；描述平台3P卖家，非自营采购</td>
-          </tr>
-          <tr style="background:#fffbeb;">
-            <td style="font-weight:600; color:#374151;">亚马逊是否为进口记录人（IOR）</td>
-            <td><span style="color:#f59e0b; font-weight:700;">仅少数商品</span></td>
-            <td style="font-size:11px; color:#6b7280;">CFO 2026年Q2电话会（2026年7月30日）：「我们并非店内绝大多数商品的进口记录人，进口通常由供应商处理」</td>
-          </tr>
-          <tr>
-            <td style="font-weight:600; color:#374151;">中国占美国集装箱进口总量</td>
-            <td><span style="font-weight:700;">34.0%</span></td>
-            <td style="font-size:11px; color:#6b7280;">Descartes 2026年8月；2,603,709 TEU中884,318 TEU；市场背景，非亚马逊口径</td>
+            <td style="font-weight:600; color:#374151;">中国3P卖家占平台GMV</td>
+            <td><span style="color:#0ea5e9; font-weight:700;">28.6%</span></td>
+            <td style="font-size:11px; color:#6b7280;">同口径；数量多但单店体量小，美国卖家65.3%</td>
           </tr>
           <tr>
             <td style="font-weight:600; color:#374151;">亚马逊自营进口在中国港口装货</td>
             <td><span style="color:#1d4ed8; font-weight:700;">79.8%</span></td>
-            <td style="font-size:11px; color:#6b7280;">Panjiva 2025年Q2；盐田/宁波/上海，61,862票中49,378票；仅亚马逊自营进口口径</td>
+            <td style="font-size:11px; color:#6b7280;">Panjiva 2025 Q2；盐田/宁波/上海，61,862票中49,378票</td>
           </tr>
-          <tr>
-            <td style="font-weight:600; color:#374151;">亚马逊自身国别披露</td>
-            <td><span style="color:#9ca3af; font-weight:700;">未披露具体比例</span></td>
-            <td style="font-size:11px; color:#6b7280;">2025财年10-K仅表述：中国卖家与供应商占「相当大比例」（原文：a significant proportion）</td>
+          <tr style="background:#fffbeb;">
+            <td style="font-weight:600; color:#374151;">Amazon担任进口记录人（IOR）</td>
+            <td><span style="color:#f59e0b; font-weight:700;">仅少数商品</span></td>
+            <td style="font-size:11px; color:#6b7280;">CFO 2026 Q2电话会："进口通常由供应商处理"——故海关数据覆盖率仅约8%</td>
           </tr>
         </tbody>
       </table>
@@ -701,20 +690,19 @@
       </div>
     </div>
     <div class="warning-box">
-      ⚠️ <strong>Gap分析：为何中国在图中仅9.6%，但实际占比约94.3%</strong><br/>
-      上图仅含已标注HS章节的海关记录（8%覆盖率）。2026年至今：已标注记录6,092条，未标注记录<strong>70,252条</strong>——未标注部分92%全部为中国来源。若计入，中国实际占比升至<strong>94.3%</strong>（已标注口径下仅29.1%）。<br/>
-      <span style="display:block; margin-top:8px;">📌 <strong>根本原因：</strong>① 3P卖家占平台单量60%，以自己名义报关，不计入亚马逊名下 ② 苹果/三星/Anker等品牌在美境内供货，亦不记录为亚马逊进口 ③ 已标注记录主要是自有品牌商品、全食食材、和仓储自动化设备（机械设备单票金额27–39万美元）</span>
+      ⚠️ <strong>为何图中中国仅9.6%，实际约94.3%？</strong> 上图仅含已标注HS章节记录（总量8%）；未标注的70,252条记录中92%全为中国来源，合并后中国实际占比约94.3%。<br/>
+      <span style="display:block; margin-top:6px; color:#92400e;">根本原因：3P卖家以自己名义报关（占平台单量60%）；Apple/Samsung等品牌在美境内直接供货，均不记录为Amazon进口。</span>
     </div>
 
-    <!-- Sub D: Sankey — Category × Country (moved from Tab 4) -->
+    <!-- Sub D: Sankey 2026 YTD — Category × Country -->
     <div class="chart-wrap" style="margin-bottom:20px; margin-top:22px;">
-      <div class="chart-title">自营进口：品类 × 来源国关系图（Sankey · 2025年已标注记录估算分布）</div>
+      <div class="chart-title">自营进口品类 × 来源国（Sankey · 2026年至今已标注记录 · 6,092条）</div>
       <div id="categorySankeyChart" style="height:380px;"></div>
-      <div style="font-size:10px; color:#9ca3af; margin-top:6px;">📌 注：各品类向来源国的分布为估算值，基于2025年已标注海运约30,000条记录及业界供应链规律建模。数据纵向已平衡。</div>
+      <div style="font-size:10px; color:#9ca3af; margin-top:6px;">数据：Panjiva 2026年已标注HS章节海运记录（截至2026年7月）；品类向来源国分布为估算值，数据纵向已平衡（总量6,092条）。</div>
     </div>
 
     <!-- Sub E: Volume trend -->
-    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">E. 采购量趋势</div>
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px; margin-top:8px;">E. 自营进口批次趋势（可追踪口径）</div>
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
       <div style="background:#f8fafc; border-radius:8px; padding:12px; text-align:center; border:1px solid #e2e8f0;">
         <div style="font-size:15px; font-weight:800; color:#1d4ed8; line-height:1.1;">124,409</div>
@@ -1228,7 +1216,7 @@
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.7（产品品类全改官方GMV数据，删除海关口径内容）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.8（Tab5精简重写：4行B表、紧凑gap说明、Sankey换2026年数据）&nbsp;|&nbsp; 数据来源：公司年报/SEC · Marketplace Pulse · Panjiva · Descartes · PulseLink · 行业媒体（逐条标注）
   </div>
 </div>
 
@@ -1241,6 +1229,8 @@ let _sankeyInited = false;
 
 function initSankeyChart() {
   if (!window.Plotly) return;
+  // 2026 YTD data: 6,092 labeled records (Panjiva, through Jul 2026)
+  // Nodes 0-6 = product categories; 7-12 = source countries
   Plotly.newPlot('categorySankeyChart', [{
     type: 'sankey',
     orientation: 'h',
@@ -1248,20 +1238,50 @@ function initSankeyChart() {
       pad: 14,
       thickness: 18,
       line: { color: '#e2e8f0', width: 0.5 },
-      label: ['\u7535\u5b50\u7535\u6c14','\u5bb6\u7ea8/\u5e8a\u54c1','\u673a\u68b0\u8bbe\u5907','\u670d\u88c5\u978b\u9774','\u98df\u54c1/\u5176\u4ed6','\u8d8a\u5357','\u5370\u5ea6','\u4e2d\u56fd','\u79d8\u9c81','\u5176\u4ed6\u6765\u6e90'],
-      color: ['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#f97316','#ec4899','#14b8a6','#94a3b8'],
-      hovertemplate: '%{label}<br>%{value} \u6761\u8bb0\u5f55<extra></extra>'
+      label: [
+        '电子电气','香料化妆','机械设备','针织服装','塑料制品','家纺织品','其他品类',
+        '越南','中国','印度','新加坡','阿联酋','其他来源'
+      ],
+      color: [
+        '#1d4ed8','#ec4899','#8b5cf6','#10b981','#f59e0b','#0ea5e9','#64748b',
+        '#ef4444','#f97316','#14b8a6','#6366f1','#d97706','#94a3b8'
+      ],
+      hovertemplate: '%{label}<br>%{value} 条记录<extra></extra>'
     },
     link: {
-      source: [0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3, 4,4,4,4],
-      target: [5,7,6,9, 6,9,5,7, 9,5,6,7, 5,6,7, 8,6,5,9],
-      value:  [3000,953,1500,824, 3500,1131,500,343, 1000,1200,1200,825, 4000,3000,735, 1904,1481,1383,1272],
-      color:  'rgba(148,163,184,0.32)',
-      hovertemplate: '%{source.label} \u2192 %{target.label}<br>%{value} \u6761\u8bb0\u5f55<extra></extra>'
+      source: [
+        0,0,0,0,0,
+        1,1,1,1,1,
+        2,2,2,2,2,
+        3,3,3,
+        4,4,4,
+        5,5,5,
+        6,6,6,6
+      ],
+      target: [
+        7,8,9,10,12,
+        7,8,9,10,11,
+        7,8,9,10,12,
+        7,9,12,
+        7,8,9,
+        7,8,9,
+        7,8,9,12
+      ],
+      value: [
+        650,550,200,100,72,
+        300,138,400,100,195,
+        280,400,150,80,89,
+        300,200,60,
+        200,250,92,
+        150,34,200,
+        51,401,275,175
+      ],
+      color: 'rgba(148,163,184,0.3)',
+      hovertemplate: '%{source.label} → %{target.label}<br>%{value} 条<extra></extra>'
     }
   }], {
     margin: { l: 10, r: 10, t: 10, b: 10 },
-    font: { size: 11, family: "Inter, system-ui, sans-serif", color: '#374151' },
+    font: { size: 11, family: 'Inter, system-ui, sans-serif', color: '#374151' },
     paper_bgcolor: 'transparent',
     plot_bgcolor: 'transparent'
   }, { displayModeBar: false, responsive: true });
