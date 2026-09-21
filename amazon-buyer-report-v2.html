@@ -52,10 +52,57 @@
   .mode-card { border-radius: 12px; padding: 18px; border: 1px solid #e5e7eb; }
   .mode-card-blue { background: #f0f6ff; border-color: #bfdbfe; }
   .mode-card-amber { background: #fffdf0; border-color: #fde68a; }
+
+  /* ── Tab Navigation ───────────────────────────────── */
+  .tab-bar-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #f1f5f9;
+    padding: 10px 0 0;
+    margin-bottom: 16px;
+  }
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    background: white;
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.06);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 7px 13px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: all .18s ease;
+    white-space: nowrap;
+    letter-spacing: .01em;
+  }
+  .tab-btn:hover { background: #f1f5f9; color: #374151; }
+  .tab-btn.active {
+    background: #1d4ed8;
+    color: white;
+    box-shadow: 0 2px 6px rgba(29,78,216,.35);
+  }
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
   @media print {
     body { background: white; }
     .page-wrap { padding: 0; }
     .section-block { box-shadow: none; page-break-inside: avoid; }
+    .tab-bar-wrapper { display: none; }
+    .tab-section { display: block !important; }
   }
 </style>
 </head>
@@ -64,7 +111,7 @@
 <div class="page-wrap">
 
 <!-- ═══════════════════════════════════════════════════════ HEADER ═══ -->
-<div class="section-block" style="background: linear-gradient(135deg, #0f2a6b 0%, #1d4ed8 60%, #1e40af 100%); color:white; margin-bottom:20px;">
+<div class="section-block" style="background: linear-gradient(135deg, #0f2a6b 0%, #1d4ed8 60%, #1e40af 100%); color:white; margin-bottom:12px;">
   <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
     <div>
       <div style="font-size:11px; font-weight:700; letter-spacing:.12em; color:#93c5fd; text-transform:uppercase; margin-bottom:8px;">
@@ -102,580 +149,645 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ SECTION 01 ═══ -->
-<div class="section-block">
-  <div class="section-header">§01 核心洞察</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
-    <!-- Green -->
-    <div style="border-radius:12px; padding:18px; background:#f0fdf4; border:1px solid #bbf7d0; border-top:3px solid #22c55e;">
-      <div style="font-size:18px; margin-bottom:8px;">🟢</div>
-      <div style="font-size:12px; font-weight:700; color:#15803d; margin-bottom:8px;">信用安全</div>
-      <div style="font-size:12px; color:#166534; line-height:1.6;">AA/A1评级，持有$1,230亿流动性，违约风险基本为零。信用质量居全球零售商首位。</div>
-    </div>
-    <!-- Amber -->
-    <div style="border-radius:12px; padding:18px; background:#fffbeb; border:1px solid #fde68a; border-top:3px solid #f59e0b;">
-      <div style="font-size:18px; margin-bottom:8px;">🟡</div>
-      <div style="font-size:12px; font-weight:700; color:#b45309; margin-bottom:8px;">账期拉长</div>
-      <div style="font-size:12px; color:#92400e; line-height:1.6;">推算DPO 125天，3年内拉长23天；贸易费用已升至净销售额18.6%，买方条件持续收紧。</div>
-    </div>
-    <!-- Red -->
-    <div style="border-radius:12px; padding:18px; background:#fef2f2; border:1px solid #fecaca; border-top:3px solid #ef4444;">
-      <div style="font-size:18px; margin-bottom:8px;">🔴</div>
-      <div style="font-size:12px; font-weight:700; color:#b91c1c; margin-bottom:8px;">现金流转负</div>
-      <div style="font-size:12px; color:#991b1b; line-height:1.6;">LTM自由现金流-$76亿；2026年资本开支指引$2,200亿，账期在2027年前不会收缩。</div>
-    </div>
+<!-- ═══════════════════════════════════════════════════ TAB BAR ═══ -->
+<div class="tab-bar-wrapper">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab(1)">概况</button>
+    <button class="tab-btn" onclick="showTab(2)">财务分析</button>
+    <button class="tab-btn" onclick="showTab(3)">合作条件</button>
+    <button class="tab-btn" onclick="showTab(4)">产品品类</button>
+    <button class="tab-btn" onclick="showTab(5)">采购来源</button>
+    <button class="tab-btn" onclick="showTab(6)">竞争对手&amp;供应商</button>
+    <button class="tab-btn" onclick="showTab(7)">信号&amp;诉讼</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ SECTION 02 ═══ -->
-<div class="section-block">
-  <div class="section-header">§02 财务分析（精简版）</div>
+<!-- ═══════════════════════════════════════ TAB 1: 概况 ═══ -->
+<div class="tab-section active" id="tab-1">
 
-  <!-- Sub A: Key metrics -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 关键财务指标</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:22px;">
-    <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
-      <div class="kpi-val" style="color:#1d4ed8;">$716.9bn</div>
-      <div class="kpi-label">年度营业收入</div>
-      <div class="kpi-sub" style="color:#22c55e;">+12.4% YoY</div>
-    </div>
-    <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
-      <div class="kpi-val" style="color:#f59e0b;">~125天</div>
-      <div class="kpi-label">推算应付账款天数DPO</div>
-      <div class="kpi-sub" style="color:#ef4444;">↑ 23天 vs FY2022</div>
-    </div>
-    <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
-      <div class="kpi-val" style="color:#22c55e;">AA/A1</div>
-      <div class="kpi-label">信用评级 S&P/Moody's</div>
-      <div class="kpi-sub">违约概率 &lt;0.02%</div>
-    </div>
-    <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
-      <div class="kpi-val" style="color:#ef4444;">-$7.6bn</div>
-      <div class="kpi-label">LTM自由现金流</div>
-      <div class="kpi-sub" style="color:#6b7280;">vs FY2022: +$11.2bn</div>
-    </div>
-  </div>
-
-  <!-- Combo Chart: Revenue + Margin -->
-  <div class="chart-wrap">
-    <div class="chart-title">营业收入（十亿美元）与经营利润率趋势</div>
-    <div style="height:240px; position:relative;">
-      <canvas id="revenueComboChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Sub B: Payment stability -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px; margin-top:4px;">B. 付款稳定性分析</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
-    <div>
-      <div style="font-size:11px; font-weight:600; color:#16a34a; margin-bottom:8px;">✅ 有利因素</div>
-      <div style="font-size:12px; color:#374151; line-height:1.8;">✅ 按金额加权，历史提前 1.5 天结算<br/>✅ 真实稀释率 1–2%（大部分扣款最终冲回）</div>
-    </div>
-    <div>
-      <div style="font-size:11px; font-weight:600; color:#d97706; margin-bottom:8px;">⚠️ 风险因素</div>
-      <div style="font-size:12px; color:#374151; line-height:1.8;">⚠️ 62.5% 发票有轻微逾期（7天内，无长尾）<br/>⚠️ 2025/26谈判季新供应商被要求 90–120 天账期</div>
-    </div>
-  </div>
-  <div class="chart-wrap">
-    <div class="chart-title">推算DPO趋势（天）</div>
-    <div style="height:180px; position:relative;">
-      <canvas id="dpoChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Sub C: Risk cards 2x2 -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">C. 重大诉讼、合规与库存风险</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-    <div class="risk-card risk-card-red">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">FTC 反垄断诉讼</div>
-        <span class="badge badge-red">HIGH</span>
+  <div class="section-block">
+    <div class="section-header">§01 核心洞察</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+      <!-- Green -->
+      <div style="border-radius:12px; padding:18px; background:#f0fdf4; border:1px solid #bbf7d0; border-top:3px solid #22c55e;">
+        <div style="font-size:18px; margin-bottom:8px;">🟢</div>
+        <div style="font-size:12px; font-weight:700; color:#15803d; margin-bottom:8px;">信用安全</div>
+        <div style="font-size:12px; color:#166534; line-height:1.6;">AA/A1评级，持有$1,230亿流动性，违约风险基本为零。信用质量居全球零售商首位。</div>
       </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">2027年3月庭审，FTC寻求结构性救济，可能彻底重写平台规则与费率体系，冲击供应商合约条款。</div>
-    </div>
-    <div class="risk-card risk-card-amber">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">英国集体诉讼</div>
-        <span class="badge badge-amber">MEDIUM</span>
+      <!-- Amber -->
+      <div style="border-radius:12px; padding:18px; background:#fffbeb; border:1px solid #fde68a; border-top:3px solid #f59e0b;">
+        <div style="font-size:18px; margin-bottom:8px;">🟡</div>
+        <div style="font-size:12px; font-weight:700; color:#b45309; margin-bottom:8px;">账期拉长</div>
+        <div style="font-size:12px; color:#92400e; line-height:1.6;">推算DPO 125天，3年内拉长23天；贸易费用已升至净销售额18.6%，买方条件持续收紧。</div>
       </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">£27亿（约$34亿）索赔，代表20万+第三方卖家，首次庭审预计2028年，判决可能影响平台费率。</div>
-    </div>
-    <div class="risk-card risk-card-amber">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">合规成本上升</div>
-        <span class="badge badge-amber">MEDIUM</span>
+      <!-- Red -->
+      <div style="border-radius:12px; padding:18px; background:#fef2f2; border:1px solid #fecaca; border-top:3px solid #ef4444;">
+        <div style="font-size:18px; margin-bottom:8px;">🔴</div>
+        <div style="font-size:12px; font-weight:700; color:#b91c1c; margin-bottom:8px;">现金流转负</div>
+        <div style="font-size:12px; color:#991b1b; line-height:1.6;">LTM自由现金流-$76亿；2026年资本开支指引$2,200亿，账期在2027年前不会收缩。</div>
       </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">服装类关税升至35.1%；UFLPA溯源文件要求趋严，中国供应链须提供完整审计链。</div>
-    </div>
-    <div class="risk-card risk-card-green">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">库存风险</div>
-        <span class="badge badge-green">LOW</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">自营零售库存水平正常，无过度压货迹象；经营活动现金流同比+20%，库存管理能力稳健。</div>
     </div>
   </div>
-</div>
 
-<!-- ═══════════════════════════════════════════════════ SECTION 03 ═══ -->
-<div class="section-block">
-  <div class="section-header">§03 实际合作落地条件</div>
+</div><!-- /tab-1 -->
 
-  <div class="info-box">
-    📋 本节描述向亚马逊供货的实际操作门槛、账期安排与Air8介入机会，不区分产品品类。数据来源于公开平台规则及行业访谈。
+<!-- ═══════════════════════════════════════ TAB 2: 财务分析 ═══ -->
+<div class="tab-section" id="tab-2">
+
+  <div class="section-block">
+    <div class="section-header">§02 财务分析（精简版）</div>
+
+    <!-- Sub A: Key metrics -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 关键财务指标</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:22px;">
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
+        <div class="kpi-val" style="color:#1d4ed8;">$716.9bn</div>
+        <div class="kpi-label">年度营业收入</div>
+        <div class="kpi-sub" style="color:#22c55e;">+12.4% YoY</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
+        <div class="kpi-val" style="color:#f59e0b;">~125天</div>
+        <div class="kpi-label">推算应付账款天数DPO</div>
+        <div class="kpi-sub" style="color:#ef4444;">↑ 23天 vs FY2022</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
+        <div class="kpi-val" style="color:#22c55e;">AA/A1</div>
+        <div class="kpi-label">信用评级 S&P/Moody's</div>
+        <div class="kpi-sub">违约概率 &lt;0.02%</div>
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px; border:1px solid #e2e8f0;">
+        <div class="kpi-val" style="color:#ef4444;">-$7.6bn</div>
+        <div class="kpi-label">LTM自由现金流</div>
+        <div class="kpi-sub" style="color:#6b7280;">vs FY2022: +$11.2bn</div>
+      </div>
+    </div>
+
+    <!-- Combo Chart: Revenue + Margin -->
+    <div class="chart-wrap">
+      <div class="chart-title">营业收入（十亿美元）与经营利润率趋势</div>
+      <div style="height:240px; position:relative;">
+        <canvas id="revenueComboChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Sub B: Payment stability -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px; margin-top:4px;">B. 付款稳定性分析</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
+      <div>
+        <div style="font-size:11px; font-weight:600; color:#16a34a; margin-bottom:8px;">✅ 有利因素</div>
+        <div style="font-size:12px; color:#374151; line-height:1.8;">✅ 按金额加权，历史提前 1.5 天结算<br/>✅ 真实稀释率 1–2%（大部分扣款最终冲回）</div>
+      </div>
+      <div>
+        <div style="font-size:11px; font-weight:600; color:#d97706; margin-bottom:8px;">⚠️ 风险因素</div>
+        <div style="font-size:12px; color:#374151; line-height:1.8;">⚠️ 62.5% 发票有轻微逾期（7天内，无长尾）<br/>⚠️ 2025/26谈判季新供应商被要求 90–120 天账期</div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">推算DPO趋势（天）</div>
+      <div style="height:180px; position:relative;">
+        <canvas id="dpoChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Sub C: Risk cards 2x2 -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">C. 重大诉讼、合规与库存风险</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="risk-card risk-card-red">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">FTC 反垄断诉讼</div>
+          <span class="badge badge-red">HIGH</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">2027年3月庭审，FTC寻求结构性救济，可能彻底重写平台规则与费率体系，冲击供应商合约条款。</div>
+      </div>
+      <div class="risk-card risk-card-amber">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">英国集体诉讼</div>
+          <span class="badge badge-amber">MEDIUM</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">£27亿（约$34亿）索赔，代表20万+第三方卖家，首次庭审预计2028年，判决可能影响平台费率。</div>
+      </div>
+      <div class="risk-card risk-card-amber">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">合规成本上升</div>
+          <span class="badge badge-amber">MEDIUM</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">服装类关税升至35.1%；UFLPA溯源文件要求趋严，中国供应链须提供完整审计链。</div>
+      </div>
+      <div class="risk-card risk-card-green">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">库存风险</div>
+          <span class="badge badge-green">LOW</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">自营零售库存水平正常，无过度压货迹象；经营活动现金流同比+20%，库存管理能力稳健。</div>
+      </div>
+    </div>
   </div>
 
-  <!-- Sub A: Supply modes -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 供货模式对比</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px;">
-    <div class="mode-card mode-card-blue">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-        <div style="width:32px; height:32px; border-radius:8px; background:#1d4ed8; display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">🏭</div>
-        <div>
-          <div style="font-size:13px; font-weight:700; color:#1e3a8a;">1P 自营供货</div>
-          <div style="font-size:10px; color:#6b7280;">Vendor Central</div>
+</div><!-- /tab-2 -->
+
+<!-- ═══════════════════════════════════════ TAB 3: 合作条件 ═══ -->
+<div class="tab-section" id="tab-3">
+
+  <div class="section-block">
+    <div class="section-header">§03 实际合作落地条件</div>
+
+    <div class="info-box">
+      📋 本节描述向亚马逊供货的实际操作门槛、账期安排与Air8介入机会，不区分产品品类。数据来源于公开平台规则及行业访谈。
+    </div>
+
+    <!-- Sub A: Supply modes -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 供货模式对比</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px;">
+      <div class="mode-card mode-card-blue">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <div style="width:32px; height:32px; border-radius:8px; background:#1d4ed8; display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">🏭</div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#1e3a8a;">1P 自营供货</div>
+            <div style="font-size:10px; color:#6b7280;">Vendor Central</div>
+          </div>
+        </div>
+        <div style="font-size:12px; color:#374151; line-height:1.7;">
+          亚马逊直接下PO → 工厂/供应商开票 → 账期内付款<br/>
+          <span style="font-weight:600; color:#1d4ed8;">对手方是亚马逊应付账款</span>，适合体量大、愿意让渡定价权的工厂。
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:#d97706; background:#fffbeb; padding:8px 10px; border-radius:6px;">
+          ⚠️ 亚马逊控制零售价，利润压缩风险高；需接受年度费率重谈。
         </div>
       </div>
-      <div style="font-size:12px; color:#374151; line-height:1.7;">
-        亚马逊直接下PO → 工厂/供应商开票 → 账期内付款<br/>
-        <span style="font-weight:600; color:#1d4ed8;">对手方是亚马逊应付账款</span>，适合体量大、愿意让渡定价权的工厂。
-      </div>
-      <div style="margin-top:10px; font-size:11px; color:#d97706; background:#fffbeb; padding:8px 10px; border-radius:6px;">
-        ⚠️ 亚马逊控制零售价，利润压缩风险高；需接受年度费率重谈。
-      </div>
-    </div>
-    <div class="mode-card mode-card-amber">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-        <div style="width:32px; height:32px; border-radius:8px; background:#f97316; display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">🛒</div>
-        <div>
-          <div style="font-size:13px; font-weight:700; color:#78350f;">3P 第三方卖家</div>
-          <div style="font-size:10px; color:#6b7280;">Seller Central</div>
+      <div class="mode-card mode-card-amber">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <div style="width:32px; height:32px; border-radius:8px; background:#f97316; display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">🛒</div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#78350f;">3P 第三方卖家</div>
+            <div style="font-size:10px; color:#6b7280;">Seller Central</div>
+          </div>
+        </div>
+        <div style="font-size:12px; color:#374151; line-height:1.7;">
+          自己在平台开店 → 亚马逊收服务费 → 按DD+7规则回款<br/>
+          <span style="font-weight:600; color:#b45309;">自主定价</span>，对手方是亚马逊回款节奏（非贸易应付款）。
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:#d97706; background:#fffbeb; padding:8px 10px; border-radius:6px;">
+          ⚠️ 2026年3月起计算基点改为签收日，回款周期延长约7天。
         </div>
       </div>
-      <div style="font-size:12px; color:#374151; line-height:1.7;">
-        自己在平台开店 → 亚马逊收服务费 → 按DD+7规则回款<br/>
-        <span style="font-weight:600; color:#b45309;">自主定价</span>，对手方是亚马逊回款节奏（非贸易应付款）。
+    </div>
+
+    <!-- Sub B: Payment timeline strip -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">B. 账期与资金安排</div>
+    <div class="info-strip">
+      <div class="info-strip-block">
+        <div class="info-strip-label">门户记录账期</div>
+        <div class="info-strip-value">90天</div>
+        <div class="info-strip-sub">标准合同条款</div>
       </div>
-      <div style="margin-top:10px; font-size:11px; color:#d97706; background:#fffbeb; padding:8px 10px; border-radius:6px;">
-        ⚠️ 2026年3月起计算基点改为签收日，回款周期延长约7天。
+      <div class="info-strip-block" style="background:#fff7ed; border:1px solid #fed7aa;">
+        <div class="info-strip-label" style="color:#6b7280;">实际净结算</div>
+        <div class="info-strip-value" style="color:#f97316;">Net 60</div>
+        <div class="info-strip-sub">谈判季升至 90–120天</div>
+      </div>
+      <div class="info-strip-block" style="background:#f0fdf4; border:1px solid #bbf7d0;">
+        <div class="info-strip-label" style="color:#6b7280;">Air8机会窗口</div>
+        <div class="info-strip-value" style="color:#16a34a;">~65天</div>
+        <div class="info-strip-sub">DPO 125天 vs 回收成本60天</div>
+      </div>
+    </div>
+
+    <!-- Sub C: Entry requirements table -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">C. 入场要求</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>项目</th><th>要求</th><th>备注</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600; color:#374151;">产品安全认证</td>
+            <td>按品类强制</td>
+            <td style="color:#6b7280;">家纺需OEKO-TEX；电器需UL/CE认证</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">UFLPA合规</td>
+            <td>完整供应链溯源文件</td>
+            <td style="color:#6b7280;">中国供应链适用，2026年执法趋严</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">包装/标签</td>
+            <td>UPC/FNSKU条码 + FBA标准</td>
+            <td style="color:#6b7280;">须符合亚马逊官方发货指引</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">贸易费用</td>
+            <td>~18.6% 净销售额（1P）</td>
+            <td style="color:#6b7280;">含市场推广、物流服务、退款准备</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">入场谈判窗口</td>
+            <td>通常 Q3（7–9月）</td>
+            <td style="color:#6b7280;">为次年采购季做供应商资格审核</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /tab-3 -->
+
+<!-- ═══════════════════════════════════════ TAB 4: 产品品类 ═══ -->
+<div class="tab-section" id="tab-4">
+
+  <div class="section-block">
+    <div class="section-header">§04 产品品类与趋势</div>
+
+    <!-- Treemap: Category composition -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">海关可追踪自营进口品类构成（数量口径）</div>
+    <div class="treemap-wrap" style="margin-bottom:8px;">
+      <div class="treemap-block" style="width:66.7%; background:#1d4ed8;">
+        <div class="treemap-pct">66.7%</div>
+        <div class="treemap-label">家纺织品</div>
+      </div>
+      <div class="treemap-block" style="width:20.9%; background:#0ea5e9;">
+        <div class="treemap-pct">20.9%</div>
+        <div class="treemap-label">木制品</div>
+      </div>
+      <div class="treemap-block" style="width:4.8%; background:#8b5cf6;">
+        <div class="treemap-pct" style="font-size:13px;">4.8%</div>
+        <div class="treemap-label">陶瓷</div>
+      </div>
+      <div class="treemap-block" style="width:2.4%; background:#10b981;">
+        <div class="treemap-label" style="font-size:9px;">石材 2.4%</div>
+      </div>
+      <div class="treemap-block" style="width:2.4%; background:#f59e0b;">
+        <div class="treemap-label" style="font-size:9px;">铜制品 2.4%</div>
+      </div>
+      <div class="treemap-block" style="width:3.2%; background:#64748b;">
+        <div class="treemap-label" style="font-size:9px;">其他 3.2%</div>
+      </div>
+    </div>
+    <div style="font-size:10px; color:#9ca3af; margin-bottom:20px;">* 基于已标注海运记录，家纺含床品、浴巾、毯子等品类</div>
+
+    <!-- Bar chart: category growth -->
+    <div class="chart-wrap">
+      <div class="chart-title">亚马逊平台主要品类增速（2025年）</div>
+      <div style="height:220px; position:relative;">
+        <canvas id="categoryGrowthChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Category detail table -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">品类详情</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>品类</th><th>近期增速</th><th>展望</th><th>典型零售价</th><th>供应链提示</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600;">电子产品</td>
+            <td><span style="color:#16a34a; font-weight:700;">+32%</span></td>
+            <td><span class="badge badge-green">积极</span></td>
+            <td>$20–$500</td>
+            <td>中国ODM主导，需CE/FCC</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">家居厨房</td>
+            <td><span style="color:#16a34a; font-weight:700;">+28%</span></td>
+            <td><span class="badge badge-green">积极</span></td>
+            <td>$15–$200</td>
+            <td>关税敏感，越南/印度分散</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">服装鞋靴</td>
+            <td><span style="color:#16a34a; font-weight:700;">+24%</span></td>
+            <td><span class="badge badge-amber">中性</span></td>
+            <td>$10–$150</td>
+            <td>关税升至35.1%，尺码退货率高</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">美妆个护</td>
+            <td><span style="color:#d97706; font-weight:700;">+7%</span></td>
+            <td><span class="badge badge-amber">中性</span></td>
+            <td>$5–$80</td>
+            <td>FDA注册、成分合规要求</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">健康家庭</td>
+            <td><span style="color:#d97706; font-weight:700;">+7%</span></td>
+            <td><span class="badge badge-amber">中性</span></td>
+            <td>$8–$120</td>
+            <td>竞争激烈，需私标差异化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /tab-4 -->
+
+<!-- ═══════════════════════════════════════ TAB 5: 采购来源 ═══ -->
+<div class="tab-section" id="tab-5">
+
+  <div class="section-block">
+    <div class="section-header">§05 采购来源</div>
+
+    <!-- Doughnut: source country -->
+    <div class="chart-wrap">
+      <div class="chart-title">2025年自营进口来源国（已标注记录，票数口径）</div>
+      <div style="height:260px; position:relative;">
+        <canvas id="sourceCountryChart"></canvas>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      ⚠️ <strong>注：</strong>上图为已标注HS章节的海运记录（约占总量8%），未标注部分92%全部为中国来源。若计入则<strong>中国实际占比约94.3%</strong>，印度/越南等来源主要为标注记录中的可见数据。
+    </div>
+
+    <!-- Quarterly batches bar chart -->
+    <div class="chart-wrap">
+      <div class="chart-title">季度可追踪到港批次（票数）</div>
+      <div style="height:200px; position:relative;">
+        <canvas id="quarterlyBatchChart"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Sub B: Payment timeline strip -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">B. 账期与资金安排</div>
-  <div class="info-strip">
-    <div class="info-strip-block">
-      <div class="info-strip-label">门户记录账期</div>
-      <div class="info-strip-value">90天</div>
-      <div class="info-strip-sub">标准合同条款</div>
-    </div>
-    <div class="info-strip-block" style="background:#fff7ed; border:1px solid #fed7aa;">
-      <div class="info-strip-label" style="color:#6b7280;">实际净结算</div>
-      <div class="info-strip-value" style="color:#f97316;">Net 60</div>
-      <div class="info-strip-sub">谈判季升至 90–120天</div>
-    </div>
-    <div class="info-strip-block" style="background:#f0fdf4; border:1px solid #bbf7d0;">
-      <div class="info-strip-label" style="color:#6b7280;">Air8机会窗口</div>
-      <div class="info-strip-value" style="color:#16a34a;">~65天</div>
-      <div class="info-strip-sub">DPO 125天 vs 回收成本60天</div>
-    </div>
-  </div>
+</div><!-- /tab-5 -->
 
-  <!-- Sub C: Entry requirements table -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">C. 入场要求</div>
-  <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
-    <table class="table-styled">
-      <thead>
-        <tr><th>项目</th><th>要求</th><th>备注</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight:600; color:#374151;">产品安全认证</td>
-          <td>按品类强制</td>
-          <td style="color:#6b7280;">家纺需OEKO-TEX；电器需UL/CE认证</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600; color:#374151;">UFLPA合规</td>
-          <td>完整供应链溯源文件</td>
-          <td style="color:#6b7280;">中国供应链适用，2026年执法趋严</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600; color:#374151;">包装/标签</td>
-          <td>UPC/FNSKU条码 + FBA标准</td>
-          <td style="color:#6b7280;">须符合亚马逊官方发货指引</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600; color:#374151;">贸易费用</td>
-          <td>~18.6% 净销售额（1P）</td>
-          <td style="color:#6b7280;">含市场推广、物流服务、退款准备</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600; color:#374151;">入场谈判窗口</td>
-          <td>通常 Q3（7–9月）</td>
-          <td style="color:#6b7280;">为次年采购季做供应商资格审核</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<!-- ═══════════════════════════════════════ TAB 6: 竞争对手&供应商 ═══ -->
+<div class="tab-section" id="tab-6">
 
-<!-- ═══════════════════════════════════════════════════ SECTION 04 ═══ -->
-<div class="section-block">
-  <div class="section-header">§04 产品品类与趋势</div>
+  <div class="section-block">
+    <div class="section-header">§06 同行对手与平台主要供应商</div>
 
-  <!-- Treemap: Category composition -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">海关可追踪自营进口品类构成（数量口径）</div>
-  <div class="treemap-wrap" style="margin-bottom:8px;">
-    <div class="treemap-block" style="width:66.7%; background:#1d4ed8;">
-      <div class="treemap-pct">66.7%</div>
-      <div class="treemap-label">家纺织品</div>
-    </div>
-    <div class="treemap-block" style="width:20.9%; background:#0ea5e9;">
-      <div class="treemap-pct">20.9%</div>
-      <div class="treemap-label">木制品</div>
-    </div>
-    <div class="treemap-block" style="width:4.8%; background:#8b5cf6;">
-      <div class="treemap-pct" style="font-size:13px;">4.8%</div>
-      <div class="treemap-label">陶瓷</div>
-    </div>
-    <div class="treemap-block" style="width:2.4%; background:#10b981;">
-      <div class="treemap-label" style="font-size:9px;">石材 2.4%</div>
-    </div>
-    <div class="treemap-block" style="width:2.4%; background:#f59e0b;">
-      <div class="treemap-label" style="font-size:9px;">铜制品 2.4%</div>
-    </div>
-    <div class="treemap-block" style="width:3.2%; background:#64748b;">
-      <div class="treemap-label" style="font-size:9px;">其他 3.2%</div>
-    </div>
-  </div>
-  <div style="font-size:10px; color:#9ca3af; margin-bottom:20px;">* 基于已标注海运记录，家纺含床品、浴巾、毯子等品类</div>
-
-  <!-- Bar chart: category growth -->
-  <div class="chart-wrap">
-    <div class="chart-title">亚马逊平台主要品类增速（2025年）</div>
-    <div style="height:220px; position:relative;">
-      <canvas id="categoryGrowthChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Category detail table -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">品类详情</div>
-  <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
-    <table class="table-styled">
-      <thead>
-        <tr><th>品类</th><th>近期增速</th><th>展望</th><th>典型零售价</th><th>供应链提示</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight:600;">电子产品</td>
-          <td><span style="color:#16a34a; font-weight:700;">+32%</span></td>
-          <td><span class="badge badge-green">积极</span></td>
-          <td>$20–$500</td>
-          <td>中国ODM主导，需CE/FCC</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">家居厨房</td>
-          <td><span style="color:#16a34a; font-weight:700;">+28%</span></td>
-          <td><span class="badge badge-green">积极</span></td>
-          <td>$15–$200</td>
-          <td>关税敏感，越南/印度分散</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">服装鞋靴</td>
-          <td><span style="color:#16a34a; font-weight:700;">+24%</span></td>
-          <td><span class="badge badge-amber">中性</span></td>
-          <td>$10–$150</td>
-          <td>关税升至35.1%，尺码退货率高</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">美妆个护</td>
-          <td><span style="color:#d97706; font-weight:700;">+7%</span></td>
-          <td><span class="badge badge-amber">中性</span></td>
-          <td>$5–$80</td>
-          <td>FDA注册、成分合规要求</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">健康家庭</td>
-          <td><span style="color:#d97706; font-weight:700;">+7%</span></td>
-          <td><span class="badge badge-amber">中性</span></td>
-          <td>$8–$120</td>
-          <td>竞争激烈，需私标差异化</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ SECTION 05 ═══ -->
-<div class="section-block">
-  <div class="section-header">§05 采购来源</div>
-
-  <!-- Doughnut: source country -->
-  <div class="chart-wrap">
-    <div class="chart-title">2025年自营进口来源国（已标注记录，票数口径）</div>
-    <div style="height:260px; position:relative;">
-      <canvas id="sourceCountryChart"></canvas>
-    </div>
-  </div>
-
-  <div class="warning-box">
-    ⚠️ <strong>注：</strong>上图为已标注HS章节的海运记录（约占总量8%），未标注部分92%全部为中国来源。若计入则<strong>中国实际占比约94.3%</strong>，印度/越南等来源主要为标注记录中的可见数据。
-  </div>
-
-  <!-- Quarterly batches bar chart -->
-  <div class="chart-wrap">
-    <div class="chart-title">季度可追踪到港批次（票数）</div>
-    <div style="height:200px; position:relative;">
-      <canvas id="quarterlyBatchChart"></canvas>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ SECTION 06 ═══ -->
-<div class="section-block">
-  <div class="section-header">§06 同行对手与平台主要供应商</div>
-
-  <!-- Sub A: Peer comparison -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 同赛道零售商收入对比</div>
-  <div class="chart-wrap">
-    <div class="chart-title">主要零售商收入对比（十亿美元，最新财年）</div>
-    <div style="height:220px; position:relative;">
-      <canvas id="peerRevenueChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Comparison table -->
-  <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:24px;">
-    <table class="table-styled">
-      <thead>
-        <tr><th>零售商</th><th>收入</th><th>推算DPO</th><th>信用评级</th><th>Air8视角</th></tr>
-      </thead>
-      <tbody>
-        <tr style="background:#eff6ff;">
-          <td style="font-weight:700; color:#1d4ed8;">亚马逊 ★</td>
-          <td>$716.9bn</td>
-          <td><span style="color:#ef4444; font-weight:700;">~125天</span></td>
-          <td><span class="badge badge-green">AA/A1</span></td>
-          <td style="font-size:11px;">账期最长，体量最大，信用最优</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">沃尔玛</td>
-          <td>$713.2bn</td>
-          <td>~45天</td>
-          <td><span class="badge badge-green">AA</span></td>
-          <td style="font-size:11px;">账期短，付款快，量大稳定</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">Target</td>
-          <td>$104.8bn</td>
-          <td>~50天</td>
-          <td><span class="badge badge-blue">A/Stable</span></td>
-          <td style="font-size:11px;">中高端，付款相对快</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">京东</td>
-          <td>$187.2bn</td>
-          <td>—</td>
-          <td><span class="badge badge-amber">BBB+</span></td>
-          <td style="font-size:11px;">中国市场，类Amazon自营模式</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600;">阿里巴巴</td>
-          <td>$148.4bn</td>
-          <td>—</td>
-          <td><span class="badge badge-blue">A+/Stable</span></td>
-          <td style="font-size:11px;">平台模式，非直接采购方</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Sub B: Major suppliers -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">B. 平台主要供应商分析</div>
-  <div style="font-size:11px; color:#6b7280; margin-bottom:16px; line-height:1.6;">以下为亚马逊平台主力品类的主要供应商，基于海关数据、平台公开信息与行业资料。供应商包含1P自营供货商与3P平台头部卖家。</div>
-
-  <!-- 家纺 -->
-  <div class="supply-cat-header">🛏️ 家纺 / 床品类（主力自营品类）</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Welspun India</div>
-        <span class="badge badge-blue">🇮🇳 印度 · 上市</span>
+    <!-- Sub A: Peer comparison -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:12px;">A. 同赛道零售商收入对比</div>
+    <div class="chart-wrap">
+      <div class="chart-title">主要零售商收入对比（十亿美元，最新财年）</div>
+      <div style="height:220px; position:relative;">
+        <canvas id="peerRevenueChart"></canvas>
       </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">专注家纺，亚马逊私标主要供货商。年收入约$8亿，床品/浴巾出口量居印度首位。</div>
     </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Trident Group</div>
-        <span class="badge badge-blue">🇮🇳 印度 · 上市</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">床品/浴巾多元供货，客户含Walmart和Amazon。具备完整从棉纺到成品的垂直整合能力。</div>
+
+    <!-- Comparison table -->
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; margin-bottom:24px;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>零售商</th><th>收入</th><th>推算DPO</th><th>信用评级</th><th>Air8视角</th></tr>
+        </thead>
+        <tbody>
+          <tr style="background:#eff6ff;">
+            <td style="font-weight:700; color:#1d4ed8;">亚马逊 ★</td>
+            <td>$716.9bn</td>
+            <td><span style="color:#ef4444; font-weight:700;">~125天</span></td>
+            <td><span class="badge badge-green">AA/A1</span></td>
+            <td style="font-size:11px;">账期最长，体量最大，信用最优</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">沃尔玛</td>
+            <td>$713.2bn</td>
+            <td>~45天</td>
+            <td><span class="badge badge-green">AA</span></td>
+            <td style="font-size:11px;">账期短，付款快，量大稳定</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">Target</td>
+            <td>$104.8bn</td>
+            <td>~50天</td>
+            <td><span class="badge badge-blue">A/Stable</span></td>
+            <td style="font-size:11px;">中高端，付款相对快</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">京东</td>
+            <td>$187.2bn</td>
+            <td>—</td>
+            <td><span class="badge badge-amber">BBB+</span></td>
+            <td style="font-size:11px;">中国市场，类Amazon自营模式</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;">阿里巴巴</td>
+            <td>$148.4bn</td>
+            <td>—</td>
+            <td><span class="badge badge-blue">A+/Stable</span></td>
+            <td style="font-size:11px;">平台模式，非直接采购方</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Indo Count Industries</div>
-        <span class="badge badge-blue">🇮🇳 印度 · 上市</span>
+
+    <!-- Sub B: Major suppliers -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">B. 平台主要供应商分析</div>
+    <div style="font-size:11px; color:#6b7280; margin-bottom:16px; line-height:1.6;">以下为亚马逊平台主力品类的主要供应商，基于海关数据、平台公开信息与行业资料。供应商包含1P自营供货商与3P平台头部卖家。</div>
+
+    <!-- 家纺 -->
+    <div class="supply-cat-header">🛏️ 家纺 / 床品类（主力自营品类）</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Welspun India</div>
+          <span class="badge badge-blue">🇮🇳 印度 · 上市</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">专注家纺，亚马逊私标主要供货商。年收入约$8亿，床品/浴巾出口量居印度首位。</div>
       </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">美国最大床单出口商之一，直供Amazon 1P频道，品类以床单套件为主。</div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Trident Group</div>
+          <span class="badge badge-blue">🇮🇳 印度 · 上市</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">床品/浴巾多元供货，客户含Walmart和Amazon。具备完整从棉纺到成品的垂直整合能力。</div>
+      </div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Indo Count Industries</div>
+          <span class="badge badge-blue">🇮🇳 印度 · 上市</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">美国最大床单出口商之一，直供Amazon 1P频道，品类以床单套件为主。</div>
+      </div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">中国家纺工厂（匿名）</div>
+          <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · 中小为主</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">海关数据可见，主要走3P渠道，FBA直发为主。UFLPA合规压力增大，溯源需求上升。</div>
+      </div>
     </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">中国家纺工厂（匿名）</div>
-        <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · 中小为主</span>
+
+    <!-- 电子产品 -->
+    <div class="supply-cat-header">📱 电子产品类（平台头部3P卖家）</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Anker / 安克</div>
+          <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 深圳 · 头部</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">充电器/耳机/充电宝，Amazon全球头部3P卖家，年销售额超$20亿，品牌认知度高。</div>
       </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">海关数据可见，主要走3P渠道，FBA直发为主。UFLPA合规压力增大，溯源需求上升。</div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Ugreen / 绿联</div>
+          <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · 增长</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">数码配件品类，平台销售额逾$1亿，已上市。产品线以线材/集线器/充电为主。</div>
+      </div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">小米周边品牌</div>
+          <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · 规模大</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">智能硬件品类多元，以3P为主，部分经亚马逊Global Store渠道销售。</div>
+      </div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Apple / Samsung</div>
+          <span class="badge badge-blue">自主进口</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">品牌自行报关，亚马逊非进口记录人（IOR）。属于寄售/批发模式，非传统供应商关系。</div>
+      </div>
+    </div>
+
+    <!-- 家居厨房 -->
+    <div class="supply-cat-header">🍳 家居 / 厨房类</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Instant Brands</div>
+          <span class="badge badge-blue">🇨🇦 加拿大 · 独立</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">Instant Pot电压力锅，Amazon家电类头部品牌，年销数百万台，深度依赖平台渠道。</div>
+      </div>
+      <div class="supplier-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">Utopia Deals</div>
+          <span class="badge" style="background:#f1f5f9; color:#475569;">🇺🇸🇨🇳 美/中 · 聚合</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">平台聚合卖家，覆盖床品、厨具、毯子等多品类，以性价比策略占据平台长尾流量。</div>
+      </div>
+      <div class="supplier-card" style="grid-column:1/3;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <div style="font-size:12px; font-weight:700; color:#374151;">中国厨具工厂（众多中小）</div>
+          <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · OEM/ODM</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280; line-height:1.6;">主要为FBA直发模式，OEM/ODM为主。随关税变化，部分产能向越南/墨西哥迁移趋势明显。Air8可在货款周期与UFLPA合规两个切入点提供支持。</div>
+      </div>
     </div>
   </div>
 
-  <!-- 电子产品 -->
-  <div class="supply-cat-header">📱 电子产品类（平台头部3P卖家）</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Anker / 安克</div>
-        <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 深圳 · 头部</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">充电器/耳机/充电宝，Amazon全球头部3P卖家，年销售额超$20亿，品牌认知度高。</div>
-    </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Ugreen / 绿联</div>
-        <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · 增长</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">数码配件品类，平台销售额逾$1亿，已上市。产品线以线材/集线器/充电为主。</div>
-    </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">小米周边品牌</div>
-        <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · 规模大</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">智能硬件品类多元，以3P为主，部分经亚马逊Global Store渠道销售。</div>
-    </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Apple / Samsung</div>
-        <span class="badge badge-blue">自主进口</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">品牌自行报关，亚马逊非进口记录人（IOR）。属于寄售/批发模式，非传统供应商关系。</div>
-    </div>
-  </div>
+</div><!-- /tab-6 -->
 
-  <!-- 家居厨房 -->
-  <div class="supply-cat-header">🍳 家居 / 厨房类</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Instant Brands</div>
-        <span class="badge badge-blue">🇨🇦 加拿大 · 独立</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">Instant Pot电压力锅，Amazon家电类头部品牌，年销数百万台，深度依赖平台渠道。</div>
-    </div>
-    <div class="supplier-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">Utopia Deals</div>
-        <span class="badge" style="background:#f1f5f9; color:#475569;">🇺🇸🇨🇳 美/中 · 聚合</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">平台聚合卖家，覆盖床品、厨具、毯子等多品类，以性价比策略占据平台长尾流量。</div>
-    </div>
-    <div class="supplier-card" style="grid-column:1/3;">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-        <div style="font-size:12px; font-weight:700; color:#374151;">中国厨具工厂（众多中小）</div>
-        <span class="badge" style="background:#f1f5f9; color:#475569;">🇨🇳 中国 · OEM/ODM</span>
-      </div>
-      <div style="font-size:11px; color:#6b7280; line-height:1.6;">主要为FBA直发模式，OEM/ODM为主。随关税变化，部分产能向越南/墨西哥迁移趋势明显。Air8可在货款周期与UFLPA合规两个切入点提供支持。</div>
-    </div>
-  </div>
-</div>
+<!-- ═══════════════════════════════════════ TAB 7: 信号&诉讼 ═══ -->
+<div class="tab-section" id="tab-7">
 
-<!-- ═══════════════════════════════════════════════════ SECTION 07 ═══ -->
-<div class="section-block">
-  <div class="section-header">§07 最新信号与诉讼敞口</div>
+  <div class="section-block">
+    <div class="section-header">§07 最新信号与诉讼敞口</div>
 
-  <!-- Signal cards -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:14px;">近期关键信号（时间线）</div>
+    <!-- Signal cards -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:14px;">近期关键信号（时间线）</div>
 
-  <div class="signal-card signal-blue">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
-      <div style="display:flex; align-items:center; gap:8px;">
+    <div class="signal-card signal-blue">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; background:#dbeafe; color:#1e40af; padding:2px 8px; border-radius:99px; font-weight:600;">🏢 公司动态</span>
+          <span style="font-size:11px; font-weight:700; color:#374151;">2026年7月30日</span>
+        </div>
+      </div>
+      <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">资本开支上调至$2,200亿；AWS增速36.7%（18季度最快）</div>
+      <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 在自由现金流为负的情况下继续加码，资金来源之一即拉长应付账款；DPO在2027年前不会收缩。AWS高速增长反映云业务对利润的支撑。</div>
+    </div>
+
+    <div class="signal-card signal-blue">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
         <span style="font-size:10px; background:#dbeafe; color:#1e40af; padding:2px 8px; border-radius:99px; font-weight:600;">🏢 公司动态</span>
-        <span style="font-size:11px; font-weight:700; color:#374151;">2026年7月30日</span>
+        <span style="font-size:11px; font-weight:700; color:#374151;">2026年3月12日</span>
       </div>
+      <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">3P卖家 DD+7 回款规则 — 计算基点改为签收日</div>
+      <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 3P供应商现金周期整体延长约7天。FBA卖家需重新评估运营资金需求，对小型卖家现金流压力显著。</div>
     </div>
-    <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">资本开支上调至$2,200亿；AWS增速36.7%（18季度最快）</div>
-    <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 在自由现金流为负的情况下继续加码，资金来源之一即拉长应付账款；DPO在2027年前不会收缩。AWS高速增长反映云业务对利润的支撑。</div>
+
+    <div class="signal-card signal-amber">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span style="font-size:10px; background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:99px; font-weight:600;">📊 市场动态</span>
+        <span style="font-size:11px; font-weight:700; color:#374151;">2025/26谈判季</span>
+      </div>
+      <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">供应商谈判要求90–120天账期；贸易条件成本升至18.6%净销售额</div>
+      <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 账期与贸易费用同步恶化，供应商融资需求明显增加。Air8介入窗口：DPO 125天 vs 供应商融资成本60天 = 约65天缺口。</div>
+    </div>
+
+    <div class="signal-card signal-red">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span style="font-size:10px; background:#fee2e2; color:#b91c1c; padding:2px 8px; border-radius:99px; font-weight:600;">⚖️ 监管信号</span>
+        <span style="font-size:11px; font-weight:700; color:#374151;">2027年1月1日（生效）</span>
+      </div>
+      <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">232条款木制品关税：软包家具 25%→30%；橱柜/浴柜 25%→50%</div>
+      <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 建议供应商提前确认HS编码档位；该日期曾推迟一次，需关注政策最终确认。涉及相关品类的工厂需评估成本传导可行性。</div>
+    </div>
+
+    <!-- Litigation table -->
+    <div style="font-size:12px; font-weight:600; color:#374151; margin-top:20px; margin-bottom:12px;">重大诉讼列表</div>
+    <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
+      <table class="table-styled">
+        <thead>
+          <tr><th>案件</th><th>法院/机构</th><th>状态</th><th>对供应商的意义</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600; color:#374151;">FTC 反垄断诉讼</td>
+            <td>美国联邦地区法院</td>
+            <td><span class="badge badge-red">2027.03庭审</span></td>
+            <td style="font-size:11px;">可能重写平台规则与费率体系，1P/3P合同条款或被迫调整</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">英国 £27亿集体诉讼</td>
+            <td>英国竞争上诉庭</td>
+            <td><span class="badge badge-amber">2028首次庭审</span></td>
+            <td style="font-size:11px;">代表20万+第三方卖家，判决可能影响全球平台费率政策</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600; color:#374151;">FTC Prime隐性收费案</td>
+            <td>美国联邦法院</td>
+            <td><span class="badge badge-green">已和解</span></td>
+            <td style="font-size:11px;">支付$2.5亿；监管层已关注订阅收费透明度，平台收费约束趋严</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="signal-card signal-blue">
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-      <span style="font-size:10px; background:#dbeafe; color:#1e40af; padding:2px 8px; border-radius:99px; font-weight:600;">🏢 公司动态</span>
-      <span style="font-size:11px; font-weight:700; color:#374151;">2026年3月12日</span>
-    </div>
-    <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">3P卖家 DD+7 回款规则 — 计算基点改为签收日</div>
-    <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 3P供应商现金周期整体延长约7天。FBA卖家需重新评估运营资金需求，对小型卖家现金流压力显著。</div>
-  </div>
-
-  <div class="signal-card signal-amber">
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-      <span style="font-size:10px; background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:99px; font-weight:600;">📊 市场动态</span>
-      <span style="font-size:11px; font-weight:700; color:#374151;">2025/26谈判季</span>
-    </div>
-    <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">供应商谈判要求90–120天账期；贸易条件成本升至18.6%净销售额</div>
-    <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 账期与贸易费用同步恶化，供应商融资需求明显增加。Air8介入窗口：DPO 125天 vs 供应商融资成本60天 = 约65天缺口。</div>
-  </div>
-
-  <div class="signal-card signal-red">
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-      <span style="font-size:10px; background:#fee2e2; color:#b91c1c; padding:2px 8px; border-radius:99px; font-weight:600;">⚖️ 监管信号</span>
-      <span style="font-size:11px; font-weight:700; color:#374151;">2027年1月1日（生效）</span>
-    </div>
-    <div style="font-size:12px; color:#374151; font-weight:600; margin-bottom:4px;">232条款木制品关税：软包家具 25%→30%；橱柜/浴柜 25%→50%</div>
-    <div style="font-size:11px; color:#6b7280; line-height:1.6;">💡 建议供应商提前确认HS编码档位；该日期曾推迟一次，需关注政策最终确认。涉及相关品类的工厂需评估成本传导可行性。</div>
-  </div>
-
-  <!-- Litigation table -->
-  <div style="font-size:12px; font-weight:600; color:#374151; margin-top:20px; margin-bottom:12px;">重大诉讼列表</div>
-  <div style="border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
-    <table class="table-styled">
-      <thead>
-        <tr><th>案件</th><th>法院/机构</th><th>状态</th><th>对供应商的意义</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight:600; color:#374151;">FTC 反垄断诉讼</td>
-          <td>美国联邦地区法院</td>
-          <td><span class="badge badge-red">2027.03庭审</span></td>
-          <td style="font-size:11px;">可能重写平台规则与费率体系，1P/3P合同条款或被迫调整</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600; color:#374151;">英国 £27亿集体诉讼</td>
-          <td>英国竞争上诉庭</td>
-          <td><span class="badge badge-amber">2028首次庭审</span></td>
-          <td style="font-size:11px;">代表20万+第三方卖家，判决可能影响全球平台费率政策</td>
-        </tr>
-        <tr>
-          <td style="font-weight:600; color:#374151;">FTC Prime隐性收费案</td>
-          <td>美国联邦法院</td>
-          <td><span class="badge badge-green">已和解</span></td>
-          <td style="font-size:11px;">支付$2.5亿；监管层已关注订阅收费透明度，平台收费约束趋严</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+</div><!-- /tab-7 -->
 
 <!-- ═══════════════════════════════════════════════════════ FOOTER ═══ -->
 <div style="background:#1e293b; border-radius:14px; padding:20px 24px; margin-bottom:24px; text-align:center;">
   <div style="font-size:11px; color:#94a3b8; line-height:1.8;">
     <span style="font-weight:700; color:#60a5fa;">Air8 / LFX 买方展望报告</span> — 供向该买方供货的供应商使用<br/>
     数据为公开披露值或由披露值直接推导，未经独立审计。仅供内部参考，不构成投资建议。<br/>
-    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.0
+    编制日期 2026年9月16日 &nbsp;|&nbsp; 报告版本 v2.0（Tab版）
   </div>
 </div>
 
 </div><!-- end page-wrap -->
 
 <script>
+// ── Tab navigation ────────────────────────────────────────────────────────
+const chartInstances = {};
+
+function showTab(n) {
+  // Update buttons
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i + 1 === n);
+  });
+  // Update sections
+  document.querySelectorAll('.tab-section').forEach((sec, i) => {
+    sec.classList.toggle('active', i + 1 === n);
+  });
+  // Resize all charts in the newly visible tab after a short delay
+  setTimeout(() => {
+    document.querySelectorAll('#tab-' + n + ' canvas').forEach(canvas => {
+      const instance = Chart.getChart(canvas);
+      if (instance) instance.resize();
+    });
+  }, 50);
+  // Scroll tab bar to keep active button visible
+  const activeBtn = document.querySelectorAll('.tab-btn')[n - 1];
+  if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+
 // ── Global palette & plugin registration ────────────────────────────────────
 const CHART_PAL = ['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#64748b'];
 Chart.register(ChartDataLabels);
