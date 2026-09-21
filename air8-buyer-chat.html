@@ -702,12 +702,30 @@ function buildPanel(tab, cid) {
 
   // Chart placeholder
   if(tab.chart) {
-    h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-      ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>`:''}
-      <div style="height:${tab.chart.type==='grouped_bar'?190:160}px">
-        <canvas id="${cid}-chart-${tab.id}"></canvas>
-      </div>
-    </div>`;
+    if(tab.chart.type==='block') {
+      // 方块图 (treemap style) — pure CSS, no canvas
+      const BLKPAL=['#1d4ed8','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#64748b','#e11d48'];
+      const total=(tab.chart.values||[]).reduce((a,b)=>a+b,0)||100;
+      const blocks=(tab.chart.labels||[]).map((lbl,i)=>{
+        const pct=Math.round(((tab.chart.values||[])[i]||0)/total*100);
+        const bg=BLKPAL[i%BLKPAL.length];
+        return `<div style="flex:${pct};min-width:36px;background:${bg};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;color:#fff;cursor:default" title="${esc(lbl)}: ${pct}%">
+          <span style="font-size:13px;font-weight:800;line-height:1">${pct}%</span>
+          <span style="font-size:9px;opacity:0.85;text-align:center;line-height:1.2;margin-top:2px;overflow:hidden;max-width:100%">${esc(lbl)}</span>
+        </div>`;
+      }).join('');
+      h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">${esc(tab.chart.title)}</div>`:''}
+        <div style="display:flex;height:100px;border-radius:10px;overflow:hidden;gap:2px">${blocks}</div>
+      </div>`;
+    } else {
+      h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>`:''}
+        <div style="height:${tab.chart.type==='grouped_bar'?190:160}px">
+          <canvas id="${cid}-chart-${tab.id}"></canvas>
+        </div>
+      </div>`;
+    }
   }
 
   // Country tiles for sourcing
@@ -842,20 +860,17 @@ function renderChart(tab, cid) {
         plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
         scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
+  } else if(tab.chart.type==='doughnut'&&tab.chart.values) {
+    charts[key]=new Chart(canvas,{
+      type:'doughnut',
+      data:{labels:tab.chart.labels,datasets:[{data:tab.chart.values,backgroundColor:palette.slice(0,tab.chart.values.length),borderWidth:2,borderColor:'#fff'}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+        plugins:{legend:{position:'right',labels:{font:{size:10},color:'#475569',boxWidth:10,padding:8}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}}
+    });
   } else if(tab.chart.values) {
-    const isSource=tab.id==='sourcing';
     charts[key]=new Chart(canvas,{
       type:'bar',
-      data:{
-        labels:tab.chart.labels,
-        datasets:[{
-          label:tab.chart.title||'',
-          data:tab.chart.values,
-          backgroundColor:isSource?palette:palette[0]+'cc',
-          borderColor:isSource?palette:palette[0],
-          borderWidth:1.5, borderRadius:5
-        }]
-      },
+      data:{labels:tab.chart.labels,datasets:[{label:tab.chart.title||'',data:tab.chart.values,backgroundColor:palette[0]+'cc',borderColor:palette[0],borderWidth:1.5,borderRadius:5}]},
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false}},
         scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
