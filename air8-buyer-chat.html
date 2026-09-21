@@ -275,17 +275,22 @@ async function send() {
             if(ev.type==='step') { addRealStep(thinkId, ev.text||'', ev.src||''); continue; }
             if(ev.type==='partial' && ev.json) { // PART1 ready — show partial card, keep spinner for PART2
               removeEl(thinkId);
-              addTabCard({...ev.json, _partial: true});
-              // Add a small spinner below partial card to indicate more loading
+              addTabCard(ev.json);
+              // Tag the just-added card so done handler can replace it
+              const _chatEl = document.getElementById('chat');
+              if(_chatEl.lastElementChild) _chatEl.lastElementChild.id = thinkId+'-partial-card';
+              // Add loading indicator below
               const _pc = document.createElement('div');
               _pc.id = thinkId+'-partial-spinner';
               _pc.className = 'flex justify-start gap-2.5 fade-in';
               _pc.innerHTML = `<div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background:#eff6ff"><span class="text-xs font-bold" style="color:#1d4ed8">A8</span></div><div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm px-4 py-3 flex items-center gap-2"><div class="spinner" style="width:10px;height:10px;border-width:1.5px"></div><span class="text-xs text-gray-400">Loading remaining tabs…</span></div>`;
-              document.getElementById('chat').appendChild(_pc); scrollDown(); continue;
+              _chatEl.appendChild(_pc); scrollDown(); continue;
             }
             if(ev.type==='done' && ev.json) {
               removeEl(thinkId);
-              // Remove partial loading spinner if present
+              // Remove partial card + spinner, replace with full card
+              const _pc2 = document.getElementById(thinkId+'-partial-card');
+              if(_pc2) _pc2.remove();
               const _ps = document.getElementById(thinkId+'-partial-spinner');
               if(_ps) _ps.remove();
               if(ev.json.type === 'clarify') {
