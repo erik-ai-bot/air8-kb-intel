@@ -60,11 +60,11 @@
       <p class="text-sm font-semibold text-gray-900 mb-1">Ask about any buyer, product, or market</p>
       <p class="text-xs text-gray-500 mb-5">Get structured intelligence with financials, sourcing, products & risk signals</p>
       <div class="flex flex-wrap justify-center gap-2">
-        <button onclick="sq('Tell me about Walmart')" class="chip">Walmart</button>
-        <button onclick="sq('Tell me about SHEIN')" class="chip">SHEIN</button>
-        <button onclick="sq('Compare AKA Brands vs REVOLVE')" class="chip">AKA vs REVOLVE</button>
-        <button onclick="sq('US tariff on apparel from China 2025')" class="chip">US Tariff</button>
-        <button onclick="sq('Vietnam fast fashion sourcing trend 2026')" class="chip">Vietnam Trend</button>
+        <button onclick="sq('Tell me about Walmart')" class="chip">🏢 Walmart</button>
+        <button onclick="sq('Who are Walmart\'s top suppliers?')" class="chip">🏭 Top Suppliers</button>
+        <button onclick="sq('US apparel market 2025 — market size, unit costs, leading buyers')" class="chip">📊 Apparel Market</button>
+        <button onclick="sq('Vietnam sourcing trend 2025 — exports, costs, top buyers')" class="chip">🌍 Vietnam Sourcing</button>
+        <button onclick="sq('Compare Walmart vs Target')" class="chip">⚔️ Compare Buyers</button>
       </div>
     </div>
   </div>
@@ -320,6 +320,36 @@ function guessSteps(msg) {
       { text: 'Scanning trade news & signals', src: 'Web search' },
       { text: 'Pulling sourcing shift data', src: 'Customs records' },
       { text: 'Identifying supply chain implications', src: 'Air8 KB' },
+    ];
+  } else if(/top supplier/i.test(m)) {
+    return [
+      { text: 'Querying Air8 Customs DB for supplier records', src: 'Air8 1688 DB' },
+      { text: 'Searching ImportGenius for shipper/consignee data', src: 'ImportGenius' },
+      { text: 'Cross-referencing with Census trade records', src: 'Census API' },
+      { text: 'Building supplier concentration analysis', src: 'Air8 Intelligence' },
+    ];
+  } else if(/market.*size|apparel.*market|furniture.*market|market.*trend/i.test(m) && !/walmart|target|costco|amazon|ross/i.test(m)) {
+    return [
+      { text: 'Querying US Census Trade API for import volumes', src: 'Census API' },
+      { text: 'Checking UN Comtrade for global trade data', src: 'UN Comtrade' },
+      { text: 'Searching for market size and unit cost data', src: 'Web search' },
+      { text: 'Building market analysis', src: 'Air8 Intelligence' },
+    ];
+  } else if(/vietnam|bangladesh|india|cambodia|indonesia.*sourcing|sourcing.*vietnam|sourcing.*bangladesh/i.test(m) && !/walmart|target|costco|amazon|ross/i.test(m)) {
+    return [
+      { text: 'Querying Census Trade API for country export data', src: 'Census API' },
+      { text: 'Checking Eurostat for EU sourcing from this country', src: 'Eurostat' },
+      { text: 'Searching for cost competitiveness and tariff data', src: 'Web search' },
+      { text: 'Building country sourcing analysis', src: 'Air8 Intelligence' },
+    ];
+  } else if(/compare|vs |versus/i.test(m)) {
+    const parts = msg.match(/([A-Za-z &.'-]+)\s+(vs\.?|versus|against)\s+([A-Za-z &.'-]+)/i);
+    const a = parts?.[1]?.trim()||'Buyer A', b = parts?.[3]?.trim()||'Buyer B';
+    return [
+      { text: `Searching SEC filings: ${a}`, src: 'SEC EDGAR' },
+      { text: `Searching SEC filings: ${b}`, src: 'SEC EDGAR' },
+      { text: 'Cross-referencing sourcing and customs data', src: 'Census API' },
+      { text: 'Building side-by-side comparison', src: 'Air8 Intelligence' },
     ];
   } else {
     // Buyer queries: real steps come from SSE, start empty (addRealStep fills in)
