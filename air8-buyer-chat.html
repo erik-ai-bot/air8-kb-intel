@@ -666,16 +666,17 @@ function buildPanel(tab, cid) {
 
   // Chart placeholder
   if(tab.chart) {
+    const chartH = tab.chart.type==='doughnut' ? 180 : tab.chart.type==='grouped_bar' ? 190 : 160;
     h+=`<div class="mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
       ${tab.chart.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">${esc(tab.chart.title)}</div>`:''}
-      <div style="height:${tab.chart.type==='grouped_bar'?190:160}px">
+      <div style="height:${chartH}px">
         <canvas id="${cid}-chart-${tab.id}"></canvas>
       </div>
     </div>`;
   }
 
-  // Country tiles for sourcing
-  if(tab.id==='sourcing'&&tab.chart&&tab.chart.labels) {
+  // Country tiles for sourcing/origin tabs
+  if((tab.id==='sourcing'||tab.id==='origin')&&tab.chart&&tab.chart.labels) {
     const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
     h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
     tab.chart.labels.forEach((lbl,i)=>{
@@ -714,6 +715,11 @@ function buildPanel(tab, cid) {
       </div>`;
     });
     h+=`</div>`;
+  }
+
+  // Separator between risks and signals when both present (risk_signals tab)
+  if(tab.risks&&tab.risks.length&&tab.signals&&tab.signals.length) {
+    h+=`<div class="flex items-center gap-3 my-4"><div class="flex-1 h-px bg-gray-100"></div><div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2">Latest Signals</div><div class="flex-1 h-px bg-gray-100"></div></div>`;
   }
 
   // Signals
@@ -806,8 +812,29 @@ function renderChart(tab, cid) {
         plugins:{legend:{labels:{font:{size:11},color:'#475569',boxWidth:12}}},
         scales:{y:{grid:{color:'#f1f5f9'},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
     });
+  } else if(tab.chart.type === 'doughnut') {
+    charts[key]=new Chart(canvas,{
+      type:'doughnut',
+      data:{
+        labels:tab.chart.labels,
+        datasets:[{
+          data:tab.chart.values,
+          backgroundColor:palette,
+          borderWidth:2,
+          borderColor:'#fff',
+          hoverOffset:4
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        cutout:'62%',
+        plugins:{
+          legend:{position:'right',labels:{font:{size:10},color:'#475569',boxWidth:10,padding:8}},
+          tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}
+        }
+      }
+    });
   } else if(tab.chart.values) {
-    const isSource=tab.id==='sourcing';
+    const isSource = tab.id==='sourcing' || tab.id==='origin' || (tab.chart.labels && tab.chart.labels.some(l => ['China','Vietnam','Bangladesh','India'].includes(l)));
     charts[key]=new Chart(canvas,{
       type:'bar',
       data:{
@@ -834,6 +861,9 @@ function swTab(cid,tabId) {
   document.getElementById(`${cid}-p-${tabId}`)?.classList.remove('hidden');
   const btn=document.getElementById(`${cid}-b-${tabId}`);
   if(btn){btn.classList.add('tab-active');btn.classList.remove('tab-inactive');}
+  // Resize chart if present (handles charts rendered while tab was hidden)
+  const chartKey=`${cid}-${tabId}`;
+  if(charts[chartKey]) { try { charts[chartKey].resize(); } catch(e){} }
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
