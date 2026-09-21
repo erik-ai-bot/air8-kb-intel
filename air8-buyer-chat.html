@@ -179,7 +179,7 @@ async function send() {
       if(data.tabs && Array.isArray(data.tabs)) {
         // Layer 1 tab card response
         addTabCard(data);
-        hist.push({role:'assistant', content: data.summary || data.buyer || 'Buyer overview'});
+        hist.push({role:'assistant', content: JSON.stringify({buyer:data.buyer||'',tab_ids:(data.tabs||[]).map(t=>t.id),summary:data.summary||''})});
       } else {
         // Off-topic / simple text response
         const reply = data.text || data.reply || '';
@@ -205,7 +205,7 @@ async function send() {
             if(ev.type==='step') { addRealStep(thinkId, ev.text||'', ev.src||''); continue; }
             if(ev.type==='done' && ev.json) {
               removeEl(thinkId); addTabCard(ev.json);
-              hist.push({role:'assistant', content: `Buyer intelligence report for: ${ev.json.buyer||''}. Summary: ${ev.json.summary||''}. Tabs covered: Overview, Financials, Products, Sourcing, Risk, Signals, Competitors.`});
+              hist.push({role:'assistant', content: JSON.stringify({buyer:ev.json.buyer||'',tab_ids:(ev.json.tabs||[]).map(t=>t.id),summary:ev.json.summary||''})});
               done_received=true; break outer;
             }
             if(ev.type==='done' && ev.text) {
@@ -220,7 +220,7 @@ async function send() {
                     const p = JSON.parse(_s);
                     if(p && p.tabs) {
                       removeEl(thinkId); addTabCard(p);
-                      hist.push({role:'assistant', content: `Buyer intelligence report for: ${p.buyer||''}. Summary: ${p.summary||''}.`});
+                      hist.push({role:'assistant', content: JSON.stringify({buyer:p.buyer||'',tab_ids:(p.tabs||[]).map(t=>t.id),summary:p.summary||''})});
                       done_received=true; break outer;
                     }
                   }
