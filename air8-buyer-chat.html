@@ -1425,6 +1425,18 @@ function buildTable(t) {
 // Rule 2: trend/revenue/time-series   → ALWAYS bar_line (bar + line overlay)
 function enforceChartType(c) {
   if(!c || typeof c !== 'object') return c || {};
+  // Handle combo/bars+lines format → convert to bar_line_dual
+  if(c.bars && Array.isArray(c.bars) && c.lines && Array.isArray(c.lines)) {
+    const barDs = c.bars[0] || {};
+    const lineDs = c.lines[0] || {};
+    return Object.assign({}, c, {
+      type: 'bar_line_dual',
+      bar_values: barDs.values || [],
+      bar_label: barDs.label || c.title || 'Value',
+      line_values: lineDs.values || [],
+      line_label: lineDs.label || 'Margin (%)'
+    });
+  }
   const t = (c.title||'').toLowerCase();
   const labels = Array.isArray(c.labels) ? c.labels : [];
   const isCountry = /country|origin|sourcing.mix|import.mix|distribution|by country|by region/.test(t)
