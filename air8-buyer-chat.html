@@ -293,6 +293,7 @@ async function send() {
               if(_pc2) _pc2.remove();
               const _ps = document.getElementById(thinkId+'-partial-spinner');
               if(_ps) _ps.remove();
+              if(ev.usage) ev.json._usage = ev.usage; // attach real token counts
               if(ev.json.type === 'clarify') {
                 addClarifyCard(ev.json);
                 hist.push({role:'assistant', content: JSON.stringify({clarify: true, question: ev.json.question||''})});
@@ -983,12 +984,16 @@ function addTabCard(data) {
         <button onclick="this.style.color='#16a34a';this.style.background='#f0fdf4'" class="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200 hover:border-green-300 transition-all">👍</button>
         <button onclick="this.style.color='#dc2626';this.style.background='#fef2f2'" class="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200 hover:border-red-300 transition-all">👎</button>
       </div>
-      ${data.sources ? `<div class="px-5 pb-4 pt-0">
-        <div class="text-[10px] text-gray-400 leading-relaxed p-2.5 bg-slate-50 rounded-lg border border-slate-100">
-          <span class="font-semibold text-gray-500">Data sources:</span> ${esc(data.sources)}
-          <span class="ml-2 text-gray-400">· Verify key figures before quoting.</span>
+      <div class="px-5 pb-4 pt-0">
+        <div class="text-[10px] text-gray-400 leading-relaxed p-2.5 bg-slate-50 rounded-lg border border-slate-100 flex items-start justify-between gap-3">
+          <div>${data.sources ? `<span class="font-semibold text-gray-500">Data sources:</span> ${esc(data.sources)} <span class="text-gray-400">· Verify key figures before quoting.</span>` : ''}</div>
+          ${data._usage && (data._usage.input||data._usage.output) ? (() => {
+            const i=data._usage.input||0, o=data._usage.output||0;
+            const cost=((i*3+o*15)/1e6).toFixed(4);
+            return `<div class="shrink-0 text-[10px] text-gray-400 font-mono whitespace-nowrap" title="Real token usage from Anthropic API">📊 ${i.toLocaleString()}in · ${o.toLocaleString()}out · ~$${cost}</div>`;
+          })() : ''}
         </div>
-      </div>` : ''}
+      </div>
     </div>`;
 
   chat.appendChild(el);
