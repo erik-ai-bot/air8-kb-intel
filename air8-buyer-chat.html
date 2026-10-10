@@ -322,13 +322,13 @@ async function send() {
                 } catch(e2) {}
               }
               removeEl(thinkId); addMarkdown(ev.text);
-              hist.push({role:'assistant', content: ev.text}); done_received=true; break outer;
+              hist.push({role:'assistant', content: safeReportHistory(ev.text)}); done_received=true; break outer;
             }
             if(ev.delta) fullText += ev.delta;
             if(ev.error) { removeEl(thinkId); addText('⚠️ '+ev.error); done_received=true; break outer; }
             if(ev.done) {
               fullText = ev.text||fullText; removeEl(thinkId);
-              addMarkdown(fullText); hist.push({role:'assistant',content:fullText});
+              addMarkdown(fullText); hist.push({role:'assistant',content:safeReportHistory(fullText)});
               done_received=true; break outer;
             }
           } catch(e) {}
@@ -340,7 +340,7 @@ async function send() {
         removeEl(thinkId);
         if(fullText) {
           addMarkdown(fullText);
-          hist.push({role:'assistant', content: fullText});
+          hist.push({role:'assistant', content: safeReportHistory(fullText)});
         } else {
           addText('⚠️ 响应中断，请重试。');
         }
@@ -758,7 +758,20 @@ function addText(md) {
 }
 
 // ── MARKDOWN RESPONSE ───────────────────────────────────────────────────────
+function looksLikeStructuredReport(md) {
+  return typeof md==='string' && /^\s*(?:```(?:json)?\s*)?[{[]/.test(md);
+}
+function safeReportHistory(md) {
+  return looksLikeStructuredReport(md) ? 'Structured report incomplete. Please retry.' : md;
+}
 function addMarkdown(md) {
+  // Recover complete tab cards from older Worker text responses, but never
+  // display unfinished financial JSON as if it were an analysis.
+  if(looksLikeStructuredReport(md)) {
+    const card=extractJSON(md);
+    if(card && Array.isArray(card.tabs) && card.tabs.length) { addTabCard(card); return; }
+    md='⚠️ The structured report was incomplete. Please retry this request.';
+  }
   const chat=document.getElementById('chat');
   const el=document.createElement('div');
   el.className='flex justify-start gap-2.5 fade-in';
@@ -1335,6 +1348,27 @@ function buildPanel(tab, cid) {
   }
 
   // Signals
+  if(tab.id==='risk_signals') {
+    // Existing deployed Workers may include court cases as COMPANY signals
+    // before they support the dedicated litigation_highlight field.
+    const legal=tab.litigation_highlight || (tab.signals||[]).find(s=>
+      s.type==='COMPANY' && /litigat|lawsuit|legal action|court case|诉讼|起诉|法院/i.test(s.title||'') && s.source_url);
+    let legalLink='';
+    if(legal?.source_url) {
+      try {
+        const u=new URL(legal.source_url);
+        if(u.protocol==='https:') legalLink=`<a href="${esc(u.href)}" target="_blank" rel="noopener noreferrer" class="underline font-semibold">${esc(legal.source||u.hostname)} ↗</a>`;
+      } catch(e) {}
+    }
+    h+=`<div class="mb-4 rounded-2xl p-4" style="background:#fff7ed;border:1px solid #fed7aa">
+      <div class="text-[11px] font-black uppercase tracking-wide mb-2" style="color:#9a3412">⚖️ Litigation highlight</div>
+      ${legal && legalLink ? `<div class="text-xs font-bold text-gray-900 mb-1">${esc(legal.title||'Legal proceeding')}</div>
+        <div class="text-[11px] text-gray-600 mb-2">${esc(legal.status||'Status not confirmed')}${legal.date?' · '+esc(legal.date):''}</div>
+        <div class="text-xs text-gray-700 leading-relaxed mb-2">${esc(legal.impact||'Supplier impact not established.')}</div>
+        <div class="text-[11px]" style="color:#9a3412">Source: ${legalLink}</div>`
+        : `<div class="text-xs text-gray-600">No buyer-specific litigation source shown in this report; this is not a legal clearance.</div>`}
+    </div>`;
+  }
   if(tab.signals&&tab.signals.length) {
     h+=`<div class="space-y-3">`;
     const tmap={COMPANY:{bg:'#eff6ff',border:'#bfdbfe',tag:'#1d4ed8',ico:'🏢'},REGULATORY:{bg:'#faf5ff',border:'#e9d5ff',tag:'#7e22ce',ico:'⚖️'},MARKET:{bg:'#fffbeb',border:'#fde68a',tag:'#b45309',ico:'📈'}};
