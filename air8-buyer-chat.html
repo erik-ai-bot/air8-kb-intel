@@ -188,6 +188,20 @@ function continueExplore(cid) {
   send();
 }
 
+function isZhInput(text) {
+  return /[\u4e00-\u9fff\u3400-\u4dbf]/.test(String(text || '')) || /[\u4e00-\u9fff\u3400-\u4dbf]/.test(String(window._lastMsg || ''));
+}
+function uiText(key, sample) {
+  const zh = isZhInput(sample);
+  const dict = {
+    timeout: zh ? '请求超时，请重试。' : 'Request timed out. Please retry.',
+    interrupted: zh ? '响应中断，请重试。' : 'Response interrupted. Please retry.',
+    failed: zh ? '请求失败，请重试。' : 'Request failed. Please retry.',
+    retry: zh ? '重试' : 'Retry'
+  };
+  return dict[key] || key;
+}
+
 async function send() {
   const inp=document.getElementById('inp'), msg=inp.value.trim();
   if(!msg) return;
@@ -228,7 +242,7 @@ async function send() {
         break;
       } catch(fetchErr) {
         clearTimeout(_fetchTimer);
-        if(fetchErr.name === 'AbortError') throw new Error('请求超时，请重试。');
+        if(fetchErr.name === 'AbortError') throw new Error(uiText('timeout', msg));
         if(++_retries > 1) throw fetchErr;
         await new Promise(r => setTimeout(r, 1200));
       }
@@ -342,14 +356,14 @@ async function send() {
           addMarkdown(fullText);
           hist.push({role:'assistant', content: safeReportHistory(fullText)});
         } else {
-          addText('⚠️ 响应中断，请重试。');
+          addText('⚠️ ' + uiText('interrupted', msg));
         }
       }
     }
   } catch(err) {
     removeEl(thinkId);
     const msg2 = String(err);
-    addText('⚠️ ' + (msg2.includes('超时') ? msg2 : '请求失败，请重试。'));
+    addText('⚠️ ' + ((msg2.includes('超时') || msg2.toLowerCase().includes('timed out')) ? uiText('timeout', msg) : uiText('failed', msg)));
   }
 }
 
@@ -744,7 +758,7 @@ function addText(md) {
   const el=document.createElement('div');
   el.className='flex justify-start gap-2.5 fade-in';
   const isErr = md.startsWith('⚠️');
-  const retryBtn = isErr ? '<button onclick="retryLastMsg()" class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white rounded-xl" style="background:#1d4ed8">↺ 重试</button>' : '';
+  const retryBtn = isErr ? `<button onclick="retryLastMsg()" class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white rounded-xl" style="background:#1d4ed8">↺ ${uiText('retry')}</button>` : '';
   el.innerHTML=`
     <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#eff6ff">
       <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
