@@ -147,7 +147,12 @@ function addRealStep(thinkId, text, src) {
 }
 function fqClick(cid, idx) {
   const q = window._fq && window._fq[cid] && window._fq[cid][idx];
-  if(q) sq(q);
+  if(!q) return;
+  if(/upload invoice|上传发票|precision|精准|comparable buyers|同类买家/i.test(q)) {
+    const btn = document.getElementById(cid+'-b-lead_capture');
+    if(btn) { swTab(cid, 'lead_capture'); btn.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+  }
+  sq(q);
 }
 
 function srcBadge(src) {
