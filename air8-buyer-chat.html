@@ -1242,6 +1242,36 @@ function buildStoreMap(pts) {
 }
 
 
+function leadCaptureHtml(tab, cid) {
+  const uploadId = `${cid}-${tab.id}-upload`;
+  const statusId = `${cid}-${tab.id}-status`;
+  const accept = esc((tab.upload && tab.upload.accept) || '.pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv');
+  const uploadLabel = esc((tab.upload && tab.upload.label) || 'Upload invoice');
+  const fields = Array.isArray(tab.fields) ? tab.fields : [];
+  const fieldHtml = fields.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+    ${fields.map(f => `<label class="block"><div class="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">${esc(f.label||'Field')}</div><input class="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-blue-400" placeholder="${esc(f.placeholder||'')}" oninput="window._leadCapture=window._leadCapture||{};window._leadCapture['${cid}']=window._leadCapture['${cid}']||{};window._leadCapture['${cid}']['${esc(f.id||f.label||'field')}']=this.value" /></label>`).join('')}
+  </div>` : '';
+  return `<div class="mt-4 rounded-2xl border p-4" style="background:#f8faff;border-color:#c7d2fe">
+    <div class="text-[11px] font-black uppercase tracking-wide mb-2" style="color:#1d4ed8">Air8 Precision Input</div>
+    ${fieldHtml}
+    <input id="${uploadId}" type="file" accept="${accept}" class="hidden" onchange="handleInvoiceUpload('${uploadId}','${statusId}')" />
+    <div class="flex flex-wrap gap-2 items-center">
+      <button onclick="document.getElementById('${uploadId}').click()" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white rounded-xl" style="background:#1d4ed8">📎 ${uploadLabel}</button>
+      <span id="${statusId}" class="text-[11px] text-gray-500">Optional — used to refine product and buyer matching.</span>
+    </div>
+    <div class="text-[10px] text-gray-400 mt-2 leading-relaxed">Files are selected locally in this demo UI. Connect this control to Air8's secure upload/storage endpoint before collecting customer documents in production.</div>
+  </div>`;
+}
+
+function handleInvoiceUpload(inputId, statusId) {
+  const inp = document.getElementById(inputId), status = document.getElementById(statusId);
+  const f = inp && inp.files && inp.files[0];
+  if(!f || !status) return;
+  const mb = (f.size/1024/1024).toFixed(2);
+  status.textContent = `Selected: ${f.name} (${mb} MB). Submit flow can now use this invoice to refine product matching.`;
+  status.style.color = '#15803d';
+}
+
 function buildPanel(tab, cid) {
   try {
   let h='';
@@ -1271,6 +1301,10 @@ function buildPanel(tab, cid) {
 
   // Free text
   if(tab.text) h+=renderAnalysisText(tab.text);
+
+  // Lead capture CTA (invoice upload / customer info collection)
+  if(tab.lead_capture || tab.upload || tab.fields) h+=leadCaptureHtml(tab, cid);
+
 
   // Charts array (multiple charts per tab, e.g. financial drill-down)
   if(tab.charts && Array.isArray(tab.charts)) {
