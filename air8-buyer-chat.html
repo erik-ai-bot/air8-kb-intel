@@ -1304,6 +1304,35 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
+  // Field context / chain description block
+  if(tab.field_context) {
+    h+=`<div class="mb-4 rounded-2xl border p-4" style="background:#f8faff;border-color:#c7d2fe">
+      <div class="text-[10px] font-black uppercase tracking-wide mb-2" style="color:#1d4ed8">${esc(tab.field_context.title||'Chain context')}</div>
+      <div class="text-sm font-semibold text-gray-800 leading-relaxed">${esc(tab.field_context.text||'')}</div>
+    </div>`;
+  }
+
+  // Highlight cards (Supplier / Product / Buyer)
+  if(tab.cards && Array.isArray(tab.cards)) {
+    h+=`<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">`;
+    tab.cards.forEach((c,i)=>{
+      const colors=[['#eff6ff','#bfdbfe','#1d4ed8'],['#f0fdf4','#bbf7d0','#15803d'],['#fff7ed','#fed7aa','#c2410c']][i%3];
+      h+=`<div class="rounded-2xl border p-4 shadow-sm" style="background:${colors[0]};border-color:${colors[1]}">
+        <div class="text-sm font-black mb-1" style="color:${colors[2]}">${esc(c.title||'Highlight')}</div>
+        ${c.subtitle?`<div class="text-[11px] font-semibold text-gray-600 mb-2">${esc(c.subtitle)}</div>`:''}
+        ${(c.bullets||[]).map(b=>`<div class="text-[11px] text-gray-700 leading-relaxed mb-1.5">• ${esc(b)}</div>`).join('')}
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  // Multiple named tables (chain structure)
+  if(tab.tables && Array.isArray(tab.tables)) {
+    tab.tables.forEach(tbl=>{
+      h+=`<div class="mb-4">${tbl.title?`<div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">${esc(tbl.title)}</div>`:''}${buildTable(tbl)}</div>`;
+    });
+  }
+
   // Free text
   if(tab.text) h+=renderAnalysisText(tab.text);
 
