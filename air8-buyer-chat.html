@@ -1338,7 +1338,7 @@ function buildPanel(tab, cid) {
   }
 
   // Country tiles for sourcing
-  if(tab.id==='sourcing'&&tab.chart&&tab.chart.labels) {
+  if(tab.id==='sourcing'&&tab.chart&&Array.isArray(tab.chart.labels)&&Array.isArray(tab.chart.values)) {
     const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
     h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
     tab.chart.labels.forEach((lbl,i)=>{
