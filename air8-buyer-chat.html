@@ -1277,7 +1277,7 @@ function leadCaptureHtml(tab, cid) {
   const uploadId = `${cid}-${tab.id}-upload`;
   const statusId = `${cid}-${tab.id}-status`;
   const accept = esc((tab.upload && tab.upload.accept) || '.pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv');
-  const uploadLabel = esc((tab.upload && tab.upload.label) || 'Upload invoice');
+  const uploadLabel = esc((tab.upload && tab.upload.label) || 'Upload invoices / summary lists / summary list');
   const fields = Array.isArray(tab.fields) ? tab.fields : [];
   const fieldHtml = fields.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
     ${fields.map(f => `<label class="block"><div class="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">${esc(f.label||'Field')}</div><input class="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-blue-400" placeholder="${esc(f.placeholder||'')}" oninput="window._leadCapture=window._leadCapture||{};window._leadCapture['${cid}']=window._leadCapture['${cid}']||{};window._leadCapture['${cid}']['${esc(f.id||f.label||'field')}']=this.value" /></label>`).join('')}
@@ -1300,7 +1300,7 @@ function addLeadCaptureMessage(tab) {
   const el=document.createElement('div');
   const cid='cta-'+Math.random().toString(36).slice(2);
   el.className='flex justify-start gap-2.5 fade-in';
-  const title = tab.label || (tab.lead_capture==='competitor'?'Improve Match':'Upload Invoice');
+  const title = tab.label || (tab.lead_capture==='competitor'?'Improve Match':'Upload invoices / summary lists / summary list');
   const bullets = (tab.bullets||[]).map(b=>`<div class="text-xs text-gray-700 leading-relaxed mb-1.5">• ${esc(b)}</div>`).join('');
   el.innerHTML=`
     <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff"><span class="text-xs font-bold" style="color:#1d4ed8">A8</span></div>
@@ -1321,7 +1321,7 @@ function handleInvoiceUpload(inputId, statusId) {
   const f = inp && inp.files && inp.files[0];
   if(!f || !status) return;
   const mb = (f.size/1024/1024).toFixed(2);
-  status.textContent = `Selected: ${f.name} (${mb} MB). Submit flow can now use this invoice to refine product matching.`;
+  status.textContent = `Selected: ${f.name} (${mb} MB). Submit flow can now use these files/details to refine product matching.`;
   status.style.color = '#15803d';
 }
 
@@ -1696,10 +1696,20 @@ function barLineDualCfg(c) {
 function renderChartObj(rawData, canvasId) {
   const canvas = document.getElementById(canvasId);
   if(!canvas || !rawData) return;
-  if(!rawData.values && !rawData.datasets && !rawData.bar_values) return; // nothing to render
+  if(!rawData.values && !rawData.datasets && !rawData.series && !rawData.bar_values) return; // nothing to render
   if(charts[canvasId]) charts[canvasId].destroy();
   const c = enforceChartType(rawData);
-  if(c.type==='grouped_bar' && c.datasets) {
+  if((c.type==='bar_multi' || c.series) && Array.isArray(c.series)) {
+    charts[canvasId]=new Chart(canvas,{
+      type:'bar',
+      data:{labels:c.labels,datasets:c.series.map((ds,i)=>({
+        label:ds.name||ds.label||`Series ${i+1}`, data:ds.values||[], backgroundColor:DPAL[i%DPAL.length]+'88', borderColor:DPAL[i%DPAL.length], borderWidth:1, borderRadius:8, borderSkipped:false
+      }))},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:8,font:{size:10}}},datalabels:{display:false}},
+        scales:{y:{grid:{color:'#f1f5f9'},border:{display:false},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+    });
+  } else if(c.type==='grouped_bar' && c.datasets) {
     charts[canvasId]=new Chart(canvas,{
       type:'bar',
       data:{labels:c.labels,datasets:c.datasets.map((ds,i)=>({
@@ -1735,7 +1745,17 @@ function renderChart(tab, cid) {
   const key=`${cid}-${tab.id}`;
   if(charts[key]) charts[key].destroy();
   const c = enforceChartType(tab.chart);
-  if(c.type==='grouped_bar'&&c.datasets) {
+  if((c.type==='bar_multi' || c.series) && Array.isArray(c.series)) {
+    charts[key]=new Chart(canvas,{
+      type:'bar',
+      data:{labels:c.labels,datasets:c.series.map((ds,i)=>({
+        label:ds.name||ds.label||`Series ${i+1}`, data:ds.values||[], backgroundColor:DPAL[i%DPAL.length]+'88', borderColor:DPAL[i%DPAL.length], borderWidth:1, borderRadius:8, borderSkipped:false
+      }))},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:8,font:{size:10}}},datalabels:{display:false}},
+        scales:{y:{grid:{color:'#f1f5f9'},border:{display:false},ticks:{font:{size:10},color:'#94a3b8'}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#64748b'}}}}
+    });
+  } else if(c.type==='grouped_bar'&&c.datasets) {
     charts[key]=new Chart(canvas,{
       type:'bar',
       data:{labels:c.labels,datasets:c.datasets.map((ds,i)=>({
