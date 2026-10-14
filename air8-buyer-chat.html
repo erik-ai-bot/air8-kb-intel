@@ -605,13 +605,13 @@ function continueDirection(cid) {
   var picker = window._dirPickers && window._dirPickers[cid];
   var buyer = picker ? picker.buyer : '';
   const dirMap = {
-    financials: 'financials and credit profile',
+    financials: 'detailed financials',
     products: 'products and category mix',
-    sourcing: 'sourcing and supply chain',
-    risk: 'risk and compliance requirements',
-    signals: 'latest news and market signals',
-    competitors: 'competitive landscape and positioning',
-    store_network: 'store network and locations',
+    sourcing: 'sourcing deep dive',
+    risk: 'latest signals and risk',
+    signals: 'latest signals and risk',
+    competitors: 'compare competitors',
+    store_network: 'store network',
     supply_chain: 'supply chain intelligence'
   };
   var selected = [...container.querySelectorAll('[data-dir][data-selected="1"]')].map(el => dirMap[el.dataset.dir] || el.dataset.dir);
@@ -631,14 +631,14 @@ function showDirectionPicker(originalMsg, buyer) {
   if(!window._dirPickers) window._dirPickers = {};
   window._dirPickers[cid] = { buyer, originalMsg };
   const directions = [
-    { id:'financials',    icon:'💰', title:'Financials',        desc:'Revenue, DPO, credit profile, payment terms' },
-    { id:'products',      icon:'📦', title:'Products',          desc:'Category mix, price points, buying approach' },
-    { id:'sourcing',      icon:'🌍', title:'Sourcing',          desc:'Country breakdown, import trends, supplier requirements' },
-    { id:'risk',          icon:'⚠️', title:'Risk',              desc:'Compliance requirements, payment risk, supplier risks' },
-    { id:'signals',       icon:'📰', title:'Signals',           desc:'Latest news, market moves, strategic shifts' },
-    { id:'store_network', icon:'🏪', title:'Store Network',     desc:'Store count, formats, geographic footprint, e-commerce split' },
-    { id:'competitors',   icon:'🥊', title:'Competitors',       desc:'Market positioning, competitive landscape' },
-    { id:'supply_chain',  icon:'🔗', title:'Supply Chain',      desc:'Chain structure, sourcing countries, product trends, buyer positioning' },
+    { id:'financials',    icon:'💰', title:'Detailed Financials', desc:'Revenue trend, margins, FCF, DPO, credit rating, payment stability' },
+    { id:'products',      icon:'📦', title:'Products & Categories', desc:'Category mix, price bands, sourcing approach, sales/volume trend' },
+    { id:'sourcing',      icon:'🌍', title:'Sourcing Deep Dive', desc:'Origin mix, volume trend, HS breakdown, tariff risk' },
+    { id:'supply_chain',  icon:'🔗', title:'Supply Chain', desc:'Chain structure, sourcing countries, product trends, buyer positioning' },
+    { id:'store_network', icon:'🏪', title:'Store Network', desc:'Store count by format, opening/closing trend, regional shift' },
+    { id:'competitors',   icon:'🥊', title:'Competitors', desc:'Market positioning, competitive landscape and peer set' },
+    { id:'risk',          icon:'⚠️', title:'Latest Signals & Risk', desc:'News, litigation, regulatory actions, ESG compliance flags' },
+    { id:'signals',       icon:'📰', title:'Latest Signals & Risk', desc:'News, litigation, regulatory actions, ESG compliance flags' },
   ];
   const optHtml = directions.map(d =>
     `<label class="flex gap-3 items-start p-3 rounded-xl cursor-pointer hover:bg-blue-50 transition-all" style="border:1px solid #e0e7ff;background:#f8faff" onclick="toggleDirectionOpt(this)">
