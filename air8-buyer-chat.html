@@ -1423,14 +1423,16 @@ function buildPanel(tab, cid) {
   // Country tiles for sourcing
   if(tab.id==='sourcing'&&tab.chart&&Array.isArray(tab.chart.labels)&&Array.isArray(tab.chart.values)) {
     const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
+    const factoryCountChart=/factory count|factory footprint/i.test(String(tab.chart.title||''));
     h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
     tab.chart.labels.forEach((lbl,i)=>{
-      const pct=tab.chart.values[i]||0, bar=Math.round(pct/total*100);
+      const raw=Number(tab.chart.values[i]||0), bar=Math.round(raw/total*100);
+      const metric=factoryCountChart?`${raw.toLocaleString()} · ${(raw/total*100).toFixed(1)}%`:`${raw}%`;
       h+=`<div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
         <div class="flex items-center gap-1.5 mb-2">
           <span class="text-base">${flag(lbl)}</span>
           <span class="text-xs font-semibold text-gray-800">${esc(lbl)}</span>
-          <span class="ml-auto text-xs font-black" style="color:#1d4ed8">${pct}%</span>
+          <span class="ml-auto text-xs font-black" style="color:#1d4ed8">${metric}</span>
         </div>
         <div class="w-full bg-gray-100 rounded-full h-1.5">
           <div class="h-1.5 rounded-full" style="width:${bar}%;background:#1d4ed8"></div>
