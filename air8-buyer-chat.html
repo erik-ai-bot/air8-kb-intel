@@ -1382,8 +1382,9 @@ function buildPanel(tab, cid) {
     });
   }
 
-  // Free text
-  if(tab.text) h+=renderAnalysisText(tab.text);
+  // Free text. For sourcing, keep the visual footprint directly under the KPI
+  // cards and place the evidence narrative after the chart/country tiles.
+  if(tab.text&&tab.id!=='sourcing') h+=renderAnalysisText(tab.text);
 
   // Lead capture CTA (invoice upload / customer info collection)
   if(tab.lead_capture || tab.upload || tab.fields) h+=leadCaptureHtml(tab, cid);
@@ -1441,6 +1442,8 @@ function buildPanel(tab, cid) {
     });
     h+=`</div>`;
   }
+
+  if(tab.text&&tab.id==='sourcing') h+=renderAnalysisText(tab.text);
 
   // Table (main)
   if(tab.table) h+=buildTable(tab.table);
