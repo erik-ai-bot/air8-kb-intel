@@ -23,6 +23,7 @@
   .risk-low  { background:#f0fdf4; color:#15803d; border-color:#bbf7d0; }
   .risk-med  { background:#fffbeb; color:#b45309; border-color:#fde68a; }
   .risk-high { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
+  .risk-unknown { background:#f8fafc; color:#64748b; border-color:#e2e8f0; }
   .chip { padding:7px 16px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px; border-radius:999px; cursor:pointer; transition:all .15s; white-space:nowrap; }
   .chip:hover { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
 </style>
@@ -1462,9 +1463,10 @@ function buildPanel(tab, cid) {
   if(tab.risks&&tab.risks.length) {
     h+=`<div class="grid grid-cols-2 gap-3 mb-4">`;
     tab.risks.forEach(r=>{
-      const lv=r.level||'';
-      const cls=lv==='Low'?'risk-low':lv==='High'?'risk-high':'risk-med';
-      const dot=lv==='Low'?'#16a34a':lv==='High'?'#be123c':'#b45309';
+      const raw=String(r.level||'').trim().toLowerCase();
+      const lv=raw==='low'?'Low':raw==='medium'||raw==='med'?'Medium':raw==='high'?'High':'Unknown';
+      const cls=lv==='Low'?'risk-low':lv==='Medium'?'risk-med':lv==='High'?'risk-high':'risk-unknown';
+      const dot=lv==='Low'?'#16a34a':lv==='Medium'?'#b45309':lv==='High'?'#be123c':'#94a3b8';
       h+=`<div class="p-3 rounded-2xl border ${cls}">
         <div class="flex items-center gap-1.5 mb-1.5">
           <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${dot}"></div>
@@ -1477,29 +1479,9 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-  // Signals
-  if(tab.id==='risk_signals') {
-    // Existing deployed Workers may include court cases as COMPANY signals
-    // before they support the dedicated litigation_highlight field.
-    const legal=tab.litigation_highlight || (tab.signals||[]).find(s=>
-      s.type==='COMPANY' && /litigat|lawsuit|legal action|court case|诉讼|起诉|法院/i.test(s.title||'') && s.source_url);
-    let legalLink='';
-    if(legal?.source_url) {
-      try {
-        const u=new URL(legal.source_url);
-        if(u.protocol==='https:') legalLink=`<a href="${esc(u.href)}" target="_blank" rel="noopener noreferrer" class="underline font-semibold">${esc(legal.source||u.hostname)} ↗</a>`;
-      } catch(e) {}
-    }
-    h+=`<div class="mb-4 rounded-2xl p-4" style="background:#fff7ed;border:1px solid #fed7aa">
-      <div class="text-[11px] font-black uppercase tracking-wide mb-2" style="color:#9a3412">⚖️ Litigation highlight</div>
-      ${legal && legalLink ? `<div class="text-xs font-bold text-gray-900 mb-1">${esc(legal.title||'Legal proceeding')}</div>
-        <div class="text-[11px] text-gray-600 mb-2">${esc(legal.status||'Status not confirmed')}${legal.date?' · '+esc(legal.date):''}</div>
-        <div class="text-xs text-gray-700 leading-relaxed mb-2">${esc(legal.impact||'Supplier impact not established.')}</div>
-        <div class="text-[11px]" style="color:#9a3412">Source: ${legalLink}</div>`
-        : `<div class="text-xs text-gray-600">No buyer-specific litigation source shown in this report; this is not a legal clearance.</div>`}
-    </div>`;
-  }
+  // Signals use the original template: risk grid followed by typed signal cards.
   if(tab.signals&&tab.signals.length) {
+    h+=`<div class="flex items-center gap-3 mb-3"><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Latest Signals</span><div class="h-px bg-gray-100 flex-1"></div></div>`;
     h+=`<div class="space-y-3">`;
     const tmap={COMPANY:{bg:'#eff6ff',border:'#bfdbfe',tag:'#1d4ed8',ico:'🏢'},REGULATORY:{bg:'#faf5ff',border:'#e9d5ff',tag:'#7e22ce',ico:'⚖️'},MARKET:{bg:'#fffbeb',border:'#fde68a',tag:'#b45309',ico:'📈'}};
     tab.signals.forEach(s=>{
@@ -1739,12 +1721,24 @@ function renderChartObj(rawData, canvasId) {
   }
 }
 
+function compactCategoryChartLabel(label) {
+  const raw=String(label||'').trim();
+  const hs=(raw.match(/\bHS\s*(\d{4,6})\b/i)||[])[1]||'';
+  const name=raw.replace(/\s*[—-]\s*HS\s*\d{4,6}\s*$/i,'').trim();
+  const words=name.split(/\s+/).filter(Boolean);
+  const shortName=name.length<=34?name:`${words.slice(0,5).join(' ')}…`;
+  return hs?[shortName,`HS ${hs}`]:shortName;
+}
+
 function renderChart(tab, cid) {
   const canvas=document.getElementById(`${cid}-chart-${tab.id}`);
   if(!canvas||!tab.chart) return;
   const key=`${cid}-${tab.id}`;
   if(charts[key]) charts[key].destroy();
   const c = enforceChartType(tab.chart);
+  const subcategoryFullLabels=tab.id==='subcategories'&&Array.isArray(c.labels)?c.labels.map(String):null;
+  const displayLabels=tab.id==='subcategories'?subcategoryFullLabels.map(compactCategoryChartLabel):c.labels;
+  const subcategoryTooltip=tab.id==='subcategories'?{callbacks:{title(items){const i=items?.[0]?.dataIndex;return Number.isInteger(i)?subcategoryFullLabels[i]:'';}}}:{};
   if((c.type==='bar_multi' || c.series) && Array.isArray(c.series)) {
     charts[key]=new Chart(canvas,{
       type:'bar',
@@ -1776,10 +1770,10 @@ function renderChart(tab, cid) {
     const bkg=c.values.map((_,i)=>DPAL[i%DPAL.length]+'99');
     const brd=c.values.map((_,i)=>DPAL[i%DPAL.length]);
     charts[key]=new Chart(canvas,{type:'bar',
-      data:{labels:c.labels,datasets:[{label:c.title||'',data:c.values,backgroundColor:bkg,borderColor:brd,borderWidth:0,borderRadius:8,borderSkipped:false}]},
+      data:{labels:displayLabels,datasets:[{label:c.title||'',data:c.values,backgroundColor:bkg,borderColor:brd,borderWidth:0,borderRadius:8,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},datalabels:{display:false}},
-        scales:{y:{grid:{color:'#f8fafc'},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b'}}}}
+        plugins:{legend:{display:false},datalabels:{display:false},tooltip:subcategoryTooltip},
+        scales:{y:{grid:{color:'#f8fafc'},border:{display:false},ticks:{font:{size:9},color:'#94a3b8',maxTicksLimit:5}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#64748b',maxRotation:0,minRotation:0,autoSkip:tab.id!=='subcategories'}}}}
     });
   }
 }
