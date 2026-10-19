@@ -1384,7 +1384,7 @@ function buildPanel(tab, cid) {
 
   // Free text. For sourcing, keep the visual footprint directly under the KPI
   // cards and place the evidence narrative after the chart/country tiles.
-  if(tab.text&&tab.id!=='sourcing') h+=renderAnalysisText(tab.text);
+  if(tab.text&&!['sourcing','origin'].includes(tab.id)) h+=renderAnalysisText(tab.text);
 
   // Lead capture CTA (invoice upload / customer info collection)
   if(tab.lead_capture || tab.upload || tab.fields) h+=leadCaptureHtml(tab, cid);
@@ -1422,7 +1422,7 @@ function buildPanel(tab, cid) {
   }
 
   // Country tiles for sourcing
-  if(tab.id==='sourcing'&&tab.chart&&Array.isArray(tab.chart.labels)&&Array.isArray(tab.chart.values)) {
+  if(['sourcing','origin'].includes(tab.id)&&tab.chart&&Array.isArray(tab.chart.labels)&&Array.isArray(tab.chart.values)) {
     const total=tab.chart.values.reduce((a,b)=>a+b,0)||100;
     const factoryCountChart=/factory count|factory footprint/i.test(String(tab.chart.title||''));
     h+=`<div class="grid grid-cols-2 gap-2 mb-4">`;
@@ -1443,7 +1443,7 @@ function buildPanel(tab, cid) {
     h+=`</div>`;
   }
 
-  if(tab.text&&tab.id==='sourcing') h+=renderAnalysisText(tab.text);
+  if(tab.text&&['sourcing','origin'].includes(tab.id)) h+=renderAnalysisText(tab.text);
 
   // Table (main)
   if(tab.table) h+=buildTable(tab.table);
