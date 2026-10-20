@@ -1595,12 +1595,13 @@ function dataSourceNamesOnly(value,buyer='') {
     [/supply.chain (?:page|webpage)/i,`${properBuyer} Supply Chain webpage`],[/earnings (?:call|release)/i,`${properBuyer} earnings release / call`],
     [/factory list/i,`${properBuyer} official factory list`],[/official company (?:website|pages?)/i,`${properBuyer} official website`],
     [/UN Comtrade|Comtrade/i,'UN Comtrade'],[/U\.S\. Census|US Census/i,'U.S. Census trade data'],[/Eurostat/i,'Eurostat'],
-    [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],[/public web|public search|web search|public websites?/i,'Public websites'],
+    [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],
     [/Air8 Intelligence/i,'Air8 Intelligence']
   ];
   for(const [re,name] of rules) if(re.test(s)&&!(name==='Air8 Intelligence'&&air8Empty))add(name);
   if(/customs|bill of lading|\bBoL\b/i.test(s)&&!customsUnavailable)add('Customs data');
   if(/SourceReady/i.test(s)&&!sourceReadyEmpty)add('SourceReady customs data');
+  if(/public web|public search|web search|public websites?/i.test(s)&&!found.some(x=>x!=='Air8 Intelligence'))add('Public websites');
   return found.join(' · ')||`${properBuyer} official website · ${properBuyer} Annual Report · Public websites`;
 }
 function isSourceOnlyHeader(header) {
