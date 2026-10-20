@@ -1045,7 +1045,7 @@ function addTabCard(data) {
       </div>
       <div class="px-5 pb-4 pt-0">
         <div class="text-[10px] text-gray-400 leading-relaxed p-2.5 bg-slate-50 rounded-lg border border-slate-100 flex items-start justify-between gap-3">
-          <div><span class="font-semibold text-gray-500">Data sources:</span> ${esc(dataSourceNamesOnly(data.sources))}</div>
+          <div><span class="font-semibold text-gray-500">Data sources:</span> ${esc(dataSourceNamesOnly(data.sources,data.buyer))}</div>
           ${data._usage && (data._usage.input||data._usage.output) ? (() => {
             const i=data._usage.input||0, o=data._usage.output||0;
             const cost=((i*3+o*15)/1e6).toFixed(4);
@@ -1557,15 +1557,17 @@ function buildPanel(tab, cid) {
 // ── TABLE / SOURCE PRESENTATION ──────────────────────────────────────────────
 function sourceNameFromUrl(raw) {
   try {
-    const host=new URL(String(raw)).hostname.toLowerCase().replace(/^www\./,'');
+    const u=new URL(String(raw)),host=u.hostname.toLowerCase().replace(/^www\./,''),path=u.pathname.toLowerCase();
     const known=[
-      [/sec\.gov$/,'SEC EDGAR / XBRL'],[/target\.com$/,'Target official disclosures'],
-      [/annualreports\.com$/,'AnnualReports'],[/importyeti\.com$/,'ImportYeti'],
-      [/census\.gov$/,'U.S. Census'],[/comtradeplus\.un\.org$|comtrade\.un\.org$/,'UN Comtrade'],
-      [/europa\.eu$|ec\.europa\.eu$/,'Eurostat'],[/opensupplyhub\.org$/,'Open Supply Hub']
+      [/sec\.gov$/,'SEC EDGAR'],[/spglobal\.com$/,'S&P Global Ratings'],[/moodys\.com$/,"Moody’s Ratings"],
+      [/cbonds\.com$/,'Cbonds'],[/kontoorbrands\.com$/,'Kontoor Brands official website'],
+      [/target\.com$/,'Target official website'],[/annualreports\.com$/,'AnnualReports'],
+      [/importyeti\.com$/,'ImportYeti'],[/census\.gov$/,'U.S. Census trade data'],
+      [/comtradeplus\.un\.org$|comtrade\.un\.org$/,'UN Comtrade'],[/europa\.eu$|ec\.europa\.eu$/,'Eurostat'],
+      [/opensupplyhub\.org$/,'Open Supply Hub']
     ];
     for(const [re,name] of known) if(re.test(host)) return name;
-    return host.split('.').slice(0,-1).join(' ').replace(/(^|\s)\w/g,c=>c.toUpperCase())||'Official company website';
+    return host.split('.').slice(0,-1).join(' ').replace(/[-_]/g,' ').replace(/(^|\s)\w/g,c=>c.toUpperCase())||'Official company website';
   } catch(_) { return ''; }
 }
 function stripVisibleUrls(value) {
@@ -1573,31 +1575,30 @@ function stripVisibleUrls(value) {
     .replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/gi,'$1')
     .replace(/https?:\/\/[^\s<>)\]]+/gi,m=>sourceNameFromUrl(m));
 }
-function dataSourceNamesOnly(value) {
+function dataSourceNamesOnly(value,buyer='') {
   const found=[];
   const add=name=>{name=String(name||'').replace(/\s+/g,' ').replace(/^[·|,;:\s-]+|[·|,;:\s-]+$/g,'').trim();if(name&&!found.some(x=>x.toLowerCase()===name.toLowerCase()))found.push(name);};
-  let s=String(value||'Company reports · Public web research · Air8 Intelligence');
-  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi,(_,label,url)=>{add(label||sourceNameFromUrl(url));return ' · ';});
-  s=s.replace(/https?:\/\/[^\s<>)\]]+/gi,url=>{add(sourceNameFromUrl(url));return ' · ';});
-  const canonical=[
-    [/S&P Global/i,'S&P Global financial data'],[/SEC(?: EDGAR| filings?| XBRL)?/i,'SEC EDGAR / XBRL'],
-    [/Target official|Target Corporation/i,'Target official disclosures'],[/SourceReady/i,'SourceReady customs data'],
-    [/Air8/i,'Air8 Intelligence'],[/UN Comtrade|Comtrade/i,'UN Comtrade'],[/U\.S\. Census|US Census/i,'U.S. Census'],
-    [/Eurostat/i,'Eurostat'],[/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],
-    [/annual reports?|company reports?|official company filings?|company filings?/i,'Company reports / official filings'],
-    [/public web|public search|web search/i,'Public web research'],[/rating agenc|Moody|Fitch/i,'Rating-agency disclosures']
+  const s=String(value||'');
+  s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi,(_,label,url)=>{add(sourceNameFromUrl(url)||label);return _;});
+  s.replace(/https?:\/\/[^\s<>)\]]+/gi,url=>{add(sourceNameFromUrl(url));return url;});
+  const properBuyer=String(buyer||'Company').replace(/\b(?:Inc\.?|Corporation|Corp\.?)\b/gi,'').replace(/\s+/g,' ').trim()||'Company';
+  const sourceReadyEmpty=/SourceReady[^.·\n]*(?:rows?\s*[:=]\s*0|0\s+buyer-view rows?|unavailable|not connected)/i.test(s);
+  const air8Empty=/Air8[^.·\n]*(?:unavailable|not connected|no matched|rows?\s*[:=]\s*0)/i.test(s);
+  const rules=[
+    [/S&P Global Ratings|rating agency release/i,'S&P Global Ratings'],
+    [/S&P Global financial|S&P company\/entity|Market Intelligence/i,'S&P Global Market Intelligence'],
+    [/Moody[’']s/i,"Moody’s Ratings"],[/Fitch/i,'Fitch Ratings'],[/Cbonds/i,'Cbonds'],
+    [/SEC EDGAR|SEC filings?|SEC XBRL|sec\.gov/i,'SEC EDGAR'],
+    [/annual reports?/i,`${properBuyer} Annual Report`],[/investor relations/i,`${properBuyer} Investor Relations`],
+    [/factory list/i,`${properBuyer} official factory list`],[/official company (?:website|pages?)/i,`${properBuyer} official website`],
+    [/UN Comtrade|Comtrade/i,'UN Comtrade'],[/U\.S\. Census|US Census/i,'U.S. Census trade data'],[/Eurostat/i,'Eurostat'],
+    [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],
+    [/customs|bill of lading|\bBoL\b/i,'Customs data'],[/public web|public search|web search|public websites?/i,'Public websites'],
+    [/Air8 Intelligence/i,'Air8 Intelligence']
   ];
-  for(const [re,name] of canonical) if(re.test(s)) add(name);
-  for(let part of s.split(/[·|;\n]+/)) {
-    part=part.replace(/\([^)]*(?:retrieved|reference|row|entity|validated|available|cross-check)[^)]*\)/gi,'')
-      .replace(/\b(?:buyer-view )?rows?\s*[:=]\s*\d+\b/gi,'')
-      .replace(/\s+[—-]\s+(?:matched|entity|\d{4}|FY\d|rows?).*$/i,'')
-      .replace(/\bwhere available\b/gi,'').trim();
-    if(!part||/^(?:\d+|0|not connected|unavailable)$/i.test(part))continue;
-    if(/S&P Global|SEC|Target official|SourceReady|Air8|Comtrade|Census|Eurostat|ImportYeti|Open Supply|annual report|company report|filing|public web|public search|rating agenc|Moody|Fitch/i.test(part)) continue;
-    if(part.length<=70&&!/:\s*\d/.test(part))add(part);
-  }
-  return found.join(' · ')||'Company reports / official filings · Public web research · Air8 Intelligence';
+  for(const [re,name] of rules) if(re.test(s)&&!(name==='Air8 Intelligence'&&air8Empty))add(name);
+  if(/SourceReady/i.test(s)&&!sourceReadyEmpty)add('SourceReady customs data');
+  return found.join(' · ')||`${properBuyer} official website · ${properBuyer} Annual Report · Public websites`;
 }
 function isSourceOnlyHeader(header) {
   const h=String(header||'').trim();
