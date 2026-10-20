@@ -1562,6 +1562,7 @@ function sourceNameFromUrl(raw) {
       [/sec\.gov$/,'SEC EDGAR'],[/spglobal\.com$/,'S&P Global Ratings'],[/moodys\.com$/,"Moody’s Ratings"],
       [/cbonds\.com$/,'Cbonds'],[/kontoorbrands\.com$/,'Kontoor Brands official website'],
       [/target\.com$/,'Target official website'],[/annualreports\.com$/,'AnnualReports'],[/yahoo\.com$/,'Yahoo Finance'],
+      [/sustainabilityreports\.com$/,'SustainabilityReports.com'],[/marketscreener\.com$/,'MarketScreener'],[/amazonaws\.com$/,'Corporate report repository'],
       [/importyeti\.com$/,'ImportYeti'],[/census\.gov$/,'U.S. Census trade data'],
       [/comtradeplus\.un\.org$|comtrade\.un\.org$/,'UN Comtrade'],[/europa\.eu$|ec\.europa\.eu$/,'Eurostat'],
       [/opensupplyhub\.org$/,'Open Supply Hub']
@@ -1581,7 +1582,7 @@ function dataSourceNamesOnly(value,buyer='') {
   const s=String(value||'');
   s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi,(_,label,url)=>{add(sourceNameFromUrl(url)||label);return _;});
   s.replace(/https?:\/\/[^\s<>)\]]+/gi,url=>{add(sourceNameFromUrl(url));return url;});
-  const properBuyer=String(buyer||'Company').replace(/\b(?:Inc\.?|Corporation|Corp\.?)\b/gi,'').replace(/\s+/g,' ').trim()||'Company';
+  const properBuyer=String(buyer||'Company').replace(/\b(?:Inc\.?|Corporation|Corp\.?)\b/gi,'').replace(/[,.\s]+$/g,'').replace(/\s+/g,' ').trim()||'Company';
   const sourceReadyEmpty=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}SourceReady|SourceReady[^.·\n]*(?:rows?\s*[:=]\s*0|0\s+buyer-view rows?|unavailable|not available|not matched|not connected)/i.test(s);
   const customsUnavailable=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}(?:customs|bill.of.lading|\bBoL\b)|(?:customs|bill.of.lading|\bBoL\b)[^.·\n]{0,80}(?:rows?\s*[:=]\s*0|unavailable|not available|not matched)/i.test(s);
   const air8Empty=/Air8[^.·\n]*(?:unavailable|not connected|no matched|rows?\s*[:=]\s*0)/i.test(s);
