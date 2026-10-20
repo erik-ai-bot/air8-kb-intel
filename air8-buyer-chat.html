@@ -1561,7 +1561,7 @@ function sourceNameFromUrl(raw) {
     const known=[
       [/sec\.gov$/,'SEC EDGAR'],[/spglobal\.com$/,'S&P Global Ratings'],[/moodys\.com$/,"Moody’s Ratings"],
       [/cbonds\.com$/,'Cbonds'],[/kontoorbrands\.com$/,'Kontoor Brands official website'],
-      [/target\.com$/,'Target official website'],[/annualreports\.com$/,'AnnualReports'],
+      [/target\.com$/,'Target official website'],[/annualreports\.com$/,'AnnualReports'],[/yahoo\.com$/,'Yahoo Finance'],
       [/importyeti\.com$/,'ImportYeti'],[/census\.gov$/,'U.S. Census trade data'],
       [/comtradeplus\.un\.org$|comtrade\.un\.org$/,'UN Comtrade'],[/europa\.eu$|ec\.europa\.eu$/,'Eurostat'],
       [/opensupplyhub\.org$/,'Open Supply Hub']
@@ -1582,21 +1582,23 @@ function dataSourceNamesOnly(value,buyer='') {
   s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi,(_,label,url)=>{add(sourceNameFromUrl(url)||label);return _;});
   s.replace(/https?:\/\/[^\s<>)\]]+/gi,url=>{add(sourceNameFromUrl(url));return url;});
   const properBuyer=String(buyer||'Company').replace(/\b(?:Inc\.?|Corporation|Corp\.?)\b/gi,'').replace(/\s+/g,' ').trim()||'Company';
-  const sourceReadyEmpty=/SourceReady[^.·\n]*(?:rows?\s*[:=]\s*0|0\s+buyer-view rows?|unavailable|not connected)/i.test(s);
+  const sourceReadyEmpty=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}SourceReady|SourceReady[^.·\n]*(?:rows?\s*[:=]\s*0|0\s+buyer-view rows?|unavailable|not available|not matched|not connected)/i.test(s);
+  const customsUnavailable=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}(?:customs|bill.of.lading|\bBoL\b)|(?:customs|bill.of.lading|\bBoL\b)[^.·\n]{0,80}(?:rows?\s*[:=]\s*0|unavailable|not available|not matched)/i.test(s);
   const air8Empty=/Air8[^.·\n]*(?:unavailable|not connected|no matched|rows?\s*[:=]\s*0)/i.test(s);
   const rules=[
     [/S&P Global Ratings|rating agency release/i,'S&P Global Ratings'],
     [/S&P Global financial|S&P company\/entity|Market Intelligence/i,'S&P Global Market Intelligence'],
     [/Moody[’']s/i,"Moody’s Ratings"],[/Fitch/i,'Fitch Ratings'],[/Cbonds/i,'Cbonds'],
-    [/SEC EDGAR|SEC filings?|SEC XBRL|sec\.gov/i,'SEC EDGAR'],
-    [/annual reports?/i,`${properBuyer} Annual Report`],[/investor relations/i,`${properBuyer} Investor Relations`],
+    [/SEC EDGAR|SEC filings?|SEC XBRL|sec\.gov/i,'SEC EDGAR'],[/\bForm\s+10-K\b|\b10-K\b/i,`${properBuyer} Form 10-K`],
+    [/annual reports?/i,`${properBuyer} Annual Report`],[/investor relations|\bIR\b/i,`${properBuyer} Investor Relations`],
+    [/supply.chain (?:page|webpage)/i,`${properBuyer} Supply Chain webpage`],[/earnings (?:call|release)/i,`${properBuyer} earnings release / call`],
     [/factory list/i,`${properBuyer} official factory list`],[/official company (?:website|pages?)/i,`${properBuyer} official website`],
     [/UN Comtrade|Comtrade/i,'UN Comtrade'],[/U\.S\. Census|US Census/i,'U.S. Census trade data'],[/Eurostat/i,'Eurostat'],
-    [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],
-    [/customs|bill of lading|\bBoL\b/i,'Customs data'],[/public web|public search|web search|public websites?/i,'Public websites'],
+    [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],[/public web|public search|web search|public websites?/i,'Public websites'],
     [/Air8 Intelligence/i,'Air8 Intelligence']
   ];
   for(const [re,name] of rules) if(re.test(s)&&!(name==='Air8 Intelligence'&&air8Empty))add(name);
+  if(/customs|bill of lading|\bBoL\b/i.test(s)&&!customsUnavailable)add('Customs data');
   if(/SourceReady/i.test(s)&&!sourceReadyEmpty)add('SourceReady customs data');
   return found.join(' · ')||`${properBuyer} official website · ${properBuyer} Annual Report · Public websites`;
 }
