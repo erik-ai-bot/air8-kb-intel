@@ -1596,7 +1596,7 @@ function dataSourceNamesOnly(value,buyer='') {
     [/factory list/i,`${properBuyer} official factory list`],[/official company (?:website|pages?)/i,`${properBuyer} official website`],
     [/UN Comtrade|Comtrade/i,'UN Comtrade'],[/U\.S\. Census|US Census/i,'U.S. Census trade data'],[/Eurostat/i,'Eurostat'],
     [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],
-    [/Air8 Intelligence/i,'Air8 Intelligence']
+    [/Air8 internal payment records/i,'Air8 internal payment records'],[/Air8 Intelligence/i,'Air8 Intelligence']
   ];
   for(const [re,name] of rules) if(re.test(s)&&!(name==='Air8 Intelligence'&&air8Empty))add(name);
   if(/customs|bill of lading|\bBoL\b/i.test(s)&&!customsUnavailable)add('Customs data');
