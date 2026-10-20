@@ -1600,7 +1600,8 @@ function dataSourceNamesOnly(value) {
   return found.join(' · ')||'Company reports / official filings · Public web research · Air8 Intelligence';
 }
 function isSourceOnlyHeader(header) {
-  return /^(?:data\s+)?sources?$|^source\s*(?:name|url|link)?$|^public\s+evidence$|^evidence(?:\s+(?:source|scope|url|link))?$|^references?$|^(?:source\s+)?url$|^link$/i.test(String(header||'').trim());
+  const h=String(header||'').trim();
+  return /\bsource\b/i.test(h)||/^public\s+evidence$|^evidence(?:\s+(?:scope|url|link))?$|^references?$|^url$|^link$/i.test(h);
 }
 function buildTable(t) {
   if(!t||!Array.isArray(t.headers)) return '';
