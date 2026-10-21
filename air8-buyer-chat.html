@@ -161,7 +161,7 @@ function addRealStep(thinkId, text, src) {
   const row = document.createElement('div');
   row.className='flex items-start gap-2.5 step-row';
   row.style.animation='stepIn .2s ease-out forwards';
-  row.innerHTML=`<div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px"><div class="spinner" style="width:12px;height:12px"></div></div><div class="flex-1 min-w-0"><div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(text)}${srcBadge(src)}</div></div>`;
+  row.innerHTML=`<div class="step-icon flex items-center justify-center flex-shrink-0 mt-0.5" style="width:14px;height:14px"><div class="spinner" style="width:12px;height:12px"></div></div><div class="flex-1 min-w-0"><div class="step-text text-xs font-medium leading-snug" style="color:#111827">${esc(text)}</div></div>`;
   box.appendChild(row);
   scrollDown();
 }
@@ -174,17 +174,6 @@ function fqClick(cid, idx) {
     document.getElementById('fileInp')?.click(); return;
   }
   sq(q);
-}
-
-function srcBadge(src) {
-  if(!src) return '';
-  const s = src.toLowerCase();
-  let color = '#6b7280', bg = '#f3f4f6';
-  if(s.includes('google') || s.includes('brave') || s.includes('web')) { color='#1d4ed8'; bg='#eff6ff'; }
-  else if(s.includes('sec') || s.includes('edgar') || s.includes('filing')) { color='#d97706'; bg='#fffbeb'; }
-  else if(s.includes('customs') || s.includes('1688') || s.includes('census')) { color='#059669'; bg='#ecfdf5'; }
-  else if(s.includes('air8') || s.includes('pulselink')) { color='#7c3aed'; bg='#f5f3ff'; }
-  return `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ml-1" style="color:${color};background:${bg}">${esc(src)}</span>`;
 }
 
 // ── SEND ─────────────────────────────────────────────────────────────────────
@@ -1015,6 +1004,9 @@ function addTabCard(data) {
       </div>
     </div>` : '';
 
+  const sourceNames=dataSourceNamesOnly(data.sources,data.buyer);
+  const sourceHtml=sourceNames?`<div class="px-5 pb-4 pt-0"><div class="text-[10px] text-gray-400 leading-relaxed p-2.5 bg-slate-50 rounded-lg border border-slate-100 flex items-start justify-between gap-3"><div><span class="font-semibold text-gray-500">Data sources:</span> ${esc(sourceNames)}</div></div></div>`:'';
+
   el.innerHTML=`
     <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:#eff6ff">
       <span class="text-xs font-bold" style="color:#1d4ed8">A8</span>
@@ -1043,16 +1035,7 @@ function addTabCard(data) {
         <button onclick="this.style.color='#16a34a';this.style.background='#f0fdf4'" class="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200 hover:border-green-300 transition-all">👍</button>
         <button onclick="this.style.color='#dc2626';this.style.background='#fef2f2'" class="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200 hover:border-red-300 transition-all">👎</button>
       </div>
-      <div class="px-5 pb-4 pt-0">
-        <div class="text-[10px] text-gray-400 leading-relaxed p-2.5 bg-slate-50 rounded-lg border border-slate-100 flex items-start justify-between gap-3">
-          <div><span class="font-semibold text-gray-500">Data sources:</span> ${esc(dataSourceNamesOnly(data.sources,data.buyer))}</div>
-          ${data._usage && (data._usage.input||data._usage.output) ? (() => {
-            const i=data._usage.input||0, o=data._usage.output||0;
-            const cost=((i*3+o*15)/1e6).toFixed(4);
-            return `<div class="shrink-0 text-[10px] text-gray-400 font-mono whitespace-nowrap" title="Real token usage from Anthropic API">📊 ${i.toLocaleString()}in · ${o.toLocaleString()}out · ~$${cost}</div>`;
-          })() : ''}
-        </div>
-      </div>
+      ${sourceHtml}
     </div>`;
 
   chat.appendChild(el);
@@ -1568,7 +1551,8 @@ function sourceNameFromUrl(raw) {
       [/opensupplyhub\.org$/,'Open Supply Hub']
     ];
     for(const [re,name] of known) if(re.test(host)) return name;
-    return host.split('.').slice(0,-1).join(' ').replace(/[-_]/g,' ').replace(/(^|\s)\w/g,c=>c.toUpperCase())||'Official company website';
+    if(/(?:^|[-.])(?:api|backend|internal|private|dev|staging)(?:[-.]|$)|(?:mcp|openrouter|workers\.dev)/i.test(host))return '';
+    return host.split('.').slice(0,-1).join(' ').replace(/[-_]/g,' ').replace(/(^|\s)\w/g,c=>c.toUpperCase())||'';
   } catch(_) { return ''; }
 }
 function stripVisibleUrls(value) {
@@ -1580,29 +1564,36 @@ function dataSourceNamesOnly(value,buyer='') {
   const found=[];
   const add=name=>{name=String(name||'').replace(/\s+/g,' ').replace(/^[·|,;:\s-]+|[·|,;:\s-]+$/g,'').trim();if(name&&!found.some(x=>x.toLowerCase()===name.toLowerCase()))found.push(name);};
   const s=String(value||'');
-  s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi,(_,label,url)=>{add(sourceNameFromUrl(url)||label);return _;});
+  s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi,(_,label,url)=>{const mapped=sourceNameFromUrl(url);if(mapped)add(mapped);return _;});
   s.replace(/https?:\/\/[^\s<>)\]]+/gi,url=>{add(sourceNameFromUrl(url));return url;});
   const properBuyer=String(buyer||'Company').replace(/\b(?:Inc\.?|Corporation|Corp\.?)\b/gi,'').replace(/[,.\s]+$/g,'').replace(/\s+/g,' ').trim()||'Company';
+  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+investor (?:website|site|portal)\b/g))add(`${m[1]} Investor Relations`);
+  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+official (?:product|brand) pages?\b/g))add(`${m[1]} official website`);
+  let explicitAnnual=false,explicit10k=false;
+  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+(?:FY\d{4}\s+)?Annual Report\b/g)){const co=m[1].replace(/\s+FY\d{4}$/i,'').trim();if(!/^(?:FY\d+|SEC|EDGAR)$/i.test(co)){add(`${co} Annual Report`);explicitAnnual=true;}}
+  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+Form\s+10-K\b/g)){const co=m[1].trim();if(!/^(?:SEC|EDGAR)$/i.test(co)){add(`${co} Form 10-K`);explicit10k=true;}}
+  if(!explicitAnnual&&/annual reports?/i.test(s))add(`${properBuyer} Annual Report`);
+  if(!explicit10k&&/\b(?:Form\s+)?10-K\b/i.test(s))add(`${properBuyer} Form 10-K`);
   const sourceReadyEmpty=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}SourceReady|SourceReady[^.·\n]*(?:rows?\s*[:=]\s*0|0\s+buyer-view rows?|unavailable|not available|not matched|not connected)/i.test(s);
   const customsUnavailable=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}(?:customs|bill.of.lading|\bBoL\b)|(?:customs|bill.of.lading|\bBoL\b)[^.·\n]{0,80}(?:rows?\s*[:=]\s*0|unavailable|not available|not matched)/i.test(s);
-  const air8Empty=/Air8[^.·\n]*(?:unavailable|not connected|no matched|rows?\s*[:=]\s*0)/i.test(s);
   const rules=[
     [/S&P Global Ratings|rating agency release/i,'S&P Global Ratings'],
     [/S&P Global financial|S&P company\/entity|Market Intelligence/i,'S&P Global Market Intelligence'],
     [/Moody[’']s/i,"Moody’s Ratings"],[/Fitch/i,'Fitch Ratings'],[/Cbonds/i,'Cbonds'],
-    [/SEC EDGAR|SEC filings?|SEC XBRL|sec\.gov/i,'SEC EDGAR'],[/\bForm\s+10-K\b|\b10-K\b/i,`${properBuyer} Form 10-K`],
-    [/annual reports?/i,`${properBuyer} Annual Report`],[/investor relations|\bIR\b/i,`${properBuyer} Investor Relations`],
+    [/SEC EDGAR|SEC filings?|SEC XBRL|sec\.gov/i,'SEC EDGAR'],
+    [/investor relations|\bIR\b/i,`${properBuyer} Investor Relations`],
+    [/Companies House/i,'UK Companies House'],[/Reuters/i,'Reuters'],[/Financial Times|\bFT\.com\b/i,'Financial Times'],
     [/supply.chain (?:page|webpage)/i,`${properBuyer} Supply Chain webpage`],[/earnings (?:call|release)/i,`${properBuyer} earnings release / call`],
     [/factory list/i,`${properBuyer} official factory list`],[/official company (?:website|pages?)/i,`${properBuyer} official website`],
     [/UN Comtrade|Comtrade/i,'UN Comtrade'],[/U\.S\. Census|US Census/i,'U.S. Census trade data'],[/Eurostat/i,'Eurostat'],
     [/ImportYeti/i,'ImportYeti'],[/Open Supply Hub|Open Apparel Registry/i,'Open Supply Hub'],
-    [/Air8 internal payment records/i,'Air8 internal payment records'],[/Air8 Intelligence/i,'Air8 Intelligence']
+    [/Air8 internal payment records/i,'Settled invoice records']
   ];
-  for(const [re,name] of rules) if(re.test(s)&&!(name==='Air8 Intelligence'&&air8Empty))add(name);
+  for(const [re,name] of rules) if(re.test(s))add(name);
   if(/customs|bill of lading|\bBoL\b/i.test(s)&&!customsUnavailable)add('Customs data');
-  if(/SourceReady/i.test(s)&&!sourceReadyEmpty)add('SourceReady customs data');
-  if(/public web|public search|web search|public websites?/i.test(s)&&!found.some(x=>x!=='Air8 Intelligence'))add('Public websites');
-  return found.join(' · ')||`${properBuyer} official website · ${properBuyer} Annual Report · Public websites`;
+  if(/SourceReady/i.test(s)&&!sourceReadyEmpty)add('Buyer-level customs / bill-of-lading records');
+  if(/public web|public search|web search|public websites?/i.test(s)&&!found.length)add('Public websites');
+  return found.join(' · ');
 }
 function isSourceOnlyHeader(header) {
   const h=String(header||'').trim();
