@@ -1570,8 +1570,8 @@ function dataSourceNamesOnly(value,buyer='') {
   for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+investor (?:website|site|portal)\b/g))add(`${m[1]} Investor Relations`);
   for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+official (?:product|brand) pages?\b/g))add(`${m[1]} official website`);
   let explicitAnnual=false,explicit10k=false;
-  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+(?:FY\d{4}\s+)?Annual Report\b/g)){const co=m[1].replace(/\s+FY\d{4}$/i,'').trim();if(!/^(?:FY\d+|SEC|EDGAR)$/i.test(co)){add(`${co} Annual Report`);explicitAnnual=true;}}
-  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+Form\s+10-K\b/g)){const co=m[1].trim();if(!/^(?:SEC|EDGAR)$/i.test(co)){add(`${co} Form 10-K`);explicit10k=true;}}
+  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+(?:FY\d{4}\s+)?Annual Report\b/g)){const co=m[1].replace(/\s+FY\d{4}$/i,'').trim();if(!/^(?:FY\d+|SEC|EDGAR|Inc\.?|Corp\.?|Corporation|Company|Co\.?|LLC|Ltd\.?|Limited|plc)$/i.test(co)){add(`${co} Annual Report`);explicitAnnual=true;}}
+  for(const m of s.matchAll(/\b([A-Z][A-Za-z0-9&.'’\-]*(?:\s+[A-Z][A-Za-z0-9&.'’\-]*){0,3})\s+Form\s+10-K\b/g)){const co=m[1].trim();if(!/^(?:SEC|EDGAR|Inc\.?|Corp\.?|Corporation|Company|Co\.?|LLC|Ltd\.?|Limited|plc)$/i.test(co)){add(`${co} Form 10-K`);explicit10k=true;}}
   if(!explicitAnnual&&/annual reports?/i.test(s))add(`${properBuyer} Annual Report`);
   if(!explicit10k&&/\b(?:Form\s+)?10-K\b/i.test(s))add(`${properBuyer} Form 10-K`);
   const sourceReadyEmpty=/(?:\bno\b|\bzero\b|0\s+rows?|unavailable|not available|not matched)[^.·\n]{0,80}SourceReady|SourceReady[^.·\n]*(?:rows?\s*[:=]\s*0|0\s+buyer-view rows?|unavailable|not available|not matched|not connected)/i.test(s);
