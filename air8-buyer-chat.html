@@ -1833,6 +1833,9 @@ function swTab(cid,tabId) {
   document.getElementById(`${cid}-p-${tabId}`)?.classList.remove('hidden');
   const btn=document.getElementById(`${cid}-b-${tabId}`);
   if(btn){btn.classList.add('tab-active');btn.classList.remove('tab-inactive');}
+  // Charts are initialized while non-active tab panels are hidden, so Chart.js
+  // may cache a zero-size canvas. Resize after the selected panel becomes visible.
+  requestAnimationFrame(()=>Object.values(charts).forEach(chart=>{try{chart?.resize?.();}catch(e){}}));
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
